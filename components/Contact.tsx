@@ -109,50 +109,99 @@ export function Contact() {
             )}
 
             <form ref={form} onSubmit={sendEmail} className="space-y-4">
-              {[
-                { label: "Name",  name: "name",  type: "text", placeholder: "Your name" },
-                { label: "Phone", name: "phone", type: "tel",  placeholder: "+91 98765 43210" },
-              ].map(({ label, name, type, placeholder }) => (
-                <div key={name}>
-                  <label className="block text-sm font-medium mb-1 text-gray-700">{label}</label>
-                  <input type={type} name={name} required placeholder={placeholder}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none" />
-                </div>
-              ))}
 
+              {/* Name */}
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700">Your City</label>
-                <select id="city" name="city" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                <label htmlFor="contact-name" className="block text-sm font-medium mb-1 text-gray-700">Name</label>
+                <input
+                  type="text"
+                  id="contact-name"
+                  name="name"
+                  required
+                  placeholder="Your name"
+                  autoComplete="name"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                />
+              </div>
+
+              {/* Phone */}
+              <div>
+                <label htmlFor="contact-phone" className="block text-sm font-medium mb-1 text-gray-700">Phone</label>
+                <input
+                  type="tel"
+                  id="contact-phone"
+                  name="phone"
+                  required
+                  placeholder="+91 98765 43210"
+                  autoComplete="tel"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                />
+              </div>
+
+              {/* City */}
+              <div>
+                <label htmlFor="contact-city" className="block text-sm font-medium mb-1 text-gray-700">Your City</label>
+                <select
+                  id="contact-city"
+                  name="city"
+                  required
+                  autoComplete="address-level2"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                >
                   <option value="">Select your city</option>
                   {CITIES_LIST.map((c) => <option key={c}>{c}</option>)}
                 </select>
               </div>
 
+              {/* Vehicle */}
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700">Vehicle Type</label>
-                <select id="vehicle" name="vehicle" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                <label htmlFor="contact-vehicle" className="block text-sm font-medium mb-1 text-gray-700">Vehicle Type</label>
+                <select
+                  id="contact-vehicle"
+                  name="vehicle"
+                  required
+                  autoComplete="off"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                >
                   <option value="">Select vehicle type</option>
                   <option>Car</option>
                   <option>Bike</option>
                 </select>
               </div>
 
+              {/* Service */}
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700">Service Needed</label>
-                <select id="service" name="service" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                <label htmlFor="contact-service" className="block text-sm font-medium mb-1 text-gray-700">Service Needed</label>
+                <select
+                  id="contact-service"
+                  name="service"
+                  required
+                  autoComplete="off"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                >
                   <option value="">Select a service</option>
                   {serviceOptions.map((s) => <option key={s}>{s}</option>)}
                 </select>
               </div>
 
+              {/* Message */}
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700">Message (optional)</label>
-                <textarea id="message" name="message" rows={3} placeholder="Describe the issue..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none resize-none" />
+                <label htmlFor="contact-message" className="block text-sm font-medium mb-1 text-gray-700">Message (optional)</label>
+                <textarea
+                  id="contact-message"
+                  name="message"
+                  rows={3}
+                  placeholder="Describe the issue..."
+                  autoComplete="off"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none resize-none"
+                />
               </div>
 
-              <button type="submit" disabled={loading}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              >
                 {loading ? "Sending..." : "Book Service Now"}
               </button>
             </form>
