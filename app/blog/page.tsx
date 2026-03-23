@@ -52,7 +52,9 @@ export default function BlogPage() {
                 <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">By {post.author}</span>
-                  <Link href={`/blog/${post.id}`} className="text-blue-600 font-semibold text-sm hover:underline">
+                  <Link href={`/blog/${post.id}`} className="text-blue-600 font-semibold text-sm hover:underline"
+                    aria-label={`Read full article: ${post.title}`}
+                  >
                     Read More →
                   </Link>
                 </div>

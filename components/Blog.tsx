@@ -60,6 +60,8 @@ export function Blog() {
                 <Link
                   href={`/blog/${post.id}`}
                   className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all"
+                  aria-label={`Read full article: ${post.title}`}
+
                 >
                   Read More <ArrowRight className="w-4 h-4" />
                 </Link>
