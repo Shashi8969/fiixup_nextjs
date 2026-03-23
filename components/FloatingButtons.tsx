@@ -13,7 +13,7 @@ export function FloatingButtons() {
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 left-6 z-50 flex items-center gap-2 bg-green-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-green-600 transition"
-        aria-label="Chat on WhatsApp"
+        aria-label="Book on WhatsApp"
       >
         <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping" />
         <MessageCircle className="w-5 h-5 relative" />
@@ -24,7 +24,7 @@ export function FloatingButtons() {
       <a
         href={`tel:${MAIN_PHONE}`}
         className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-blue-600 text-white px-4 py-3 rounded-full shadow-lg hover:bg-blue-700 transition"
-        aria-label="Call now"
+        aria-label="Book Service — Call now"
       >
         <span className="absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75 animate-ping" />
         <Phone className="w-5 h-5 relative" />
