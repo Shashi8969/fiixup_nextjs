@@ -122,7 +122,7 @@ export function Contact() {
 
               <div>
                 <label className="block text-sm font-medium mb-1 text-gray-700">Your City</label>
-                <select name="city" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                <select id="city" name="city" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
                   <option value="">Select your city</option>
                   {CITIES_LIST.map((c) => <option key={c}>{c}</option>)}
                 </select>
@@ -130,7 +130,7 @@ export function Contact() {
 
               <div>
                 <label className="block text-sm font-medium mb-1 text-gray-700">Vehicle Type</label>
-                <select name="vehicle" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                <select id="vehicle" name="vehicle" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
                   <option value="">Select vehicle type</option>
                   <option>Car</option>
                   <option>Bike</option>
@@ -139,7 +139,7 @@ export function Contact() {
 
               <div>
                 <label className="block text-sm font-medium mb-1 text-gray-700">Service Needed</label>
-                <select name="service" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                <select id="service" name="service" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
                   <option value="">Select a service</option>
                   {serviceOptions.map((s) => <option key={s}>{s}</option>)}
                 </select>
@@ -147,7 +147,7 @@ export function Contact() {
 
               <div>
                 <label className="block text-sm font-medium mb-1 text-gray-700">Message (optional)</label>
-                <textarea name="message" rows={3} placeholder="Describe the issue..."
+                <textarea id="message" name="message" rows={3} placeholder="Describe the issue..."
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none resize-none" />
               </div>
 

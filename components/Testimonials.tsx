@@ -23,7 +23,7 @@ function TestimonialCard({ name, rating, text, date, vehicle, area }: Testimonia
       <div>
         <p className="font-semibold text-gray-900">{name}</p>
         {area && <p className="text-xs text-gray-500">{area}</p>}
-        <p className="text-xs text-gray-400 mt-1">{vehicle} · {date}</p>
+        <p className="text-xs text-gray-600 mt-1">{vehicle} · {date}</p>
       </div>
     </div>
   );

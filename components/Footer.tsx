@@ -136,7 +136,7 @@ export function Footer() {
 
       {/* Bottom Bar */}
       <div className="border-t border-gray-800">
-        <div className="container mx-auto px-4 py-5 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-gray-600">
+        <div className="container mx-auto px-4 py-5 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-gray-400">
           <p>&copy; 2026 Fiixup. All rights reserved. | Doorstep Auto Repair Across India</p>
           <p>Available 24/7 · Bengaluru · Chennai · Hyderabad · Mumbai</p>
         </div>
