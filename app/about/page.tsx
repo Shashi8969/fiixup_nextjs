@@ -1,0 +1,108 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Award, Users, ThumbsUp, CheckCircle } from "lucide-react";
+import { About } from "@/components/About";
+import { Testimonials } from "@/components/Testimonials";
+import { SITE_URL } from "@/lib/constants";
+
+export const metadata: Metadata = {
+  title: "About Us | Fiixup — India's Doorstep Auto Repair",
+  description:
+    "Learn about Fiixup — India's trusted 24/7 doorstep auto repair service. Certified technicians, transparent pricing, and quality service for cars and bikes across Bengaluru, Chennai, Hyderabad & Mumbai.",
+  keywords: "about fiixup, doorstep mechanic, mobile auto repair, certified mechanics",
+  alternates: { canonical: `${SITE_URL}/about` },
+};
+
+const mvvItems = [
+  { Icon: Award,  title: "Our Mission", text: "To make vehicle maintenance convenient, transparent, and accessible for every vehicle owner across India." },
+  { Icon: Users,  title: "Our Vision",  text: "To become India's leading doorstep auto service provider, setting new standards for quality and convenience." },
+  { Icon: ThumbsUp, title: "Our Values", text: "Honesty, quality, customer-first approach, and continuous innovation in everything we do." },
+];
+
+const differentiators = [
+  { title: "Certified Excellence",   text: "All technicians are certified with extensive training in both traditional and modern vehicle systems." },
+  { title: "True 24/7 Service",      text: "Not just support — actual repair services round the clock, including nights and holidays." },
+  { title: "Transparent Pricing",    text: "Detailed estimates before work begins. No hidden charges, no surprises — just honest pricing." },
+  { title: "Genuine Parts",          text: "We use only authentic parts from trusted suppliers, backed by manufacturer warranties." },
+  { title: "Complete City Coverage", text: "Every corner of Bengaluru, Chennai, Hyderabad and Mumbai — we're always nearby." },
+  { title: "Digital Convenience",    text: "Easy online booking, digital service history, and cashless payments." },
+];
+
+export default function AboutPage() {
+  return (
+    <>
+      {/* Hero */}
+      <section className="bg-gradient-to-br from-blue-50 to-blue-100 py-16">
+        <div className="container mx-auto px-4 text-center max-w-3xl">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">About Fiixup</h1>
+          <p className="text-xl text-gray-700">
+            Revolutionizing auto care with 24/7 doorstep service across India
+          </p>
+        </div>
+      </section>
+
+      <About />
+
+      {/* Our Story */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900">Our Story</h2>
+          <div className="space-y-6 text-lg text-gray-700">
+            <p>Fiixup was born from a simple observation: vehicle owners waste countless hours visiting garages, waiting for service, and dealing with unexpected repair bills. We knew there had to be a better way.</p>
+            <p>Founded in 2020, we started with a vision to bring professional auto repair services directly to people's doorsteps. What began as a small team of passionate mechanics has grown into India's most trusted doorstep auto service provider.</p>
+            <p>Today, we serve over 10,000 happy customers across Bengaluru, Chennai, Hyderabad and Mumbai — providing 24/7 service for both cars and bikes.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mt-14">
+            {mvvItems.map(({ Icon, title, text }) => (
+              <div key={title} className="text-center">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Icon className="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 className="font-semibold text-xl mb-2 text-gray-900">{title}</h3>
+                <p className="text-gray-600">{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* What Sets Us Apart */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-gray-900">What Sets Us Apart</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            {differentiators.map(({ title, text }) => (
+              <div key={title} className="flex gap-4">
+                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-xl mb-2 text-gray-900">{title}</h3>
+                  <p className="text-gray-600">{text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Team */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4 max-w-4xl text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">Our Team</h2>
+          <p className="text-lg text-gray-700 mb-12">
+            Fiixup is powered by 50+ certified technicians, support staff, and auto care experts — each carefully selected and passionate about exceptional service.
+          </p>
+          <div className="bg-blue-50 p-8 rounded-xl">
+            <p className="text-xl font-semibold mb-4 text-gray-900">Join Our Team</p>
+            <p className="text-gray-700 mb-6">We're always looking for skilled technicians who share our commitment to quality.</p>
+            <Link href="/contact" className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+              View Career Opportunities
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <Testimonials />
+    </>
+  );
+}

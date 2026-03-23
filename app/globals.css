@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+html:not([data-scroll-behavior]) { scroll-behavior: smooth; }
+  body { @apply text-gray-900 bg-white antialiased; }
+}
+
+@layer utilities {
+  .animate-ping-slow {
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+}
