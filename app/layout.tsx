@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { FloatingButtons } from "@/components/FloatingButtons";
 import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE, DEFAULT_KEYWORDS } from "@/lib/constants";
 import { homeSchema } from "@/lib/schema";
+import { QuickServiceModal } from "@/components/QuickServiceModal";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main>{children}</main>
         <Footer />
         <FloatingButtons />
+        <QuickServiceModal />
       </body>
     </html>
   );
