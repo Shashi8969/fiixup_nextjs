@@ -49,7 +49,7 @@ export function About() {
                 <div key={item.heading} className="flex items-start gap-3">
                   <CheckCircle className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold mb-1 text-gray-900">{item.heading}</h4>
+                    <h3 className="font-semibold mb-1 text-gray-900">{item.heading}</h3>
                     <p className="text-gray-600 text-sm">{item.text}</p>
                   </div>
                 </div>
