@@ -104,7 +104,7 @@ export default function ServicesPage() {
             <Link href="/contact#contact-form" className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
               Book a Service
             </Link>
-            <a href="tel:+918722777367" className="bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold flex items-center gap-2">
+            <a href="tel:+918197459732" className="bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold flex items-center gap-2">
               <Phone className="w-4 h-4" /> Call Now
             </a>
           </div>
@@ -225,8 +225,8 @@ export default function ServicesPage() {
             <Link href="/contact#contact-form" className="bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-blue-50 transition-colors">
               Book Service Now
             </Link>
-            <a href="tel:+918722777367" className="bg-red-500 text-white px-8 py-3 rounded-lg font-bold hover:bg-red-600 transition-colors flex items-center gap-2">
-              <Phone className="w-4 h-4" /> +91 87227 77367
+            <a href="tel:+918197459732" className="bg-red-500 text-white px-8 py-3 rounded-lg font-bold hover:bg-red-600 transition-colors flex items-center gap-2">
+              <Phone className="w-4 h-4" /> +91 81974 59732
             </a>
           </div>
         </div>
