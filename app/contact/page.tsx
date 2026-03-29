@@ -5,7 +5,7 @@ import { SITE_URL } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Contact Us | Book Doorstep Car & Bike Repair | Fiixup",
   description:
-    "Contact Fiixup for 24/7 doorstep car and bike service in Bengaluru, Chennai, Hyderabad & Mumbai. Call +91 87227 77367 or book online.",
+    "Contact Fiixup for 24/7 doorstep car and bike service in Bengaluru, Chennai, Hyderabad & Mumbai. Call +91 8197459732 or book online.",
   alternates: { canonical: `${SITE_URL}/contact` },
 };
 
