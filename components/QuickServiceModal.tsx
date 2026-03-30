@@ -62,7 +62,7 @@ export function QuickServiceModal() {
               id="quick-phone"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder="+91 87227 77367"
+              placeholder="+91 81974 59732"
               autoComplete="tel"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
               required

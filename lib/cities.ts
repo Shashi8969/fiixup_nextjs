@@ -64,8 +64,8 @@ const cities: CityData[] = [
     slug: "bengaluru",
     name: "Bengaluru",
     state: "Karnataka",
-    phone: "+91 87227 77367",
-    whatsapp: "918722777367",
+    phone: "+91 81974 59732",
+    whatsapp: "918197459732",
     email: "bengaluru@fiixup.in",
     areas: ["Koramangala", "Whitefield", "Indiranagar", "HSR Layout", "Marathahalli"],
     heroTagline: "Serving Bengaluru",
@@ -117,7 +117,7 @@ const cities: CityData[] = [
       {
         category: "Booking & Pricing — Bengaluru",
         faqs: [
-          { q: "How do I book a service in Bengaluru?", a: "Call +91 87227 77367, WhatsApp us, or fill the contact form. Booking confirmed within minutes." },
+          { q: "How do I book a service in Bengaluru?", a: "Call +91 81974 59732, WhatsApp us, or fill the contact form. Booking confirmed within minutes." },
           { q: "What is the visit charge for Bengaluru?", a: "A minimal visit fee applies, waived when you proceed with the repair. No hidden charges — pricing shared upfront." },
           { q: "Do you accept UPI in Bengaluru?", a: "Yes — GPay, PhonePe, Paytm, cash, and cards all accepted." },
         ],

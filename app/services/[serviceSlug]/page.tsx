@@ -93,7 +93,7 @@ export default function ServiceDetailPage({ params }: { params: Promise<{ servic
                 <Link href="/contact#contact-form" className={`${bgAccent} text-white px-8 py-3 rounded-lg font-bold hover:opacity-90 transition-opacity`}>
                   Book This Service
                 </Link>
-                <a href="tel:+918722777367" className="bg-white border-2 border-gray-200 text-gray-800 px-6 py-3 rounded-lg font-bold hover:border-blue-400 transition-colors flex items-center gap-2">
+                <a href="tel:+918197459732" className="bg-white border-2 border-gray-200 text-gray-800 px-6 py-3 rounded-lg font-bold hover:border-blue-400 transition-colors flex items-center gap-2">
                   <Phone className="w-4 h-4" /> Call Now
                 </a>
               </div>
@@ -256,8 +256,8 @@ export default function ServiceDetailPage({ params }: { params: Promise<{ servic
             <Link href="/contact#contact-form" className="bg-white text-gray-900 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">
               Book Service Now
             </Link>
-            <a href="tel:+918722777367" className="bg-black/20 text-white border border-white/30 px-8 py-3 rounded-lg font-bold hover:bg-black/30 transition-colors flex items-center gap-2">
-              <Phone className="w-4 h-4" /> +91 87227 77367
+            <a href="tel:+918197459732" className="bg-black/20 text-white border border-white/30 px-8 py-3 rounded-lg font-bold hover:bg-black/30 transition-colors flex items-center gap-2">
+              <Phone className="w-4 h-4" /> +91 81974 59732
             </a>
           </div>
         </div>

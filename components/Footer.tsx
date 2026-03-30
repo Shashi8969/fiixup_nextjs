@@ -56,8 +56,8 @@ export function Footer() {
             </div>
             <div className="flex flex-col sm:flex-row gap-6 sm:items-center">
               <div className="space-y-2 text-sm">
-                <a href="tel:+918722777367" className="flex items-center gap-2 text-white font-semibold hover:text-blue-400 transition-colors">
-                  <Phone className="w-4 h-4 text-blue-500 flex-shrink-0" /> +91 87227 77367
+                <a href="tel:+918197459732" className="flex items-center gap-2 text-white font-semibold hover:text-blue-400 transition-colors">
+                  <Phone className="w-4 h-4 text-blue-500 flex-shrink-0" /> +91 81974 59732
                 </a>
                 <a href="mailto:support@fiixup.com" className="flex items-center gap-2 hover:text-blue-400 transition-colors">
                   <Mail className="w-4 h-4 text-blue-500 flex-shrink-0" /> support@fiixup.com
