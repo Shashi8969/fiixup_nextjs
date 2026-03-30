@@ -13,6 +13,10 @@ import {
 import { getServiceBySlug, carServices, bikeServices } from "@/lib/services";
 import { serviceSchema, breadcrumbSchema } from "@/lib/schema";
 import { Testimonials } from "@/components/Testimonials";
+import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/constants";
+
+
 
 const iconMap: Record<string, LucideIcon> = {
   Wrench, Car, Gauge, Droplet, Wind, Battery,
@@ -23,12 +27,17 @@ const carBrands  = ['Maruti','Hyundai','Tata','Honda','Toyota','Kia','MG','Mahin
 const bikeBrands = ['Honda','Bajaj','TVS','Royal Enfield','Yamaha','Hero','Suzuki','KTM'];
 const serviceCities = ['Bengaluru','Chennai','Hyderabad','Mumbai'];
 
-export default function ServiceDetailPage({ params }: { params: Promise<{ serviceSlug: string }> }) {
+
+
+
+export default function ServiceDetailPage({ params }: { params: Promise<{ serviceSlug: string }>}) {
   const { serviceSlug } = use(params);
   const service = getServiceBySlug(serviceSlug ?? '');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
+
   if (!service) notFound();
+  
 
   const Icon       = iconMap[service.icon] ?? Wrench;
   const isCar      = service.category === 'car';
@@ -53,6 +62,7 @@ export default function ServiceDetailPage({ params }: { params: Promise<{ servic
             { name: 'Services', url: '/services' },
             { name: service.shortTitle, url: `/services/${service.slug}` },
           ]),
+      
         ]) }}
       />
 
