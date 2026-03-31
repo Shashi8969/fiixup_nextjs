@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Award, Users, ThumbsUp, CheckCircle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { About } from "@/components/About";
 import { Testimonials } from "@/components/Testimonials";
 import { SITE_URL } from "@/lib/constants";
+import { mvvItems, differentiators } from "@/lib/data/about";
 
 export const metadata: Metadata = {
   title: "About Us | Fiixup — India's Doorstep Auto Repair",
@@ -12,21 +13,6 @@ export const metadata: Metadata = {
   keywords: "about fiixup, doorstep mechanic, mobile auto repair, certified mechanics",
   alternates: { canonical: `${SITE_URL}/about` },
 };
-
-const mvvItems = [
-  { Icon: Award,  title: "Our Mission", text: "To make vehicle maintenance convenient, transparent, and accessible for every vehicle owner across India." },
-  { Icon: Users,  title: "Our Vision",  text: "To become India's leading doorstep auto service provider, setting new standards for quality and convenience." },
-  { Icon: ThumbsUp, title: "Our Values", text: "Honesty, quality, customer-first approach, and continuous innovation in everything we do." },
-];
-
-const differentiators = [
-  { title: "Certified Excellence",   text: "All technicians are certified with extensive training in both traditional and modern vehicle systems." },
-  { title: "True 24/7 Service",      text: "Not just support — actual repair services round the clock, including nights and holidays." },
-  { title: "Transparent Pricing",    text: "Detailed estimates before work begins. No hidden charges, no surprises — just honest pricing." },
-  { title: "Genuine Parts",          text: "We use only authentic parts from trusted suppliers, backed by manufacturer warranties." },
-  { title: "Complete City Coverage", text: "Every corner of Bengaluru, Chennai, Hyderabad and Mumbai — we're always nearby." },
-  { title: "Digital Convenience",    text: "Easy online booking, digital service history, and cashless payments." },
-];
 
 export default function AboutPage() {
   return (
