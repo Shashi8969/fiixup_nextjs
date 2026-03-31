@@ -1,6 +1,7 @@
 // lib/services.ts — migrated from src/app/data/services.ts
+import { ServiceData } from './models/service.model';
 
-
+/*
 export interface ServiceData {
   slug: string;           // URL → /services/car-brake-service
   title: string;          // Page H1
@@ -16,7 +17,7 @@ export interface ServiceData {
   metaTitle: string;
   metaDescription: string;
   metaKeywords: string;
-}
+} */
 
 const services: ServiceData[] = [
   // ── CAR SERVICES ──
