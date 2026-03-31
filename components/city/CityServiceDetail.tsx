@@ -9,8 +9,8 @@ import {
   Settings, Bike, Zap, Cog, CircuitBoard,
   type LucideIcon,
 } from "lucide-react";
-import type { ServiceData } from "@/lib/services";
-import type { CityData } from "@/lib/cities";
+import { ServiceData } from "@/lib/models/service.model";
+import type { CityData } from "@/lib/models/city.model";
 import { carServices, bikeServices } from "@/lib/services";
 
 const iconMap: Record<string, LucideIcon> = {
