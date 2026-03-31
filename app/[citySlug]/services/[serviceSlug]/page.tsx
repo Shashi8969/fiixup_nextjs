@@ -1,3 +1,4 @@
+// app\[citySlug]\services\[serviceSlug]\page.tsx
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getServiceBySlug } from "@/lib/services";
