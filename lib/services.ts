@@ -1,23 +1,14 @@
 // lib/services.ts — migrated from src/app/data/services.ts
 import { ServiceData } from './models/service.model';
+import { 
+  Wrench, Car, Gauge, Droplet, Wind, Battery, 
+  Settings, Shield, Bike, Zap, Cog, CircuitBoard, LucideIcon 
+} from "lucide-react";
 
-/*
-export interface ServiceData {
-  slug: string;           // URL → /services/car-brake-service
-  title: string;          // Page H1
-  shortTitle: string;     // Card title
-  category: 'car' | 'bike';
-  icon: string;
-  tagline: string;        // One-liner under H1
-  description: string;    // Long paragraph for SEO
-  price: string;          // Starting price shown on card
-  duration: string;       // Estimated time
-  features: string[];     // Bullet points on detail page
-  faqs: { q: string; a: string }[];
-  metaTitle: string;
-  metaDescription: string;
-  metaKeywords: string;
-} */
+export const iconMap: Record<string, LucideIcon> = {
+  Wrench, Car, Gauge, Droplet, Wind, Battery,
+  Settings, Shield, Bike, Zap, Cog, CircuitBoard,
+};
 
 const services: ServiceData[] = [
   // ── CAR SERVICES ──

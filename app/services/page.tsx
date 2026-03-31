@@ -1,3 +1,4 @@
+// app/services/page.tsx
 import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -8,6 +9,7 @@ import {
 } from "lucide-react";
 import { carServices, bikeServices } from "@/lib/services";
 import { SITE_URL } from "@/lib/constants";
+import { ServiceCard } from "@/components/ui/ServiceCard";
 
 export const metadata: Metadata = {
   title: "All Car & Bike Doorstep Repair Services | Fiixup",
@@ -48,44 +50,6 @@ const whyDoorstep = [
   { title: "Cost Effective",        desc: "Lower overhead means better prices for you without compromising on quality or parts."                  },
   { title: "Safe & Secure",         desc: "Your vehicle stays with you. No need to leave it at an unfamiliar garage."                            },
 ];
-
-function ServiceCard({
-  slug, iconName, title, tagline, price, duration, accentColor,
-}: {
-  slug: string;
-  iconName: string;
-  title: string;
-  tagline: string;
-  price: string;
-  duration: string;
-  accentColor: "blue" | "red";
-}) {
-  const Icon = iconMap[iconName] ?? Wrench;
-  const accent = accentColor === "blue"
-    ? { text: "text-blue-600", border: "hover:border-blue-300", hover: "group-hover:text-blue-600" }
-    : { text: "text-red-600",  border: "hover:border-red-300",  hover: "group-hover:text-red-600"  };
-
-  return (
-    <Link
-      href={`/services/${slug}`}
-      className={`group p-6 border border-gray-200 rounded-xl hover:shadow-lg ${accent.border} transition-all flex flex-col bg-white`}
-    >
-      <div className="flex items-start justify-between mb-4">
-        {React.createElement(Icon, { className: `w-12 h-12 ${accent.text}` })}
-        <ArrowRight className={`w-5 h-5 text-gray-300 ${accent.hover} group-hover:translate-x-1 transition-all mt-1`} />
-      </div>
-      <h3 className={`text-xl font-bold text-gray-900 ${accent.hover} transition-colors mb-2`}>{title}</h3>
-      <p className="text-gray-500 text-sm mb-4 flex-1">{tagline}</p>
-      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-        <div>
-          <span className={`${accent.text} font-bold`}>From {price}</span>
-          <span className="text-gray-400 text-xs ml-2">· {duration}</span>
-        </div>
-        <span className="text-xs bg-green-50 text-green-700 font-semibold px-2 py-1 rounded-full">24/7</span>
-      </div>
-    </Link>
-  );
-}
 
 export default function ServicesPage() {
   return (

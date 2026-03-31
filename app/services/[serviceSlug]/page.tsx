@@ -1,3 +1,4 @@
+// app/services/[serviceSlug]/page.tsx
 "use client";
 
 import { use, useState } from "react";
