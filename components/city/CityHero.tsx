@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { CheckCircle, MapPin } from "lucide-react";
-import type { CityData } from "@/lib/cities";
+import type { CityData } from "@/lib/models/city.model";
 
 export function CityHero({ city }: { city: CityData }) {
   return (

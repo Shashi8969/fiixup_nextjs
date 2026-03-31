@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import type { CityData } from "@/lib/cities";
+import type { CityData } from "@/lib/models/city.model";
 import { MAIN_EMAIL, TRUST_BADGES } from "@/lib/constants";
 
 const serviceOptions = [

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Award, Users, ThumbsUp, Clock } from "lucide-react";
-import type { CityData } from "@/lib/cities";
+import type { CityData } from "@/lib/models/city.model";
 
 export function CityAbout({ city }: { city: CityData }) {
   const stats = [

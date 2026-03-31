@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import type { CityData } from "@/lib/cities";
+import type { CityData } from "@/lib/models/city.model";
 
 interface TestimonialCardProps {
   name: string;

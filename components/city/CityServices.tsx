@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Wrench, Car, Gauge, Droplet, Wind, Battery, Settings, Shield, Bike, Zap, Cog, CircuitBoard } from "lucide-react";
-import type { CityData } from "@/lib/cities";
+import type { CityData } from "@/lib/models/city.model";
 
 const carServices = [
   { icon: Wrench,   title: "General Car Repairs",  slug: "car-general-repair",    description: "Comprehensive diagnostic and repair services for all car makes and models." },
