@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Calendar, Clock } from "lucide-react";
-import blogPosts from "@/lib/blogPosts.json";
+import blogPosts from "@/lib/data/blogPosts.json";
 import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {

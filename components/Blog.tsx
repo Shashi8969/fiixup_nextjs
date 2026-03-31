@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Calendar, ArrowRight } from "lucide-react";
-import blogPosts from "@/lib/blogPosts.json";
+import blogPosts from "@/lib/data/blogPosts.json";
 
 export function Blog() {
   const featuredPosts = blogPosts.slice(0, 3);
@@ -26,9 +26,10 @@ export function Blog() {
               <div className="relative h-48 overflow-hidden bg-gray-100">
                 {post.image.startsWith("http") ? (
                   <Image
-                    src={post.image}
+                    src={post.image.startsWith("http") ? post.image : `/${post.image}`}
                     alt={post.title}
                     fill
+                    priority
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />

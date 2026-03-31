@@ -8,7 +8,7 @@ import {
   Calendar, Clock, ArrowLeft, Share2, Twitter,
   Facebook, Link2, CheckCircle, ChevronUp, Phone,
 } from "lucide-react";
-import blogPosts from "@/lib/blogPosts.json";
+import blogPosts from "@/lib/data/blogPosts.json";
 import { SITE_URL, MAIN_PHONE } from "@/lib/constants";
 
 function ReadingProgress() {

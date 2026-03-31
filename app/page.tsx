@@ -7,6 +7,7 @@ import { Testimonials } from "@/components/Testimonials";
 import { Blog } from "@/components/Blog";
 import { Contact } from "@/components/Contact";
 import { SITE_URL } from "@/lib/constants";
+import { ServiceCategoryGrid } from "@/components/ServiceCategoryGrid";
 
 export const metadata: Metadata = {
   title: "Fiixup — 24/7 Doorstep Car & Bike Repair Service in India",
@@ -20,6 +21,7 @@ export default function HomePage() {
     <>
       <Hero />
       <Services />
+      <ServiceCategoryGrid />
       <About />
       <CityCoverage />
       <Testimonials />

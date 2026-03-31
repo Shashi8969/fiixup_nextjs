@@ -33,7 +33,7 @@ export function Header() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <Image src="/assets/logo.webp" alt="Fiixup" width={120} height={48} className="h-12 w-auto" style={{ width: 'auto' }} priority />
+            <Image src="/assets/logo.webp" alt="Fiixup" width={120} height={40} className="h-12 w-auto" style={{ width: 'auto' }} priority />
           </Link>
 
           {/* Desktop Nav */}

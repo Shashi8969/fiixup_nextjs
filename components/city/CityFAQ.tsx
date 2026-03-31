@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Phone } from "lucide-react";
-import type { CityData } from "@/lib/cities";
+import { CityData } from "@/lib/cities";
 
 function AccordionItem({ question, answer, isOpen, onToggle }: {
   question: string; answer: string; isOpen: boolean; onToggle: () => void;
