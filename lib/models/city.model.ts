@@ -1,13 +1,4 @@
-export interface FAQ {
-  q: string;
-  a: string;
-}
-
-export interface FAQCategory {
-  category: string;
-  faqs: FAQ[];
-}
-
+import { FAQCategory } from "@/lib/models/faq.model";
 export interface CityTestimonial {
   name: string;
   rating: number;
