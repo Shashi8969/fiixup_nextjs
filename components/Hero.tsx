@@ -2,16 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { CheckCircle, MapPin, Star } from "lucide-react";
 import { MAIN_PHONE } from "@/lib/constants";
-
-const features = [
-  "24/7 Emergency Service Available",
-  "Doorstep Service — Home, Office or Roadside",
-  "Car & Bike Repair by Certified Technicians",
-  "Transparent Pricing — No Hidden Charges",
-  "30-Day Service Warranty on All Repairs",
-];
-
-const avatars = ["RK", "PS", "AR", "SD"];
+import { features, avatars } from "@/lib/data/homepageData";
 
 export function Hero() {
   return (

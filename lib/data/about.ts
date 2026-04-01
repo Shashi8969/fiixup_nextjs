@@ -39,11 +39,6 @@ export const highlights = [
   { heading: "30-Day Repair Warranty",   text: "All repairs come with a 30-day service warranty. If the same issue recurs, we fix it free — no questions asked." },
 ];
 
-export const steps = [
-  { n: "1", title: "Book in 60 Seconds",  desc: "Call, WhatsApp, or fill the form. Pick your time and location." },
-  { n: "2", title: "We Dispatch Fast",     desc: "We confirm and dispatch the nearest certified technician to you." },
-  { n: "3", title: "Repair at Your Door",  desc: "Technician arrives with all tools & parts. You watch — full transparency." },
-  { n: "4", title: "Back on the Road",     desc: "Service done with a 30-day warranty. Digital receipt provided." },
-];
+
 
 export { mvvItems, differentiators };

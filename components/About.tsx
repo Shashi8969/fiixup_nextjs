@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { CheckCircle } from "lucide-react";
-import { aboutContent, stats, highlights, steps } from "@/lib/data/about";
+import { aboutContent, stats, highlights } from "@/lib/data/about";
+import { HOW_IT_WORKS_STEPS as steps } from "@/lib/constants";
 
 export function About() {
   return (
