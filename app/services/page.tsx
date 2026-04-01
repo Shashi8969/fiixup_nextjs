@@ -7,7 +7,7 @@ import {
   Wrench, Gauge, Droplet, Wind, Battery, Settings, Zap, Cog, CircuitBoard,
   type LucideIcon,
 } from "lucide-react";
-import { carServices, bikeServices } from "@/lib/services";
+import { serviceCategories } from "@/lib/data/serviceCategory";
 import { SITE_URL } from "@/lib/constants";
 import { ServiceCard } from "@/components/ui/ServiceCard";
 
@@ -89,58 +89,34 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
-
-      {/* CAR SERVICES */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-2 mb-3">
-            <Car className="w-7 h-7 text-blue-600" /> Car Services
-          </h2>
-          <p className="text-gray-600 mb-8">
-            Professional car repair & maintenance at your doorstep. All makes & models covered.
-          </p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {carServices.map((s) => (
-              <ServiceCard
-                key={s.slug}
-                slug={s.slug}
-                iconName={s.icon}
-                title={s.shortTitle}
-                tagline={s.tagline}
-                price={s.price}
-                duration={s.duration}
-                accentColor="blue"
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* BIKE SERVICES */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-2 mb-3">
-            <Bike className="w-7 h-7 text-red-600" /> Bike Services
-          </h2>
-          <p className="text-gray-600 mb-8">
-            Complete two-wheeler servicing & repair at your home or office. All brands covered.
-          </p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {bikeServices.map((s) => (
-              <ServiceCard
-                key={s.slug}
-                slug={s.slug}
-                iconName={s.icon}
-                title={s.shortTitle}
-                tagline={s.tagline}
-                price={s.price}
-                duration={s.duration}
-                accentColor="red"
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+{serviceCategories.map((category, index) => (
+  <section key={index} className={`py-16 ${category.bgColor}`}>
+    <div className="container mx-auto px-4">
+      <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-2 mb-3">
+        <category.icon className={`w-7 h-7 text-${category.color}-600`} />
+        {category.title}
+      </h2>
+      <p className="text-gray-600 mb-8">
+        {category.description}
+      </p>
+      
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {category.data.map((s) => (
+          <ServiceCard
+            key={s.slug}
+            slug={s.slug}
+            iconName={s.icon}
+            title={s.shortTitle}
+            tagline={s.tagline}
+            price={s.price}
+            duration={s.duration}
+            accentColor={category.color}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+))}
 
       {/* HOW IT WORKS */}
       <section className="py-16 bg-white">

@@ -5,7 +5,7 @@ export interface ServiceFAQ {
   a: string;
 }
 
-export type ServiceCategory = "car" | "bike";
+export type ServiceCategory = "car" | "bike" | "battery" | "towing" | "puncture" | "roadside" | "mechanic";
 
 export interface ServiceData {
   slug: string;           // URL slug → /services/car-brake-service
