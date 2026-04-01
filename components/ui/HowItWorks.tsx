@@ -9,9 +9,7 @@ const howItWorks = [
 {/* HOW IT WORKS */}
 export default function HowItWorks() {
 return (
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
+     
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8">
             {howItWorks.map(({ n, title, desc }) => (
               <div key={n} className="text-center">
@@ -23,7 +21,5 @@ return (
               </div>
             ))}
           </div>
-        </div>
-      </section>
 );
 }

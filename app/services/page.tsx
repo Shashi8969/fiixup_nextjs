@@ -2,9 +2,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  Phone, CheckCircle, Clock, Shield, Award, ArrowRight, Car, Bike,
-  Wrench, Gauge, Droplet, Wind, Battery, Settings, Zap, Cog, CircuitBoard,
-  type LucideIcon,
+  Phone, CheckCircle, Clock, Shield, Award,
 } from "lucide-react";
 import { serviceCategories } from "@/lib/data/serviceCategory";
 import { SITE_URL } from "@/lib/constants";
@@ -24,25 +22,12 @@ export const metadata: Metadata = {
 };
 
 // Icon map — resolves string names from lib/services.ts to real Lucide components
-const iconMap: Record<string, LucideIcon> = {
-  Wrench, Car, Gauge, Droplet, Wind, Battery,
-  Settings, Shield, Bike, Zap, Cog, CircuitBoard,
-};
 
 const trustItems = [
   { icon: Clock, label: "24/7 Service", sub: "Emergency & regular" },
   { icon: Award, label: "Certified Techs", sub: "Trained professionals" },
   { icon: Shield, label: "30-Day Warranty", sub: "On all repairs" },
   { icon: CheckCircle, label: "Transparent Pricing", sub: "No hidden charges" },
-];
-
-const whyDoorstep = [
-  { title: "Save Time", desc: "No driving to a garage, waiting for hours, and driving back. We come to you while you work or relax." },
-  { title: "Avoid Traffic", desc: "Why waste time in traffic when we can service your vehicle at your home or office?" },
-  { title: "Complete Transparency", desc: "Watch the work being done. Understand exactly what's being fixed and why — no surprises." },
-  { title: "Emergency Ready", desc: "Breakdown on the road? We provide 24/7 emergency service anywhere across our cities." },
-  { title: "Cost Effective", desc: "Lower overhead means better prices for you without compromising on quality or parts." },
-  { title: "Safe & Secure", desc: "Your vehicle stays with you. No need to leave it at an unfamiliar garage." },
 ];
 
 export default function ServicesPage() {
@@ -70,9 +55,9 @@ export default function ServicesPage() {
       </section>
 
       {/* TRUST STRIP */}
-      <section className="bg-white border-b border-gray-100 py-6">
+      <section className="bg-white border-b border-gray-100 py-4">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             {trustItems.map(({ icon: Icon, label, sub }) => (
               <div key={label} className="flex flex-col items-center gap-1">
                 <Icon className="w-6 h-6 text-green-600 mb-1" />
@@ -84,7 +69,7 @@ export default function ServicesPage() {
         </div>
       </section>
       {serviceCategories.map((category, index) => (
-        <section key={index} className={`py-16 ${category.bgColor}`}>
+        <section key={index} className={`py-8 ${category.bgColor}`}>
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-2 mb-3">
               <category.icon className={`w-7 h-7 text-${category.color}-600`} />
@@ -111,9 +96,13 @@ export default function ServicesPage() {
           </div>
         </section>
       ))}
-
-      <HowItWorks />
-      <WhyChooseDoorstep/>
+      <section className="py-8 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">How It Works</h2>
+          <HowItWorks />
+        </div>
+      </section>
+      <WhyChooseDoorstep />
 
       {/* BOTTOM CTA */}
       <section className="py-16 bg-blue-600 text-white text-center">

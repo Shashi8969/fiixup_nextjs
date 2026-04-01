@@ -16,6 +16,7 @@ import { serviceSchema, breadcrumbSchema } from "@/lib/schema";
 import { Testimonials } from "@/components/Testimonials";
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/constants";
+import HowItWorks from "@/components/ui/HowItWorks";
 
 
 
@@ -172,20 +173,7 @@ export default function ServiceDetailPage({ params }: { params: Promise<{ servic
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">How Doorstep {service.shortTitle} Works</h2>
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            {[
-              { step: '1', title: 'Book Online or Call',       desc: 'Fill the form or call us. Takes under 60 seconds.' },
-              { step: '2', title: 'We Confirm & Dispatch',     desc: 'We confirm your booking and dispatch the nearest technician.' },
-              { step: '3', title: 'Tech Arrives at Your Door', desc: 'Certified technician arrives with tools & parts within the hour.' },
-              { step: '4', title: 'Drive Away Happy',          desc: 'Service complete. Get a 30-day warranty and digital receipt.' },
-            ].map(({ step, title, desc }) => (
-              <div key={step} className="text-center">
-                <div className={`w-14 h-14 ${bgAccent} text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg`}>{step}</div>
-                <h3 className="font-bold text-gray-900 mb-2">{title}</h3>
-                <p className="text-gray-600 text-sm">{desc}</p>
-              </div>
-            ))}
-          </div>
+          <HowItWorks/>
         </div>
       </section>
 
