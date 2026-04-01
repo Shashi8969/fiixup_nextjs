@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Phone } from "lucide-react";
 import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
 import { faqSchema } from "@/lib/schema";
+import { globalFAQs as faqCategories } from "@/lib/data/faqs";
 
 export const metadata: Metadata = {
   title: "FAQ — Frequently Asked Questions | Fiixup Doorstep Repair",
@@ -10,51 +11,6 @@ export const metadata: Metadata = {
     "Answers to common questions about Fiixup's 24/7 doorstep car and bike repair service — booking, pricing, warranty, service areas and more.",
   alternates: { canonical: `${SITE_URL}/faq` },
 };
-
-const faqCategories = [
-  {
-    category: "General",
-    faqs: [
-      { q: "What is Fiixup?", a: "Fiixup is a 24/7 doorstep car and bike repair service operating across major Indian cities. Our certified technicians come to your home, office, or wherever your vehicle is." },
-      { q: "Which cities do you operate in?", a: "We operate in Bengaluru, Chennai, Hyderabad, and Mumbai — with more cities coming soon!" },
-      { q: "How quickly can a technician arrive?", a: "Our technicians typically arrive within 30–60 minutes. For emergency breakdowns, we prioritise arrival within 30 minutes." },
-      { q: "What are your service hours?", a: "We are available 24/7, 365 days a year including public holidays and weekends." },
-    ],
-  },
-  {
-    category: "Booking & Pricing",
-    faqs: [
-      { q: "How do I book a service?", a: "You can book via our website contact form, call your city's number, or WhatsApp us. We'll confirm your booking within minutes." },
-      { q: "Is there a visit charge?", a: "We charge a minimal visit fee which is waived if you proceed with the service. No hidden charges — pricing is shared upfront." },
-      { q: "Do you provide a quote before starting?", a: "Yes, our technician diagnoses the issue and provides a transparent quote before starting any repair." },
-      { q: "What payment methods do you accept?", a: "We accept UPI (GPay, PhonePe, Paytm), cash, debit/credit cards, and net banking." },
-    ],
-  },
-  {
-    category: "Car Services",
-    faqs: [
-      { q: "Which car brands do you service?", a: "All popular brands — Maruti, Hyundai, Honda, Tata, Toyota, Kia, MG, Mahindra, Volkswagen, Skoda, and more." },
-      { q: "Do you carry spare parts?", a: "Yes, our service vans are stocked with common parts. For rare parts, we source them same-day." },
-      { q: "Can you do major engine repairs at my doorstep?", a: "We handle most repairs at your doorstep. For very major overhauls, we may need to tow the vehicle to our workshop." },
-    ],
-  },
-  {
-    category: "Bike Services",
-    faqs: [
-      { q: "Which bike brands do you service?", a: "All popular brands — Honda, Bajaj, TVS, Royal Enfield, Yamaha, Suzuki, Hero, KTM, and more." },
-      { q: "Do you service scooters?", a: "Yes — Honda Activa, TVS Jupiter, Suzuki Access, Yamaha Fascino, and all other scooters." },
-      { q: "How often should I service my bike?", a: "Every 3,000–5,000 km or every 3 months, whichever comes first." },
-    ],
-  },
-  {
-    category: "Quality & Warranty",
-    faqs: [
-      { q: "Is there a warranty on repairs?", a: "Yes — all repairs come with a 30-day service warranty. If the same issue recurs within 30 days, we fix it free of charge." },
-      { q: "Do you use genuine parts?", a: "Yes, we use OEM or high-quality aftermarket parts for all repairs." },
-      { q: "Are your technicians certified?", a: "Yes — all Fiixup technicians are certified, background-verified, and trained for both cars and bikes." },
-    ],
-  },
-];
 
 const allFaqs = faqCategories.flatMap((c) => c.faqs);
 
