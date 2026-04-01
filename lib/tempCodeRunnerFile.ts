@@ -1,7 +1,0 @@
-...bikeServices,
-  ...carServices,
-  ...towingServices,
-  ...batteryServices,
-  ...punctureServices,
-  ...roadsideServices,
-  ...mechanicServices,
