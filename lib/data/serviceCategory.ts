@@ -23,7 +23,7 @@ export const serviceCategories = [
     title: "Towing Services",
     description: "24/7 emergency towing and vehicle recovery services whenever you need them.",
     data: towingServices,
-    icon: Truck, // Assuming you have a Truck or Towing icon
+    icon: Truck, 
     link: "/services?cat=towing",
     color: "amber",
     bgColor: "bg-white"
