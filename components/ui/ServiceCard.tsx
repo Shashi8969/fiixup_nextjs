@@ -11,7 +11,7 @@ interface ServiceCardProps {
   tagline: string;
   price: string;      // Added to match your map
   duration: string;   // Added to match your map
-  accentColor: "blue" | "red"; // Changed from 'category' to match your prop name
+  accentColor: string; // Changed from 'category' to match your prop name
 }
 
 export function ServiceCard({ 
@@ -26,9 +26,9 @@ export function ServiceCard({
   // Resolve icon from the central map
   const Icon = iconMap[iconName] || iconMap["Wrench"];
   
-  const isBlue = accentColor === "blue";
-  const themeText = isBlue ? "text-blue-600" : "text-red-600";
-  const themeBorder = isBlue ? "hover:border-blue-300" : "hover:border-red-300";
+  // Dynamic tailwind classes based on the color string passed from the category
+  const themeText = `text-${accentColor}-600`;
+  const themeBorder = `hover:border-${accentColor}-300`;
 
   return (
     <Link href={`/services/${slug}`} className={`group p-6 border rounded-xl ${themeBorder} transition-all`}>

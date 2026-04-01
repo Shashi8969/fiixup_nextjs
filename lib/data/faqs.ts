@@ -1,12 +1,4 @@
 // lib/data/faqs.ts — All FAQ data (global + per-city)
-//
-// SEO STRATEGY:
-//  • Targets high-traffic "near me", symptom-based, price-intent & question-based queries
-//  • Service priority: Bike → Car → Towing → Puncture → Jump Start → Doorstep / Mobile Mechanic
-//  • City FAQs embed local landmarks, roads & pain-points for geo-ranking
-//  • Questions mirror exact Google search phrases (long-tail + People Also Ask)
-//  • Answers contain natural LSI keywords without stuffing
-//
 import type { FAQCategory } from "@/lib/models/faq.model";
 
 // ── Global FAQ page ──────────────────────────────────────────────────────────
