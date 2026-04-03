@@ -37,10 +37,10 @@ export function QuickServiceModal() {
     formData.set("request_time", now);
     formData.set("phone", phoneNumber);
     formData.set("name", "Not provided");
-  formData.set("city", "Not provided");
-  formData.set("vehicle", "Not specified");
-  formData.set("service", "Callback Request");
-  formData.set("message", "Customer requested a quick callback");
+    formData.set("city", "Not provided");
+    formData.set("vehicle", "Not specified");
+    formData.set("service", "Callback Request");
+    formData.set("message", "Customer requested a quick callback");
 
     emailjs
       .send(
@@ -118,10 +118,6 @@ export function QuickServiceModal() {
           >
             {loading ? "Sending..." : "Request Callback"}
           </button>
-          formData.set("name", "Not provided");
-          formData.set("city", "Not provided");
-          formData.set("service", "Callback Request");
-
           <button
             type="button"
             onClick={handleClose}
