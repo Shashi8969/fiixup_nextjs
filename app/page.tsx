@@ -2,18 +2,9 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { Hero } from "@/components/Hero"; // keep this normal
 import { SITE_URL } from "@/lib/constants";
-
-const Services = dynamic(() =>
-  import("@/components/Services").then((mod) => mod.Services)
-);
-
-const About = dynamic(() =>
-  import("@/components/About").then((mod) => mod.About)
-);
-
-const CityCoverage = dynamic(() =>
-  import("@/components/CityCoverage").then((mod) => mod.CityCoverage)
-);
+import { Services } from "@/components/Services"; // named export
+import { About } from "@/components/About"; // named export
+import { CityCoverage } from "@/components/CityCoverage"; 
 
 const Testimonials = dynamic(() =>
   import("@/components/Testimonials").then((mod) => mod.Testimonials)
