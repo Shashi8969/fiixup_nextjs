@@ -1,16 +1,62 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { CheckCircle, MapPin, Star } from "lucide-react";
 import { MAIN_PHONE } from "@/lib/constants";
 import { features, avatars } from "@/lib/data/homepageData";
+import { useState } from "react";
 
 export function Hero() {
+
+  // ✅ State (correct place)
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  // ✅ Submit handler
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const now = new Date().toLocaleString("en-IN", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+
+    formData.set("request_time", now);
+    formData.set("form_type", "Hero Quick Booking");
+    formData.set("name", "Not provided");
+    formData.set("vehicle", "Not specified");
+    formData.set("service", "Quick Booking");
+    formData.set("message", "User submitted from Hero section");
+
+    import("@emailjs/browser").then((emailjs) => {
+      emailjs.default
+        .send(
+          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_CONTACT!,
+          Object.fromEntries(formData.entries()),
+          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+        )
+        .then(() => {
+          setIsSuccess(true);
+          form.reset();
+
+          setTimeout(() => setIsSuccess(false), 4000);
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("Failed. Call us instead.");
+        });
+    });
+  };
+
   return (
     <section className="relative bg-gradient-to-br from-blue-50 to-blue-100 py-12 overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center">
 
-          {/* Left */}
+          {/* LEFT */}
           <div className="space-y-6">
             <div className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
               <MapPin className="w-4 h-4" />
@@ -45,9 +91,13 @@ export function Hero() {
               </div>
               <div>
                 <div className="flex gap-0.5">
-                  {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />)}
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
                 </div>
-                <p className="text-sm text-gray-600 font-medium">10,000+ happy customers across India</p>
+                <p className="text-sm text-gray-600 font-medium">
+                  10,000+ happy customers across India
+                </p>
               </div>
             </div>
 
@@ -61,7 +111,7 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Right */}
+          {/* RIGHT */}
           <div className="relative">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[500px] w-full">
               <Image
@@ -74,42 +124,103 @@ export function Hero() {
               />
             </div>
 
-            {/* Quick booking form overlay */}
+            {/* FORM OVERLAY */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="bg-white bg-opacity-90 p-6 rounded-xl shadow-xl w-[90%] max-w-sm backdrop-blur-sm">
-                <h2 className="text-lg font-bold text-gray-900 mb-1">Book Doorstep Repair</h2>
-                <p className="text-xs text-gray-500 mb-4">We call back in under 2 minutes</p>
+              
+              {/* FLIP WRAPPER (ONLY THIS PART CHANGED) */}
+              <div className="w-[90%] max-w-sm h-[320px] [perspective:1000px]">
+                <div
+                  className={`relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] ${
+  isSuccess ? "[transform:rotateY(180deg)]" : ""
+}`}
+                >
 
-                <label htmlFor="mobile" className="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
-                <input
-                  type="tel"
-                  id="mobile"
-                  name="mobile"
-                  placeholder="+91 98765 43210"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 mb-3"
-                />
+                  {/* FRONT */}
+                  <div className="absolute w-full h-full [backface-visibility:hidden]">
+                    <div className="bg-white bg-opacity-90 p-6 rounded-xl shadow-xl backdrop-blur-sm h-full">
 
-                <label htmlFor="city-select" className="block text-sm font-medium text-gray-700 mb-1">Your City</label>
-                <select id="city-select" name="city" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 mb-4">
-                  <option value="">Select your city</option>
-                  <option>Bengaluru</option>
-                  <option>Chennai</option>
-                  <option>Hyderabad</option>
-                  <option>Mumbai</option>
-                </select>
+                      <h2 className="text-lg font-bold text-gray-900 mb-1">
+                        Book Doorstep Repair
+                      </h2>
 
-                <Link href="/contact" className="block w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-center">
-                  Request Service Now
-                </Link>
+                      <p className="text-xs text-gray-500 mb-4">
+                        We call back in under 2 minutes
+                      </p>
+
+                      <form onSubmit={handleSubmit} className="space-y-3">
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Mobile Number
+                          </label>
+                          <input
+                            type="tel"
+                            name="phone"
+                            required
+                            placeholder="+91 98765 43210"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Your City
+                          </label>
+                          <select
+                            name="city"
+                            required
+                            defaultValue=""
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
+                          >
+                            <option value="" disabled>Select your city</option>
+                            <option value="Bengaluru">Bengaluru</option>
+                            <option value="Chennai">Chennai</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="Mumbai">Mumbai</option>
+                          </select>
+                        </div>
+
+                        <input type="hidden" name="request_time" />
+                        <input type="hidden" name="form_type" value="Hero Quick Booking" />
+
+                        <button
+                          type="submit"
+                          className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                        >
+                          Request Service Now
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+
+                  {/* BACK (MATCHED STYLE) */}
+                  <div className="absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                    <div className="bg-white bg-opacity-90 p-6 rounded-xl shadow-xl backdrop-blur-sm h-full flex flex-col items-center justify-center text-center">
+
+                      <div className="text-4xl mb-2">✅</div>
+
+                      <h3 className="text-lg font-bold text-green-700">
+                        Request Sent!
+                      </h3>
+
+                      <p className="text-sm text-gray-600 mt-1">
+                        Our team will call you within 2 minutes 🚀
+                      </p>
+
+                    </div>
+                  </div>
+
+                </div>
               </div>
             </div>
 
+            {/* ✅ YOUR BADGE (UNCHANGED POSITION) */}
             <div className="absolute -bottom-6 -left-6 bg-yellow-400 text-gray-900 p-5 rounded-xl shadow-lg">
               <p className="text-3xl font-bold">20+</p>
               <p className="text-xs font-semibold">Years Experience</p>
             </div>
-          </div>
 
+          </div>
         </div>
       </div>
     </section>
