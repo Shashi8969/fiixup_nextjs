@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
+emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!);
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { MAIN_PHONE, MAIN_PHONE_DISPLAY, MAIN_EMAIL, CITIES_LIST, TRUST_BADGES } from "@/lib/constants";
 
@@ -15,20 +16,21 @@ function useEmailForm() {
     e.preventDefault();
     if (!form.current) return;
     setLoading(true);
-    emailjs
-      .sendForm(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-        form.current,
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-      )
-      .then(() => {
+    emailjs.sendForm(
+      process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+      process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_CONTACT!,
+      form.current,
+      process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+    )
+      .then((result) => {
+        console.log("Success:", result.text);
         setLoading(false);
         setShowSuccess(true);
         form.current?.reset();
         setTimeout(() => setShowSuccess(false), 4000);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error("EmailJS Error:", error);
         setLoading(false);
         setShowError(true);
         setTimeout(() => setShowError(false), 4000);
@@ -66,10 +68,10 @@ export function Contact() {
           {/* Contact Info */}
           <div className="space-y-6">
             {[
-              { Icon: MapPin, title: "Cities We Serve",  content: `${CITIES_LIST.join(" · ")}\nMore cities coming soon!` },
-              { Icon: Phone,  title: "Phone (24/7)",     content: MAIN_PHONE_DISPLAY, href: `tel:${MAIN_PHONE}` },
-              { Icon: Mail,   title: "Email",            content: MAIN_EMAIL,         href: `mailto:${MAIN_EMAIL}` },
-              { Icon: Clock,  title: "Service Hours",    content: "24/7 — All days including holidays\nEmergency & scheduled bookings" },
+              { Icon: MapPin, title: "Cities We Serve", content: `${CITIES_LIST.join(" · ")}\nMore cities coming soon!` },
+              { Icon: Phone, title: "Phone (24/7)", content: MAIN_PHONE_DISPLAY, href: `tel:${MAIN_PHONE}` },
+              { Icon: Mail, title: "Email", content: MAIN_EMAIL, href: `mailto:${MAIN_EMAIL}` },
+              { Icon: Clock, title: "Service Hours", content: "24/7 — All days including holidays\nEmergency & scheduled bookings" },
             ].map(({ Icon, title, content, href }) => (
               <div key={title} className="flex items-start gap-4">
                 <div className="bg-blue-100 p-3 rounded-lg flex-shrink-0">
@@ -140,16 +142,27 @@ export function Contact() {
 
               {/* City */}
               <div>
-                <label htmlFor="contact-city" className="block text-sm font-medium mb-1 text-gray-700">Your City</label>
+                <label htmlFor="contact-city" className="block text-sm font-medium mb-1 text-gray-700">
+                  Your City
+                </label>
+
                 <select
                   id="contact-city"
                   name="city"
                   required
+                  defaultValue=""
                   autoComplete="address-level2"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
                 >
-                  <option value="">Select your city</option>
-                  {CITIES_LIST.map((c) => <option key={c}>{c}</option>)}
+                  <option value="" disabled>
+                    Select your city
+                  </option>
+
+                  {CITIES_LIST.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -196,6 +209,14 @@ export function Contact() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none resize-none"
                 />
               </div>
+              <input
+                type="hidden"
+                name="request_time"
+                value={new Date().toLocaleString("en-IN", {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
+              />
 
               <button
                 type="submit"
