@@ -112,6 +112,8 @@ export function Contact() {
 
             <form ref={form} onSubmit={sendEmail} className="space-y-4">
 
+              <input type="hidden" name="form_type" value="Contact Form For Booking" />
+
               {/* Name */}
               <div>
                 <label htmlFor="contact-name" className="block text-sm font-medium mb-1 text-gray-700">Name</label>
