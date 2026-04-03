@@ -5,18 +5,9 @@ import { SITE_URL } from "@/lib/constants";
 import { Services } from "@/components/Services"; // named export
 import { About } from "@/components/About"; // named export
 import { CityCoverage } from "@/components/CityCoverage"; 
-
-const Testimonials = dynamic(() =>
-  import("@/components/Testimonials").then((mod) => mod.Testimonials)
-);
-
-const Blog = dynamic(() =>
-  import("@/components/Blog").then((mod) => mod.Blog)
-);
-
-const Contact = dynamic(() =>
-  import("@/components/Contact").then((mod) => mod.Contact)
-);
+import { Testimonials } from "@/components/Testimonials"; // named export
+import { Blog } from "@/components/Blog"; // named export
+import { Contact } from "@/components/Contact"; // named export
 
 export const metadata: Metadata = {
   title: "Fiixup — 24/7 Doorstep Car & Bike Repair Service in India",
