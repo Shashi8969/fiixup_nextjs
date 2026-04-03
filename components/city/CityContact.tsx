@@ -29,10 +29,10 @@ export function CityContact({ city }: { city: CityData }) {
     });
 
     const input = form.current.querySelector(
-    'input[name="request_time"]'
-  ) as HTMLInputElement;
+      'input[name="request_time"]'
+    ) as HTMLInputElement;
 
-  if (input) input.value = now;
+    if (input) input.value = now;
 
     setLoading(true);
     emailjs
@@ -152,7 +152,7 @@ export function CityContact({ city }: { city: CityData }) {
                 </select>
               </div>
               <input type="hidden" name="city" value={city.name} />
-              <input type="hidden" name="form_type" value={city.name + "- Full Contact Form"} />
+              <input type="hidden" name="form_type" value={`${city.name} Contact Form`} />
               <input type="hidden" name="request_time" />
               <input type="hidden" name="source" value="City Contact Page" />
               <div>
