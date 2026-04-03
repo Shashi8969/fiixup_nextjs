@@ -74,6 +74,7 @@ export function QuickServiceModal() {
 
         <button
           onClick={handleClose}
+          aria-label="Close modal"
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
         >
           <X className="w-6 h-6" />

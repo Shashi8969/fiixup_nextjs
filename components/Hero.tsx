@@ -126,13 +126,12 @@ export function Hero() {
 
             {/* FORM OVERLAY */}
             <div className="absolute inset-0 flex items-center justify-center">
-              
+
               {/* FLIP WRAPPER (ONLY THIS PART CHANGED) */}
               <div className="w-[90%] max-w-sm h-[320px] [perspective:1000px]">
                 <div
-                  className={`relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] ${
-  isSuccess ? "[transform:rotateY(180deg)]" : ""
-}`}
+                  className={`relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] ${isSuccess ? "[transform:rotateY(180deg)]" : ""
+                    }`}
                 >
 
                   {/* FRONT */}
@@ -163,10 +162,15 @@ export function Hero() {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label
+                            htmlFor="city"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
                             Your City
                           </label>
+
                           <select
+                            id="city"
                             name="city"
                             required
                             defaultValue=""
