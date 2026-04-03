@@ -15,18 +15,30 @@ const serviceOptions = [
 
 export function CityContact({ city }: { city: CityData }) {
   const form = useRef<HTMLFormElement>(null);
+  const [showError, setShowError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [showError, setShowError] = useState(false);
 
   const sendEmail = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.current) return;
+
+    const now = new Date().toLocaleString("en-IN", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+
+    const input = form.current.querySelector(
+    'input[name="request_time"]'
+  ) as HTMLInputElement;
+
+  if (input) input.value = now;
+
     setLoading(true);
     emailjs
       .sendForm(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_CONTACT!,
         form.current,
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
       )
@@ -113,8 +125,8 @@ export function CityContact({ city }: { city: CityData }) {
               <input type="hidden" name="city_name" value={city.name} />
 
               {[
-                { label: "Name",  name: "name",  type: "text", placeholder: "Your name" },
-                { label: "Phone", name: "phone", type: "tel",  placeholder: city.phone  },
+                { label: "Name", name: "name", type: "text", placeholder: "Your name" },
+                { label: "Phone", name: "phone", type: "tel", placeholder: city.phone },
               ].map(({ label, name, type, placeholder }) => (
                 <div key={name}>
                   <label className="block text-sm font-medium mb-1 text-gray-700">{label}</label>
@@ -139,7 +151,10 @@ export function CityContact({ city }: { city: CityData }) {
                   {serviceOptions.map((s) => <option key={s}>{s}</option>)}
                 </select>
               </div>
-
+              <input type="hidden" name="city" value={city.name} />
+              <input type="hidden" name="form_type" value={city.name + "- Full Contact Form"} />
+              <input type="hidden" name="request_time" />
+              <input type="hidden" name="source" value="City Contact Page" />
               <div>
                 <label className="block text-sm font-medium mb-1 text-gray-700">Message (optional)</label>
                 <textarea name="message" rows={3} placeholder="Describe the issue or your location..."
