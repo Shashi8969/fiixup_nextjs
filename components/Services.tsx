@@ -1,39 +1,57 @@
-// components/Services.tsx
+// app/services/page.tsx
 import { serviceCategories } from "@/lib/data/serviceCategory";
-import { ServiceCard } from "@/components/ui/ServiceCard";
-import Link from "next/link";
+import { ServiceCardPrice } from "@/components/ui/ServiceCardPrice";
+import { iconMap } from "@/lib/icons"; // Ensure your iconMap is imported
 
-export function Services() {
+export default async function ServicesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ cat?: string }>;
+}) {
+  // 1. Await the params to get the category (e.g., 'bike' or 'car')
+  const { cat } = await searchParams;
+
+  const filteredCategories = cat
+    ? serviceCategories.filter((category) => category.color === cat)
+    : serviceCategories;
+
   return (
-    <section id="services" className="py-12 bg-white">
+    <main className="min-h-screen bg-white py-16">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-extrabold mb-4 text-gray-900">
-            Professional Vehicle Services
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Certified technicians at your doorstep. We provide high-quality maintenance 
-            and repair for all makes and models.
+        {/* Dynamic Header */}
+        <div className="mb-12">
+          <h1 className="text-4xl font-black text-gray-900 capitalize">
+            {cat ? `${cat} Doorstep Services` : "All Doorstep Services"}
+          </h1>
+          <p className="text-gray-500 mt-2">
+            Professional repair and maintenance at your location.
           </p>
         </div>
 
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-  {serviceCategories.slice(0, 8).map((cat) => (
-    <ServiceCard 
-      key={cat.title} 
-      cat={cat} // Pass the whole object here
-    />
-  ))}
-</div>
-        <div className="text-center mt-12">
-          <Link
-            href="/services"
-            className="inline-block bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-200 transform hover:-translate-y-0.5"
-          >
-            Browse All Services
-          </Link>
-        </div>
+        {filteredCategories.map((category) => (
+          <section key={category.title} className="mb-16 last:mb-0">
+            <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
+              <category.icon className="w-6 h-6 text-blue-600" />
+              {category.title}
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {category.data.map((s) => (
+                <ServiceCardPrice
+                  key={s.slug}
+                  slug={s.slug}
+                  title={s.shortTitle}
+                  tagline={s.tagline}
+                  price={s.price}
+                  duration={s.duration}
+                  accentColor={category.color}
+                  icon={iconMap[s.icon]} 
+                />
+              ))}
+            </div>
+          </section>
+        ))}
       </div>
-    </section>
+    </main>
   );
 }
