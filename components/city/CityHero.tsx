@@ -10,6 +10,7 @@ export function CityHero({ city }: { city: CityData }) {
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showError, setShowError] = useState(false); // Added missing state
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,11 +42,11 @@ export function CityHero({ city }: { city: CityData }) {
           setSuccess(true);
           setPhone("");
           setLoading(false);
-
           setTimeout(() => setSuccess(false), 4000);
         })
         .catch(() => {
           setLoading(false);
+          setShowError(true);
           alert("Failed. Please call instead.");
         });
     });
@@ -75,7 +76,8 @@ export function CityHero({ city }: { city: CityData }) {
             <div className="space-y-3">
               {[
                 `24/7 Emergency Service Available in ${city.name}`,
-                `Doorstep Service Across ${city.name} — ${city.areas.slice(0, 3).join(", ")} & more`,
+                // SEO FIX: Handle both String and Object areas safely
+                `Doorstep Service Across ${city.name} — ${city.areas.slice(0, 3).map((a: any) => typeof a === 'string' ? a : a.name).join(", ")} & more`,
                 "Both Car & Bike Service",
                 "Certified & Background-Verified Technicians",
               ].map((point) => (

@@ -2,11 +2,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  Phone, CheckCircle, Clock, Shield, Award,
+  Phone, CheckCircle, Clock, Shield, Award, Wrench, Bike, Battery, Truck, Car, Settings, Droplets, Wind, ShieldAlert
 } from "lucide-react";
 import { serviceCategories } from "@/lib/data/serviceCategory";
 import { SITE_URL } from "@/lib/constants";
-import { ServiceCard } from "@/components/ui/ServiceCard";
+import { ServiceCardPrice } from "@/components/ui/ServiceCardPrice";
 import HowItWorks from "@/components/ui/HowItWorks";
 import WhyChooseDoorstep from "@/components/ui/WhyChooseDoorstep";
 
@@ -22,6 +22,18 @@ export const metadata: Metadata = {
 };
 
 // Icon map — resolves string names from lib/services.ts to real Lucide components
+const iconMap: Record<string, any> = {
+  Wrench: Wrench,
+  Bike: Bike,
+  Battery: Battery,
+  Truck: Truck,
+  Car: Car,
+  Settings: Settings,
+  Droplets: Droplets,
+  Wind: Wind,
+  ShieldAlert: ShieldAlert,
+  // Add any other icons you use in your service categories data here
+};
 
 const trustItems = [
   { icon: Clock, label: "24/7 Service", sub: "Emergency & regular" },
@@ -78,21 +90,21 @@ export default function ServicesPage() {
             <p className="text-gray-600 mb-8">
               {category.description}
             </p>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {category.data.map((s) => (
-                <ServiceCard
-                  key={s.slug}
-                  slug={s.slug}
-                  iconName={s.icon}
-                  title={s.shortTitle}
-                  tagline={s.tagline}
-                  price={s.price}
-                  duration={s.duration}
-                  accentColor={category.color}
-                />
-              ))}
-            </div>
+<div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  {category.data.map((s) => (
+    <ServiceCardPrice
+      key={s.slug}
+      slug={s.slug}
+      title={s.shortTitle}
+      tagline={s.tagline}
+      price={s.price}
+      duration={s.duration}
+      accentColor={category.color}
+      // Ensure iconMap is imported from your services data file
+      icon={iconMap[s.icon]} 
+    />
+  ))}
+</div>  
           </div>
         </section>
       ))}

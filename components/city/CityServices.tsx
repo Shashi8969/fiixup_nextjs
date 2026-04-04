@@ -1,83 +1,66 @@
+import { serviceCategories } from "@/lib/data/serviceCategory";
+import { serviceThemes, type ThemeColor } from "@/lib/theme";
 import Link from "next/link";
-import { Wrench, Car, Gauge, Droplet, Wind, Battery, Settings, Shield, Bike, Zap, Cog, CircuitBoard } from "lucide-react";
 import type { CityData } from "@/lib/models/city.model";
 
-const carServices = [
-  { icon: Wrench,   title: "General Car Repairs",  slug: "car-general-repair",    description: "Comprehensive diagnostic and repair services for all car makes and models." },
-  { icon: Car,      title: "Brake Service",         slug: "car-brake-service",      description: "Complete brake inspection, pad replacement, and rotor resurfacing." },
-  { icon: Droplet,  title: "Oil Changes",           slug: "car-oil-change",         description: "Fast and affordable oil changes with full fluid level inspection." },
-  { icon: Gauge,    title: "Engine Diagnostics",    slug: "car-engine-diagnostics", description: "Advanced computer diagnostics to identify and fix engine issues." },
-  { icon: Wind,     title: "AC Service",            slug: "car-ac-service",         description: "Air conditioning repair, recharge, and maintenance services." },
-  { icon: Battery,  title: "Battery & Electrical",  slug: "car-battery-electrical", description: "Battery testing, replacement, and electrical system repairs." },
-];
+export function CityServices({ city, areaName }: { city: CityData; areaName?: string }) {
+  const displayLocation = areaName || city.name;
 
-const bikeServices = [
-  { icon: Bike,         title: "Bike General Service", slug: "bike-general-service",    description: "Complete bike servicing including chain cleaning, oil change, and tune-up." },
-  { icon: Cog,          title: "Engine Repair",        slug: "bike-engine-repair",      description: "Expert motorcycle engine diagnosis and repair services." },
-  { icon: Zap,          title: "Electrical Works",     slug: "bike-electrical-repair",  description: "Battery, wiring, headlight, and indicator repair services." },
-  { icon: CircuitBoard, title: "Parts Replacement",    slug: "bike-parts-replacement",  description: "Genuine and aftermarket parts replacement for all bike models." },
-  { icon: Settings,     title: "Brake & Clutch",       slug: "bike-brake-clutch",       description: "Brake pad replacement, clutch adjustment, and repairs." },
-  { icon: Shield,       title: "Regular Maintenance",  slug: "bike-regular-maintenance",description: "Scheduled maintenance to keep your bike running smoothly." },
-];
-
-export function CityServices({ city }: { city: CityData }) {
   return (
-    <section id="services" className="py-20 bg-white">
+    <section id="service-categories" className="py-12 bg-white">
       <div className="container mx-auto px-4">
-
+        {/* Localized Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">{city.servicesSectionHeading}</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">{city.servicesSectionSubtext}</p>
+          <h2 className="text-3xl md:text-5xl font-extrabold mb-4 text-gray-900">
+            Professional Vehicle Services in {displayLocation}
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Certified technicians at your doorstep in {displayLocation}. We provide high-quality 
+            maintenance and repair for all makes and models across {city.name}.
+          </p>
         </div>
 
-        {/* Car Services */}
-        <div className="mb-12">
-          <h3 className="text-2xl font-bold mb-6 flex items-center gap-2 text-gray-900">
-            <Car className="w-6 h-6 text-blue-600" />
-            {city.carServicesHeading}
-          </h3>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {carServices.map((service) => (
-              <Link
-                key={service.slug}
-                href={`/${city.slug}/services/${service.slug}`}
-                className="p-6 border border-gray-200 rounded-xl hover:shadow-lg transition-all hover:border-blue-300 group"
+        {/* Localized Category Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {serviceCategories.slice(0, 8).map((cat) => {
+            const theme = serviceThemes[cat.color as ThemeColor] || serviceThemes.blue;
+
+            return (
+              <Link 
+                key={cat.title} 
+                // Append city slug to the query for better tracking/context
+                href={`${cat.link}&city=${city.slug}`}
+                className={`group relative p-8 rounded-2xl bg-white border border-gray-100 transition-all duration-300 flex flex-col hover:shadow-2xl hover:-translate-y-1 ${theme.hoverBorder}`}
               >
-                <service.icon className="w-12 h-12 text-blue-600 mb-4" />
-                <h4 className="text-lg font-semibold mb-2 text-gray-900 group-hover:text-blue-600 transition-colors">
-                  {service.title} in {city.name}
-                </h4>
-                <p className="text-gray-600 text-sm">{service.description}</p>
-                <span className="mt-3 inline-block text-blue-600 text-sm font-semibold">View details →</span>
+                <div className={`mb-6 inline-flex w-fit p-4 rounded-xl border border-gray-50 bg-gray-50/50 group-hover:bg-white transition-all duration-300 ${theme.hoverIconBg}`}>
+                  <cat.icon className={`w-10 h-10 ${theme.iconText}`} />
+                </div>
+                
+                {/* SEO Optimized H3 */}
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  {cat.title} in {displayLocation}
+                </h3>
+                
+                <p className="text-gray-500 text-sm leading-relaxed mb-6 flex-1">
+                  {cat.description.replace("at your doorstep", `at your doorstep in ${displayLocation}`)}
+                </p>
+
+                <span className={`mt-4 text-sm font-semibold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ${theme.linkText}`}>
+                  Explore {cat.title} →
+                </span>
               </Link>
-            ))}
-          </div>
+            );
+          })}
         </div>
 
-        {/* Bike Services */}
-        <div>
-          <h3 className="text-2xl font-bold mb-6 flex items-center gap-2 text-gray-900">
-            <Bike className="w-6 h-6 text-red-600" />
-            {city.bikeServicesHeading}
-          </h3>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {bikeServices.map((service) => (
-              <Link
-                key={service.slug}
-                href={`/services/${service.slug}`}
-                className="p-6 border border-gray-200 rounded-xl hover:shadow-lg transition-all hover:border-red-300 group"
-              >
-                <service.icon className="w-12 h-12 text-red-600 mb-4" />
-                <h4 className="text-lg font-semibold mb-2 text-gray-900 group-hover:text-red-600 transition-colors">
-                  {service.title} in {city.name}
-                </h4>
-                <p className="text-gray-600 text-sm">{service.description}</p>
-                <span className="mt-3 inline-block text-red-600 text-sm font-semibold">View details →</span>
-              </Link>
-            ))}
-          </div>
+        <div className="text-center mt-12">
+          <Link
+            href={`/services?city=${city.slug}`}
+            className="inline-block bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-200 transform hover:-translate-y-0.5"
+          >
+            Browse All Services in {displayLocation}
+          </Link>
         </div>
-
       </div>
     </section>
   );

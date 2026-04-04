@@ -10,6 +10,7 @@ import { CityAbout } from "@/components/city/CityAbout";
 import { CityTestimonials } from "@/components/city/CityTestimonials";
 import { CityContact } from "@/components/city/CityContact";
 import { CityFAQ } from "@/components/city/CityFAQ";
+import { CityAreas } from "@/components/city/CityAreas";
 
 // Pre-render all city pages at build time (SSG)
 export function generateStaticParams() {
@@ -46,7 +47,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
   const allFaqs = city.faqCategories.flatMap((cat) => cat.faqs);
 
   const schemas = [
-    localBusinessSchema({ cityName: city.name, phone: city.phone, slug: city.slug, areas: city.areas }),
+    localBusinessSchema({ cityName: city.name, phone: city.phone, slug: city.slug, areas: city.areas.map((a) => typeof a === "string" ? a : a.name) }),
     breadcrumbSchema([{ name: "Home", url: "/" }, { name: `Fiixup ${city.name}`, url: `/${city.slug}` }]),
     faqSchema(allFaqs),
   ];
@@ -60,6 +61,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
       />
       <CityHero city={city} />
       <CityServices city={city} />
+      <CityAreas city={city} />
       <CityAbout city={city} />
       <CityTestimonials city={city} />
       <CityFAQ city={city} />

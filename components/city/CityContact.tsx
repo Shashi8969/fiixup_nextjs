@@ -72,12 +72,20 @@ export function CityContact({ city }: { city: CityData }) {
           {/* Info */}
           <div className="space-y-6">
             <div className="flex items-start gap-4">
-              <div className="bg-blue-100 p-3 rounded-lg flex-shrink-0"><MapPin className="w-6 h-6 text-blue-600" /></div>
-              <div>
-                <h3 className="font-semibold mb-1 text-gray-900">Service Area in {city.name}</h3>
-                <p className="text-gray-600">{city.areas.join(", ")} & all areas citywide</p>
-              </div>
-            </div>
+  <div className="bg-blue-100 p-3 rounded-lg flex-shrink-0">
+    <MapPin className="w-6 h-6 text-blue-600" />
+  </div>
+  <div>
+    <h3 className="font-semibold mb-1 text-gray-900">Service Area in {city.name}</h3>
+    <p className="text-gray-600">
+      {/* Fix: Map through areas and check if they are strings or objects */}
+      {city.areas
+        .map((area: any) => (typeof area === "string" ? area : area.name))
+        .join(", ")} 
+      & all areas citywide
+    </p>
+  </div>
+</div>
             <div className="flex items-start gap-4">
               <div className="bg-blue-100 p-3 rounded-lg flex-shrink-0"><Phone className="w-6 h-6 text-blue-600" /></div>
               <div>

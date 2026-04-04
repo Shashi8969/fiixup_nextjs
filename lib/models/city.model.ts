@@ -20,7 +20,7 @@ export interface CityData {
   phone: string;
   whatsapp: string;
   email: string;
-  areas: string[];
+  areas: string[] | { name: string; slug: string; highlight: string }[]; // For city areas section
   heroTagline: string;
   metaTitle: string;
   metaDescription: string;

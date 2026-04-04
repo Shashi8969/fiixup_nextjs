@@ -1,44 +1,34 @@
-// components/ui/ServiceCard.tsx
 import Link from "next/link";
-// components/ui/ServiceCard.tsx
-import { iconMap } from "@/lib/services";
-import { LucideIcon } from "lucide-react";
+import { serviceThemes, type ThemeColor } from "@/lib/theme";
 
 interface ServiceCardProps {
-  slug: string;
-  iconName: string;
-  title: string;
-  tagline: string;
-  price: string;      // Added to match your map
-  duration: string;   // Added to match your map
-  accentColor: string; // Changed from 'category' to match your prop name
+  cat: any; // This is the category object from your array
+  displayLocation?: string; // Optional: for city/area pages
 }
 
-export function ServiceCard({ 
-  slug, 
-  iconName, 
-  title, 
-  tagline, 
-  price, 
-  duration, 
-  accentColor 
-}: ServiceCardProps) {
-  // Resolve icon from the central map
-  const Icon = iconMap[iconName] || iconMap["Wrench"];
-  
-  // Dynamic tailwind classes based on the color string passed from the category
-  const themeText = `text-${accentColor}-600`;
-  const themeBorder = `hover:border-${accentColor}-300`;
+export function ServiceCard({ cat, displayLocation }: ServiceCardProps) {  // Keep your exact theme logic
+  const theme = serviceThemes[cat.color as ThemeColor] || serviceThemes.blue;
+  const title = displayLocation ? `${cat.title} in ${displayLocation}` : cat.title;
 
   return (
-    <Link href={`/services/${slug}`} className={`group p-6 border rounded-xl ${themeBorder} transition-all`}>
-      <Icon className={`w-12 h-12 ${themeText} mb-4`} />
-      <h3 className="text-xl font-bold">{title}</h3>
-      <p className="text-gray-600 mb-4">{tagline}</p>
-      <div className="flex justify-between items-center border-t pt-4">
-        <span className={`font-bold ${themeText}`}>From {price}</span>
-        <span className="text-sm text-gray-400">{duration}</span>
+    <Link 
+      href={cat.link}
+      className={`group relative p-8 rounded-2xl bg-white border border-gray-100 transition-all duration-300 flex flex-col hover:shadow-2xl hover:-translate-y-1 ${theme.hoverBorder}`}
+    >
+      <div className={`mb-6 inline-flex w-fit p-4 rounded-xl border border-gray-50 bg-gray-50/50 group-hover:bg-white transition-all duration-300 ${theme.hoverIconBg}`}>
+        <cat.icon className={`w-10 h-10 ${theme.iconText}`} />
       </div>
+      
+      <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+      <p className="text-gray-500 text-sm leading-relaxed mb-6 flex-1">
+        {displayLocation 
+          ? cat.description.replace("at your doorstep", `at your doorstep in ${displayLocation}`)
+          : cat.description}
+      </p>
+
+      <span className={`mt-4 text-sm font-semibold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ${theme.linkText}`}>
+        Explore {cat.title} →
+      </span>
     </Link>
   );
 }

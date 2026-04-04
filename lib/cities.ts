@@ -14,7 +14,49 @@ const cities: CityData[] = [
     phone: "+91 81974 59732",
     whatsapp: "918197459732",
     email: "bengaluru@fiixup.in",
-    areas: ["Koramangala", "Whitefield", "Indiranagar", "HSR Layout", "Marathahalli"],
+    areas: [
+  { 
+    name: "Koramangala", 
+    slug: "koramangala", 
+    highlight: "Doorstep car & bike repair in Koramangala – fast service for startups and residents" 
+  },
+  { 
+    name: "Whitefield", 
+    slug: "whitefield", 
+    highlight: "24/7 car breakdown & bike repair in Whitefield IT corridor – quick support near tech parks" 
+  },
+  { 
+    name: "Indiranagar", 
+    slug: "indiranagar", 
+    highlight: "Premium doorstep auto care in Indiranagar – trusted car & bike service with quick response" 
+  },
+  { 
+    name: "HSR Layout", 
+    slug: "hsr-layout", 
+    highlight: "Specialists for bike & car repair in HSR Layout – doorstep service at affordable rates" 
+  },
+  { 
+    name: "Marathahalli", 
+    slug: "marathahalli", 
+    highlight: "Emergency car & bike repair in Marathahalli – pothole damage and breakdown support" 
+  },
+  { 
+    name: "Electronic City", 
+    slug: "electronic-city", 
+    highlight: "24/7 doorstep car & bike repair in Electronic City – fast service for IT park employees" 
+  },
+  { 
+    name: "Jayanagar", 
+    slug: "jayanagar", 
+    highlight: "Family car care in Jayanagar – reliable doorstep auto repair for daily commuters" 
+  },
+  { 
+    name: "JP Nagar", 
+    slug: "jp-nagar", 
+    highlight: "Comprehensive car & bike service in JP Nagar – doorstep repair with expert mechanics" 
+  },
+],
+
     heroTagline: "Serving Bengaluru",
     metaTitle: "24/7 Doorstep Car & Bike Repair in Bengaluru | Fiixup",
     metaDescription: "Professional car and bike repair at your doorstep in Bengaluru. Certified technicians, honest pricing, 24/7 emergency service across Koramangala, Whitefield, Indiranagar & more.",
@@ -321,4 +363,15 @@ export default cities;
 
 export function getCityBySlug(slug: string): CityData | undefined {
   return cities.find((c) => c.slug === slug.toLowerCase());
+}
+// Add this to your lib/cities.ts
+export function getAreaBySlug(citySlug: string, areaSlug: string) {
+  const city = getCityBySlug(citySlug);
+  if (!city) return null;
+  
+  const area = city.areas.find((a: any) => 
+    typeof a === "string" ? a.toLowerCase().replace(/ /g, "-") === areaSlug : a.slug === areaSlug
+  );
+
+  return area ? { city, area } : null;
 }

@@ -18,8 +18,8 @@ const iconMap: Record<string, LucideIcon> = {
   Settings, Shield, Bike, Zap, Cog, CircuitBoard,
 };
 
-const carBrands  = ['Maruti','Hyundai','Tata','Honda','Toyota','Kia','MG','Mahindra','Volkswagen','Skoda'];
-const bikeBrands = ['Honda','Bajaj','TVS','Royal Enfield','Yamaha','Hero','Suzuki','KTM'];
+const carBrands = ['Maruti', 'Hyundai', 'Tata', 'Honda', 'Toyota', 'Kia', 'MG', 'Mahindra', 'Volkswagen', 'Skoda'];
+const bikeBrands = ['Honda', 'Bajaj', 'TVS', 'Royal Enfield', 'Yamaha', 'Hero', 'Suzuki', 'KTM'];
 
 export function CityServiceDetail({
   service,
@@ -30,13 +30,13 @@ export function CityServiceDetail({
 }) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const Icon         = iconMap[service.icon] ?? Wrench;
-  const isCar        = service.category === 'car';
-  const accentBlue   = isCar ? 'text-blue-600'  : 'text-red-600';
-  const bgAccent     = isCar ? 'bg-blue-600'     : 'bg-red-600';
+  const Icon = iconMap[service.icon] ?? Wrench;
+  const isCar = service.category === 'car';
+  const accentBlue = isCar ? 'text-blue-600' : 'text-red-600';
+  const bgAccent = isCar ? 'bg-blue-600' : 'bg-red-600';
   const borderAccent = isCar ? 'border-blue-300' : 'border-red-300';
-  const bgLight      = isCar ? 'bg-blue-50'      : 'bg-red-50';
-  const brands       = isCar ? carBrands : bikeBrands;
+  const bgLight = isCar ? 'bg-blue-50' : 'bg-red-50';
+  const brands = isCar ? carBrands : bikeBrands;
 
   const related = (isCar ? carServices : bikeServices)
     .filter((s) => s.slug !== service.slug)
@@ -106,11 +106,11 @@ export function CityServiceDetail({
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center gap-8">
             {[
-              { icon: Award,       label: 'Certified Technicians'    },
-              { icon: Shield,      label: '30-Day Warranty'          },
-              { icon: Clock,       label: '24/7 Available'           },
-              { icon: CheckCircle, label: 'Transparent Pricing'      },
-              { icon: MapPin,      label: `Doorstep in ${city.name}` },
+              { icon: Award, label: 'Certified Technicians' },
+              { icon: Shield, label: '30-Day Warranty' },
+              { icon: Clock, label: '24/7 Available' },
+              { icon: CheckCircle, label: 'Transparent Pricing' },
+              { icon: MapPin, label: `Doorstep in ${city.name}` },
             ].map(({ icon: I, label }) => (
               <div key={label} className="flex items-center gap-2">
                 <I className="w-5 h-5 text-green-600" />
@@ -162,10 +162,10 @@ export function CityServiceDetail({
           </h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
             {[
-              { step: '1', title: 'Book Online or Call',       desc: `Call ${city.phone} or fill the form. Takes under 60 seconds.` },
-              { step: '2', title: 'We Confirm & Dispatch',     desc: `We dispatch the nearest ${city.name} technician to your location.` },
+              { step: '1', title: 'Book Online or Call', desc: `Call ${city.phone} or fill the form. Takes under 60 seconds.` },
+              { step: '2', title: 'We Confirm & Dispatch', desc: `We dispatch the nearest ${city.name} technician to your location.` },
               { step: '3', title: 'Tech Arrives at Your Door', desc: 'Certified technician arrives with tools & parts within the hour.' },
-              { step: '4', title: 'Drive Away Happy',          desc: 'Service complete. 30-day warranty and digital receipt provided.' },
+              { step: '4', title: 'Drive Away Happy', desc: 'Service complete. 30-day warranty and digital receipt provided.' },
             ].map(({ step, title, desc }) => (
               <div key={step} className="text-center">
                 <div className={`w-14 h-14 ${bgAccent} text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg`}>{step}</div>
@@ -182,11 +182,21 @@ export function CityServiceDetail({
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-bold text-center mb-8">{service.shortTitle} Available Across {city.name}</h2>
           <div className="flex flex-wrap gap-3 justify-center">
-            {city.areas.map((area) => (
-              <span key={area} className={`flex items-center gap-2 border-2 ${borderAccent} ${accentBlue} font-semibold px-5 py-2 rounded-full text-sm`}>
-                <MapPin className="w-4 h-4" />{service.shortTitle} in {area}
-              </span>
-            ))}
+            {city.areas.map((area) => {
+              // 1. Determine the Name and the Key safely
+              const areaName = typeof area === "string" ? area : area.name;
+              const areaKey = typeof area === "string" ? area : area.slug;
+
+              return (
+                <span
+                  key={areaKey}
+                  className={`flex items-center gap-2 border-2 ${borderAccent} ${accentBlue} font-semibold px-5 py-2 rounded-full text-sm`}
+                >
+                  <MapPin className="w-4 h-4" />
+                  {service.shortTitle} in {areaName}
+                </span>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -273,7 +283,9 @@ export function CityServiceDetail({
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-3">Book {service.shortTitle} in {city.name} Now</h2>
           <p className="text-white/80 mb-8 text-lg">
-            Certified technicians available 24/7 across {city.areas.slice(0, 3).join(', ')} & all of {city.name}.
+            Certified technicians available 24/7 across {" "}
+            {city.areas.slice(0, 3).map(a => typeof a === 'string' ? a : a.name).join(', ')}
+            & all of {city.name}.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link href={`/${city.slug}#contact`} className="bg-white text-gray-900 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">
