@@ -44,7 +44,7 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-5">
               <Car className="w-4 h-4 text-blue-400 flex-shrink-0" />
-              <h4 className="text-white font-bold text-sm uppercase tracking-widest">Car Services</h4>
+              <h3 className="text-white font-bold text-sm uppercase tracking-widest">Car Services</h3>
             </div>
             <ul className="space-y-3">
               {carServices.map((s) => (
@@ -72,7 +72,7 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-5">
               <MapPin className="w-4 h-4 text-green-400 flex-shrink-0" />
-              <h4 className="text-white font-bold text-sm uppercase tracking-widest">Cities</h4>
+              <h3 className="text-white font-bold text-sm uppercase tracking-widest">Cities</h3>
             </div>
             <ul className="space-y-3">
               {cities.map((c) => (
@@ -84,7 +84,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-5">Quick Links</h4>
+            <h3 className="text-white font-bold text-sm uppercase tracking-widest mb-5">Quick Links</h3>
             <ul className="space-y-3">
               {quickLinks.map((l) => (
                 <li key={l.href}>
