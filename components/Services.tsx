@@ -11,7 +11,7 @@ export function Services() {
           <h2 className="text-3xl md:text-5xl font-extrabold mb-4 text-gray-900">
             Professional Vehicle Services
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-700 max-w-2xl mx-auto">
             Certified technicians at your doorstep. We provide high-quality maintenance 
             and repair for all makes and models.
           </p>

@@ -20,13 +20,13 @@ export function ServiceCard({ cat, displayLocation }: ServiceCardProps) {  // Ke
       </div>
       
       <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
-      <p className="text-gray-500 text-sm leading-relaxed mb-6 flex-1">
+      <p className="text-gray-600 text-sm leading-relaxed mb-6 flex-1">
         {displayLocation 
           ? cat.description.replace("at your doorstep", `at your doorstep in ${displayLocation}`)
           : cat.description}
       </p>
 
-      <span className={`mt-4 text-sm font-semibold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ${theme.linkText}`}>
+      <span aria-hidden="true" className={`mt-4 text-sm font-semibold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ${theme.linkText}`}>
         Explore {cat.title} →
       </span>
     </Link>
