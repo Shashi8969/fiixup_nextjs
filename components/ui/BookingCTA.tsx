@@ -10,7 +10,7 @@ interface BookingSectionProps {
 
 export default function BookingSection({
   serviceTitle,
-  bgAccent = "bg-blue-600",
+  bgAccent = "bg-blue-700",
   phoneNumber = "+918197459732",
 }: BookingSectionProps) {
   return (
@@ -19,7 +19,7 @@ export default function BookingSection({
         <h2 className="text-3xl font-bold mb-3">
           Ready to Book {serviceTitle}?
         </h2>
-        <p className="text-white/80 mb-8 text-lg">
+        <p className="text-white mb-8 text-lg">
           Certified technicians available 24/7 across Bengaluru, Chennai, Hyderabad & Mumbai.
         </p>
         <div className="flex flex-wrap gap-4 justify-center">

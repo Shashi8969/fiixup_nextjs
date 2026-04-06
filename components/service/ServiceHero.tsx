@@ -12,7 +12,7 @@ export default function Hero({
   bgLight
 }: any) {
   return (
-    <section className={`${bgLight} py-6 border-b border-gray-200`}>
+    <section className={`${bgLight} py-6 border-b border-gray-300`}>
       <div className="container mx-auto px-4">
         
         {/* Breadcrumb */}
@@ -46,7 +46,7 @@ export default function Hero({
                 <p className={`text-2xl font-bold ${accentBlue}`}>
                   Starting {service.price}
                 </p>
-                <p className="text-xs text-gray-500">Transparent pricing</p>
+                <p className="text-sm text-gray-600 font-medium">Transparent pricing</p>
               </div>
               <div className="w-px bg-gray-200" />
               <div>
