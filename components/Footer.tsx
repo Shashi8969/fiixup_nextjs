@@ -58,7 +58,7 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-5">
               <Bike className="w-4 h-4 text-red-400 flex-shrink-0" />
-              <h4 className="text-white font-bold text-sm uppercase tracking-widest">Bike Services</h4>
+              <h3 className="text-white font-bold text-sm uppercase tracking-widest">Bike Services</h3>
             </div>
             <ul className="space-y-3">
               {bikeServices.map((s) => (
