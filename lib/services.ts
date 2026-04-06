@@ -1,33 +1,6 @@
 // lib/data/services.ts
-//
-// SEO STRATEGY:
-//  • Service priority: Bike → Car → Towing → Battery → Puncture → Roadside → Mechanic
-//  • metaTitle: primary keyword first, under 60 characters
-//  • metaDescription: 140–160 chars, includes action verb + keyword + geo hint
-//  • metaKeywords: 8–12 high-traffic "near me" + symptom + transactional terms
-//  • description: natural keyword density, no stuffing, 80–120 words
-//  • FAQs: mirror real Google "People Also Ask" queries for featured snippet capture
-//  • Slugs: match exact high-volume search phrases (/services/bike-service-at-home etc.)
-//
 import type { ServiceData } from "./models/service.model";
-import {
-  Wrench, Car, Gauge, Droplet, Wind, Battery,
-  Settings, Shield, Bike, Zap, Cog, CircuitBoard,
-  Truck, AlertTriangle, MapPin, LucideIcon,
-} from "lucide-react";
-
-export const iconMap: Record<string, LucideIcon> = {
-  Wrench, Car, Gauge, Droplet, Wind, Battery,
-  Settings, Shield, Bike, Zap, Cog, CircuitBoard,
-  Truck, AlertTriangle, MapPin,
-};
-
 const services: ServiceData[] = [
-
-  // ══════════════════════════════════════════════════════════════════════════
-  // BIKE SERVICES  (highest traffic priority)
-  // ══════════════════════════════════════════════════════════════════════════
-
   {
     slug: "bike-service-at-home",
     title: "Bike Service at Home — Doorstep Two-Wheeler Servicing",

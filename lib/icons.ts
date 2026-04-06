@@ -40,11 +40,12 @@ export const iconMap: Record<string, any> = {
   CheckCircle,
   Award,
   Shield,
-  Tag
+  Tag,
+  default: Wrench, // fallback icon
 };
 
 // Also export them individually so you can import them directly if needed
-export { 
+export const icons = { 
   Wrench, Bike, Battery, Truck, Car, 
   Settings, Droplets, Wind, ShieldAlert,
   Clock, Tag, Phone

@@ -1,8 +1,9 @@
 // app/services/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
+import { iconMap } from "@/lib/icons";
 import {
-  Phone, CheckCircle, Clock, Shield, Award, Wrench, Bike, Battery, Truck, Car, Settings, Droplets, Wind, ShieldAlert
+  Phone, CheckCircle, Clock, Shield, Award, 
 } from "lucide-react";
 import { serviceCategories } from "@/lib/data/serviceCategory";
 import { SITE_URL } from "@/lib/constants";
@@ -21,17 +22,6 @@ export const metadata: Metadata = {
   },
 };
 
-const iconMap: Record<string, any> = {
-  Wrench: Wrench,
-  Bike: Bike,
-  Battery: Battery,
-  Truck: Truck,
-  Car: Car,
-  Settings: Settings,
-  Droplets: Droplets,
-  Wind: Wind,
-  ShieldAlert: ShieldAlert,
-};
 
 const trustItems = [
   { icon: Clock, label: "24/7 Service", sub: "Emergency & regular" },
