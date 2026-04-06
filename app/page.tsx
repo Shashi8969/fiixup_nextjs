@@ -1,19 +1,36 @@
+// app/page.tsx
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import { Hero } from "@/components/Hero"; // keep this normal
 import { SITE_URL } from "@/lib/constants";
-import { Services } from "@/components/Services"; // named export
 import { About } from "@/components/About"; // named export
+import { Services } from "@/components/Services"
 import { CityCoverage } from "@/components/CityCoverage"; 
 import { Testimonials } from "@/components/Testimonials"; // named export
 import { Blog } from "@/components/Blog"; // named export
 import { Contact } from "@/components/Contact"; // named export
 
 export const metadata: Metadata = {
-  title: "Fiixup — 24/7 Doorstep Car & Bike Repair Service in India",
+  title: "24/7 Doorstep Car & Bike Repair India | Mechanic Near Me | Fiixup",
   description:
-    "India's trusted 24/7 doorstep car and bike repair service. Certified mechanics at your home or office in Bengaluru, Chennai, Hyderabad & Mumbai. Honest pricing. Book now.",
+    "Fiixup offers 24/7 doorstep car and bike repair services across India. Find a mechanic near you for quick and reliable vehicle maintenance. Book now!",
   alternates: { canonical: SITE_URL },
+  keywords: [
+    "doorstep car repair",
+    "bike service at home",
+    "mechanic near me",
+    "24/7 roadside assistance",
+    "car battery jumpstart",
+    "on-site vehicle repair",
+    "Best car mechanic near me",
+    "Best bike mechanic near me",
+    "Garage near me",
+    "Mobile mechanic near me",
+    "Car repair near me",
+    "Bike repair near me",
+    "jumpstart near me",
+    "roadside assistance near me",
+    "Fiixup"
+  ],
 };
 
 export default function HomePage() {
