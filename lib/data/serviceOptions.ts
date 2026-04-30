@@ -1,0 +1,17 @@
+export const SERVICE_OPTIONS = [
+  "General Car Repair",
+  "Brake Service",
+  "Oil Change",
+  "Engine Diagnostics",
+  "AC Service",
+  "Battery & Electrical",
+  "Bike General Service",
+  "Engine Repair",
+  "Electrical Works",
+  "Parts Replacement",
+  "Brake & Clutch",
+  "Regular Maintenance",
+  "Emergency / Breakdown",
+  "Towing Service",
+  "Other",
+] as const;

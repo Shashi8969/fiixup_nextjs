@@ -1,7 +1,12 @@
 import Image from "next/image";
 import { CheckCircle } from "lucide-react";
 import { aboutContent, stats, highlights } from "@/lib/data/about";
+<<<<<<< HEAD
 import { HOW_IT_WORKS_STEPS as steps } from "@/lib/constants";
+=======
+import HowItWorks from "@/components/ui/HowItWorks";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+>>>>>>> 8dcb818 (reconect github)
 
 export function About() {
   return (
@@ -9,18 +14,26 @@ export function About() {
       <div className="container mx-auto px-4">
 
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+<<<<<<< HEAD
 
           {/* Left — content */}
+=======
+>>>>>>> 8dcb818 (reconect github)
           <div className="order-2 md:order-1">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
               {aboutContent.title}
             </h2>
+<<<<<<< HEAD
             <p className="text-lg text-gray-700 mb-4">
               {aboutContent.description1}
             </p>
             <p className="text-lg text-gray-700 mb-8">
               {aboutContent.description2}
             </p>
+=======
+            <p className="text-lg text-gray-700 mb-4">{aboutContent.description1}</p>
+            <p className="text-lg text-gray-700 mb-8">{aboutContent.description2}</p>
+>>>>>>> 8dcb818 (reconect github)
             <div className="space-y-5">
               {highlights.map((item) => (
                 <div key={item.heading} className="flex items-start gap-3">
@@ -34,7 +47,10 @@ export function About() {
             </div>
           </div>
 
+<<<<<<< HEAD
           {/* Right — image */}
+=======
+>>>>>>> 8dcb818 (reconect github)
           <div className="order-1 md:order-2">
             <div className="rounded-2xl overflow-hidden shadow-xl relative h-[420px]">
               <Image
@@ -59,6 +75,7 @@ export function About() {
           ))}
         </div>
 
+<<<<<<< HEAD
         {/* How it works */}
         <div className="mt-16">
           <h3 className="text-2xl font-bold text-center mb-10 text-gray-900">
@@ -75,9 +92,19 @@ export function About() {
               </div>
             ))}
           </div>
+=======
+        {/* How It Works */}
+        <div className="mt-16">
+          <SectionHeader heading={aboutContent.sections.howItWorks} className="mb-10" />
+          <HowItWorks />
+>>>>>>> 8dcb818 (reconect github)
         </div>
 
       </div>
     </section>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 8dcb818 (reconect github)

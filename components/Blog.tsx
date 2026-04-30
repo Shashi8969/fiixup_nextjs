@@ -1,7 +1,13 @@
 import Link from "next/link";
+<<<<<<< HEAD
 import Image from "next/image";
 import { Calendar, ArrowRight } from "lucide-react";
 import blogPosts from "@/lib/data/blogPosts.json";
+=======
+import blogPosts from "@/lib/data/blogPosts.json";
+import { BlogCard } from "@/components/ui/BlogCard";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+>>>>>>> 8dcb818 (reconect github)
 
 export function Blog() {
   const featuredPosts = blogPosts.slice(0, 3);
@@ -9,6 +15,7 @@ export function Blog() {
   return (
     <section id="blog" className="py-12 bg-white">
       <div className="container mx-auto px-4">
+<<<<<<< HEAD
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Latest from Our Blog</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -68,6 +75,16 @@ export function Blog() {
                 </Link>
               </div>
             </article>
+=======
+        <SectionHeader
+          heading="Latest from Our Blog"
+          subtext="Expert tips, maintenance guides, and industry insights to help you keep your car and bike in perfect condition."
+        />
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {featuredPosts.map((post, i) => (
+            <BlogCard key={post.id} {...post} priority={i === 0} />
+>>>>>>> 8dcb818 (reconect github)
           ))}
         </div>
 

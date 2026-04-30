@@ -10,9 +10,17 @@ export function ServiceCard({ cat, displayLocation }: ServiceCardProps) {  // Ke
   const theme = serviceThemes[cat.color as ThemeColor] || serviceThemes.blue;
   const title = displayLocation ? `${cat.title} in ${displayLocation}` : cat.title;
 
+<<<<<<< HEAD
   return (
     <Link 
       href={cat.link}
+=======
+  const targetHref = cat.link || `/services/${cat.slug || ''}`;
+
+  return (
+    <Link 
+      href={targetHref}
+>>>>>>> 8dcb818 (reconect github)
       className={`group relative p-8 rounded-2xl bg-white border border-gray-100 transition-all duration-300 flex flex-col hover:shadow-2xl hover:-translate-y-1 ${theme.hoverBorder}`}
     >
       <div className={`mb-6 inline-flex w-fit p-4 rounded-xl border border-gray-50 bg-gray-50/50 group-hover:bg-white transition-all duration-300 ${theme.hoverIconBg}`}>

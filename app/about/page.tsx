@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CheckCircle } from "lucide-react";
 import { About } from "@/components/About";
 import { Testimonials } from "@/components/Testimonials";
+<<<<<<< HEAD
 import { SITE_URL } from "@/lib/constants";
 import { mvvItems, differentiators } from "@/lib/data/about";
 
@@ -12,11 +13,31 @@ export const metadata: Metadata = {
     "Learn about Fiixup — India's trusted 24/7 doorstep auto repair service. Certified technicians, transparent pricing, and quality service for cars and bikes across Bengaluru, Chennai, Hyderabad & Mumbai.",
   keywords: "about fiixup, doorstep mechanic, mobile auto repair, certified mechanics",
   alternates: { canonical: `${SITE_URL}/about` },
+=======
+import { mvvItems, differentiators } from "@/lib/data/about";
+import { getStaticPageSEO } from "@/lib/data/seo";
+import { PageHero } from "@/components/ui/PageHero";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+
+const seo = getStaticPageSEO("about")!;
+
+export const metadata: Metadata = {
+  title: seo.title,
+  description: seo.description,
+  keywords: seo.keywords,
+  alternates: { canonical: seo.canonical },
+  openGraph: {
+    title: seo.ogTitle ?? seo.title,
+    description: seo.ogDescription ?? seo.description,
+    url: seo.canonical,
+  },
+>>>>>>> 8dcb818 (reconect github)
 };
 
 export default function AboutPage() {
   return (
     <>
+<<<<<<< HEAD
       {/* Hero */}
       <section className="bg-gradient-to-br from-blue-50 to-blue-100 py-16">
         <div className="container mx-auto px-4 text-center max-w-3xl">
@@ -26,16 +47,29 @@ export default function AboutPage() {
           </p>
         </div>
       </section>
+=======
+      <PageHero
+        heading="About Fiixup"
+        subtext="Revolutionizing auto care with 24/7 doorstep service across India"
+      />
+>>>>>>> 8dcb818 (reconect github)
 
       <About />
 
       {/* Our Story */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 max-w-4xl">
+<<<<<<< HEAD
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900">Our Story</h2>
           <div className="space-y-6 text-lg text-gray-700">
             <p>Fiixup was born from a simple observation: vehicle owners waste countless hours visiting garages, waiting for service, and dealing with unexpected repair bills. We knew there had to be a better way.</p>
             <p>Founded in 2020, we started with a vision to bring professional auto repair services directly to people's doorsteps. What began as a small team of passionate mechanics has grown into India's most trusted doorstep auto service provider.</p>
+=======
+          <SectionHeader heading="Our Story" />
+          <div className="space-y-6 text-lg text-gray-700">
+            <p>Fiixup was born from a simple observation: vehicle owners waste countless hours visiting garages, waiting for service, and dealing with unexpected repair bills. We knew there had to be a better way.</p>
+            <p>Founded in 2020, we started with a vision to bring professional auto repair services directly to people&apos;s doorsteps. What began as a small team of passionate mechanics has grown into India&apos;s most trusted doorstep auto service provider.</p>
+>>>>>>> 8dcb818 (reconect github)
             <p>Today, we serve over 10,000 happy customers across Bengaluru, Chennai, Hyderabad and Mumbai — providing 24/7 service for both cars and bikes.</p>
           </div>
 
@@ -56,7 +90,11 @@ export default function AboutPage() {
       {/* What Sets Us Apart */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4 max-w-4xl">
+<<<<<<< HEAD
           <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-gray-900">What Sets Us Apart</h2>
+=======
+          <SectionHeader heading="What Sets Us Apart" />
+>>>>>>> 8dcb818 (reconect github)
           <div className="grid md:grid-cols-2 gap-8">
             {differentiators.map(({ title, text }) => (
               <div key={title} className="flex gap-4">
@@ -74,14 +112,26 @@ export default function AboutPage() {
       {/* Team */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 max-w-4xl text-center">
+<<<<<<< HEAD
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">Our Team</h2>
+=======
+          <SectionHeader heading="Our Team" />
+>>>>>>> 8dcb818 (reconect github)
           <p className="text-lg text-gray-700 mb-12">
             Fiixup is powered by 50+ certified technicians, support staff, and auto care experts — each carefully selected and passionate about exceptional service.
           </p>
           <div className="bg-blue-50 p-8 rounded-xl">
             <p className="text-xl font-semibold mb-4 text-gray-900">Join Our Team</p>
+<<<<<<< HEAD
             <p className="text-gray-700 mb-6">We're always looking for skilled technicians who share our commitment to quality.</p>
             <Link href="/contact" className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+=======
+            <p className="text-gray-700 mb-6">We&apos;re always looking for skilled technicians who share our commitment to quality.</p>
+            <Link
+              href="/contact"
+              className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+            >
+>>>>>>> 8dcb818 (reconect github)
               View Career Opportunities
             </Link>
           </div>

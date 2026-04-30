@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // components/service/TrustStrip.tsx
 
 import { TRUST_BADGES } from "@/lib/constants";
@@ -17,3 +18,10 @@ export default function TrustStrip() {
     </section>
   );
 }
+=======
+import { TrustStrip } from "@/components/ui/TrustStrip";
+
+export default function ServiceTrustStrip() {
+  return <TrustStrip variant="text" />;
+}
+>>>>>>> 8dcb818 (reconect github)

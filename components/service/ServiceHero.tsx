@@ -6,7 +6,13 @@ import { Phone } from "lucide-react";
 export default function Hero({
   service,
   Icon,
+<<<<<<< HEAD
   isCar,
+=======
+  // ADDED: Accept category data
+  categoryTitle,
+  CategoryIcon,
+>>>>>>> 8dcb818 (reconect github)
   bgAccent,
   accentBlue,
   bgLight
@@ -29,8 +35,13 @@ export default function Hero({
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <span className={`inline-block ${bgAccent} text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-4`}>
+<<<<<<< HEAD
               {isCar ? '🚗 Car Service' : '🏍️ Bike Service'}
             </span>
+=======
+{categoryTitle || (service.category === 'car' ? 'Car Service' : 'Bike Service')}            
+</span>
+>>>>>>> 8dcb818 (reconect github)
 
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
               {service.title}
@@ -75,7 +86,11 @@ export default function Hero({
 
           <div className="hidden md:flex justify-center">
             <div className="bg-white rounded-3xl shadow-xl p-16">
+<<<<<<< HEAD
               <Icon className={`w-36 h-36 ${accentBlue}`} />
+=======
+              {Icon && <Icon className={`w-36 h-36 ${accentBlue}`} />}
+>>>>>>> 8dcb818 (reconect github)
             </div>
           </div>
         </div>
