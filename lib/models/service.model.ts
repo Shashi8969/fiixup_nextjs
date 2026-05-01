@@ -29,7 +29,7 @@ export interface CompetitorRow {
   name: string;
   price: string;
   arrivalTime: string;
-  warranty: string;
+  warranty?: string;
   doorstep: boolean;
 }
 
