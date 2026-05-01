@@ -17,7 +17,7 @@ export const serviceCategories = [
     color: "blue",
     bgColor: "bg-white",
     // --- SEO Metadata ---
-    metaTitle: "Doorstep Car Service & Repair | Professional Mechanics | Fiixup",
+    metaTitle: "Doorstep Car Service & Repair | Professional Mechanics",
     metaDescription: "Get certified car mechanics at your doorstep. We offer car general service, oil changes, brake repairs, and diagnostics for all major brands. Book online 24/7.",
     keywords: "car service near me, doorstep car repair, car mechanic home visit, car oil change at home",
     
@@ -271,7 +271,10 @@ export const serviceCategories = [
       conclusion: "Stay safe on the road. Call Fiixup for instant puncture assistance."
     },
     faqs: [
-      { question: "Can you fix tube-type punctures?", answer: "Yes, we carry replacement tubes for bikes and can perform patches on-site." }
+      { question: "Can you fix tube-type punctures?", answer: "Yes, we carry replacement tubes for bikes and can perform patches on-site." },
+      { question: "Do you offer tyre replacement?", answer: "Yes, we can replace your tyre with a new one from our stock or install your spare." },
+      { question: "Is it safe to repair a puncture on the highway?", answer: "Yes, our technicians are trained to perform safe roadside repairs. We also provide safety cones and reflective gear to ensure your safety during the service." },
+      { question: "What if I have multiple punctures?", answer: "We can handle multiple punctures, but additional charges may apply based on the severity and location of the damage." }
     ]
   },
   {
@@ -322,5 +325,59 @@ export const serviceCategories = [
       { question: "Do you provide a warranty on repairs?", answer: "Yes, all major mechanical repairs come with a 30-day/1000km labor warranty." }
     ]
   },
+  {
+    slug: "roadside",
+    link: "services/roadside",
+    title: "Roadside Assistance",
+    tagline: "Comprehensive Roadside Assistance for All Vehicle Emergencies",
+    description: "From lockouts to fuel delivery, our roadside assistance team is equipped to handle all emergencies and get you back on the road quickly.",
+    data: roadsideServices,
+    icon: ShieldCheck,
+    color: "purple",
+    bgColor: "bg-gray-50",
+    metaTitle: "24/7 Roadside Assistance Near Me | Emergency Vehicle Help | Fiixup",
+    metaDescription: "Comprehensive roadside assistance for cars and bikes. Lockout service, fuel delivery, jumpstarts, and on-site repairs. Available 24/7 with quick response.",
+    benefits: [
+      { icon: "Clock", title: "Rapid Response", body: "Our team is trained to reach you within 30 minutes for any roadside emergency." },
+      { icon: "ShieldCheck", title: "All-in-One Service", body: "From lockouts to fuel delivery, we handle all common roadside issues." },
+      { icon: "Wrench", title: "On-Site Repairs", body: "Minor issues like flat tyres or dead batteries can often be fixed on the spot." },
+    ],
+    pricingSummary: {
+      rows: [
+        { label: "Lockout Service", priceFrom: 999, highlight: true },
+        { label: "Fuel Delivery", priceFrom: 499 },
+        { label: "On-Site Repair", priceFrom: 299 },
+      ],
+      competitors: [
+        { name: "Fiixup", price: "Starting ₹299", arrivalTime: "30 mins", doorstep: true },
+        { name: "Roadside Club", price: "Variable", arrivalTime: "N/A", doorstep: false },
+      ],
+      disclaimer: "Prices may vary based on location and time of day."
+    },  
+    brands: [
+      { name: "All Brands", models: ["We service all car and bike brands for roadside assistance"] }
+    ],
+    guide: {
+      title: "What to Do During a Roadside Emergency: A Safety Guide",
+      intro: "A roadside emergency can be a frightening experience. Knowing how to stay safe and who to call can make all the difference.",
+      sections: [
+        {
+          heading: "Immediate Safety Measures",
+          body: "If you experience a breakdown, first ensure your safety. Move your vehicle to the shoulder, turn on hazard lights, and use reflective triangles if you have them. Stay inside your vehicle if you're on a busy highway. Once safe, call Fiixup for 24/7 roadside assistance. Our team will track your location and dispatch help immediately.",
+          tips: ["Keep a roadside emergency kit in your car", "Always have our number saved for quick access"]
+        }
+      ],
+      conclusion: "With Fiixup's comprehensive roadside assistance, help is just a call away. Stay safe on the road."
+    },
+    faqs: [
+      { question: "Do you offer roadside assistance for electric vehicles?", answer: "Yes, we provide specialized roadside services for EVs, including mobile charging and towing to the nearest charging station." },
+      { question: "Is your roadside assistance available in remote areas?", answer: "We have a wide network of technicians across the country, but availability may vary in extremely remote locations. We recommend checking our service coverage map for details." },
+      { question: "Can I request a specific technician for roadside assistance?", answer: "While we cannot guarantee a specific technician, our dispatch system ensures that the most qualified and nearest technician is sent to assist you." },
+      { question: "What payment methods do you accept for roadside assistance?", answer: "We accept all major credit/debit cards, UPI, and cash payments for our roadside services." },
+      { question: "Do you provide roadside assistance for commercial vehicles?", answer: "Currently, our roadside assistance services are focused on passenger cars and bikes. We do not offer services for commercial vehicles at this time." },
+      { question: "Is there a subscription option for roadside assistance?", answer: "We currently offer our roadside assistance on a pay-per-use basis. However, we are exploring subscription models for frequent users in the future." },
+      { question: "What should I do if I am in an accident?", answer: "If you are involved in an accident, first ensure your safety and the safety of others. Call emergency services if there are injuries. For vehicle recovery and assistance, contact Fiixup's roadside assistance team, and we will dispatch help to your location." }
+    ] 
+  }
   // ... Add Battery, Puncture, and Mechanic categories with similar deep content
 ]; 

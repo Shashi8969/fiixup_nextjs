@@ -4,21 +4,19 @@
 
 import type { PricingData } from "@/lib/models/service.model";
 import { Check, X, Phone } from "lucide-react";
+import { serviceThemes, type ThemeColor } from "@/lib/theme";
 import Link from "next/link";
 
 interface Props {
   pricing: PricingData;
   serviceTitle: string;
-  accentColor?: "blue" | "red";
+  accentColor?: ThemeColor;
 }
 
-const ACCENT = {
-  blue: { badge: "bg-blue-600 text-white", highlight: "bg-blue-50 border-blue-300", price: "text-blue-600" },
-  red:  { badge: "bg-red-600 text-white",  highlight: "bg-red-50 border-red-300",   price: "text-red-600"  },
-};
+
 
 export default function PricingTable({ pricing, serviceTitle, accentColor = "red" }: Props) {
-  const a = ACCENT[accentColor];
+  const a = serviceThemes[accentColor];
 
   return (
     <section className="py-16 bg-white" id="pricing">

@@ -106,6 +106,8 @@ export default async function Page({
   if (cat) {
     const theme = heroTheme[cat.color] ?? heroTheme.blue;
     const CategoryIcon = cat.icon;
+    const accentColor = (cat.slug === "car" ? "blue" : cat.color) as "blue" | "red"; 
+    const themeGradient = `from-${cat.color}-50 to-${cat.color}-100`;
 
     return (
       <>
@@ -155,6 +157,36 @@ export default async function Page({
             </div>
           </div>
         </section>
+
+        {/* 1. Benefits (Why Choose Us) */}
+        {cat.benefits && (
+          <ServiceBenefits 
+            benefits={cat.benefits} 
+            serviceTitle={cat.title} 
+            accentColor={accentColor} 
+          />
+        )}
+
+        {/* 2. Pricing Summary */}
+        {cat.pricingSummary && (
+          <PricingTable 
+            pricing={cat.pricingSummary} 
+            serviceTitle={cat.title} 
+            accentColor={accentColor} 
+          />
+        )}
+
+        {/* 3. Brands Grid */}
+        {cat.brands && (
+          <BrandsGrid 
+            brands={cat.brands} 
+            heading={`${cat.title} Brands We Service`} 
+            accentColor={accentColor} 
+          />
+        )}
+
+        {/* 4. Complete Guide (SEO Content) */}
+        {cat.guide && <CompleteGuideSection guide={cat.guide} />}
 
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">

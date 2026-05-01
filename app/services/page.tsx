@@ -1,3 +1,8 @@
+// app/services/page.tsx
+// ─────────────────────────────────────────────────────────────────────────────
+// Services page — data-driven from lib/data/serviceCategory.ts.
+// To add a service: add entry to JSON. No code changes needed.
+// ─────────────────────────────────────────────────────────────────────────────
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Phone } from "lucide-react";

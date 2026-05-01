@@ -1,5 +1,7 @@
 // components/service/ServiceBenefits.tsx
 import { iconMap } from "@/lib/icons";
+import { serviceThemes, type ThemeColor } from "@/lib/theme";
+import * as LucideIcons from "lucide-react";
 
 interface Benefit {
   icon: string;
@@ -10,16 +12,12 @@ interface Benefit {
 interface Props {
   benefits: Benefit[];
   serviceTitle: string;
-  accentColor?: "blue" | "red";
+  accentColor?: ThemeColor;
 }
 
-const COLORS = {
-  red:  { iconBg: "bg-red-100",  iconText: "text-red-600"  },
-  blue: { iconBg: "bg-blue-100", iconText: "text-blue-600" },
-};
 
 export default function ServiceBenefits({ benefits, serviceTitle, accentColor = "red" }: Props) {
-  const c = COLORS[accentColor];
+  const c = serviceThemes[accentColor];
 
   return (
     <section className="py-16 bg-gray-50">
