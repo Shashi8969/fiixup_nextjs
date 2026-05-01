@@ -1,54 +1,13 @@
 import { Star } from "lucide-react";
 import type { CityData } from "@/lib/models/city.model";
-<<<<<<< HEAD
-import { TestimonialCardProps } from "@/lib/models/testimonial.model";
-import { globalTestimonials, globalStats } from "@/lib/data/testimonials";
-
-function TestimonialCard({ name, rating, text, date, vehicle, area }: TestimonialCardProps) {
-  return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex flex-col">
-      <div className="flex gap-0.5 mb-3">
-        {[...Array(rating)].map((_, i) => (
-          <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-        ))}
-      </div>
-      <p className="text-gray-700 text-sm leading-relaxed flex-1 mb-4">"{text}"</p>
-      <div>
-        <p className="font-semibold text-gray-900">{name}</p>
-        {area && <p className="text-xs text-gray-500">{area}</p>}
-        <p className="text-xs text-gray-600 mt-1">{vehicle} · {date}</p>
-      </div>
-    </div>
-  );
-}
-
-
-// Global testimonials (used on homepage & about page)
-=======
 import { globalTestimonials, globalStats } from "@/lib/data/testimonials";
 import { TestimonialCard } from "@/components/ui/TestimonialCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
->>>>>>> 8dcb818 (reconect github)
 export function Testimonials() {
   return (
     <section id="testimonials" className="py-12 bg-blue-50">
       <div className="container mx-auto px-4">
-<<<<<<< HEAD
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-            Trusted by Customers Across India
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            From Bengaluru to Mumbai — thousands of car and bike owners rely on Fiixup for fast,
-            professional doorstep repair service.
-          </p>
-        </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {globalTestimonials.map((t) => (
-            <TestimonialCard key={t.name} {...t} showArea />
-=======
         <SectionHeader
           heading="Trusted by Customers Across India"
           subtext="From Bengaluru to Mumbai — thousands of car and bike owners rely on Fiixup for fast, professional doorstep repair service."
@@ -57,7 +16,6 @@ export function Testimonials() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {globalTestimonials.map((t) => (
             <TestimonialCard key={t.name} {...t} />
->>>>>>> 8dcb818 (reconect github)
           ))}
         </div>
 
@@ -67,11 +25,7 @@ export function Testimonials() {
               <p className="text-4xl font-bold text-gray-900">{value}</p>
               {isRating && (
                 <div className="flex gap-0.5 justify-center my-1">
-<<<<<<< HEAD
-                  {[...Array(5)].map((_, i) => (
-=======
                   {Array.from({ length: 5 }, (_, i) => (
->>>>>>> 8dcb818 (reconect github)
                     <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
@@ -85,39 +39,17 @@ export function Testimonials() {
   );
 }
 
-<<<<<<< HEAD
-// City-specific testimonials (used on city pages)
-export function CityTestimonials({ city }: { city: CityData }) {
-  const cityStats = [
-    { value: "4.9/5",   label: "Average Rating" },
-    { value: "1,200+",  label: `Reviews in ${city.name}` },
-    { value: "98%",     label: "Would Recommend" },
-    { value: "10,000+", label: `Vehicles Serviced in ${city.name}` },
-=======
 export function CityTestimonials({ city }: { readonly city: CityData }) {
   const cityStats = [
     { value: "4.9/5",   label: "Average Rating"                        },
     { value: "1,200+",  label: `Reviews in ${city.name}`               },
     { value: "98%",     label: "Would Recommend"                       },
     { value: "10,000+", label: `Vehicles Serviced in ${city.name}`     },
->>>>>>> 8dcb818 (reconect github)
   ];
 
   return (
     <section id="testimonials" className="py-20 bg-blue-50">
       <div className="container mx-auto px-4">
-<<<<<<< HEAD
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-            {city.testimonialsHeading}
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">{city.testimonialsSubtext}</p>
-        </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {city.testimonials.map((t, i) => (
-            <TestimonialCard key={i} {...t} />
-=======
         <SectionHeader
           heading={city.testimonialsHeading}
           subtext={city.testimonialsSubtext}
@@ -126,7 +58,6 @@ export function CityTestimonials({ city }: { readonly city: CityData }) {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {city.testimonials.map((t) => (
             <TestimonialCard key={`${t.name}-${t.date}`} {...t} />
->>>>>>> 8dcb818 (reconect github)
           ))}
         </div>
 

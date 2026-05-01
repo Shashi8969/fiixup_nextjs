@@ -1,24 +1,3 @@
-<<<<<<< HEAD
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  
-  images: {
-      formats: ["image/avif", "image/webp"],
-    remotePatterns: [
-      { protocol: "https", hostname: "fiixup.in" },
-      { protocol: "https", hostname: "images.unsplash.com" },
-    ],
-  },
-  async redirects() {
-    return [
-      { source: "/city/:citySlug", destination: "/:citySlug", permanent: true },
-      { source: "/blog/car-repair-service", destination: "/blog", permanent: true },
-      { source: "/blog/royal-enfield-service-bangalore", destination: "/blog", permanent: true },
-      { source: "/bangalore-towing-service", destination: "/bengaluru", permanent: true },
-      { source: "/book-bike-service", destination: "/services", permanent: true },
-      { source: "/Break-Down-Service", destination: "/bengaluru", permanent: true },
-=======
 // next.config.ts
 // ─────────────────────────────────────────────────────────────────────────────
 // Redirects for all legacy WordPress URLs and 404s found in SEO audit.
@@ -285,13 +264,8 @@ const nextConfig: NextConfig = {
         destination: "/bangalore/koramangala",
         permanent: false,
       },
->>>>>>> 8dcb818 (reconect github)
     ];
   },
 };
 
-<<<<<<< HEAD
 export default nextConfig;
-=======
-export default nextConfig;
->>>>>>> 8dcb818 (reconect github)

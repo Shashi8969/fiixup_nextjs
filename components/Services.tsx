@@ -1,9 +1,5 @@
 // components/Services.tsx
-<<<<<<< HEAD
-import { serviceCategories } from "@/lib/data/serviceCategory";
-=======
 import { serviceCategories } from "@/lib/data/serviceCategory"; // Verified path
->>>>>>> 8dcb818 (reconect github)
 import { ServiceCard } from "@/components/ui/ServiceCard";
 import Link from "next/link";
 
@@ -21,16 +17,6 @@ export function Services() {
           </p>
         </div>
 
-<<<<<<< HEAD
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-  {serviceCategories.slice(0, 8).map((cat) => (
-    <ServiceCard 
-      key={cat.title} 
-      cat={cat} // Pass the whole object here
-    />
-  ))}
-</div>
-=======
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {/* slice(0, 8) ensures we don't overflow the UI if you add 20 categories[cite: 17] */}
           {serviceCategories.slice(0, 8).map((cat) => (
@@ -41,7 +27,6 @@ export function Services() {
           ))}
         </div>
 
->>>>>>> 8dcb818 (reconect github)
         <div className="text-center mt-12">
           <Link
             href="/services"

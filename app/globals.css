@@ -8,11 +8,3 @@ html:not([data-scroll-behavior]) { scroll-behavior: smooth; }
   body { @apply text-gray-900 bg-white antialiased; }
 }
 
-<<<<<<< HEAD
-@layer utilities {
-  .animate-ping-slow {
-    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-  }
-}
-=======
->>>>>>> 8dcb818 (reconect github)
