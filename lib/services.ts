@@ -1,62 +1,6 @@
-<<<<<<< HEAD
 // lib/data/services.ts
 import type { ServiceData } from "./models/service.model";
 const services: ServiceData[] = [
-=======
-// lib/services.ts
-// ─────────────────────────────────────────────────────────────────────────────
-// Single source of truth for ALL service data.
-// To update any service — edit only this file. No component changes needed.
-// ─────────────────────────────────────────────────────────────────────────────
-
-import type { ServiceData } from "./models/service.model";
-
-// ── Shared competitor table (reused across services) ──────────────────────────
-const defaultCompetitors = [
-  { name: "Local Garage",      price: "₹800–₹1,500", arrivalTime: "Next day",     warranty: "None",    doorstep: false },
-  { name: "Authorised Service",price: "₹1,500–₹4,000",arrivalTime: "3–7 days",    warranty: "3 months",doorstep: false },
-  { name: "Fiixup",            price: "From ₹299",   arrivalTime: "30–60 minutes",warranty: "30 days", doorstep: true  },
-];
-
-// ── Shared car brands with top models ────────────────────────────────────────
-const CAR_BRANDS_RICH = [
-  { name: "Maruti Suzuki", models: ["Swift", "Baleno", "Dzire", "Ertiga", "Brezza"] },
-  { name: "Hyundai",       models: ["i20", "Creta", "Venue", "Verna", "Alcazar"] },
-  { name: "Tata",          models: ["Nexon", "Punch", "Harrier", "Safari", "Tiago"] },
-  { name: "Honda",         models: ["City", "Amaze", "WR-V", "Jazz"] },
-  { name: "Toyota",        models: ["Innova Crysta", "Fortuner", "Glanza", "Urban Cruiser"] },
-  { name: "Kia",           models: ["Seltos", "Sonet", "Carens"] },
-  { name: "MG",            models: ["Hector", "ZS EV", "Astor"] },
-  { name: "Mahindra",      models: ["Scorpio", "XUV700", "Thar", "Bolero"] },
-  { name: "Volkswagen",    models: ["Polo", "Virtus", "Taigun"] },
-  { name: "Skoda",         models: ["Slavia", "Kushaq", "Octavia"] },
-  { name: "Renault",       models: ["Kwid", "Triber", "Kiger"] },
-  { name: "Nissan",        models: ["Magnite", "Kicks"] },
-];
-
-// ── Shared bike brands with top models ───────────────────────────────────────
-const BIKE_BRANDS_RICH = [
-  { name: "Honda",        models: ["Activa 6G", "Shine", "CB300R", "Hornet 2.0", "SP125"] },
-  { name: "Bajaj",        models: ["Pulsar 150", "Pulsar NS200", "Dominar 400", "Platina", "Avenger"] },
-  { name: "TVS",          models: ["Jupiter", "Apache RTR 160", "Ntorq 125", "Raider 125", "iQube"] },
-  { name: "Royal Enfield",models: ["Classic 350", "Bullet 350", "Meteor 350", "Himalayan", "Hunter 350"] },
-  { name: "Yamaha",       models: ["R15 V4", "FZ-S", "MT-15", "Fascino 125", "Ray ZR"] },
-  { name: "Hero",         models: ["Splendor Plus", "HF Deluxe", "Glamour", "Xpulse 200", "Xtreme 160R"] },
-  { name: "Suzuki",       models: ["Access 125", "Burgman Street", "Gixxer 250", "V-Strom 650"] },
-  { name: "KTM",          models: ["Duke 200", "Duke 390", "RC 390", "Adventure 390"] },
-];
-
-// ─────────────────────────────────────────────────────────────────────────────
-// SERVICES ARRAY
-// ─────────────────────────────────────────────────────────────────────────────
-
-const services: ServiceData[] = [
-
-  // ══════════════════════════════════════════════════════════════════════════
-  // BIKE SERVICES
-  // ══════════════════════════════════════════════════════════════════════════
-
->>>>>>> 8dcb818 (reconect github)
   {
     slug: "bike-service-at-home",
     title: "Bike Service at Home — Doorstep Two-Wheeler Servicing",
