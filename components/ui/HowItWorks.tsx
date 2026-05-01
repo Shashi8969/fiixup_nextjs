@@ -1,7 +1,10 @@
-"use client";
+// components/ui/HowItWorks.tsx
+// ─────────────────────────────────────────────────────────────────────────────
+// "How It Works" step component.
+// Accepts optional custom steps from service data; falls back to global steps.
+// ─────────────────────────────────────────────────────────────────────────────
 
 import { HOW_IT_WORKS_STEPS } from "@/lib/constants";
-import { CheckCircle } from "lucide-react";
 
 interface Step {
   n: string;
@@ -14,41 +17,26 @@ interface Props {
 }
 
 export default function HowItWorks({ steps }: Props) {
-  // Uses custom steps from specific services (Source 3) or falls back to global constants
   const displaySteps = steps ?? HOW_IT_WORKS_STEPS;
 
   return (
-    <div className="relative">
-      {/* Desktop Connector Line - Enhanced with gradient from Source 6 */}
-      <div className="hidden lg:block absolute top-12 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-blue-200 to-transparent z-0" />
+    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {displaySteps.map((step, i) => (
+        <div key={i} className="relative">
+          {/* Connector line (hidden on last item) */}
+          {i < displaySteps.length - 1 && (
+            <div className="hidden lg:block absolute top-7 left-[calc(50%+24px)] right-[-calc(50%-24px)] h-0.5 bg-gradient-to-r from-blue-200 to-gray-200 z-0" />
+          )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {displaySteps.map((step, i) => (
-          <div key={i} className="group relative z-10">
-            {/* Card UI from Source 6 with optimized padding and shadows */}
-            <div className="bg-white rounded-3xl border border-gray-100 p-8 text-center shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-              
-              {/* Step Number Circle[cite: 6] */}
-              <div className="w-16 h-16 rounded-2xl bg-blue-600 text-white font-extrabold text-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-200 group-hover:scale-110 transition-transform">
-                {step.n}
-              </div>
-
-              {/* Text Content[cite: 6] */}
-              <h3 className="font-bold text-gray-900 mb-3 text-lg tracking-tight">
-                {step.title}
-              </h3>
-              <p className="text-gray-500 text-sm leading-relaxed font-medium">
-                {step.desc}
-              </p>
-
-              {/* Status Indicator for Mobile Clarity */}
-              <div className="mt-4 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <CheckCircle className="w-5 h-5 text-green-500" />
-              </div>
+          <div className="relative z-10 bg-white rounded-2xl border border-gray-200 p-6 text-center hover:shadow-md hover:border-blue-200 transition-all">
+            <div className="w-14 h-14 rounded-full bg-blue-600 text-white font-bold text-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-100">
+              {step.n}
             </div>
+            <h3 className="font-bold text-gray-900 mb-2 text-sm">{step.title}</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 }

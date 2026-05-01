@@ -1,11 +1,7 @@
 // components/service/CompleteGuide.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// Long-form SEO guide section (3,000+ words).
-// Renders the guide data structure from ServiceData with proper h2/h3 hierarchy.
-// ─────────────────────────────────────────────────────────────────────────────
-
 import type { CompleteGuide } from "@/lib/models/service.model";
 import { Lightbulb } from "lucide-react";
+import Link from "next/link";
 
 interface Props {
   guide: CompleteGuide;
@@ -17,7 +13,6 @@ export default function CompleteGuideSection({ guide }: Props) {
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
 
-          {/* Guide header */}
           <div className="mb-10">
             <span className="inline-block text-xs font-bold tracking-widest uppercase text-gray-500 mb-3">
               Complete Guide
@@ -66,14 +61,11 @@ export default function CompleteGuideSection({ guide }: Props) {
                     <p key={pi}>{para}</p>
                   ))}
 
-                  {/* Tips callout */}
                   {section.tips && section.tips.length > 0 && (
                     <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mt-4">
                       <div className="flex items-center gap-2 mb-3">
                         <Lightbulb className="w-4 h-4 text-amber-600 flex-shrink-0" />
-                        <span className="text-xs font-bold uppercase tracking-wider text-amber-700">
-                          Pro Tips
-                        </span>
+                        <span className="text-xs font-bold uppercase tracking-wider text-amber-700">Pro Tips</span>
                       </div>
                       <ul className="space-y-2">
                         {section.tips.map((tip, ti) => (
@@ -100,12 +92,12 @@ export default function CompleteGuideSection({ guide }: Props) {
               >
                 Call +91 8197459732
               </a>
-              <a
+              <Link
                 href="/contact#contact-form"
                 className="bg-white text-gray-900 hover:bg-gray-100 font-bold px-6 py-3 rounded-xl transition-colors text-sm"
               >
                 Book Online
-              </a>
+              </Link>
             </div>
           </div>
 

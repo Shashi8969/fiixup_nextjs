@@ -1,9 +1,4 @@
 // components/service/BrandsGrid.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// Displays car or bike brands with top model names.
-// Data driven — no hardcoding in this component.
-// ─────────────────────────────────────────────────────────────────────────────
-
 import type { BrandEntry } from "@/lib/models/service.model";
 
 interface Props {
@@ -19,7 +14,9 @@ export default function BrandsGrid({
   subtext,
   accentColor = "red",
 }: Props) {
-  const pillBg = accentColor === "red" ? "bg-red-50 text-red-700 border-red-200" : "bg-blue-50 text-blue-700 border-blue-200";
+  const pillBg = accentColor === "red"
+    ? "bg-red-50 text-red-700 border-red-200"
+    : "bg-blue-50 text-blue-700 border-blue-200";
 
   return (
     <section className="py-14 bg-gray-50">
@@ -48,7 +45,7 @@ export default function BrandsGrid({
                   ))}
                   {brand.models.length > 3 && (
                     <span className="text-xs px-2 py-0.5 rounded-full border bg-gray-100 text-gray-500 font-medium">
-                      +{brand.models.length - 3} more
+                      +{brand.models.length - 3}
                     </span>
                   )}
                 </div>
@@ -58,9 +55,9 @@ export default function BrandsGrid({
         </div>
 
         <p className="text-center text-sm text-gray-400 mt-6">
-          Don't see your brand? Call{" "}
+          Don&apos;t see your brand?{" "}
           <a href="tel:+918197459732" className="text-red-600 font-semibold hover:underline">
-            +91 8197459732
+            Call +91 8197459732
           </a>{" "}
           — we service virtually all brands available in India.
         </p>

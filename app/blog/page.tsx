@@ -31,8 +31,13 @@ export default function BlogPage() {
         <div className="container mx-auto px-4">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogPosts.map((post, i) => (
-              <BlogCard key={post.id} {...post} priority={i === 0} />
-            ))}
+  <BlogCard 
+    key={post.id} 
+    {...post} 
+    readTime={String(post.readTime)} // Convert number to string
+    priority={i === 0} 
+  />
+))}
           </div>
         </div>
       </section>

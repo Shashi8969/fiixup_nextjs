@@ -9,7 +9,7 @@ interface BlogCardProps {
   readonly image?: string; // Made optional for safety
   readonly date: string;
   readonly category: string;
-  readonly readTime?: string;
+  readonly readTime?: string | number;
   readonly author?: string;
   readonly priority?: boolean;
 }
@@ -56,7 +56,7 @@ export function BlogCard({
           </span>
           {readTime && (
             <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" /> {readTime}
+              <Clock className="w-3.5 h-3.5" /> {" "}{typeof readTime === "number" ? `${readTime} min read` : readTime}
             </span>
           )}
         </div>

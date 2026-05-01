@@ -1,10 +1,5 @@
 // components/service/ServiceBenefits.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// "Why Choose Fiixup for [Service]" — driven by service.benefits data.
-// ─────────────────────────────────────────────────────────────────────────────
-
 import { iconMap } from "@/lib/icons";
-import { serviceThemes, type ThemeColor } from "@/lib/theme";
 
 interface Benefit {
   icon: string;
@@ -15,13 +10,16 @@ interface Benefit {
 interface Props {
   benefits: Benefit[];
   serviceTitle: string;
-  // Update this line to include all your slugs
-  accentColor?: ThemeColor; // Uses the type from theme.ts
+  accentColor?: "blue" | "red";
 }
 
+const COLORS = {
+  red:  { iconBg: "bg-red-100",  iconText: "text-red-600"  },
+  blue: { iconBg: "bg-blue-100", iconText: "text-blue-600" },
+};
 
 export default function ServiceBenefits({ benefits, serviceTitle, accentColor = "red" }: Props) {
-  const c = serviceThemes[accentColor] || serviceThemes["red"]; // Fallback to red if invalid color provided
+  const c = COLORS[accentColor];
 
   return (
     <section className="py-16 bg-gray-50">

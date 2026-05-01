@@ -1,28 +1,29 @@
 // components/service/PricingTable.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// Transparent pricing section + competitor comparison table.
-// All data comes from ServiceData.pricing — zero hardcoding.
-// ─────────────────────────────────────────────────────────────────────────────
+// Transparent pricing + competitor comparison table.
+// Renders only when service.pricing is defined — no crash if absent.
 
 import type { PricingData } from "@/lib/models/service.model";
-import { Check, X } from "lucide-react";
-import { serviceThemes, type ThemeColor } from "@/lib/theme";
+import { Check, X, Phone } from "lucide-react";
+import Link from "next/link";
 
 interface Props {
   pricing: PricingData;
   serviceTitle: string;
-  accentColor?: ThemeColor; // Uses the type from theme.ts
+  accentColor?: "blue" | "red";
 }
 
+const ACCENT = {
+  blue: { badge: "bg-blue-600 text-white", highlight: "bg-blue-50 border-blue-300", price: "text-blue-600" },
+  red:  { badge: "bg-red-600 text-white",  highlight: "bg-red-50 border-red-300",   price: "text-red-600"  },
+};
 
 export default function PricingTable({ pricing, serviceTitle, accentColor = "red" }: Props) {
-  const a = serviceThemes[accentColor] || serviceThemes["red"]; // Fallback to red if invalid color provided
+  const a = ACCENT[accentColor];
 
   return (
     <section className="py-16 bg-white" id="pricing">
       <div className="container mx-auto px-4">
 
-        {/* Section header */}
         <div className="text-center mb-12">
           <span className="inline-block text-xs font-bold tracking-widest uppercase text-gray-500 mb-2">
             Transparent Pricing
@@ -56,9 +57,7 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
                     )}
                     <div className="min-w-0">
                       <p className="font-semibold text-gray-800 text-sm leading-tight">{row.label}</p>
-                      {row.note && (
-                        <p className="text-xs text-gray-400 mt-0.5">{row.note}</p>
-                      )}
+                      {row.note && <p className="text-xs text-gray-400 mt-0.5">{row.note}</p>}
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
@@ -70,16 +69,13 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
                 </div>
               ))}
             </div>
-            <p className="text-xs text-gray-400 mt-3 leading-relaxed">
-              {pricing.disclaimer}
-            </p>
+            <p className="text-xs text-gray-400 mt-3 leading-relaxed">{pricing.disclaimer}</p>
           </div>
 
           {/* Competitor comparison */}
           <div>
             <h3 className="font-bold text-gray-900 mb-4 text-lg">How We Compare</h3>
             <div className="rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-              {/* Header */}
               <div className="grid grid-cols-4 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50 px-4 py-3 border-b gap-2">
                 <span className="col-span-1">Provider</span>
                 <span className="text-center">Price</span>
@@ -96,18 +92,14 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
                     `}
                   >
                     <div className="col-span-1 flex items-center gap-1.5">
-                      {isUs && (
-                        <span className="inline-block w-2 h-2 rounded-full bg-green-500 flex-shrink-0" />
-                      )}
+                      {isUs && <span className="inline-block w-2 h-2 rounded-full bg-green-500 flex-shrink-0" />}
                       <span className={isUs ? "text-green-800" : "text-gray-700"}>{c.name}</span>
                     </div>
                     <div className="text-center">
-                      <span className={isUs ? "text-green-700" : "text-gray-600"}>{c.price}</span>
+                      <span className={`text-xs ${isUs ? "text-green-700 font-semibold" : "text-gray-600"}`}>{c.price}</span>
                     </div>
                     <div className="text-center">
-                      <span className={`text-xs ${isUs ? "text-green-700 font-semibold" : "text-gray-500"}`}>
-                        {c.arrivalTime}
-                      </span>
+                      <span className={`text-xs ${isUs ? "text-green-700 font-semibold" : "text-gray-500"}`}>{c.arrivalTime}</span>
                     </div>
                     <div className="flex justify-center">
                       {c.doorstep
@@ -120,7 +112,6 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
               })}
             </div>
 
-            {/* Trust badges */}
             <div className="mt-5 flex flex-wrap gap-2">
               {["Upfront pricing", "30-day warranty", "Certified mechanics", "No hidden fees"].map((b) => (
                 <span key={b} className="flex items-center gap-1.5 text-xs bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full font-medium">
@@ -131,17 +122,15 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
           </div>
         </div>
 
-        {/* CTA */}
         <div className="mt-10 text-center">
           <a
             href="tel:+918197459732"
             className="inline-flex items-center gap-2 bg-red-600 text-white font-bold px-8 py-4 rounded-xl hover:bg-red-700 transition-colors shadow-lg shadow-red-100 text-base"
           >
-            Get Exact Quote — Call +91 8197459732
+            <Phone className="w-5 h-5" /> Get Exact Quote — Call +91 8197459732
           </a>
           <p className="text-xs text-gray-400 mt-2">Quote confirmed before any work begins. No obligation.</p>
         </div>
-
       </div>
     </section>
   );

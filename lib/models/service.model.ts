@@ -1,4 +1,5 @@
 // lib/models/service.model.ts
+// All new fields are OPTIONAL so existing services without them still build fine.
 
 export interface ServiceFAQ {
   q: string;
@@ -14,78 +15,99 @@ export type ServiceCategory =
   | "roadside"
   | "mechanic";
 
+// ── Pricing ───────────────────────────────────────────────────────────────────
+
 export interface PricingRow {
-  label: string;        // e.g. "Bike Jumpstart"
-  vehicle: "bike" | "car" | "both";
-  priceFrom: number;    // numeric for comparisons
+  label: string;
+  priceFrom: number;
   priceTo?: number;
-  note?: string;        // e.g. "parts extra"
+  note?: string;
+  highlight?: boolean;
 }
 
 export interface CompetitorRow {
-  competitor: string;
-  theirPrice: string;
-  ourPrice: string;
-  advantage: string;    // e.g. "Save ₹300"
+  name: string;
+  price: string;
+  arrivalTime: string;
+  warranty: string;
+  doorstep: boolean;
 }
+
+export interface PricingData {
+  rows: PricingRow[];
+  competitors: CompetitorRow[];
+  disclaimer: string;
+}
+
+// ── Guide ─────────────────────────────────────────────────────────────────────
 
 export interface GuideSection {
   heading: string;
-  body: string;         // plain prose paragraph(s)
+  body: string;
+  tips?: string[];
 }
 
-export interface ServiceGuide {
+export interface CompleteGuide {
   title: string;
   intro: string;
   sections: GuideSection[];
   conclusion: string;
 }
 
+// ── Testimonial ───────────────────────────────────────────────────────────────
+
+export interface ServiceTestimonial {
+  name: string;
+  location: string;
+  vehicle: string;
+  rating: number;
+  review: string;
+  date: string;
+  verified: boolean;
+}
+
+// ── Brand ─────────────────────────────────────────────────────────────────────
+
+export interface BrandEntry {
+  name: string;
+  models?: string[];
+}
+
+// ── Benefit ───────────────────────────────────────────────────────────────────
+
+export interface ServiceBenefit {
+  icon: string;
+  title: string;
+  body: string;
+}
+
+// ── Core ServiceData ──────────────────────────────────────────────────────────
+// Required fields match the ORIGINAL model exactly.
+// All new fields are optional — existing services without them build fine.
+
 export interface ServiceData {
-  slug: string;               // URL slug → /services/car-brake-service
-  title: string;              // Page H1
-  shortTitle: string;         // Card / listing title
+  // ── ORIGINAL required fields (unchanged) ───────────────────────────────────
+  slug: string;
+  title: string;
+  shortTitle: string;
   category: ServiceCategory;
-  icon: string;               // Lucide icon name
-  tagline: string;            // One-liner under H1
-  description: string;        // SEO paragraph (About section)
-  price: string;              // Starting price string e.g. "₹499"
-  priceNumeric: number;       // Starting price as number for sorting
-  duration: string;           // e.g. "1–2 hrs"
-  features: string[];         // What's included checklist
-  stats: { value: string; label: string }[];   // Hero stats row
-  heroChecks: string[];       // Short trust checks under hero H1
-
-  // ── Pricing ───────────────────────────────────────────────────────────────
-  pricingRows: PricingRow[];
-  competitorPricing: CompetitorRow[];
-  pricingDisclaimer: string;
-
-  // ── Brands ────────────────────────────────────────────────────────────────
-  carBrands?: string[];
-  bikeBrands?: string[];
-
-  // ── Guide ─────────────────────────────────────────────────────────────────
-  guide: ServiceGuide;
-
-  // ── FAQs ──────────────────────────────────────────────────────────────────
+  icon: string;
+  tagline: string;
+  description: string;
+  price: string;
+  duration: string;
+  features: string[];
   faqs: ServiceFAQ[];
-
-  // ── Testimonials (service-specific, optional) ─────────────────────────────
-  testimonials?: {
-    name: string;
-    area: string;
-    vehicle: string;
-    rating: number;
-    text: string;
-    date: string;
-  }[];
-
-  // ── SEO ───────────────────────────────────────────────────────────────────
   metaTitle: string;
   metaDescription: string;
   metaKeywords: string;
 
-  // ── Related ───────────────────────────────────────────────────────────────
-  relatedSlugs: string[];
+  // ── NEW optional fields (add to any service to unlock rich page sections) ──
+  pricing?: PricingData;
+  benefits?: ServiceBenefit[];
+  testimonials?: ServiceTestimonial[];
+  guide?: CompleteGuide;
+  carBrands?: BrandEntry[];
+  bikeBrands?: BrandEntry[];
+  relatedSlugs?: string[];
 }
