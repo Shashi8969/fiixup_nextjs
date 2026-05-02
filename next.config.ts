@@ -230,11 +230,6 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
-        source: "/car-oil-change-near-me-bengaluru",
-        destination: "/services/car-oil-change-at-home",
-        permanent: false, 
-      },
-      {
         source: "/bangalore/koramangala/bike-service-near-me",
         destination: "/bangalore/koramangala",
         permanent: false,
@@ -269,6 +264,7 @@ const nextConfig: NextConfig = {
         destination: "/bangalore/hsr-layout",
         permanent: false,
       },
+      
     ];
   },
 };
