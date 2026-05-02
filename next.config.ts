@@ -198,10 +198,8 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        // FIX: Next.js does not support # hash fragments in server-side redirects.
-        // Redirect to the contact page — the browser scroll is handled client-side.
         source: "/book-bike-service",
-        destination: "/contact",
+        destination: "/contact#contact-form",
         permanent: true,
       },
       {
@@ -216,13 +214,6 @@ const nextConfig: NextConfig = {
       },
 
       // ── 404 area sub-pages from SEO audit ───────────────────────────────
-      // FIX: Removed duplicate /car-jumpstart-near-me-bengaluru (was listed
-      // above as permanent:true — Next.js throws on duplicate sources).
-      {
-        source: "/car-jumpstart-near-me-bengaluru",
-        destination: "/services/car-battery-jumpstart-near-me",
-        permanent: true,
-      },
       {
         source: "/bangalore/koramangala/towing-service-near-me",
         destination: "/bangalore/koramangala",
@@ -266,6 +257,11 @@ const nextConfig: NextConfig = {
       {
         source: "/bangalore/hsr-layout/doorstep-mechanic-near-me",
         destination: "/bangalore/hsr-layout",
+        permanent: false,
+      },
+      {
+        source: "/bangalore/indiranagar",
+        destination: "/bangalore/koramangala",
         permanent: false,
       },
     ];
