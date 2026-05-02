@@ -8,12 +8,12 @@ const cities: CityData[] = [
   //  BENGALURU
   // ═══════════════════════════════════════
   {
-    slug: "bengaluru",
-    name: "Bengaluru",
+    slug: "bangalore",
+    name: "Bangalore",
     state: "Karnataka",
     phone: "+91 81974 59732",
     whatsapp: "918197459732",
-    email: "bengaluru@fiixup.in",
+    email: "bangalore@fiixup.in",
     areas: [
   { 
     name: "Koramangala", 
@@ -67,74 +67,74 @@ const cities: CityData[] = [
   }
 ],
 
-    heroTagline: "Serving Bengaluru",
-    metaTitle: "24/7 Doorstep Car & Bike Repair in Bengaluru | Fiixup",
-    metaDescription: "Professional car and bike repair at your doorstep in Bengaluru. Certified technicians, honest pricing, 24/7 emergency service across Koramangala, Whitefield, Indiranagar & more.",
-    metaKeywords: "car service Bengaluru, bike repair Bengaluru, doorstep mechanic Bengaluru, 24/7 auto repair Bengaluru",
+    heroTagline: "Serving Bangalore",
+    metaTitle: "24/7 Doorstep Car & Bike Repair in Bangalore | Fiixup",
+    metaDescription: "Professional car and bike repair at your doorstep in Bangalore. Certified technicians, honest pricing, 24/7 emergency service across Koramangala, Whitefield, Indiranagar & more.",
+    metaKeywords: "car service Bangalore, bike repair Bangalore, doorstep mechanic Bangalore, 24/7 auto repair Bangalore",
 
     // About
-    aboutHeading: "Why Bengaluru Trusts Fiixup for Doorstep Auto Repair",
-    aboutPara1: "Fiixup brings the workshop to your doorstep across Bengaluru! We're the city's most trusted 24/7 mobile auto repair service for both cars and bikes. No more wasting hours in Bengaluru's infamous traffic to reach a garage — our certified technicians come to you in Koramangala, Whitefield, Indiranagar, HSR Layout, or wherever you are.",
-    aboutPara2: "We understand Bengaluru's unique challenges — potholed roads that damage suspensions, monsoon flooding that affects electricals, and the city's busy schedules that leave no time for garage visits. Fiixup solves all of this with transparent pricing, honest diagnostics, and genuine parts — right at your doorstep.",
+    aboutHeading: "Why Bangalore Trusts Fiixup for Doorstep Auto Repair",
+    aboutPara1: "Fiixup brings the workshop to your doorstep across Bangalore! We're the city's most trusted 24/7 mobile auto repair service for both cars and bikes. No more wasting hours in Bangalore's infamous traffic to reach a garage — our certified technicians come to you in Koramangala, Whitefield, Indiranagar, HSR Layout, or wherever you are.",
+    aboutPara2: "We understand Bangalore's unique challenges — potholed roads that damage suspensions, monsoon flooding that affects electricals, and the city's busy schedules that leave no time for garage visits. Fiixup solves all of this with transparent pricing, honest diagnostics, and genuine parts — right at your doorstep.",
     aboutBullets: [
-      { heading: "24/7 Across All of Bengaluru", text: "From Hebbal to Electronic City, Rajajinagar to Whitefield — we cover every corner of Bengaluru around the clock." },
-      { heading: "Bengaluru Road Damage Specialists", text: "Our technicians are experienced in suspension, tyre, and alignment issues caused by Bengaluru's road conditions." },
-      { heading: "Transparent Pricing in Bengaluru", text: "No garage markup. No hidden charges. Detailed estimates before we start — trusted by 10,000+ Bengaluru customers." },
+      { heading: "24/7 Across All of Bangalore", text: "From Hebbal to Electronic City, Rajajinagar to Whitefield — we cover every corner of Bangalore around the clock." },
+      { heading: "Bangalore Road Damage Specialists", text: "Our technicians are experienced in suspension, tyre, and alignment issues caused by Bangalore's road conditions." },
+      { heading: "Transparent Pricing in Bangalore", text: "No garage markup. No hidden charges. Detailed estimates before we start — trusted by 10,000+ Bangalore customers." },
     ],
-    statsLabel: "Bengaluru Coverage",
+    statsLabel: "Bangalore Coverage",
 
     // Services
-    servicesSectionHeading: "Car & Bike Services at Your Doorstep in Bengaluru",
-    servicesSectionSubtext: "From routine oil changes in Koramangala to emergency engine repairs in Whitefield — our certified technicians handle it all across Bengaluru.",
-    carServicesHeading: "Car Services in Bengaluru",
-    bikeServicesHeading: "Bike Services in Bengaluru",
+    servicesSectionHeading: "Car & Bike Services at Your Doorstep in Bangalore",
+    servicesSectionSubtext: "From routine oil changes in Koramangala to emergency engine repairs in Whitefield — our certified technicians handle it all across Bangalore.",
+    carServicesHeading: "Car Services in Bangalore",
+    bikeServicesHeading: "Bike Services in Bangalore",
     cityServiceHighlights: [
-      { title: "Bengaluru Pothole Damage Repair", description: "Suspension, wheel alignment, and tyre damage caused by Bengaluru's roads — diagnosed and repaired at your doorstep." },
-      { title: "Monsoon Electrical & Brake Check — Bengaluru", description: "Bengaluru's heavy rains affect brakes, wiring, and battery. Book a pre/post-monsoon health check today." },
+      { title: "Bangalore Pothole Damage Repair", description: "Suspension, wheel alignment, and tyre damage caused by Bangalore's roads — diagnosed and repaired at your doorstep." },
+      { title: "Monsoon Electrical & Brake Check — Bangalore", description: "Bangalore's heavy rains affect brakes, wiring, and battery. Book a pre/post-monsoon health check today." },
     ],
 
     // Testimonials
-    testimonialsHeading: "What Bengaluru Customers Say About Fiixup",
-    testimonialsSubtext: "Trusted by thousands of car and bike owners across Koramangala, Whitefield, Indiranagar, HSR Layout, and all of Bengaluru.",
+    testimonialsHeading: "What Bangalore Customers Say About Fiixup",
+    testimonialsSubtext: "Trusted by thousands of car and bike owners across Koramangala, Whitefield, Indiranagar, HSR Layout, and all of Bangalore.",
     testimonials: [
-      { name: "Rajesh Kumar", rating: 5, text: "My car broke down on Outer Ring Road during peak traffic. Fiixup reached Marathahalli in 25 minutes flat and fixed it on the spot. Lifesaver!", date: "March 2026", vehicle: "Car Owner", area: "Marathahalli, Bengaluru" },
-      { name: "Priya Sharma", rating: 5, text: "Best bike service in Bengaluru! They came to my office in Whitefield for regular servicing. Professional, on-time, and very reasonably priced.", date: "February 2026", vehicle: "Bike Owner", area: "Whitefield, Bengaluru" },
-      { name: "Arjun Reddy", rating: 5, text: "Called at 2 AM when my car wouldn't start in Indiranagar. Fiixup was there within 30 minutes. True 24/7 service — can't recommend enough!", date: "March 2026", vehicle: "Car Owner", area: "Indiranagar, Bengaluru" },
-      { name: "Sneha Patel", rating: 5, text: "Got my Activa serviced at my HSR Layout home. The technician was knowledgeable and explained everything clearly. Will use Fiixup every time!", date: "January 2026", vehicle: "Bike Owner", area: "HSR Layout, Bengaluru" },
+      { name: "Rajesh Kumar", rating: 5, text: "My car broke down on Outer Ring Road during peak traffic. Fiixup reached Marathahalli in 25 minutes flat and fixed it on the spot. Lifesaver!", date: "March 2026", vehicle: "Car Owner", area: "Marathahalli, Bangalore" },
+      { name: "Priya Sharma", rating: 5, text: "Best bike service in Bangalore! They came to my office in Whitefield for regular servicing. Professional, on-time, and very reasonably priced.", date: "February 2026", vehicle: "Bike Owner", area: "Whitefield, Bangalore" },
+      { name: "Arjun Reddy", rating: 5, text: "Called at 2 AM when my car wouldn't start in Indiranagar. Fiixup was there within 30 minutes. True 24/7 service — can't recommend enough!", date: "March 2026", vehicle: "Car Owner", area: "Indiranagar, Bangalore" },
+      { name: "Sneha Patel", rating: 5, text: "Got my Activa serviced at my HSR Layout home. The technician was knowledgeable and explained everything clearly. Will use Fiixup every time!", date: "January 2026", vehicle: "Bike Owner", area: "HSR Layout, Bangalore" },
     ],
 
     faqCategories: [
       {
-        category: "Service in Bengaluru",
+        category: "Service in Bangalore",
         faqs: [
-          { q: "Which areas in Bengaluru do you cover?", a: "We cover all areas including Koramangala, Whitefield, Indiranagar, HSR Layout, Marathahalli, Electronic City, Jayanagar, JP Nagar, Rajajinagar, Malleshwaram, Yeshwanthpur, and more." },
-          { q: "How fast can you reach me in Bengaluru?", a: "Our technicians arrive within 30–60 minutes anywhere in Bengaluru. For ORR or Electronic City breakdowns, we dispatch the nearest available technician immediately." },
-          { q: "Do you serve both North and South Bengaluru?", a: "Yes — from Hebbal and Yelahanka in the north to Bannerghatta Road and Electronic City in the south, we cover all of Bengaluru." },
-          { q: "Is your Bengaluru service available on weekends and holidays?", a: "Yes, 24/7, 365 days a year — including weekends, Kannada Rajyotsava, and all public holidays." },
+          { q: "Which areas in Bangalore do you cover?", a: "We cover all areas including Koramangala, Whitefield, Indiranagar, HSR Layout, Marathahalli, Electronic City, Jayanagar, JP Nagar, Rajajinagar, Malleshwaram, Yeshwanthpur, and more." },
+          { q: "How fast can you reach me in Bangalore?", a: "Our technicians arrive within 30–60 minutes anywhere in Bangalore. For ORR or Electronic City breakdowns, we dispatch the nearest available technician immediately." },
+          { q: "Do you serve both North and South Bangalore?", a: "Yes — from Hebbal and Yelahanka in the north to Bannerghatta Road and Electronic City in the south, we cover all of Bangalore." },
+          { q: "Is your Bangalore service available on weekends and holidays?", a: "Yes, 24/7, 365 days a year — including weekends, Kannada Rajyotsava, and all public holidays." },
         ],
       },
       {
-        category: "Booking & Pricing — Bengaluru",
+        category: "Booking & Pricing — Bangalore",
         faqs: [
-          { q: "How do I book a service in Bengaluru?", a: "Call +91 81974 59732, WhatsApp us, or fill the contact form. Booking confirmed within minutes." },
-          { q: "What is the visit charge for Bengaluru?", a: "A minimal visit fee applies, waived when you proceed with the repair. No hidden charges — pricing shared upfront." },
-          { q: "Do you accept UPI in Bengaluru?", a: "Yes — GPay, PhonePe, Paytm, cash, and cards all accepted." },
+          { q: "How do I book a service in Bangalore?", a: "Call +91 81974 59732, WhatsApp us, or fill the contact form. Booking confirmed within minutes." },
+          { q: "What is the visit charge for Bangalore?", a: "A minimal visit fee applies, waived when you proceed with the repair. No hidden charges — pricing shared upfront." },
+          { q: "Do you accept UPI in Bangalore?", a: "Yes — GPay, PhonePe, Paytm, cash, and cards all accepted." },
         ],
       },
       {
-        category: "Car Services in Bengaluru",
+        category: "Car Services in Bangalore",
         faqs: [
-          { q: "Which car brands do you service in Bengaluru?", a: "All popular brands — Maruti, Hyundai, Tata, Honda, Toyota, Kia, MG, Mahindra, Volkswagen, Skoda, Ford, and more." },
-          { q: "Can you fix pothole damage to my car in Bengaluru?", a: "Yes! Suspension damage, tyre punctures, wheel alignment — all repaired at your doorstep. Bengaluru roads are our speciality." },
-          { q: "Do you service electric vehicles in Bengaluru?", a: "We service hybrid vehicles and handle basic EV maintenance. Full EV service coming soon to Bengaluru." },
+          { q: "Which car brands do you service in Bangalore?", a: "All popular brands — Maruti, Hyundai, Tata, Honda, Toyota, Kia, MG, Mahindra, Volkswagen, Skoda, Ford, and more." },
+          { q: "Can you fix pothole damage to my car in Bangalore?", a: "Yes! Suspension damage, tyre punctures, wheel alignment — all repaired at your doorstep. Bangalore roads are our speciality." },
+          { q: "Do you service electric vehicles in Bangalore?", a: "We service hybrid vehicles and handle basic EV maintenance. Full EV service coming soon to Bangalore." },
         ],
       },
       {
-        category: "Bike Services in Bengaluru",
+        category: "Bike Services in Bangalore",
         faqs: [
-          { q: "Which bike brands do you service in Bengaluru?", a: "Honda, Bajaj, TVS, Royal Enfield, Yamaha, Hero, Suzuki, KTM, and all other popular brands." },
-          { q: "Can you service my Royal Enfield in Bengaluru?", a: "Yes! RE servicing is one of our most popular services. We handle Bullet, Classic 350, Meteor, Himalayan — all models." },
-          { q: "Do you service scooters in Bengaluru?", a: "Yes — Activa, TVS Jupiter, Suzuki Access, Yamaha Fascino, and Ola S1 across all of Bengaluru." },
+          { q: "Which bike brands do you service in Bangalore?", a: "Honda, Bajaj, TVS, Royal Enfield, Yamaha, Hero, Suzuki, KTM, and all other popular brands." },
+          { q: "Can you service my Royal Enfield in Bangalore?", a: "Yes! RE servicing is one of our most popular services. We handle Bullet, Classic 350, Meteor, Himalayan — all models." },
+          { q: "Do you service scooters in Bangalore?", a: "Yes — Activa, TVS Jupiter, Suzuki Access, Yamaha Fascino, and Ola S1 across all of Bangalore." },
         ],
       },
     ],
