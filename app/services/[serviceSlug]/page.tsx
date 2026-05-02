@@ -400,6 +400,7 @@ export default async function Page({
           </div>
         </section>
       )}
+      <WhyChooseDoorstep />
 
       {/* 13. Booking CTA */}
       <BookingCTA serviceTitle={service.shortTitle} bgAccent={bgAccent} />

@@ -28,8 +28,7 @@ export function CityServices({ city, areaName }: { city: CityData; areaName?: st
             return (
               <Link 
                 key={cat.title} 
-                // Append city slug to the query for better tracking/context
-                href={`${cat.link}&city=${city.slug}`}
+                href={`/${city.slug}/services/${cat.slug}`}
                 className={`group relative p-8 rounded-2xl bg-white border border-gray-100 transition-all duration-300 flex flex-col hover:shadow-2xl hover:-translate-y-1 ${theme.hoverBorder}`}
               >
                 <div className={`mb-6 inline-flex w-fit p-4 rounded-xl border border-gray-50 bg-gray-50/50 group-hover:bg-white transition-all duration-300 ${theme.hoverIconBg}`}>
@@ -55,7 +54,7 @@ export function CityServices({ city, areaName }: { city: CityData; areaName?: st
 
         <div className="text-center mt-12">
           <Link
-            href={`/services?city=${city.slug}`}
+            href={`/${city.slug}/services`}
             className="inline-block bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-200 transform hover:-translate-y-0.5"
           >
             Browse All Services in {displayLocation}

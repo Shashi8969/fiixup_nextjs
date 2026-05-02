@@ -179,7 +179,8 @@ export const serviceCategories = [
     ]
   },
   {
-    slug: "services/battery",
+    slug: "battery",
+    link: "services/battery",
     title: "Battery Services",
     tagline: "Instant Vehicle Battery Jumpstart & Replacement",
     description: "Dead battery? Don't get stranded. Our technicians provide jumpstart services and doorstep battery replacement within 30-60 minutes.",

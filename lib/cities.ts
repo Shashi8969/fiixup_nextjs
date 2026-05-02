@@ -55,6 +55,16 @@ const cities: CityData[] = [
     slug: "jp-nagar", 
     highlight: "Comprehensive car & bike service in JP Nagar – doorstep repair with expert mechanics" 
   },
+  {
+    name: "Rajajinagar",
+    slug: "rajajinagar",
+    highlight: "Trusted doorstep car & bike repair in Rajajinagar – quick and affordable auto service"
+  },
+  {
+    name: "Banashankari",
+    slug: "banashankari",
+    highlight: "Doorstep car & bike repair in Banashankari – expert mechanics at your service"
+  }
 ],
 
     heroTagline: "Serving Bengaluru",

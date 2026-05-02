@@ -220,6 +220,11 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
+        source: "/car-jumpstart-near-me-bengaluru",
+        destination: "/services/car-battery-jumpstart-near-me",
+        permanent: false,
+      },
+      {
         source: "/bangalore/koramangala/car-repair-near-me",
         destination: "/bangalore/koramangala",
         permanent: false,
