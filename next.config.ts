@@ -212,6 +212,11 @@ const nextConfig: NextConfig = {
         destination: "/bangalore/hsr-layout",
         permanent: true,
       },
+      {
+        source: "/car-jumpstart-near-me-bengaluru",
+        destination: "/services/car-battery-jumpstart-near-me",
+        permanent: true,
+      },
 
       // ── 404 area sub-pages from SEO audit ───────────────────────────────
       {
