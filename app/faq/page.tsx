@@ -9,6 +9,8 @@ import { PageHero } from "@/components/ui/PageHero";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
 
 const seo = getStaticPageSEO("faq")!;
+export const revalidate = 3600; // refreshes every 1 hour
+
 
 export const metadata: Metadata = {
   title: seo.title,

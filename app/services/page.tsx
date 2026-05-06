@@ -1,13 +1,12 @@
 // app/services/page.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// Services page — data-driven from lib/data/serviceCategory.ts.
-// To add a service: add entry to JSON. No code changes needed.
-// ─────────────────────────────────────────────────────────────────────────────
+export const revalidate = 3600;
+
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Phone } from "lucide-react";
 import { iconMap } from "@/lib/icons";
-import { serviceCategories } from "@/lib/data/serviceCategory";
+import { getAllServiceCategories } from "@/lib/data/serviceCategory";
+import { getAllServices } from "@/lib/services";
 import { ServiceCardPrice } from "@/components/ui/ServiceCardPrice";
 import { TrustStrip } from "@/components/ui/TrustStrip";
 import HowItWorks from "@/components/ui/HowItWorks";
@@ -29,7 +28,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const [serviceCategories, allServices] = await Promise.all([
+    getAllServiceCategories(),
+    getAllServices(),
+  ]);
+
   return (
     <>
       {/* HERO */}
@@ -62,31 +66,38 @@ export default function ServicesPage() {
       <TrustStrip />
 
       {/* SERVICE CATEGORY SECTIONS */}
-      {serviceCategories.map((category) => (
-        <section key={category.slug} className={`py-8 ${category.bgColor}`}>
-          <div className="container mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-2 mb-3">
-              <category.icon className={`w-7 h-7 text-${category.color}-700`} />
-              {category.title}
-            </h2>
-            <p className="text-gray-600 mb-8">{category.description}</p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {category.data.map((s) => (
-                <ServiceCardPrice
-                  key={s.slug}
-                  slug={s.slug}
-                  title={s.shortTitle}
-                  tagline={s.tagline}
-                  price={s.price}
-                  duration={s.duration}
-                  accentColor={category.color}
-                  icon={iconMap[s.icon]}
-                />
-              ))}
+      {serviceCategories.map((category) => {
+        const categoryServices = allServices.filter(
+          (s) => s.category === category.categorySlug
+        );
+        if (categoryServices.length === 0) return null;
+
+        return (
+          <section key={category.slug} className={`py-8 ${category.bgColor}`}>
+            <div className="container mx-auto px-4">
+              <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-2 mb-3">
+                <category.icon className={`w-7 h-7 text-${category.color}-700`} />
+                {category.title}
+              </h2>
+              <p className="text-gray-600 mb-8">{category.description}</p>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {categoryServices.map((s) => (
+                  <ServiceCardPrice
+                    key={s.slug}
+                    slug={s.slug}
+                    title={s.shortTitle}
+                    tagline={s.tagline}
+                    price={s.price}
+                    duration={s.duration}
+                    accentColor={category.color}
+                    icon={iconMap[s.icon]}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-      ))}
+          </section>
+        );
+      })}
 
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">

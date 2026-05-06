@@ -1,9 +1,11 @@
-import { serviceCategories } from "@/lib/data/serviceCategory";
+// components/city/CityServices.tsx
+import { getAllServiceCategories } from "@/lib/data/serviceCategory";
 import { serviceThemes, type ThemeColor } from "@/lib/theme";
 import Link from "next/link";
 import type { CityData } from "@/lib/models/city.model";
 
-export function CityServices({ city, areaName }: { city: CityData; areaName?: string }) {
+export async function CityServices({ city, areaName }: { city: CityData; areaName?: string }) {
+  const serviceCategories = await getAllServiceCategories();
   const displayLocation = areaName || city.name;
 
   return (
@@ -26,20 +28,20 @@ export function CityServices({ city, areaName }: { city: CityData; areaName?: st
             const theme = serviceThemes[cat.color as ThemeColor] || serviceThemes.blue;
 
             return (
-              <Link 
-                key={cat.title} 
+              <Link
+                key={cat.title}
                 href={`/${city.slug}/services/${cat.slug}`}
                 className={`group relative p-8 rounded-2xl bg-white border border-gray-100 transition-all duration-300 flex flex-col hover:shadow-2xl hover:-translate-y-1 ${theme.hoverBorder}`}
               >
                 <div className={`mb-6 inline-flex w-fit p-4 rounded-xl border border-gray-50 bg-gray-50/50 group-hover:bg-white transition-all duration-300 ${theme.hoverIconBg}`}>
                   <cat.icon className={`w-10 h-10 ${theme.iconText}`} />
                 </div>
-                
+
                 {/* SEO Optimized H3 */}
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
                   {cat.title} in {displayLocation}
                 </h3>
-                
+
                 <p className="text-gray-500 text-sm leading-relaxed mb-6 flex-1">
                   {cat.description.replace("at your doorstep", `at your doorstep in ${displayLocation}`)}
                 </p>

@@ -1,5 +1,8 @@
+// app/blog/page.tsx
+export const revalidate = 3600;
+
 import type { Metadata } from "next";
-import blogPosts from "@/lib/data/blogPosts.json";
+import { getAllPosts } from "@/lib/posts";
 import { getStaticPageSEO } from "@/lib/data/seo";
 import { PageHero } from "@/components/ui/PageHero";
 import { BlogCard } from "@/components/ui/BlogCard";
@@ -18,7 +21,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const posts = await getAllPosts();
+
   return (
     <>
       <PageHero
@@ -30,14 +35,14 @@ export default function BlogPage() {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.map((post, i) => (
-  <BlogCard 
-    key={post.id} 
-    {...post} 
-    readTime={String(post.readTime)} // Convert number to string
-    priority={i === 0} 
-  />
-))}
+            {posts.map((post, i) => (
+              <BlogCard
+                key={post.id}
+                {...post}
+                readTime={String(post.readTime)}
+                priority={i === 0}
+              />
+            ))}
           </div>
         </div>
       </section>

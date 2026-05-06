@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { ServiceData } from "@/lib/models/service.model";
 import type { CityData } from "@/lib/models/city.model";
-import { carServices, bikeServices } from "@/lib/services";
 
 const iconMap: Record<string, LucideIcon> = {
   Wrench, Car, Gauge, Droplet, Wind, Battery,
@@ -24,9 +23,11 @@ const bikeBrands = ['Honda', 'Bajaj', 'TVS', 'Royal Enfield', 'Yamaha', 'Hero', 
 export function CityServiceDetail({
   service,
   city,
+  relatedServices = [],  // ← passed from parent server component
 }: {
   service: ServiceData;
   city: CityData;
+  relatedServices?: ServiceData[];
 }) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
@@ -38,7 +39,7 @@ export function CityServiceDetail({
   const bgLight = isCar ? 'bg-blue-50' : 'bg-red-50';
   const brands = isCar ? carBrands : bikeBrands;
 
-  const related = (isCar ? carServices : bikeServices)
+  const related = relatedServices
     .filter((s) => s.slug !== service.slug)
     .slice(0, 3);
 
@@ -65,7 +66,7 @@ export function CityServiceDetail({
               </h1>
               <p className="text-lg text-gray-600 mb-2">{service.tagline}</p>
               <p className="text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2 mb-6">
-                Serving {city.areas.slice(0, 4).join(', ')} & all areas across {city.name}
+                Serving {city.areas.slice(0, 4).map((a: any) => typeof a === 'string' ? a : a.name).join(', ')} & all areas across {city.name}
               </p>
               <div className="flex flex-wrap gap-6 mb-8">
                 <div>
@@ -129,7 +130,7 @@ export function CityServiceDetail({
               <h2 className="text-2xl font-bold mb-4">{service.shortTitle} in {city.name}</h2>
               <p className="text-gray-700 leading-relaxed text-lg mb-4">{service.description}</p>
               <p className="text-gray-600 leading-relaxed mb-8">
-                Our certified technicians cover all areas of {city.name} including {city.areas.join(', ')} — reaching you within 30–60 minutes.
+                Our certified technicians cover all areas of {city.name} including {city.areas.map((a: any) => typeof a === 'string' ? a : a.name).join(', ')} — reaching you within 30–60 minutes.
               </p>
               <h3 className="font-bold text-gray-900 mb-3">{isCar ? 'Car Brands We Service' : 'Bike Brands We Service'}</h3>
               <div className="flex flex-wrap gap-2">
@@ -140,7 +141,7 @@ export function CityServiceDetail({
               </div>
             </div>
             <div className={`${bgLight} rounded-2xl p-8`}>
-              <h2 className="text-2xl font-bold mb-6">What's Included</h2>
+              <h2 className="text-2xl font-bold mb-6">What&apos;s Included</h2>
               <ul className="space-y-4">
                 {service.features.map((f) => (
                   <li key={f} className="flex items-start gap-3">
@@ -182,16 +183,11 @@ export function CityServiceDetail({
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-bold text-center mb-8">{service.shortTitle} Available Across {city.name}</h2>
           <div className="flex flex-wrap gap-3 justify-center">
-            {city.areas.map((area) => {
-              // 1. Determine the Name and the Key safely
+            {city.areas.map((area: any) => {
               const areaName = typeof area === "string" ? area : area.name;
-              const areaKey = typeof area === "string" ? area : area.slug;
-
+              const areaKey  = typeof area === "string" ? area : area.slug;
               return (
-                <span
-                  key={areaKey}
-                  className={`flex items-center gap-2 border-2 ${borderAccent} ${accentBlue} font-semibold px-5 py-2 rounded-full text-sm`}
-                >
+                <span key={areaKey} className={`flex items-center gap-2 border-2 ${borderAccent} ${accentBlue} font-semibold px-5 py-2 rounded-full text-sm`}>
                   <MapPin className="w-4 h-4" />
                   {service.shortTitle} in {areaName}
                 </span>
@@ -206,14 +202,14 @@ export function CityServiceDetail({
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">What {city.name} Customers Say</h2>
           <div className="grid sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {city.testimonials.slice(0, 3).map((review, i) => (
+            {city.testimonials.slice(0, 3).map((review: any, i: number) => (
               <div key={i} className="bg-white rounded-xl p-6 shadow-sm">
                 <div className="flex gap-0.5 mb-3">
                   {[...Array(review.rating)].map((_, j) => (
                     <span key={j} className="text-yellow-400 text-sm">★</span>
                   ))}
                 </div>
-                <p className="text-gray-700 text-sm mb-4">"{review.text}"</p>
+                <p className="text-gray-700 text-sm mb-4">&quot;{review.text}&quot;</p>
                 <div className="border-t pt-3">
                   <p className="font-semibold text-gray-900 text-sm">{review.name}</p>
                   <p className="text-blue-600 text-xs flex items-center gap-1 mt-0.5">
@@ -251,41 +247,43 @@ export function CityServiceDetail({
       </section>
 
       {/* ── RELATED SERVICES ── */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold mb-8">Other {isCar ? 'Car' : 'Bike'} Services in {city.name}</h2>
-          <div className="grid sm:grid-cols-3 gap-6">
-            {related.map((s) => {
-              const RelIcon = iconMap[s.icon] ?? Wrench;
-              return (
-                <Link key={s.slug} href={`/${city.slug}/services/${s.slug}`}
-                  className="bg-white p-6 border border-gray-200 rounded-xl hover:shadow-lg transition-all group">
-                  <RelIcon className={`w-10 h-10 ${accentBlue} mb-3`} />
-                  <h3 className={`font-bold text-gray-900 group-hover:${accentBlue} transition-colors mb-1`}>
-                    {s.shortTitle} in {city.name}
-                  </h3>
-                  <p className="text-sm text-gray-500 mb-3">{s.tagline}</p>
-                  <p className={`text-sm font-bold ${accentBlue}`}>From {s.price}</p>
-                </Link>
-              );
-            })}
+      {related.length > 0 && (
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl font-bold mb-8">Other {isCar ? 'Car' : 'Bike'} Services in {city.name}</h2>
+            <div className="grid sm:grid-cols-3 gap-6">
+              {related.map((s) => {
+                const RelIcon = iconMap[s.icon] ?? Wrench;
+                return (
+                  <Link key={s.slug} href={`/${city.slug}/services/${s.slug}`}
+                    className="bg-white p-6 border border-gray-200 rounded-xl hover:shadow-lg transition-all group">
+                    <RelIcon className={`w-10 h-10 ${accentBlue} mb-3`} />
+                    <h3 className={`font-bold text-gray-900 group-hover:${accentBlue} transition-colors mb-1`}>
+                      {s.shortTitle} in {city.name}
+                    </h3>
+                    <p className="text-sm text-gray-500 mb-3">{s.tagline}</p>
+                    <p className={`text-sm font-bold ${accentBlue}`}>From {s.price}</p>
+                  </Link>
+                );
+              })}
+            </div>
+            <div className="mt-8 text-center">
+              <Link href={`/${city.slug}`} className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all">
+                <ArrowLeft className="w-4 h-4" /> Back to {city.name} Services
+              </Link>
+            </div>
           </div>
-          <div className="mt-8 text-center">
-            <Link href={`/${city.slug}`} className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all">
-              <ArrowLeft className="w-4 h-4" /> Back to {city.name} Services
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ── BOTTOM CTA ── */}
       <section className={`py-16 ${bgAccent} text-white text-center`}>
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-3">Book {service.shortTitle} in {city.name} Now</h2>
           <p className="text-white/80 mb-8 text-lg">
-            Certified technicians available 24/7 across {" "}
-            {city.areas.slice(0, 3).map(a => typeof a === 'string' ? a : a.name).join(', ')}
-            & all of {city.name}.
+            Certified technicians available 24/7 across{" "}
+            {city.areas.slice(0, 3).map((a: any) => typeof a === 'string' ? a : a.name).join(', ')}
+            &amp; all of {city.name}.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link href={`/${city.slug}#contact`} className="bg-white text-gray-900 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">

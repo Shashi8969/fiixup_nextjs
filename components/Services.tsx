@@ -1,9 +1,11 @@
 // components/Services.tsx
-import { serviceCategories } from "@/lib/data/serviceCategory"; // Verified path
+import { getAllServiceCategories } from "@/lib/data/serviceCategory";
 import { ServiceCard } from "@/components/ui/ServiceCard";
 import Link from "next/link";
 
-export function Services() {
+export async function Services() {
+  const serviceCategories = await getAllServiceCategories();
+
   return (
     <section id="services" className="py-12 bg-white">
       <div className="container mx-auto px-4">
@@ -18,11 +20,10 @@ export function Services() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {/* slice(0, 8) ensures we don't overflow the UI if you add 20 categories[cite: 17] */}
           {serviceCategories.slice(0, 8).map((cat) => (
-            <ServiceCard 
-              key={cat.slug || cat.title} // Use slug as key for better stability[cite: 8]
-              cat={cat} 
+            <ServiceCard
+              key={cat.slug || cat.title}
+              cat={cat}
             />
           ))}
         </div>

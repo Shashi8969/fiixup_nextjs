@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Contact } from "@/components/Contact";
 import { getStaticPageSEO } from "@/lib/data/seo";
 import { PageHero } from "@/components/ui/PageHero";
+export const revalidate = 3600; // refreshes every 1 hour
+
 
 const seo = getStaticPageSEO("contact")!;
 

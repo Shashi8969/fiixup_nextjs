@@ -1,10 +1,11 @@
+// components/Blog.tsx
 import Link from "next/link";
-import blogPosts from "@/lib/data/blogPosts.json";
+import { getFeaturedPosts } from "@/lib/posts";
 import { BlogCard } from "@/components/ui/BlogCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
-export function Blog() {
-  const featuredPosts = blogPosts.slice(0, 3);
+export async function Blog() {
+  const featuredPosts = await getFeaturedPosts(3);
 
   return (
     <section id="blog" className="py-12 bg-white">
@@ -16,7 +17,12 @@ export function Blog() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuredPosts.map((post, i) => (
-            <BlogCard key={post.id} {...post} priority={i === 0} />
+            <BlogCard
+              key={post.id}
+              {...post}
+              readTime={String(post.readTime)}
+              priority={i === 0}
+            />
           ))}
         </div>
 

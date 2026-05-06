@@ -1,3 +1,5 @@
+export const revalidate = 3600; // refreshes every 1 hour
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";

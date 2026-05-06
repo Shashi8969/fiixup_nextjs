@@ -18,6 +18,8 @@ import {
   WHATSAPP_NUMBER,
 } from "@/lib/constants";
 
+export const revalidate = 3600; // refreshes every 1 hour
+
 // ── Quick-access services shown on 404 page ───────────────────────────────────
 const TOP_SERVICES = [
   { icon: Bike,    label: "Bike Service at Home",     href: "/services/bike-service-at-home",        tag: "From ₹349",  color: "red"    },

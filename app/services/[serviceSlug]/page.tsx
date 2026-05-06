@@ -1,41 +1,38 @@
 // app/services/[serviceSlug]/page.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// Individual + category service page — fully data-driven from lib/services.ts.
-// New section components render only when service data includes those fields.
-// ─────────────────────────────────────────────────────────────────────────────
+// Individual + category service page — fully data-driven from Supabase.
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Phone } from "lucide-react";
 
-// Existing components (already in project)
-import CityCoverage     from "@/components/service/ServiceCities";
-import ServiceFAQ       from "@/components/service/ServiceFAQ";
-import Hero             from "@/components/service/ServiceHero";
-import TrustStrip       from "@/components/service/ServiceTrustStrip";
-import { Testimonials } from "@/components/Testimonials";
-import BookingCTA       from "@/components/ui/BookingCTA";
-import HowItWorks       from "@/components/ui/HowItWorks";
+import CityCoverage      from "@/components/service/ServiceCities";
+import ServiceFAQ        from "@/components/service/ServiceFAQ";
+import Hero              from "@/components/service/ServiceHero";
+import TrustStrip        from "@/components/service/ServiceTrustStrip";
+import { Testimonials }  from "@/components/Testimonials";
+import BookingCTA        from "@/components/ui/BookingCTA";
+import HowItWorks        from "@/components/ui/HowItWorks";
 import WhyChooseDoorstep from "@/components/ui/WhyChooseDoorstep";
 import { ServiceCardPrice } from "@/components/ui/ServiceCardPrice";
 import { TrustStrip as IconTrustStrip } from "@/components/ui/TrustStrip";
 
-// NEW components (included in this update)
 import PricingTable         from "@/components/service/PricingTable";
 import BrandsGrid           from "@/components/service/BrandsGrid";
 import CompleteGuideSection from "@/components/service/CompleteGuide";
 import ServiceTestimonials  from "@/components/service/ServiceTestimonials";
 import ServiceBenefits      from "@/components/service/ServiceBenefits";
 
-import { iconMap }            from "@/lib/icons";
-import { getServiceBySlug, carServices, bikeServices, allServicesOrdered } from "@/lib/services";
-import { serviceCategories }  from "@/lib/data/serviceCategory";
+import { iconMap } from "@/lib/icons";
+import { getAllServices, getServiceBySlug, getServicesByCategory } from "@/lib/services";
+import { serviceCategories } from "@/lib/data/serviceCategory";
 import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
-import { getCategorySEO }     from "@/lib/data/seo";
+import { getCategorySEO } from "@/lib/data/seo";
 import { serviceSchema, faqSchema, breadcrumbSchema } from "@/lib/schema";
+import { getAllServiceCategories } from "@/lib/data/serviceCategory";
 
-// ── Category hero themes ──────────────────────────────────────────────────────
+export const revalidate = 3600;
+
 const heroTheme: Record<string, { gradient: string; iconBg: string; iconText: string; btn: string }> = {
   blue:   { gradient: "from-blue-50 to-blue-100",     iconBg: "bg-blue-100",   iconText: "text-blue-700",   btn: "bg-blue-600 hover:bg-blue-700" },
   red:    { gradient: "from-red-50 to-red-100",       iconBg: "bg-red-100",    iconText: "text-red-700",    btn: "bg-red-600 hover:bg-red-700" },
@@ -46,10 +43,11 @@ const heroTheme: Record<string, { gradient: string; iconBg: string; iconText: st
   teal:   { gradient: "from-teal-50 to-teal-100",     iconBg: "bg-teal-100",   iconText: "text-teal-700",   btn: "bg-teal-600 hover:bg-teal-700" },
 };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const allServices = await getAllServices();
   return [
     ...serviceCategories.map((c) => ({ serviceSlug: c.slug })),
-    ...allServicesOrdered.map((s) => ({ serviceSlug: s.slug })),
+    ...allServices.map((s) => ({ serviceSlug: s.slug })),
   ];
 }
 
@@ -76,7 +74,7 @@ export async function generateMetadata({
     };
   }
 
-  const service = getServiceBySlug(serviceSlug);
+  const service = await getServiceBySlug(serviceSlug);
   if (service) {
     return {
       title:       service.metaTitle,
@@ -102,12 +100,15 @@ export default async function Page({
   const { serviceSlug } = await params;
 
   // ── Category landing page ──────────────────────────────────────────────────
-  const cat = serviceCategories.find((c) => c.slug === serviceSlug);
+const categories = await getAllServiceCategories();
+const cat = categories.find((c) => c.slug === serviceSlug);
   if (cat) {
     const theme = heroTheme[cat.color] ?? heroTheme.blue;
     const CategoryIcon = cat.icon;
-    const accentColor = (cat.slug === "car" ? "blue" : cat.color) as "blue" | "red"; 
-    const themeGradient = `from-${cat.color}-50 to-${cat.color}-100`;
+    const accentColor = (cat.slug === "car" ? "blue" : cat.color) as "blue" | "red";
+
+    // Fetch services for this category from Supabase
+    const catServices = await getServicesByCategory(cat.categorySlug as any);
 
     return (
       <>
@@ -142,7 +143,7 @@ export default async function Page({
             <h2 className="text-2xl md:text-3xl font-bold mb-3">All {cat.title}</h2>
             <p className="text-gray-600 mb-8">{cat.description}</p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {cat.data.map((s) => (
+              {catServices.map((s) => (
                 <ServiceCardPrice
                   key={s.slug}
                   slug={s.slug}
@@ -158,34 +159,18 @@ export default async function Page({
           </div>
         </section>
 
-        {/* 1. Benefits (Why Choose Us) */}
         {cat.benefits && (
-          <ServiceBenefits 
-            benefits={cat.benefits} 
-            serviceTitle={cat.title} 
-            accentColor={accentColor} 
-          />
+          <ServiceBenefits benefits={cat.benefits} serviceTitle={cat.title} accentColor={accentColor} />
         )}
 
-        {/* 2. Pricing Summary */}
         {cat.pricingSummary && (
-          <PricingTable 
-            pricing={cat.pricingSummary} 
-            serviceTitle={cat.title} 
-            accentColor={accentColor} 
-          />
+          <PricingTable pricing={cat.pricingSummary} serviceTitle={cat.title} accentColor={accentColor} />
         )}
 
-        {/* 3. Brands Grid */}
         {cat.brands && (
-          <BrandsGrid 
-            brands={cat.brands} 
-            heading={`${cat.title} Brands We Service`} 
-            accentColor={accentColor} 
-          />
+          <BrandsGrid brands={cat.brands} heading={`${cat.title} Brands We Service`} accentColor={accentColor} />
         )}
 
-        {/* 4. Complete Guide (SEO Content) */}
         {cat.guide && <CompleteGuideSection guide={cat.guide} />}
 
         <section className="py-16 bg-gray-50">
@@ -204,16 +189,10 @@ export default async function Page({
               Certified technicians come to you — at home, office, or anywhere your vehicle is parked.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <Link
-                href="/contact#contact-form"
-                className="bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-blue-50 transition-colors"
-              >
+              <Link href="/contact#contact-form" className="bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-blue-50 transition-colors">
                 Book Service Now
               </Link>
-              <a
-                href={`tel:${MAIN_PHONE}`}
-                className="bg-red-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-red-700 transition-colors flex items-center gap-2"
-              >
+              <a href={`tel:${MAIN_PHONE}`} className="bg-red-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-red-700 transition-colors flex items-center gap-2">
                 <Phone className="w-4 h-4" /> {MAIN_PHONE_DISPLAY}
               </a>
             </div>
@@ -224,7 +203,7 @@ export default async function Page({
   }
 
   // ── Individual service page ────────────────────────────────────────────────
-  const service = getServiceBySlug(serviceSlug ?? "");
+  const service = await getServiceBySlug(serviceSlug ?? "");
   if (!service) return notFound();
 
   const Icon = iconMap[service.icon];
@@ -236,55 +215,36 @@ export default async function Page({
   const bgLight      = isCar ? "bg-blue-50"      : "bg-red-50";
   const accentColor  = (isCar ? "blue" : "red") as "blue" | "red";
 
-  // Related services — use relatedSlugs if available, otherwise same-category fallback
+  // Related services from Supabase
   const relatedSlugs = service.relatedSlugs ?? [];
-  const allInCategory = isCar ? carServices : bikeServices;
-  const related = allInCategory
+  const sameCategory = await getServicesByCategory(service.category as any);
+  const related = sameCategory
     .filter((s) => s.slug !== service.slug)
     .filter((s) => relatedSlugs.length === 0 || relatedSlugs.includes(s.slug))
     .slice(0, 3);
 
-  // Brands to display
-  const brands = isCar
-    ? (service.carBrands ?? [])
-    : (service.bikeBrands ?? []);
+  const brands = isCar ? (service.carBrands ?? []) : (service.bikeBrands ?? []);
 
-  // JSON-LD schemas
   const schemas = [
     serviceSchema({ name: service.title, description: service.description, slug: service.slug, price: service.price }),
     faqSchema(service.faqs),
     breadcrumbSchema([
-      { name: "Home",              url: "/" },
-      { name: "Services",          url: "/services" },
-      { name: service.shortTitle,  url: `/services/${service.slug}` },
+      { name: "Home",             url: "/" },
+      { name: "Services",         url: "/services" },
+      { name: service.shortTitle, url: `/services/${service.slug}` },
     ]),
   ];
 
   return (
     <>
-      {/* JSON-LD structured data */}
       {schemas.map((schema, i) => (
-        <script
-          key={i}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-        />
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       ))}
 
-      {/* 1. Hero */}
-      <Hero
-        service={service}
-        Icon={Icon}
-        isCar={isCar}
-        bgAccent={bgAccent}
-        accentBlue={accentBlue}
-        bgLight={bgLight}
-      />
+      <Hero service={service} Icon={Icon} isCar={isCar} bgAccent={bgAccent} accentBlue={accentBlue} bgLight={bgLight} />
 
-      {/* 2. Trust strip */}
       <TrustStrip />
 
-      {/* 3. Description + What's Included */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12">
           <div>
@@ -305,16 +265,10 @@ export default async function Page({
         </div>
       </section>
 
-      {/* 4. Benefits — only renders if service.benefits is defined */}
       {service.benefits && service.benefits.length > 0 && (
-        <ServiceBenefits
-          benefits={service.benefits}
-          serviceTitle={service.shortTitle}
-          accentColor={accentColor}
-        />
+        <ServiceBenefits benefits={service.benefits} serviceTitle={service.shortTitle} accentColor={accentColor} />
       )}
 
-      {/* 5. How It Works */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
@@ -324,16 +278,10 @@ export default async function Page({
         </div>
       </section>
 
-      {/* 6. Pricing Table — only renders if service.pricing is defined */}
       {service.pricing && (
-        <PricingTable
-          pricing={service.pricing}
-          serviceTitle={service.shortTitle}
-          accentColor={accentColor}
-        />
+        <PricingTable pricing={service.pricing} serviceTitle={service.shortTitle} accentColor={accentColor} />
       )}
 
-      {/* 7. Brands Grid — only renders if brands array is non-empty */}
       {brands.length > 0 && (
         <BrandsGrid
           brands={brands}
@@ -343,20 +291,14 @@ export default async function Page({
         />
       )}
 
-      {/* 8. City Coverage */}
       <CityCoverage service={service} borderAccent={borderAccent} accentBlue={accentBlue} />
 
-      {/* 9. Testimonials — service-specific if available, global fallback */}
       {service.testimonials && service.testimonials.length > 0 ? (
-        <ServiceTestimonials
-          testimonials={service.testimonials}
-          serviceTitle={service.shortTitle}
-        />
+        <ServiceTestimonials testimonials={service.testimonials} serviceTitle={service.shortTitle} />
       ) : (
         <Testimonials />
       )}
 
-      {/* 10. FAQ */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 max-w-3xl">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-2">
@@ -369,10 +311,8 @@ export default async function Page({
         </div>
       </section>
 
-      {/* 11. Complete Guide — only renders if service.guide is defined */}
       {service.guide && <CompleteGuideSection guide={service.guide} />}
 
-      {/* 12. Related Services */}
       {related.length > 0 && (
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
@@ -400,9 +340,9 @@ export default async function Page({
           </div>
         </section>
       )}
+
       <WhyChooseDoorstep />
 
-      {/* 13. Booking CTA */}
       <BookingCTA serviceTitle={service.shortTitle} bgAccent={bgAccent} />
     </>
   );

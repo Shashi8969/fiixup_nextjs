@@ -1,15 +1,12 @@
 // app/blog/[id]/page.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// Blog post page — data-driven from lib/data/blogPosts.json.
-// To add a blog post: add entry to JSON. No code changes needed.
-// ─────────────────────────────────────────────────────────────────────────────
+export const revalidate = 3600;
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Clock, CalendarDays, Tag, ChevronRight, Lightbulb, AlertCircle } from "lucide-react";
 
-import blogPosts from "@/lib/data/blogPosts.json";
+import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { SITE_URL, MAIN_PHONE } from "@/lib/constants";
 import { breadcrumbSchema } from "@/lib/schema";
 import BookingCTA from "@/components/ui/BookingCTA";
@@ -21,26 +18,9 @@ type BlogSection = {
   items?: string[];
 };
 
-type BlogPost = {
-  id: string;
-  title: string;
-  excerpt: string;
-  category: string;
-  tags: string[];
-  author: string;
-  date: string;
-  readTime: number;
-  relatedService?: string;
-  metaTitle: string;
-  metaDescription: string;
-  metaKeywords: string;
-  sections: BlogSection[];
-};
-
-const posts = blogPosts as BlogPost[];
-
-export function generateStaticParams() {
-  return posts.map((p) => ({ id: p.id }));
+export async function generateStaticParams() {
+  const posts = await getAllPosts();
+  return posts.map((p) => ({ id: p.slug }));
 }
 
 export async function generateMetadata({
@@ -49,19 +29,18 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const post = posts.find((p) => p.id === id);
+  const post = await getPostBySlug(id);
   if (!post) return {};
 
   return {
-    title:       post.metaTitle,
-    description: post.metaDescription,
-    keywords:    post.metaKeywords,
-    alternates:  { canonical: `${SITE_URL}/blog/${post.id}` },
+    title:       post.metaTitle ?? post.title,
+    description: post.metaDescription ?? post.excerpt,
+    alternates:  { canonical: `${SITE_URL}/blog/${post.slug}` },
     openGraph: {
-      title:       post.metaTitle,
-      description: post.metaDescription,
-      url:         `${SITE_URL}/blog/${post.id}`,
-      type:        "article",
+      title:         post.metaTitle ?? post.title,
+      description:   post.metaDescription ?? post.excerpt,
+      url:           `${SITE_URL}/blog/${post.slug}`,
+      type:          "article",
       publishedTime: post.date,
     },
   };
@@ -77,15 +56,12 @@ function renderSection(section: BlogSection, index: number) {
       );
 
     case "heading": {
-      const Tag = `h${section.level ?? 2}` as "h2" | "h3" | "h4";
-      const sizeClass = section.level === 2 ? "text-2xl font-bold mt-10 mb-4 text-gray-900"
+      const HeadingTag = `h${section.level ?? 2}` as "h2" | "h3" | "h4";
+      const sizeClass =
+        section.level === 2 ? "text-2xl font-bold mt-10 mb-4 text-gray-900"
         : section.level === 3 ? "text-xl font-bold mt-8 mb-3 text-gray-900"
         : "text-lg font-bold mt-6 mb-2 text-gray-900";
-      return (
-        <Tag key={index} className={sizeClass}>
-          {section.content}
-        </Tag>
-      );
+      return <HeadingTag key={index} className={sizeClass}>{section.content}</HeadingTag>;
     }
 
     case "list":
@@ -130,15 +106,22 @@ export default async function BlogPostPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const post = posts.find((p) => p.id === id);
+  const post = await getPostBySlug(id);
   if (!post) return notFound();
 
-  const relatedPosts = posts.filter((p) => p.id !== id && p.category === post.category).slice(0, 3);
+  // sections come from the `content` field stored in Supabase
+// ✅ After
+const sections = (post.content as unknown as BlogSection[]) ?? [];
+  // Related posts — fetch all then filter by category
+  const allPosts = await getAllPosts();
+  const relatedPosts = allPosts
+    .filter((p) => p.slug !== id && p.category === post.category)
+    .slice(0, 3);
 
   const schema = breadcrumbSchema([
     { name: "Home", url: "/" },
     { name: "Blog", url: "/blog" },
-    { name: post.title, url: `/blog/${post.id}` },
+    { name: post.title, url: `/blog/${post.slug}` },
   ]);
 
   const articleSchema = {
@@ -149,8 +132,8 @@ export default async function BlogPostPage({
     author: { "@type": "Organization", name: "Fiixup" },
     publisher: { "@type": "Organization", name: "Fiixup", url: SITE_URL },
     datePublished: post.date,
-    url: `${SITE_URL}/blog/${post.id}`,
-    keywords: post.tags.join(", "),
+    url: `${SITE_URL}/blog/${post.slug}`,
+    keywords: post.tags?.join(", "),
   };
 
   return (
@@ -161,7 +144,6 @@ export default async function BlogPostPage({
       {/* Header */}
       <div className="bg-gray-50 border-b border-gray-200 py-12">
         <div className="container mx-auto px-4 max-w-3xl">
-          {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
             <Link href="/" className="hover:text-gray-700">Home</Link>
             <ChevronRight className="w-3 h-3" />
@@ -200,13 +182,12 @@ export default async function BlogPostPage({
       {/* Content */}
       <article className="py-12">
         <div className="container mx-auto px-4 max-w-3xl">
-          {post.sections.map((section, i) => renderSection(section, i))}
+          {sections.map((section, i) => renderSection(section, i))}
 
-          {/* Tags */}
           <div className="mt-10 pt-6 border-t border-gray-200">
             <p className="text-sm font-semibold text-gray-700 mb-3">Tags</p>
             <div className="flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
+              {(post.tags ?? []).map((tag) => (
                 <span key={tag} className="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full">
                   {tag}
                 </span>
@@ -214,7 +195,6 @@ export default async function BlogPostPage({
             </div>
           </div>
 
-          {/* CTA Card */}
           <div className="mt-10 bg-red-600 rounded-2xl p-8 text-white text-center">
             <h3 className="text-xl font-bold mb-2">Need a Mechanic Right Now?</h3>
             <p className="text-red-100 mb-6 text-sm">
@@ -238,7 +218,6 @@ export default async function BlogPostPage({
         </div>
       </article>
 
-      {/* Related posts */}
       {relatedPosts.length > 0 && (
         <section className="py-12 bg-gray-50 border-t border-gray-200">
           <div className="container mx-auto px-4 max-w-3xl">
@@ -246,8 +225,8 @@ export default async function BlogPostPage({
             <div className="grid sm:grid-cols-3 gap-5">
               {relatedPosts.map((p) => (
                 <Link
-                  key={p.id}
-                  href={`/blog/${p.id}`}
+                  key={p.slug}
+                  href={`/blog/${p.slug}`}
                   className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition-all block"
                 >
                   <span className="text-xs font-bold uppercase tracking-wider text-red-600 mb-2 block">

@@ -5,7 +5,7 @@ export interface BlogPost {
   title: string;
   slug: string;           // URL-friendly slug (same as id or separate)
   excerpt: string;        // Short summary for cards & meta description
-  content: string;        // Full HTML or markdown content
+  content: any[];       // Full HTML or markdown content
   author: string;
   authorRole?: string;    // e.g. "Head Technician at Fiixup"
   date: string;           // ISO date string or display string

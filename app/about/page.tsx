@@ -9,6 +9,7 @@ import { PageHero } from "@/components/ui/PageHero";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
 const seo = getStaticPageSEO("about")!;
+export const revalidate = 3600; // refreshes every 1 hour
 
 export const metadata: Metadata = {
   title: seo.title,
