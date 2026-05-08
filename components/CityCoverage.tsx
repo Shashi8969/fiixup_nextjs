@@ -2,7 +2,7 @@ import Link from "next/link";
 import { MapPin, ArrowRight } from "lucide-react";
 
 const coverageCities = [
-  { name: "Bengaluru", slug: "bengaluru", areas: "Koramangala · Whitefield · Indiranagar", highlight: "Pothole & monsoon damage specialists" },
+  { name: "Bengaluru", slug: "bangalore", areas: "Koramangala · Whitefield · Indiranagar", highlight: "Pothole & monsoon damage specialists" },
   { name: "Chennai",   slug: "chennai",   areas: "Anna Nagar · T. Nagar · OMR",           highlight: "Coastal corrosion & AC experts" },
   { name: "Hyderabad", slug: "hyderabad", areas: "Hitech City · Gachibowli · Banjara Hills",highlight: "Summer heat & ORR breakdown service" },
   { name: "Mumbai",    slug: "mumbai",    areas: "Andheri · Bandra · Powai · Thane",       highlight: "Monsoon waterlogging rescue 24/7" },

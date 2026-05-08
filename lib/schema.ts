@@ -83,3 +83,60 @@ export function serviceSchema({ name, description, slug, price }: {
     offers: { "@type": "Offer", priceCurrency: "INR", price, availability: "https://schema.org/InStock" },
   };
 }
+
+/** Location-specific AutoRepair schema */
+export function locationServiceSchema({
+  name,
+  description,
+  slug,
+  cityName,
+  phone,
+  areas,
+  rating = 4.9,
+  reviewCount = 150,
+}: {
+  name: string;
+  description: string;
+  slug: string;
+  cityName: string;
+  phone: string;
+  areas: string[];
+  rating?: number;
+  reviewCount?: number;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": ["AutoRepair", "LocalBusiness"],
+    name: `Fiixup — ${name}`,
+    description,
+    url: `${SITE_URL}${slug.startsWith("/") ? slug : "/" + slug}`,
+    telephone: phone,
+    email: MAIN_EMAIL,
+    openingHours: "Mo-Su 00:00-24:00",
+    areaServed: areas.length > 0
+      ? areas.map((a) => ({ "@type": "Place", name: a }))
+      : [{ "@type": "City", name: cityName }],
+    priceRange: "₹₹",
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: rating.toFixed(1),
+      reviewCount: String(reviewCount),
+      bestRating: "5",
+      worstRating: "1",
+    },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: name,
+      itemListElement: [
+        {
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: name,
+            description: description,
+          },
+        },
+      ],
+    },
+  };
+}

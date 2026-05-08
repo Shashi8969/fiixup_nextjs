@@ -1,82 +1,90 @@
 // lib/cities.ts
-// ─────────────────────────────────────────────────────────────────────────────
-// All city data now comes from Supabase.
-// Return shape is IDENTICAL to the old static TS array — zero component changes.
-// ─────────────────────────────────────────────────────────────────────────────
+// Areas now come from the `areas` table, not cities.areas JSONB.
+// CityData shape is unchanged — zero component changes needed.
 
 import { supabase } from "./supabase";
 import type { CityData } from "./models/city.model";
 
-// ── Raw Supabase row → CityData shape ────────────────────────────────────────
 function rowToCity(row: any): CityData {
   return {
-    slug:                     row.slug,
-    name:                     row.name,
-    state:                    row.state,
-    phone:                    row.phone,
-    whatsapp:                 row.whatsapp,
-    email:                    row.email,
-    areas:                    row.areas ?? [],
-    heroTagline:              row.hero_tagline,
-    metaTitle:                row.meta_title,
-    metaDescription:          row.meta_description,
-    metaKeywords:             row.meta_keywords,
-    aboutHeading:             row.about_heading,
-    aboutPara1:               row.about_para1,
-    aboutPara2:               row.about_para2,
-    aboutBullets:             row.about_bullets ?? [],
-    statsLabel:               row.stats_label,
-    servicesSectionHeading:   row.services_section_heading,
-    servicesSectionSubtext:   row.services_section_subtext,
-    carServicesHeading:       row.car_services_heading,
-    bikeServicesHeading:      row.bike_services_heading,
-    cityServiceHighlights:    row.city_service_highlights ?? [],
-    testimonialsHeading:      row.testimonials_heading,
-    testimonialsSubtext:      row.testimonials_subtext,
-    testimonials:             row.testimonials ?? [],
-    faqCategories:            row.faq_categories ?? [],
+    slug:                   row.slug,
+    name:                   row.name,
+    state:                  row.state,
+    phone:                  row.phone,
+    whatsapp:               row.whatsapp,
+    email:                  row.email,
+    areas:                  row.areas ?? [],       // populated below from areas table
+    heroTagline:            row.hero_tagline,
+    metaTitle:              row.meta_title,
+    metaDescription:        row.meta_description,
+    metaKeywords:           row.meta_keywords,
+    aboutHeading:           row.about_heading,
+    aboutPara1:             row.about_para1,
+    aboutPara2:             row.about_para2,
+    aboutBullets:           row.about_bullets ?? [],
+    statsLabel:             row.stats_label,
+    servicesSectionHeading: row.services_section_heading,
+    servicesSectionSubtext: row.services_section_subtext,
+    carServicesHeading:     row.car_services_heading,
+    bikeServicesHeading:    row.bike_services_heading,
+    cityServiceHighlights:  row.city_service_highlights ?? [],
+    testimonialsHeading:    row.testimonials_heading,
+    testimonialsSubtext:    row.testimonials_subtext,
+    testimonials:           row.testimonials ?? [],
+    faqCategories:          row.faq_categories ?? [],
   };
 }
 
-// ── Get all cities ────────────────────────────────────────────────────────────
+// ── Get all cities (with areas from areas table) ──────────────────────────────
 export async function getAllCities(): Promise<CityData[]> {
-  const { data, error } = await supabase
-    .from("cities")
-    .select("*")
-    .order("name");
+  const [citiesRes, areasRes] = await Promise.all([
+    supabase.from("cities").select("*").order("name"),
+    supabase.from("areas").select("city_slug, slug, name, highlight").eq("is_active", true).order("sort_order"),
+  ]);
 
-  if (error) {
-    console.error("getAllCities error:", error.message);
+  if (citiesRes.error) {
+    console.error("getAllCities error:", citiesRes.error.message);
     return [];
   }
-  return (data ?? []).map(rowToCity);
+
+  const areasByCitySlug: Record<string, { name: string; slug: string; highlight: string }[]> = {};
+  for (const area of areasRes.data ?? []) {
+    if (!areasByCitySlug[area.city_slug]) areasByCitySlug[area.city_slug] = [];
+    areasByCitySlug[area.city_slug].push({ name: area.name, slug: area.slug, highlight: area.highlight ?? "" });
+  }
+
+  return (citiesRes.data ?? []).map((row) => ({
+    ...rowToCity(row),
+    areas: areasByCitySlug[row.slug] ?? [],
+  }));
 }
 
-// ── Get one city by slug ──────────────────────────────────────────────────────
+// ── Get one city by slug (with areas from areas table) ────────────────────────
 export async function getCityBySlug(slug: string | undefined): Promise<CityData | undefined> {
-  // Guard — if slug is undefined or empty, return immediately
   if (!slug) return undefined;
 
-  const { data, error } = await supabase
-    .from("cities")
-    .select("*")
-    .eq("slug", slug.toLowerCase())
-    .single();
+  const [cityRes, areasRes] = await Promise.all([
+    supabase.from("cities").select("*").eq("slug", slug.toLowerCase()).single(),
+    supabase.from("areas").select("slug, name, highlight").eq("city_slug", slug.toLowerCase()).eq("is_active", true).order("sort_order"),
+  ]);
 
-  if (error || !data) return undefined;
-  return rowToCity(data);
+  if (cityRes.error || !cityRes.data) return undefined;
+
+  return {
+    ...rowToCity(cityRes.data),
+    areas: (areasRes.data ?? []).map((a) => ({ name: a.name, slug: a.slug, highlight: a.highlight ?? "" })),
+  };
 }
 
 // ── Get area inside a city ────────────────────────────────────────────────────
 export async function getAreaBySlug(citySlug: string, areaSlug: string) {
-  const city = await getCityBySlug(citySlug);
-  if (!city) return null;
+  const { data, error } = await supabase
+    .from("areas")
+    .select("slug, name, highlight, city_slug")
+    .eq("city_slug", citySlug.toLowerCase())
+    .eq("slug", areaSlug.toLowerCase())
+    .maybeSingle();
 
-  const area = city.areas.find((a: any) =>
-    typeof a === "string"
-      ? a.toLowerCase().replace(/ /g, "-") === areaSlug
-      : a.slug === areaSlug
-  );
-
-  return area ? { city, area } : null;
+  if (error || !data) return null;
+  return data;
 }

@@ -20,6 +20,7 @@ export function Footer() {
                 width={120}
                 height={40}
                 className="h-10 w-auto mb-3 brightness-0 invert"
+                style={{ width: 'auto' }}
               />
               <p className="text-sm text-gray-400 max-w-xs leading-relaxed">
                 India&apos;s 24/7 doorstep car &amp; bike repair service. Certified technicians at your home or office.

@@ -1,9 +1,4 @@
 // next.config.ts
-// ─────────────────────────────────────────────────────────────────────────────
-// Redirects for all legacy WordPress URLs and 404s found in SEO audit.
-// Add new redirects here — no other file changes needed.
-// ─────────────────────────────────────────────────────────────────────────────
-
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -14,7 +9,7 @@ const nextConfig: NextConfig = {
 
   async redirects() {
     return [
-      // ── Legacy WordPress URL casing fixes ────────────────────────────────
+      // ── Legacy WordPress casing fixes ─────────────────────────────────────
       {
         source: "/Car-Repair-Service",
         destination: "/services/car-general-repair",
@@ -31,7 +26,7 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
 
-      // ── Old service URLs → new slugs ─────────────────────────────────────
+      // ── Old URLs → new service slugs ──────────────────────────────────────
       {
         source: "/car-jump-start-near-me-bengaluru",
         destination: "/services/car-battery-jumpstart-near-me",
@@ -39,6 +34,11 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/car-jumpstart-service-chennai",
+        destination: "/services/car-battery-jumpstart-near-me",
+        permanent: true,
+      },
+      {
+        source: "/car-jumpstart-near-me-bengaluru",
         destination: "/services/car-battery-jumpstart-near-me",
         permanent: true,
       },
@@ -119,77 +119,77 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/bike-mechanic-near-me-bangalore",
-        destination: "/services/mobile-mechanic-near-me",
+        destination: "/bangalore/bike-mechanic-near-me",
         permanent: true,
       },
       {
         source: "/bike-mechanic-near-me-chennai",
-        destination: "/services/mobile-mechanic-near-me",
+        destination: "/chennai/bike-mechanic-near-me",
         permanent: true,
       },
       {
         source: "/bike-mechanic-in-hsr-layout",
-        destination: "/bangalore/hsr-layout",
+        destination: "/bangalore/hsr-layout/bike-mechanic-near-me",
         permanent: true,
       },
       {
         source: "/24-7-bike-mechanic-in-hsr-layout",
-        destination: "/bangalore/hsr-layout",
+        destination: "/bangalore/hsr-layout/bike-mechanic-near-me",
         permanent: true,
       },
       {
         source: "/24-hours-bike-repair-koramangala",
-        destination: "/bangalore/koramangala",
+        destination: "/bangalore/koramangala/bike-mechanic-near-me",
         permanent: true,
       },
       {
         source: "/24-7-bike-mechanic-rr-nagar-bangalore",
-        destination: "/bangalore",
+        destination: "/bangalore/bike-mechanic-near-me",
         permanent: true,
       },
       {
         source: "/mechanic-in-electronic-city",
-        destination: "/bangalore/electronic-city",
+        destination: "/bangalore/electronic-city/mechanic-near-me",
         permanent: true,
       },
       {
         source: "/garage-near-me-bengaluru",
-        destination: "/services/car-service-at-home",
+        destination: "/bangalore/car-garage-near-me",
         permanent: true,
       },
       {
         source: "/bike-garage-near-me-bengaluru",
-        destination: "/services/bike-service-at-home",
+        destination: "/bangalore/bike-garage-near-me",
         permanent: true,
       },
       {
         source: "/bike-garage-near-me-in-chennai-fiixups-24-7-doorstep-solutions",
-        destination: "/services/bike-service-at-home",
+        destination: "/chennai/bike-garage-near-me",
         permanent: true,
       },
       {
         source: "/car-mechanics-bangalore",
-        destination: "/services/car-general-repair",
+        destination: "/bangalore/car-mechanic-near-me",
         permanent: true,
       },
       {
         source: "/car-mechanic-in-chennai-24-7-emergency-car-repair",
-        destination: "/services/car-general-repair",
+        destination: "/chennai/car-mechanic-near-me",
         permanent: true,
       },
       {
         source: "/car-breakdown-service-chennai",
-        destination: "/services/car-breakdown-service",
+        destination: "/chennai/car-breakdown-service-near-me",
         permanent: true,
       },
       {
         source: "/motor-mechanic-near-me-chennai",
-        destination: "/services/mobile-mechanic-near-me",
+        destination: "/chennai/mechanic-near-me",
         permanent: true,
       },
       {
         source: "/bike-mechanic-in-bangaluru",
-        destination: "/services/mobile-mechanic-near-me",
+        destination: "/bangalore/bike-mechanic-near-me",
         permanent: true,
       },
       {
@@ -209,65 +209,8 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/fastest-royal-enfield-servicing-near-me-hsr-fiixup-24-7",
-        destination: "/bangalore/hsr-layout",
+        destination: "/bangalore/hsr-layout/bike-mechanic-near-me",
         permanent: true,
-      },
-      {
-        source: "/car-jumpstart-near-me-bengaluru",
-        destination: "/services/car-battery-jumpstart-near-me",
-        permanent: true,
-      },
-
-      // ── 404 area sub-pages from SEO audit ───────────────────────────────
-      {
-        source: "/bangalore/koramangala/towing-service-near-me",
-        destination: "/bangalore/koramangala",
-        permanent: false,
-      },
-      {
-        source: "/bangalore/koramangala/car-repair-near-me",
-        destination: "/bangalore/koramangala",
-        permanent: false,
-      },
-      {
-        source: "/bangalore/koramangala/bike-service-near-me",
-        destination: "/bangalore/koramangala",
-        permanent: false,
-      },
-      {
-        source: "/bangalore/koramangala/mechanic-near-me",
-        destination: "/bangalore/koramangala",
-        permanent: false,
-      },
-      {
-        source: "/bangalore/koramangala/garage-near-me",
-        destination: "/bangalore/koramangala",
-        permanent: false,
-      },
-      {
-        source: "/bangalore/koramangala/royal-enfield-service-near-me",
-        destination: "/bangalore/koramangala",
-        permanent: false,
-      },
-      {
-        source: "/bangalore/koramangala/car-mechanic-near-me",
-        destination: "/bangalore/koramangala",
-        permanent: false,
-      },
-      {
-        source: "/bangalore/hsr-layout/jump-start-service-near-me",
-        destination: "/bangalore/hsr-layout",
-        permanent: false,
-      },
-      {
-        source: "/bangalore/hsr-layout/doorstep-mechanic-near-me",
-        destination: "/bangalore/hsr-layout",
-        permanent: false,
-      },
-      {
-        source: "/bangalore/indiranagar",
-        destination: "/bangalore/koramangala",
-        permanent: false,
       },
     ];
   },
