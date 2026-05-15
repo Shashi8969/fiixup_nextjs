@@ -12,6 +12,7 @@ import type { LocationServiceData } from "@/lib/locationServices";
 import type { CityData } from "@/lib/models/city.model";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 
+
 const iconMap: Record<string, React.ElementType> = {
   Clock, Shield, IndianRupee, Star, Phone, MapPin, CheckCircle,
 };
@@ -26,15 +27,53 @@ interface Props {
 export function LocationServicePage({ data, city, breadcrumbs }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const isBike     = data.serviceCategory === "bike";
-  const bgAccent   = isBike ? "bg-red-600"       : "bg-blue-600";
-  const btnHover   = isBike ? "hover:bg-red-700"  : "hover:bg-blue-700";
-  const bgLight    = isBike ? "bg-red-50"         : "bg-blue-50";
-  const accentText = isBike ? "text-red-600"      : "text-blue-600";
-  const borderClr  = isBike ? "border-red-200"    : "border-blue-200";
-  const heroImage  = isBike
-    ? "/assets/bike-mechanic-in-bangalore.webp"
-    : "/assets/Car_mechanic_700x1049.webp";
+  // Full category config — covers all current and future service categories
+  const CATEGORY_THEME: Record<string, {
+    bgAccent: string; btnHover: string; bgLight: string;
+    accentText: string; borderClr: string; heroImage: string; badge: string;
+  }> = {
+    car: {
+      bgAccent: "bg-blue-600", btnHover: "hover:bg-blue-700", bgLight: "bg-blue-50",
+      accentText: "text-blue-600", borderClr: "border-blue-200",
+      heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🚗 Car Service",
+    },
+    bike: {
+      bgAccent: "bg-red-600", btnHover: "hover:bg-red-700", bgLight: "bg-red-50",
+      accentText: "text-red-600", borderClr: "border-red-200",
+      heroImage: "/assets/bike-mechanic-in-bangalore.webp", badge: "🏍️ Bike Service",
+    },
+    roadside: {
+      bgAccent: "bg-red-700", btnHover: "hover:bg-red-800", bgLight: "bg-red-50",
+      accentText: "text-red-700", borderClr: "border-red-200",
+      heroImage: "/assets/car-emergency.webp", badge: "🆘 Roadside Assistance",
+    },
+    towing: {
+      bgAccent: "bg-amber-600", btnHover: "hover:bg-amber-700", bgLight: "bg-amber-50",
+      accentText: "text-amber-600", borderClr: "border-amber-200",
+      heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🚛 Towing Service",
+    },
+    electrical: {
+      bgAccent: "bg-purple-600", btnHover: "hover:bg-purple-700", bgLight: "bg-purple-50",
+      accentText: "text-purple-600", borderClr: "border-purple-200",
+      heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "⚡ Electrical Repair",
+    },
+    ev: {
+      bgAccent: "bg-green-600", btnHover: "hover:bg-green-700", bgLight: "bg-green-50",
+      accentText: "text-green-600", borderClr: "border-green-200",
+      heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🔋 EV Service",
+    },
+  };
+
+  const DEFAULT_THEME = {
+    bgAccent: "bg-blue-600", btnHover: "hover:bg-blue-700", bgLight: "bg-blue-50",
+    accentText: "text-blue-600", borderClr: "border-blue-200",
+    heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🔧 Vehicle Service",
+  };
+
+  const theme = CATEGORY_THEME[data.serviceCategory] ?? DEFAULT_THEME;
+  const { bgAccent, btnHover, bgLight, accentText, borderClr, heroImage } = theme;
+  const isBike = data.serviceCategory === "bike";
+  const categoryBadge = theme.badge;
 
   return (
     <>
@@ -59,7 +98,7 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <span className={`inline-block ${bgAccent} text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-4`}>
-                {isBike ? "🏍️ Bike Service" : "🚗 Vehicle Service"} — {data.locationHeading}
+                {categoryBadge} — {data.locationHeading}
               </span>
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 leading-tight">
                 {data.heroHeading}

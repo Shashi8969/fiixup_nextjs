@@ -10,6 +10,7 @@ import { Testimonials } from "@/components/Testimonials";
 import { Blog }         from "@/components/Blog";
 import { Contact }      from "@/components/Contact";
 import { getStaticPageSEO } from "@/lib/data/seo";
+import { homeSchema } from "@/lib/schema";
 
 const seo = getStaticPageSEO("home")!;
 
@@ -29,6 +30,10 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSchema()) }}
+      />
       <Hero />
       <Services />
       <About />

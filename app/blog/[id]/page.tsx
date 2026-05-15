@@ -8,7 +8,7 @@ import { Clock, CalendarDays, Tag, ChevronRight, Lightbulb, AlertCircle } from "
 
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { SITE_URL, MAIN_PHONE } from "@/lib/constants";
-import { breadcrumbSchema } from "@/lib/schema";
+import { breadcrumbSchema, blogPostSchema } from "@/lib/schema";
 import BookingCTA from "@/components/ui/BookingCTA";
 
 type BlogSection = {
@@ -118,28 +118,19 @@ const sections = (post.content as unknown as BlogSection[]) ?? [];
     .filter((p) => p.slug !== id && p.category === post.category)
     .slice(0, 3);
 
-  const schema = breadcrumbSchema([
-    { name: "Home", url: "/" },
-    { name: "Blog", url: "/blog" },
-    { name: post.title, url: `/blog/${post.slug}` },
-  ]);
-
-  const articleSchema = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: post.title,
-    description: post.excerpt,
-    author: { "@type": "Organization", name: "Fiixup" },
-    publisher: { "@type": "Organization", name: "Fiixup", url: SITE_URL },
-    datePublished: post.date,
-    url: `${SITE_URL}/blog/${post.slug}`,
-    keywords: post.tags?.join(", "),
-  };
+  // Use blogPostSchema (Article + BreadcrumbList + publisher logo) — was missing before
+  const postSchema = blogPostSchema({
+    title:       post.title,
+    slug:        post.slug,
+    description: post.metaDescription ?? post.excerpt ?? "",
+    coverImage:  post.image || `${SITE_URL}/assets/og-image.webp`,
+    publishedAt: post.date,
+    tags:        post.tags,
+  });
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(postSchema) }} />
 
       {/* Header */}
       <div className="bg-gray-50 border-b border-gray-200 py-12">

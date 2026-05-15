@@ -3,13 +3,17 @@ import { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/constants";
 import { getAllCities } from "@/lib/cities";
 import { getAllServices } from "@/lib/services";
+import { getAllLocationServices } from "@/lib/locationServices";
+import { getAllPosts } from "@/lib/posts";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
-  const [cities, services] = await Promise.all([
+  const [cities, services, locationServices, posts] = await Promise.all([
     getAllCities(),
     getAllServices(),
+    getAllLocationServices(),
+    getAllPosts(),
   ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -35,17 +39,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.85,
   }));
 
-  const cityServiceRoutes: MetadataRoute.Sitemap = [];
-  for (const city of cities) {
-    for (const service of services) {
-      cityServiceRoutes.push({
-        url: `${SITE_URL}/${city.slug}/services/${service.slug}`,
-        lastModified: now,
-        changeFrequency: "monthly",
-        priority: 0.8,
-      });
-    }
-  }
+  // ── location_services — the real /[city]/[area]/[service] URLs ──────────────
+  // These are the most important SEO pages — always use canonicalUrl from DB
+  const locationServiceRoutes: MetadataRoute.Sitemap = locationServices.map((ls) => ({
+    url: ls.canonicalUrl.startsWith("http")
+      ? ls.canonicalUrl
+      : `${SITE_URL}${ls.canonicalUrl}`,
+    lastModified: now,
+    changeFrequency: "weekly" as const,
+    priority: ls.areaSlug ? 0.80 : 0.90, // city-level pages rank higher than area pages
+  }));
 
-  return [...staticRoutes, ...cityRoutes, ...serviceRoutes, ...cityServiceRoutes];
+  // ── Blog posts ────────────────────────────────────────────────────────────
+  const blogRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: `${SITE_URL}/blog/${post.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  return [
+    ...staticRoutes,
+    ...cityRoutes,
+    ...serviceRoutes,
+    ...locationServiceRoutes,
+    ...blogRoutes,
+  ];
 }

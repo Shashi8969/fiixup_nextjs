@@ -62,7 +62,7 @@ export async function generateMetadata({
   if (cat) {
     const seo = getCategorySEO(cat.slug);
     return {
-      title:       seo?.title       ?? `${cat.title} — Doorstep Vehicle Repair | Fiixup`,
+      title:       seo?.title       ?? `${cat.title} — Doorstep Vehicle Repair`,
       description: seo?.description ?? cat.description,
       keywords:    seo?.keywords,
       alternates:  { canonical: seo?.canonical ?? `${SITE_URL}/services/${cat.slug}` },
@@ -207,8 +207,23 @@ export default async function Page({
 
   const brands = isCar ? (service.carBrands ?? []) : (service.bikeBrands ?? []);
 
+  // Derive minPrice/maxPrice from pricing rows; fall back to parsing the price string
+  const pricingRows = service.pricing?.rows ?? [];
+  const minPrice = pricingRows.length > 0
+    ? Math.min(...pricingRows.map((r) => r.priceFrom))
+    : parseInt(service.price.replace(/[^\d]/g, ""), 10) || 499;
+  const maxPrice = pricingRows.length > 0
+    ? Math.max(...pricingRows.map((r) => r.priceTo ?? r.priceFrom))
+    : minPrice * 3;
+
   const schemas = [
-    serviceSchema({ name: service.title, description: service.description, slug: service.slug, price: service.price }),
+    serviceSchema({
+      name: service.title,
+      description: service.description,
+      slug: service.slug,
+      minPrice,
+      maxPrice,
+    }),
     faqSchema(service.faqs),
     breadcrumbSchema([
       { name: "Home",             url: "/" },

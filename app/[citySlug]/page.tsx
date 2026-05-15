@@ -53,12 +53,22 @@ export default async function CityPage({
 
   const allFaqs = city.faqCategories.flatMap((cat: any) => cat.faqs);
 
+  const areas = city.areas.map((a: any) =>
+    typeof a === "string" ? a : a.name
+  );
+
   const schemas = [
     localBusinessSchema({
-      cityName: city.name,
-      phone:    city.phone,
-      slug:     city.slug,
-      areas:    city.areas.slice(0, 5).map((a: any) => (typeof a === "string" ? a : a.name)),
+      name:        city.name,
+      slug:        city.slug,
+      state:       (city as any).state ?? "India",
+      postalCode:  "000000",
+      lat:         0,
+      lng:         0,
+      phone:       city.phone ?? "",
+      email:       city.email ?? "",
+      reviewCount: 500,
+      areas,
     }),
     breadcrumbSchema([
       { name: "Home",    url: "/" },

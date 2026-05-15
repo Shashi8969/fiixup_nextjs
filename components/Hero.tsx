@@ -64,12 +64,12 @@ export function Hero() {
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-              24/7 Doorstep Car & Bike Repair Service
+              Doorstep Car & Bike Repair — Now in 4 Cities Across India
             </h1>
 
             <p className="text-lg text-gray-700">
-              Professional car and bike repair at your doorstep — anywhere in India.
-              Certified technicians, honest pricing, and reliable repairs at your home or office, anytime.
+              Certified mechanics come to your home or office in Bangalore, 
+Chennai, Hyderabad & Mumbai. Starting ₹249. 30-min response. 24/7.
             </p>
 
             <div className="space-y-3">

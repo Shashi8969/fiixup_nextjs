@@ -132,10 +132,16 @@ export default async function CitySlugPage({
 
   const schemas = [
     localBusinessSchema({
-      cityName: `${areaName}, ${city.name}`,
-      phone: city.phone,
-      slug: `${city.slug}/${areaSlug}`,
-      areas: [areaName],
+      name:        `${areaName}, ${city.name}`,
+      slug:        `${citySlug}/${areaSlug}`,
+      state:       (city as any).state ?? "India",
+      postalCode:  "000000",
+      lat:         0,
+      lng:         0,
+      phone:       city.phone ?? "",
+      email:       city.email ?? "",
+      reviewCount: 300,
+      areas:       [areaName],
     }),
     breadcrumbSchema([
       { name: "Home", url: "/" },
