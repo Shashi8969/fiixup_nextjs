@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllCities, getCityBySlug } from "@/lib/cities";
 import { getAreaLocationService, getAllAreaServiceParams, getServiceKeywords } from "@/lib/locationServices";
+import { locationServiceSchema, CITY_DATA, type CityKey } from "@/lib/schema";
 import { LocationServicePage } from "@/components/location-service/LocationServicePage";
 
 export const revalidate = 3600;
@@ -58,17 +59,53 @@ export default async function AreaServicePage({
 
   const allKeywords = await getServiceKeywords();
 
+  // Pull geo data from CITY_DATA for accurate coordinates
+  const cityGeo = CITY_DATA[citySlug as CityKey];
+
+  const schema = locationServiceSchema({
+    serviceName:     locationService.serviceName,
+    serviceSlug:     locationService.serviceSlug,
+    serviceCategory: locationService.serviceCategory,
+    canonicalUrl:    locationService.canonicalUrl,
+    heroHeading:     locationService.heroHeading,
+    aboutPara1:      locationService.aboutPara1,
+    cityName:        locationService.cityName,
+    citySlug:        locationService.citySlug,
+    cityState:       cityGeo?.state,
+    areaName:        locationService.areaName,
+    areaSlug:        locationService.areaSlug,
+    pricingRows:     locationService.pricingRows,
+    testimonials:    locationService.testimonials?.map((t) => ({
+      name: t.name, rating: t.rating, text: t.text, date: t.date, vehicle: t.vehicle,
+    })),
+    faqs:            locationService.faqs,
+    reviewCount:     locationService.schemaAggregateRating ?? locationService.schemaReviewCount,
+    ratingValue:     locationService.schemaAggregateRating,
+    nearbyAreas:     locationService.nearbyAreas,
+    cityLat:         cityGeo?.lat,
+    cityLng:         cityGeo?.lng,
+    cityPhone:       cityGeo?.phone,
+    cityEmail:       cityGeo?.email,
+    cityPostalCode:  cityGeo?.postalCode,
+  });
+
   return (
-    <LocationServicePage
-      data={locationService}
-      city={city}
-      allKeywords={allKeywords}
-      breadcrumbs={[
-        { name: "Home", url: "/" },
-        { name: city.name, url: `/${city.slug}` },
-        { name: locationService.areaName ?? "", url: `/${city.slug}/${areaSlug}` },
-        { name: locationService.serviceName, url: locationService.canonicalUrl },
-      ]}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+      <LocationServicePage
+        data={locationService}
+        city={city}
+        allKeywords={allKeywords}
+        breadcrumbs={[
+          { name: "Home", url: "/" },
+          { name: city.name, url: `/${city.slug}` },
+          { name: locationService.areaName ?? "", url: `/${city.slug}/${areaSlug}` },
+          { name: locationService.serviceName, url: locationService.canonicalUrl },
+        ]}
+      />
+    </>
   );
 }

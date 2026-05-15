@@ -12,6 +12,7 @@ import { TrustStrip } from "@/components/ui/TrustStrip";
 import HowItWorks from "@/components/ui/HowItWorks";
 import WhyChooseDoorstep from "@/components/ui/WhyChooseDoorstep";
 import { getStaticPageSEO } from "@/lib/data/seo";
+import { servicesListingSchema } from "@/lib/schema";
 import { MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
 
 const seo = getStaticPageSEO("services")!;
@@ -34,8 +35,14 @@ export default async function ServicesPage() {
     getAllServices(),
   ]);
 
+  const schema = servicesListingSchema(
+    allServices.map((s) => ({ name: s.title, slug: s.slug, description: s.description }))
+  );
+
   return (
     <>
+      <script type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       {/* HERO */}
       <section className="bg-gradient-to-br from-blue-50 to-blue-100 py-16">
         <div className="container mx-auto px-4 text-center">

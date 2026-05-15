@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getAllCities, getCityBySlug } from "@/lib/cities";
 import { SITE_URL } from "@/lib/constants";
-import { localBusinessSchema, breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { cityPageSchema } from "@/lib/schema";
 import { CityHero } from "@/components/city/CityHero";
 import { CityAbout } from "@/components/city/CityAbout";
 import { CityAreas } from "@/components/city/CityAreas";
@@ -57,25 +57,19 @@ export default async function CityPage({
     typeof a === "string" ? a : a.name
   );
 
-  const schemas = [
-    localBusinessSchema({
-      name:        city.name,
-      slug:        city.slug,
-      state:       (city as any).state ?? "India",
-      postalCode:  "000000",
-      lat:         0,
-      lng:         0,
-      phone:       city.phone ?? "",
-      email:       city.email ?? "",
-      reviewCount: 500,
-      areas,
-    }),
-    breadcrumbSchema([
-      { name: "Home",    url: "/" },
-      { name: city.name, url: `/${city.slug}` },
-    ]),
-    faqSchema(allFaqs),
-  ];
+  // cityPageSchema = AutoRepair + LocalBusiness + BreadcrumbList + FAQPage in one call
+  const schemas = cityPageSchema({
+    name:        city.name,
+    slug:        city.slug,
+    state:       (city as any).state ?? "India",
+    postalCode:  (city as any).postalCode ?? "000000",
+    lat:         (city as any).lat ?? 0,
+    lng:         (city as any).lng ?? 0,
+    phone:       city.phone ?? "",
+    email:       city.email ?? "",
+    reviewCount: 500,
+    areas,
+  }, allFaqs);
 
   return (
     <>

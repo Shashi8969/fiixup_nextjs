@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getAllCities, getCityBySlug } from "@/lib/cities";
 import { SITE_URL } from "@/lib/constants";
-import { localBusinessSchema, breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { locationServiceSchema, areaPageSchema, CITY_DATA, type CityKey } from "@/lib/schema";
 import { CityHero } from "@/components/city/CityHero";
 import { CityAbout } from "@/components/city/CityAbout";
 import { CityContact } from "@/components/city/CityContact";
@@ -92,17 +92,46 @@ export default async function CitySlugPage({
     const city = await getCityBySlug(citySlug);
     if (!city) return notFound();
     const allKeywords = await getServiceKeywords();
+    const cityGeo = CITY_DATA[citySlug as CityKey];
+    const lsSchema = locationServiceSchema({
+      serviceName:     locationService.serviceName,
+      serviceSlug:     locationService.serviceSlug,
+      serviceCategory: locationService.serviceCategory,
+      canonicalUrl:    locationService.canonicalUrl,
+      heroHeading:     locationService.heroHeading,
+      aboutPara1:      locationService.aboutPara1,
+      cityName:        locationService.cityName,
+      citySlug:        locationService.citySlug,
+      cityState:       cityGeo?.state,
+      areaName:        locationService.areaName,
+      areaSlug:        locationService.areaSlug,
+      pricingRows:     locationService.pricingRows,
+      testimonials:    locationService.testimonials?.map((t: any) => ({
+        name: t.name, rating: t.rating, text: t.text, date: t.date, vehicle: t.vehicle,
+      })),
+      faqs:            locationService.faqs,
+      reviewCount:     locationService.schemaReviewCount,
+      ratingValue:     locationService.schemaAggregateRating,
+      nearbyAreas:     locationService.nearbyAreas,
+      cityLat:         cityGeo?.lat, cityLng: cityGeo?.lng,
+      cityPhone:       cityGeo?.phone, cityEmail: cityGeo?.email,
+      cityPostalCode:  cityGeo?.postalCode,
+    });
     return (
-      <LocationServicePage
-        data={locationService}
-        city={city}
-        allKeywords={allKeywords}
-        breadcrumbs={[
-          { name: "Home", url: "/" },
-          { name: city.name, url: `/${city.slug}` },
-          { name: locationService.serviceName, url: locationService.canonicalUrl },
-        ]}
-      />
+      <>
+        <script type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(lsSchema) }} />
+        <LocationServicePage
+          data={locationService}
+          city={city}
+          allKeywords={allKeywords}
+          breadcrumbs={[
+            { name: "Home", url: "/" },
+            { name: city.name, url: `/${city.slug}` },
+            { name: locationService.serviceName, url: locationService.canonicalUrl },
+          ]}
+        />
+      </>
     );
   }
 
@@ -130,26 +159,21 @@ export default async function CitySlugPage({
 
   const allFaqs = city.faqCategories.flatMap((cat: any) => cat.faqs);
 
-  const schemas = [
-    localBusinessSchema({
-      name:        `${areaName}, ${city.name}`,
-      slug:        `${citySlug}/${areaSlug}`,
-      state:       (city as any).state ?? "India",
-      postalCode:  "000000",
-      lat:         0,
-      lng:         0,
-      phone:       city.phone ?? "",
-      email:       city.email ?? "",
-      reviewCount: 300,
-      areas:       [areaName],
-    }),
-    breadcrumbSchema([
-      { name: "Home", url: "/" },
-      { name: city.name, url: `/${city.slug}` },
-      { name: areaName, url: `/${city.slug}/${areaSlug}` },
-    ]),
-    faqSchema(allFaqs),
-  ];
+  // Use locationServiceSchema when page is driven by location_services table
+  // Use areaPageSchema when it's a plain area hub page
+  const schemas = areaPageSchema({
+    cityName:    city.name,
+    citySlug,
+    cityState:   (city as any).state ?? "India",
+    cityPhone:   city.phone ?? "",
+    cityEmail:   city.email ?? "",
+    cityLat:     (city as any).lat ?? 0,
+    cityLng:     (city as any).lng ?? 0,
+    areaName,
+    areaSlug,
+    reviewCount: 300,
+    faqs:        allFaqs ?? [],
+  });
 
   return (
     <>

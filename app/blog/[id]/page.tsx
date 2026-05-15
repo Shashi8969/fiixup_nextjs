@@ -118,14 +118,17 @@ const sections = (post.content as unknown as BlogSection[]) ?? [];
     .filter((p) => p.slug !== id && p.category === post.category)
     .slice(0, 3);
 
-  // Use blogPostSchema (Article + BreadcrumbList + publisher logo) — was missing before
   const postSchema = blogPostSchema({
     title:       post.title,
     slug:        post.slug,
     description: post.metaDescription ?? post.excerpt ?? "",
     coverImage:  post.image || `${SITE_URL}/assets/og-image.webp`,
     publishedAt: post.date,
+    updatedAt:   (post as any).updatedAt ?? post.date,
     tags:        post.tags,
+    author:      post.author,
+    authorRole:  post.authorRole,
+    category:    post.category,
   });
 
   return (

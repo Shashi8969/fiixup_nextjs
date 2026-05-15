@@ -26,7 +26,7 @@ import { getAllServices, getServiceBySlug, getServicesByCategory } from "@/lib/s
 import { getAllServiceCategories, getServiceCategoryBySlug } from "@/lib/data/serviceCategory";
 import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
 import { getCategorySEO } from "@/lib/data/seo";
-import { serviceSchema, faqSchema, breadcrumbSchema } from "@/lib/schema";
+import { serviceDetailSchema, serviceCategorySchema } from "@/lib/schema";
 
 export const revalidate = 3600;
 
@@ -107,8 +107,23 @@ export default async function Page({
     const accentColor = (cat.slug === "car" ? "blue" : cat.color) as "blue" | "red";
     const catServices = await getServicesByCategory(cat.categorySlug as any);
 
+    const catSchema = serviceCategorySchema({
+      categoryName: cat.title,
+      categorySlug: cat.slug,
+      description:  cat.description,
+      services: catServices.map((s) => ({
+        name: s.title, slug: s.slug, description: s.description,
+        minPrice: parseInt(s.price.replace(/[^\d]/g, ""), 10) || undefined,
+      })),
+      faqs: cat.faqs ?? [],
+    });
+
     return (
       <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(catSchema) }}
+        />
         <section className={`py-16 bg-gradient-to-br ${theme.gradient}`}>
           <div className="container mx-auto px-4 text-center">
             <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl ${theme.iconBg} mb-6`}>
@@ -216,27 +231,28 @@ export default async function Page({
     ? Math.max(...pricingRows.map((r) => r.priceTo ?? r.priceFrom))
     : minPrice * 3;
 
-  const schemas = [
-    serviceSchema({
-      name: service.title,
-      description: service.description,
-      slug: service.slug,
-      minPrice,
-      maxPrice,
-    }),
-    faqSchema(service.faqs),
-    breadcrumbSchema([
-      { name: "Home",             url: "/" },
-      { name: "Services",         url: "/services" },
-      { name: service.shortTitle, url: `/services/${service.slug}` },
-    ]),
-  ];
+  // serviceDetailSchema = Service + AggregateRating + Review[] + HowTo + BreadcrumbList + FAQPage
+  const serviceSchemaData = serviceDetailSchema({
+    name:         service.title,
+    slug:         service.slug,
+    description:  service.description,
+    minPrice,
+    maxPrice,
+    faqs:         service.faqs,
+    testimonials: service.testimonials?.map((t: any) => ({
+      name: t.name, rating: t.rating, review: t.review ?? t.text ?? "",
+      location: t.location, vehicle: t.vehicle, date: t.date,
+    })),
+    features:     service.features,
+    duration:     service.duration,
+  });
 
   return (
     <>
-      {schemas.map((schema, i) => (
-        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      ))}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchemaData) }}
+      />
 
       <Hero service={service} Icon={Icon} isCar={isCar} bgAccent={bgAccent} accentBlue={accentBlue} bgLight={bgLight} />
       <TrustStrip />

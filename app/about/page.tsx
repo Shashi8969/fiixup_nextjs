@@ -6,6 +6,7 @@ import { About } from "@/components/About";
 import { Testimonials } from "@/components/Testimonials";
 import { mvvItems, differentiators } from "@/lib/data/about";
 import { getStaticPageSEO } from "@/lib/data/seo";
+import { aboutPageSchema } from "@/lib/schema";
 import { PageHero } from "@/components/ui/PageHero";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
@@ -27,6 +28,10 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutPageSchema()) }}
+      />
       <PageHero
         heading="About Fiixup"
         subtext="Revolutionizing auto care with 24/7 doorstep service across India"
