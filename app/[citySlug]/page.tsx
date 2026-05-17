@@ -28,6 +28,9 @@ export async function generateMetadata({
   const city = await getCityBySlug(citySlug);
   if (!city) return {};
 
+  const ogImage = (city as any).ogImageUrl
+    || `${SITE_URL}/assets/og-image.webp`;
+
   return {
     title:       city.metaTitle,
     description: city.metaDescription,
@@ -38,7 +41,19 @@ export async function generateMetadata({
       description: city.metaDescription,
       url:         `${SITE_URL}/${city.slug}`,
       type:        "website",
+    images: [{
+        url:    ogImage,
+        width:  1200,
+        height: 630,
+        alt:    `Doorstep car and bike repair in ${city.name} — Fiixup`,
+      }],
     },
+    twitter: {
+      card:        "summary_large_image",
+      title:       city.metaTitle,
+      description: city.metaDescription,
+      images:      [ogImage],
+    },    
   };
 }
 

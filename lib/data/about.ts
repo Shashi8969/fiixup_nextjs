@@ -1,44 +1,120 @@
 import { Award, Users, Clock, ThumbsUp } from "lucide-react";
 
 const mvvItems = [
-  { Icon: Award,  title: "Our Mission", text: "To make vehicle maintenance convenient, transparent, and accessible for every vehicle owner across India." },
-  { Icon: Users,  title: "Our Vision",  text: "To become India's leading doorstep auto service provider, setting new standards for quality and convenience." },
-  { Icon: ThumbsUp, title: "Our Values", text: "Honesty, quality, customer-first approach, and continuous innovation in everything we do." },
+  {
+    Icon: Award,
+    title: "Why Vehicle Owners Choose Fiixup",
+    text: "Finding a reliable car or bike mechanic during a breakdown is difficult, especially in busy city traffic and apartment areas. Fiixup helps customers get doorstep repair support without wasting hours searching for a nearby garage."
+  },
+
+  {
+    Icon: Users,
+    title: "Built for Everyday Vehicle Problems",
+    text: "From dead batteries and punctures to engine starting problems, oil changes, brake repair, and regular servicing, Fiixup is designed for common vehicle issues faced by daily commuters and riders."
+  },
+
+  {
+    Icon: ThumbsUp,
+    title: "Simple, Honest & Practical Service",
+    text: "We focus on quick response times, clear communication, and practical vehicle repair support at your home, office, apartment parking, or roadside location."
+  },
 ];
 
 const differentiators = [
-  { title: "Certified Excellence",   text: "All technicians are certified with extensive training in both traditional and modern vehicle systems." },
-  { title: "True 24/7 Service",      text: "Not just support — actual repair services round the clock, including nights and holidays." },
-  { title: "Transparent Pricing",    text: "Detailed estimates before work begins. No hidden charges, no surprises — just honest pricing." },
-  { title: "Genuine Parts",          text: "We use only authentic parts from trusted suppliers, backed by manufacturer warranties." },
-  { title: "Complete City Coverage", text: "Every corner of Bengaluru, Chennai, Hyderabad and Mumbai — we're always nearby." },
-  { title: "Digital Convenience",    text: "Easy online booking, digital service history, and cashless payments." },
+  {
+    title: "Doorstep Mechanics Near Your Location",
+    text: "Instead of asking customers to visit a crowded garage, nearby mechanics travel directly to homes, offices, apartment parking areas, and roadside breakdown locations."
+  },
+
+  {
+    title: "Support for Emergency Breakdowns",
+    text: "Available for non-start vehicles, dead batteries, punctures, overheating, chain issues, brake problems, and other urgent roadside repair situations."
+  },
+
+  {
+    title: "Car & Bike Repair Services",
+    text: "Support available for motorcycles, scooters, hatchbacks, sedans, SUVs, and commercial vehicles across multiple service categories."
+  },
+
+  {
+    title: "Fast Response in Major City Areas",
+    text: "Doorstep mechanic services available across Bengaluru, Chennai, Hyderabad, Mumbai, and nearby local areas with quick booking support."
+  },
+
+  {
+    title: "Repair & Servicing at Home or Office",
+    text: "Customers can book mechanics for regular servicing, inspections, oil changes, battery replacement, and repair work directly at their location."
+  },
+
+  {
+    title: "Easy Online Booking Process",
+    text: "Book a mechanic online or by phone without complicated forms, unnecessary delays, or long waiting times at local garages."
+  },
 ];
 
 export const aboutContent = {
-  title: "India's Trusted Doorstep Auto Repair Service",
-  description1: "Fiixup brings the workshop to your doorstep. We're India's growing 24/7 mobile auto repair service for both cars and bikes — operating across Bengaluru, Chennai, Hyderabad, and Mumbai, with more cities coming soon.",
-  description2: "No more wasting hours in traffic to reach a garage. Our certified technicians arrive at your location with professional-grade tools, genuine parts, and the expertise to get your vehicle back on the road — fast.",
-  imageAlt: "Fiixup certified technician performing doorstep car repair",
+  title: "Doorstep Car & Bike Mechanic Service for Fast Vehicle Repairs",
+
+  description1:
+    "Getting stranded with a vehicle problem in traffic, apartment parking, or on the roadside can be frustrating. Many garages ask customers to tow the vehicle or wait hours before inspection. Fiixup helps car and bike owners get mechanic support directly at their location.",
+
+  description2:
+    "From battery drain and puncture repair to oil changes, brake service, engine starting problems, and regular maintenance. Experienced mechanics arrive with tools and essential equipment to handle common vehicle issues without requiring a garage visit.",
+
+  imageAlt:
+    "Mechanic repairing a vehicle during doorstep car and bike service",
+
   sections: {
-    howItWorks: "How Fiixup Works"
+    howItWorks: "How Doorstep Mechanic Service Works"
   }
 };
 
 export const stats = [
-  { icon: Users,    value: "10,000+", label: "Happy Customers"       },
-  { icon: Clock,    value: "24/7",    label: "Always Available"       },
-  { icon: ThumbsUp, value: "98%",     label: "Customer Satisfaction"  },
-  { icon: Award,    value: "4",       label: "Cities & Growing"       },
+  {
+    icon: Users,
+    value: "10,000+",
+    label: "Vehicle Owners Assisted"
+  },
+
+  {
+    icon: Clock,
+    value: "24/7",
+    label: "Emergency Breakdown Support"
+  },
+
+  {
+    icon: ThumbsUp,
+    value: "98%",
+    label: "Customer Satisfaction"
+  },
+
+  {
+    icon: Award,
+    value: "4+",
+    label: "Cities Covered"
+  },
 ];
 
 export const highlights = [
-  { heading: "24/7 Doorstep Service",    text: "We come to you anytime — at your home, office, or roadside. Emergency breakdown at midnight? We're just a call away." },
-  { heading: "Certified Technicians",    text: "Every Fiixup technician is trained, certified, and has a minimum of 3 years of hands-on experience in car and bike repair." },
-  { heading: "Transparent Pricing",      text: "We provide detailed estimates before starting any work. No hidden charges, no surprises — just honest, upfront pricing." },
-  { heading: "30-Day Repair Warranty",   text: "All repairs come with a 30-day service warranty. If the same issue recurs, we fix it free — no questions asked." },
+  {
+    heading: "Mechanics Come to Your Location",
+    text: "Book doorstep vehicle repair services for homes, office parking, apartments, or roadside breakdown situations."
+  },
+
+  {
+    heading: "Quick Help for Common Vehicle Problems",
+    text: "Support available for dead batteries, punctures, engine issues, brake problems, oil changes, and non-start vehicles."
+  },
+
+  {
+    heading: "Suitable for Busy Daily Commuters",
+    text: "Avoid traffic, towing charges, and long garage waiting times with doorstep servicing and repair support."
+  },
+
+  {
+    heading: "Available Across Major City Locations",
+    text: "Doorstep car and bike mechanic services available across Bengaluru, Chennai, Hyderabad, Mumbai, and surrounding areas."
+  },
 ];
-
-
 
 export { mvvItems, differentiators };

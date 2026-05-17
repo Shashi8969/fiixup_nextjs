@@ -55,6 +55,15 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [390, 640, 768, 1024, 1280, 1600],
+    remotePatterns: [
+      {
+        // Supabase Storage CDN — for blog, service, city images
+        protocol: "https",
+        hostname:  "vpnztzzsyzgesnpihxsu.supabase.co",
+        port:      "",
+        pathname:  "/storage/v1/object/public/**",
+      },
+    ],
   },
 
   async redirects() {

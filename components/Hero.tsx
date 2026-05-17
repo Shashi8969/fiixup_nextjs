@@ -64,13 +64,14 @@ export function Hero() {
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-              Doorstep Car & Bike Repair — Now in 4 Cities Across India
-            </h1>
+  Trusted Doorstep Car & Bike Mechanic Service in Bangalore, Chennai, Hyderabad & Mumbai
+</h1>
 
             <p className="text-lg text-gray-700">
-              Certified mechanics come to your home or office in Bangalore, 
-Chennai, Hyderabad & Mumbai. Starting ₹249. 30-min response. 24/7.
-            </p>
+  Stuck with a bike that won’t start? Car battery dead in your apartment parking? 
+  Our local mechanics come directly to your home, office, or roadside location for fast car and bike repair services. 
+  Available 24/7 for breakdown help, emergency repairs, periodic servicing, battery jumpstart, puncture repair, oil change, and more.
+</p>
 
             <div className="space-y-3">
               {features.map((point) => (
@@ -96,8 +97,8 @@ Chennai, Hyderabad & Mumbai. Starting ₹249. 30-min response. 24/7.
                   ))}
                 </div>
                 <p className="text-sm text-gray-600 font-medium">
-                  10,000+ happy customers across India
-                </p>
+  Drivers across Bangalore, Chennai, Hyderabad & Mumbai trust us for quick and reliable doorstep repairs
+</p>
               </div>
             </div>
 
@@ -139,12 +140,10 @@ Chennai, Hyderabad & Mumbai. Starting ₹249. 30-min response. 24/7.
                     <div className="bg-white bg-opacity-90 p-6 rounded-xl shadow-xl backdrop-blur-sm h-full">
 
                       <h2 className="text-lg font-bold text-gray-900 mb-1">
-                        Book Doorstep Repair
-                      </h2>
+Get a Mechanic at Your Location                      </h2>
 
                       <p className="text-xs text-gray-500 mb-4">
-                        We call back in under 2 minutes
-                      </p>
+Tell us your issue — our nearby mechanic team will contact you shortly                      </p>
 
                       <form onSubmit={handleSubmit} className="space-y-3">
 

@@ -6,7 +6,8 @@ interface BlogCardProps {
   readonly id: string | number;
   readonly title: string;
   readonly excerpt: string;
-  readonly image?: string; // Made optional for safety
+  readonly image?: string;
+  readonly imageAlt?: string;   // SEO alt text from DB — falls back to title
   readonly date: string;
   readonly category: string;
   readonly readTime?: string | number;
@@ -15,7 +16,7 @@ interface BlogCardProps {
 }
 
 export function BlogCard({
-  id, title, excerpt, image, date, category,
+  id, title, excerpt, image, imageAlt, date, category,
   readTime, author, priority = false,
 }: BlogCardProps) {
   
@@ -36,7 +37,7 @@ export function BlogCard({
       <div className="relative h-48 overflow-hidden bg-gray-100">
         <Image
           src={src}
-          alt={title}
+          alt={imageAlt || title}
           fill
           priority={priority}
           className="object-cover group-hover:scale-105 transition-transform duration-300"

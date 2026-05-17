@@ -74,19 +74,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    
-    <html lang="en-IN" className={inter.variable}>
-      {/*
-        ✅ FIX: NO schema here in layout.
-        Each page injects its OWN relevant schema:
-          - app/page.tsx            → homeSchema()        (Organization + WebSite)
-          - app/bangalore/page.tsx  → bangaloreSchema()   (AutoRepair, Bangalore)
-          - app/chennai/page.tsx    → chennaiSchema()     (AutoRepair, Chennai)
-          - app/services/page.tsx → serviceSchema(data) (Service + price)
-          - app/blog/[slug]/page.tsx → blogPostSchema(post) (Article)
-          - app/faq/page.tsx        → faqSchema()         (FAQPage)
-        This way Google gets the RIGHT schema for each page, not homepage schema everywhere.
-      */}
+    <html lang="en-IN" className={inter.variable} suppressHydrationWarning>
       <head />
       <body suppressHydrationWarning>
         <Header />

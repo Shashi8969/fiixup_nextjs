@@ -8,9 +8,10 @@ export function Testimonials() {
   return (
     <section id="testimonials" className="py-12 bg-blue-50">
       <div className="container mx-auto px-4">
+
         <SectionHeader
-          heading="Trusted by Customers Across India"
-          subtext="From Bengaluru to Mumbai — thousands of car and bike owners rely on Fiixup for fast, professional doorstep repair service."
+          heading="Vehicle Owners Across India Use Fiixup for Doorstep Car & Bike Repair"
+          subtext="Customers book Fiixup for emergency breakdown support, doorstep car servicing, bike repair, battery replacement, puncture repair, and roadside mechanic assistance across Bengaluru, Chennai, Hyderabad, and Mumbai."
         />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -20,17 +21,30 @@ export function Testimonials() {
         </div>
 
         <div className="mt-12 bg-white rounded-xl p-6 flex flex-wrap items-center justify-center gap-10 shadow-sm max-w-3xl mx-auto">
+
           {globalStats.map(({ value, label, isRating }) => (
+
             <div key={label} className="text-center">
-              <p className="text-4xl font-bold text-gray-900">{value}</p>
+
+              <p className="text-4xl font-bold text-gray-900">
+                {value}
+              </p>
+
               {isRating && (
                 <div className="flex gap-0.5 justify-center my-1">
                   {Array.from({ length: 5 }, (_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                    <Star
+                      key={i}
+                      className="w-4 h-4 fill-yellow-400 text-yellow-400"
+                    />
                   ))}
                 </div>
               )}
-              <p className="text-sm text-gray-500">{label}</p>
+
+              <p className="text-sm text-gray-500">
+                {label}
+              </p>
+
             </div>
           ))}
         </div>
@@ -40,35 +54,70 @@ export function Testimonials() {
 }
 
 export function CityTestimonials({ city }: { readonly city: CityData }) {
+
   const cityStats = [
-    { value: "4.9/5",   label: "Average Rating"                        },
-    { value: "1,200+",  label: `Reviews in ${city.name}`               },
-    { value: "98%",     label: "Would Recommend"                       },
-    { value: "10,000+", label: `Vehicles Serviced in ${city.name}`     },
+    {
+      value: "4.9/5",
+      label: `Average Customer Rating in ${city.name}`
+    },
+
+    {
+      value: "1,200+",
+      label: `Verified Service Reviews from ${city.name}`
+    },
+
+    {
+      value: "98%",
+      label: "Customers Recommend Fiixup to Others"
+    },
+
+    {
+      value: "10,000+",
+      label: `Cars & Bikes Serviced in ${city.name}`
+    },
   ];
 
   return (
     <section id="testimonials" className="py-20 bg-blue-50">
+
       <div className="container mx-auto px-4">
+
         <SectionHeader
-          heading={city.testimonialsHeading}
-          subtext={city.testimonialsSubtext}
+          heading={`Doorstep Mechanic Reviews from ${city.name} Customers`}
+          subtext={`See why vehicle owners in ${city.name} choose Fiixup for bike repair, car servicing, roadside breakdown support, battery replacement, puncture repair, and emergency mechanic services.`}
         />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
           {city.testimonials.map((t) => (
-            <TestimonialCard key={`${t.name}-${t.date}`} {...t} />
+            <TestimonialCard
+              key={`${t.name}-${t.date}`}
+              {...t}
+            />
           ))}
+
         </div>
 
         <div className="mt-12 bg-white rounded-xl p-6 flex flex-wrap items-center justify-center gap-10 shadow-sm max-w-3xl mx-auto">
+
           {cityStats.map(({ value, label }) => (
+
             <div key={label} className="text-center">
-              <p className="text-4xl font-bold text-gray-900">{value}</p>
-              <p className="text-sm text-gray-500 mt-1">{label}</p>
+
+              <p className="text-4xl font-bold text-gray-900">
+                {value}
+              </p>
+
+              <p className="text-sm text-gray-500 mt-1">
+                {label}
+              </p>
+
             </div>
+
           ))}
+
         </div>
+
       </div>
     </section>
   );
