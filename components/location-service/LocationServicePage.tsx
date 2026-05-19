@@ -1,91 +1,102 @@
-"use client";
+// components/location-service/LocationServicePage.tsx
+// SERVER COMPONENT — no "use client"
+// FAQAccordion is the only client island (handles useState for open/close)
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
   Phone, MapPin, Star, CheckCircle,
-  ChevronDown, ChevronUp, Clock, Shield,
-  IndianRupee, Navigation, ArrowRight,
+  Clock, Shield, IndianRupee, Navigation, ArrowRight,
 } from "lucide-react";
 import type { LocationServiceData } from "@/lib/locationServices";
 import type { CityData } from "@/lib/models/city.model";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
+import { FAQAccordion } from "@/components/ui/FAQAccordion";
 
+// ─── Theme config ────────────────────────────────────────────────────────────
+const CATEGORY_THEME: Record<string, {
+  bgAccent: string; btnHover: string; bgLight: string;
+  accentText: string; borderClr: string; heroImage: string; badge: string;
+}> = {
+  car: {
+    bgAccent: "bg-blue-600", btnHover: "hover:bg-blue-700", bgLight: "bg-blue-50",
+    accentText: "text-blue-600", borderClr: "border-blue-200",
+    heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🚗 Car Service",
+  },
+  bike: {
+    bgAccent: "bg-red-600", btnHover: "hover:bg-red-700", bgLight: "bg-red-50",
+    accentText: "text-red-600", borderClr: "border-red-200",
+    heroImage: "/assets/bike-mechanic-in-bangalore.webp", badge: "🏍️ Bike Service",
+  },
+  roadside: {
+    bgAccent: "bg-red-700", btnHover: "hover:bg-red-800", bgLight: "bg-red-50",
+    accentText: "text-red-700", borderClr: "border-red-200",
+    heroImage: "/assets/car-emergency.webp", badge: "🆘 Roadside Assistance",
+  },
+  towing: {
+    bgAccent: "bg-amber-600", btnHover: "hover:bg-amber-700", bgLight: "bg-amber-50",
+    accentText: "text-amber-600", borderClr: "border-amber-200",
+    heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🚛 Towing Service",
+  },
+  electrical: {
+    bgAccent: "bg-purple-600", btnHover: "hover:bg-purple-700", bgLight: "bg-purple-50",
+    accentText: "text-purple-600", borderClr: "border-purple-200",
+    heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "⚡ Electrical Repair",
+  },
+  battery: {
+    bgAccent: "bg-yellow-600", btnHover: "hover:bg-yellow-700", bgLight: "bg-yellow-50",
+    accentText: "text-yellow-600", borderClr: "border-yellow-200",
+    heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🔋 Battery Service",
+  },
+  puncture: {
+    bgAccent: "bg-orange-600", btnHover: "hover:bg-orange-700", bgLight: "bg-orange-50",
+    accentText: "text-orange-600", borderClr: "border-orange-200",
+    heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🔧 Puncture Repair",
+  },
+  mechanic: {
+    bgAccent: "bg-slate-700", btnHover: "hover:bg-slate-800", bgLight: "bg-slate-50",
+    accentText: "text-slate-700", borderClr: "border-slate-200",
+    heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🔩 Mechanic Service",
+  },
+};
+
+const DEFAULT_THEME = {
+  bgAccent: "bg-blue-600", btnHover: "hover:bg-blue-700", bgLight: "bg-blue-50",
+  accentText: "text-blue-600", borderClr: "border-blue-200",
+  heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🔧 Vehicle Service",
+};
 
 const iconMap: Record<string, React.ElementType> = {
   Clock, Shield, IndianRupee, Star, Phone, MapPin, CheckCircle,
 };
 
+// ─── Props ───────────────────────────────────────────────────────────────────
 interface Props {
   data: LocationServiceData;
   city: CityData;
-  allKeywords: { slug: string; name: string; category: string }[];
   breadcrumbs: { name: string; url: string }[];
 }
 
+// ─── Component (Server) ──────────────────────────────────────────────────────
 export function LocationServicePage({ data, city, breadcrumbs }: Props) {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  // Full category config — covers all current and future service categories
-  const CATEGORY_THEME: Record<string, {
-    bgAccent: string; btnHover: string; bgLight: string;
-    accentText: string; borderClr: string; heroImage: string; badge: string;
-  }> = {
-    car: {
-      bgAccent: "bg-blue-600", btnHover: "hover:bg-blue-700", bgLight: "bg-blue-50",
-      accentText: "text-blue-600", borderClr: "border-blue-200",
-      heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🚗 Car Service",
-    },
-    bike: {
-      bgAccent: "bg-red-600", btnHover: "hover:bg-red-700", bgLight: "bg-red-50",
-      accentText: "text-red-600", borderClr: "border-red-200",
-      heroImage: "/assets/bike-mechanic-in-bangalore.webp", badge: "🏍️ Bike Service",
-    },
-    roadside: {
-      bgAccent: "bg-red-700", btnHover: "hover:bg-red-800", bgLight: "bg-red-50",
-      accentText: "text-red-700", borderClr: "border-red-200",
-      heroImage: "/assets/car-emergency.webp", badge: "🆘 Roadside Assistance",
-    },
-    towing: {
-      bgAccent: "bg-amber-600", btnHover: "hover:bg-amber-700", bgLight: "bg-amber-50",
-      accentText: "text-amber-600", borderClr: "border-amber-200",
-      heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🚛 Towing Service",
-    },
-    electrical: {
-      bgAccent: "bg-purple-600", btnHover: "hover:bg-purple-700", bgLight: "bg-purple-50",
-      accentText: "text-purple-600", borderClr: "border-purple-200",
-      heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "⚡ Electrical Repair",
-    },
-    ev: {
-      bgAccent: "bg-green-600", btnHover: "hover:bg-green-700", bgLight: "bg-green-50",
-      accentText: "text-green-600", borderClr: "border-green-200",
-      heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🔋 EV Service",
-    },
-  };
-
-  const DEFAULT_THEME = {
-    bgAccent: "bg-blue-600", btnHover: "hover:bg-blue-700", bgLight: "bg-blue-50",
-    accentText: "text-blue-600", borderClr: "border-blue-200",
-    heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🔧 Vehicle Service",
-  };
-
   const theme = CATEGORY_THEME[data.serviceCategory] ?? DEFAULT_THEME;
   const { bgAccent, btnHover, bgLight, accentText, borderClr, heroImage } = theme;
-  const isBike = data.serviceCategory === "bike";
-  const categoryBadge = theme.badge;
 
   return (
     <>
       {/* HERO */}
       <section className={`${bgLight} py-6 border-b border-gray-200`}>
         <div className="container mx-auto px-4">
+
+          {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6 flex-wrap">
             {breadcrumbs.map((crumb, i) => (
               <span key={crumb.url} className="flex items-center gap-2">
                 {i < breadcrumbs.length - 1 ? (
                   <>
-                    <Link href={crumb.url} className="hover:text-blue-600 transition-colors">{crumb.name}</Link>
+                    <Link href={crumb.url} className="hover:text-blue-600 transition-colors">
+                      {crumb.name}
+                    </Link>
                     <span>/</span>
                   </>
                 ) : (
@@ -98,7 +109,7 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <span className={`inline-block ${bgAccent} text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-4`}>
-                {categoryBadge} — {data.locationHeading}
+                {theme.badge} — {data.locationHeading}
               </span>
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 leading-tight">
                 {data.heroHeading}
@@ -108,6 +119,7 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
                 📍 {data.heroBadgeText || `Serving all areas in ${data.displayLocation}`}
               </p>
 
+              {/* Stats */}
               <div className="flex flex-wrap gap-6 mb-8">
                 <div>
                   <p className={`text-2xl font-bold ${accentText}`}>24/7</p>
@@ -125,6 +137,7 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
                 </div>
               </div>
 
+              {/* CTAs */}
               <div className="flex flex-wrap gap-3">
                 <Link
                   href={`/${city.slug}#contact`}
@@ -149,6 +162,7 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
               </div>
             </div>
 
+            {/* Hero Image */}
             <div className="hidden md:block relative">
               <div className="rounded-2xl overflow-hidden shadow-xl h-[420px] w-full relative">
                 <Image
@@ -289,7 +303,10 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
                   <span className="text-right">Note</span>
                 </div>
                 {data.pricingRows.map((row, i) => (
-                  <div key={row.label} className={`grid grid-cols-3 px-6 py-4 text-sm ${i % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
+                  <div
+                    key={row.label}
+                    className={`grid grid-cols-3 px-6 py-4 text-sm ${i % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
+                  >
                     <span className="font-medium text-gray-900">{row.label}</span>
                     <span className="text-center font-semibold text-gray-800">
                       ₹{row.priceFrom.toLocaleString("en-IN")}
@@ -301,7 +318,10 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
               </div>
               <p className="text-xs text-gray-500 mt-3 text-center">{data.pricingDisclaimer}</p>
               <div className="mt-6 text-center">
-                <Link href={`/${city.slug}#contact`} className={`${bgAccent} ${btnHover} text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-block`}>
+                <Link
+                  href={`/${city.slug}#contact`}
+                  className={`${bgAccent} ${btnHover} text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-block`}
+                >
                   Get Free Quote for {data.locationHeading}
                 </Link>
               </div>
@@ -340,7 +360,7 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
         </section>
       )}
 
-      {/* FAQ */}
+      {/* FAQ — "use client" island for accordion interactivity */}
       {data.faqs.length > 0 && (
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4 max-w-3xl">
@@ -350,26 +370,8 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
             <p className="text-gray-500 text-center mb-10">
               Common questions from {data.locationHeading} customers.
             </p>
-            <div className="space-y-4">
-              {data.faqs.map((faq, i) => (
-                <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
-                  <button
-                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="w-full flex items-center justify-between p-5 text-left font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
-                  >
-                    <span>{faq.q}</span>
-                    {openFaq === i
-                      ? <ChevronUp className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                      : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
-                  </button>
-                  {openFaq === i && (
-                    <div className="px-5 pb-5 pt-3 text-gray-600 leading-relaxed border-t border-gray-100">
-                      {faq.a}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+            {/* Only this component is "use client" */}
+            <FAQAccordion faqs={data.faqs} accentText={accentText} />
           </div>
         </section>
       )}
@@ -414,7 +416,11 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
               {data.relatedServices.map((s) => (
                 <Link
                   key={s.slug}
-                  href={data.isCityLevel ? `/${data.citySlug}/${s.slug}` : `/${data.citySlug}/${data.areaSlug}/${s.slug}`}
+                  href={
+                    data.isCityLevel
+                      ? `/${data.citySlug}/${s.slug}`
+                      : `/${data.citySlug}/${data.areaSlug}/${s.slug}`
+                  }
                   className="bg-white p-6 border border-gray-200 rounded-xl hover:shadow-lg transition-all group"
                 >
                   <h3 className={`font-bold text-gray-900 group-hover:${accentText} transition-colors mb-1`}>
@@ -440,10 +446,16 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
             Certified technicians available 24/7 across {data.displayLocation}.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link href={`/${city.slug}#contact`} className="bg-white text-gray-900 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">
+            <Link
+              href={`/${city.slug}#contact`}
+              className="bg-white text-gray-900 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors"
+            >
               Book Service Now
             </Link>
-            <a href={`tel:${city.phone}`} className="bg-black/20 text-white border border-white/30 px-8 py-3 rounded-lg font-bold hover:bg-black/30 transition-colors flex items-center gap-2">
+            <a
+              href={`tel:${city.phone}`}
+              className="bg-black/20 text-white border border-white/30 px-8 py-3 rounded-lg font-bold hover:bg-black/30 transition-colors flex items-center gap-2"
+            >
               <Phone className="w-4 h-4" /> {city.phone}
             </a>
           </div>

@@ -157,3 +157,100 @@ export async function getServiceKeywords(): Promise<
   if (error || !data) return [];
   return data;
 }
+
+export interface CityServiceListItem {
+  id:              number;
+  serviceSlug:     string;
+  serviceName:     string;
+  serviceCategory: string;
+  heroSubheading:  string;   // used as the card tagline
+  pricingRows:     { label: string; priceFrom: number; priceTo?: number }[];
+  schemaAggregateRating: number;
+  schemaReviewCount:     number;
+  canonicalUrl:    string;
+}
+ 
+export async function getCityServices(
+  citySlug: string
+): Promise<CityServiceListItem[]> {
+  const { data, error } = await supabase
+    .from("location_services")
+    .select(
+      `id, service_slug, service_name, service_category,
+       hero_subheading, pricing_rows,
+       schema_aggregate_rating, schema_review_count,
+       canonical_url`
+    )
+    .eq("city_slug", citySlug.toLowerCase())
+    .is("area_slug", null)
+    .eq("is_active", true)
+    .order("service_category")
+    .order("service_name");
+ 
+  if (error) {
+    console.error("getCityServices error:", error.message);
+    return [];
+  }
+ 
+  return (data ?? []).map((row) => ({
+    id:              row.id,
+    serviceSlug:     row.service_slug,
+    serviceName:     row.service_name,
+    serviceCategory: row.service_category,
+    heroSubheading:  row.hero_subheading ?? "",
+    pricingRows:     row.pricing_rows ?? [],
+    schemaAggregateRating: parseFloat(row.schema_aggregate_rating) || 4.9,
+    schemaReviewCount:     row.schema_review_count ?? 150,
+    canonicalUrl:    row.canonical_url,
+  }));
+}
+ 
+export interface CityServiceCard {
+  id:              number;
+  serviceSlug:     string;
+  serviceName:     string;
+  serviceCategory: string;
+  heroSubheading:  string;   // tagline shown on card
+  pricingRows:     { label: string; priceFrom: number; priceTo?: number; note?: string }[];
+  duration:        string | null;
+  schemaAggregateRating: number;
+  schemaReviewCount:     number;
+  canonicalUrl:    string;
+}
+ 
+export async function getCityServicesByCategory(
+  citySlug: string,
+  categorySlug: string
+): Promise<CityServiceCard[]> {
+  const { data, error } = await supabase
+    .from("location_services")
+    .select(
+      `id, service_slug, service_name, service_category,
+       hero_subheading, pricing_rows,
+       schema_aggregate_rating, schema_review_count,
+       canonical_url`
+    )
+    .eq("city_slug",         citySlug.toLowerCase())
+    .eq("service_category",  categorySlug.toLowerCase())   // matches the category_slug column
+    .is("area_slug",         null)                         // city-level only
+    .eq("is_active",         true)
+    .order("service_name");
+ 
+  if (error) {
+    console.error("getCityServicesByCategory error:", error.message);
+    return [];
+  }
+ 
+  return (data ?? []).map((row) => ({
+    id:              row.id,
+    serviceSlug:     row.service_slug,
+    serviceName:     row.service_name,
+    serviceCategory: row.service_category,
+    heroSubheading:  row.hero_subheading ?? "",
+    pricingRows:     row.pricing_rows    ?? [],
+    duration:        null,   // location_services has no duration column — shown as "30–60 min"
+    schemaAggregateRating: parseFloat(row.schema_aggregate_rating) || 4.9,
+    schemaReviewCount:     row.schema_review_count ?? 150,
+    canonicalUrl:    row.canonical_url,
+  }));
+}

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
   title: {
     default: "Fiixup — 24/7 Doorstep Car & Bike Repair in India",
-    template: `%s | ${SITE_NAME}`,
+    template: `%s`,
   },
 
   description:

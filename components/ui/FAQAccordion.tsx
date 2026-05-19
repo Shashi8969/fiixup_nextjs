@@ -1,36 +1,41 @@
 "use client";
+// components/ui/FAQAccordion.tsx
+// This is the ONLY "use client" component in the location service page.
+// Isolated here so the parent LocationServicePage can be a Server Component.
 
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
-import type { FAQ } from "@/lib/models/faq.model";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
-interface FAQAccordionProps {
-  faqs: FAQ[];
+interface FAQ {
+  q: string;
+  a: string;
 }
 
-export function FAQAccordion({ faqs }: FAQAccordionProps) {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const toggle = (i: number) => setOpenIndex((prev) => (prev === i ? null : i));
+interface Props {
+  faqs: FAQ[];
+  accentText?: string;
+}
+
+export function FAQAccordion({ faqs, accentText = "text-blue-600" }: Props) {
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {faqs.map((faq, i) => (
         <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
           <button
-            onClick={() => toggle(i)}
-            className="w-full text-left px-6 py-4 flex items-center justify-between bg-white hover:bg-gray-50 transition-colors"
-            aria-expanded={openIndex === i}
+            onClick={() => setOpenFaq(openFaq === i ? null : i)}
+            className="w-full flex items-center justify-between p-5 text-left font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
+            aria-expanded={openFaq === i}
           >
-            <span className="font-semibold text-gray-900 pr-4">{faq.q}</span>
-            <ChevronDown
-              className={`w-5 h-5 text-gray-500 flex-shrink-0 transition-transform ${
-                openIndex === i ? "rotate-180" : ""
-              }`}
-            />
+            <span>{faq.q}</span>
+            {openFaq === i
+              ? <ChevronUp className={`w-5 h-5 ${accentText} flex-shrink-0`} />
+              : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
           </button>
-          {openIndex === i && (
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-              <p className="text-gray-600 leading-relaxed">{faq.a}</p>
+          {openFaq === i && (
+            <div className="px-5 pb-5 pt-3 text-gray-600 leading-relaxed border-t border-gray-100">
+              {faq.a}
             </div>
           )}
         </div>

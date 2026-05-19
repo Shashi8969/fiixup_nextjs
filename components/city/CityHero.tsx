@@ -100,7 +100,7 @@ export function CityHero({ city }: { city: CityData }) {
                 href={`tel:${city.phone}`}
                 className="bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold"
               >
-                Call Now — {city.phone}
+                Call Now {city.phone}
               </a>
             </div>
           </div>

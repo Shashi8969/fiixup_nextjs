@@ -1049,3 +1049,238 @@ export function faqSchema(faqs: { q: string; a: string }[]) {
 export function breadcrumbSchema(crumbs: { name: string; url: string }[]) {
   return _breadcrumb(crumbs);
 }
+
+export function cityHubSchema(opts: {
+  name:        string;
+  slug:        string;
+  state:       string;
+  postalCode:  string;
+  lat:         number;
+  lng:         number;
+  phone:       string;
+  email:       string;
+  reviewCount: number;
+  rating:      number;
+  areas:       { name: string; slug: string }[];
+  faqs:        { q: string; a: string }[];
+  heroHeading: string;
+  metaTitle:   string;
+  metaDesc:    string;
+  ogImageUrl:  string | null;
+}) {
+  const pageUrl = `${SITE_URL}/${opts.slug}`;
+  const image   = opts.ogImageUrl ?? OG_IMAGE;
+
+  const graph: object[] = [
+    // ── WebPage ──────────────────────────────────────────────
+    {
+      "@type":           "WebPage",
+      "@id":             `${pageUrl}/#webpage`,
+      url:               pageUrl,
+      name:              opts.metaTitle,
+      description:       opts.metaDesc,
+      inLanguage:        "en-IN",
+      isPartOf:          { "@id": `${SITE_URL}/#website` },
+      about:             { "@id": `${pageUrl}/#localbusiness` },
+      primaryImageOfPage: { "@id": `${pageUrl}/#heroimage` },
+      breadcrumb:        { "@id": `${pageUrl}/#breadcrumb` },
+    },
+
+    // ── ImageObject ──────────────────────────────────────────
+    {
+      "@type": "ImageObject",
+      "@id":   `${pageUrl}/#heroimage`,
+      url:     image,
+      width:   1200,
+      height:  630,
+    },
+
+    // ── AutoRepair + LocalBusiness ───────────────────────────
+    {
+      "@type":     ["AutoRepair", "LocalBusiness"],
+      "@id":       `${pageUrl}/#localbusiness`,
+      name:        `Fiixup — Doorstep Auto Repair in ${opts.name}`,
+      url:         pageUrl,
+      image,
+      telephone:   opts.phone,
+      email:       opts.email ?? MAIN_EMAIL,
+      description: `24/7 doorstep car and bike repair service in ${opts.name}, ${opts.state}. Certified mechanics come to you.`,
+      parentOrganization: { "@id": ORG_ID },
+      address: {
+        "@type":           "PostalAddress",
+        addressLocality:   opts.name,
+        addressRegion:     opts.state,
+        postalCode:        opts.postalCode || "000000",
+        addressCountry:    "IN",
+      },
+      geo: {
+        "@type":     "GeoCoordinates",
+        latitude:    opts.lat,
+        longitude:   opts.lng,
+      },
+      areaServed: [
+        { "@type": "City",  name: opts.name, containedInPlace: { "@type": "State", name: opts.state } },
+        ...opts.areas.slice(0, 20).map((a) => ({
+          "@type": "Neighborhood",
+          name:    a.name,
+          url:     `${SITE_URL}/${opts.slug}/${a.slug}`,
+        })),
+      ],
+      openingHours: "Mo-Su 00:00-24:00",
+      priceRange:   "₹₹",
+      aggregateRating: {
+        "@type":       "AggregateRating",
+        ratingValue:   String(opts.rating),
+        reviewCount:   String(opts.reviewCount),
+        bestRating:    "5",
+        worstRating:   "1",
+      },
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name:    `Vehicle Repair Services in ${opts.name}`,
+        itemListElement: [
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: `Car Mechanic at Home in ${opts.name}` } },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: `Bike Repair in ${opts.name}` } },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: `Car Battery Replacement in ${opts.name}` } },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: `Tyre Puncture Repair in ${opts.name}` } },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: `Car Towing Service in ${opts.name}` } },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: `Roadside Assistance in ${opts.name}` } },
+        ],
+      },
+    },
+
+    // ── BreadcrumbList ───────────────────────────────────────
+    {
+      "@type":   "BreadcrumbList",
+      "@id":     `${pageUrl}/#breadcrumb`,
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home",     item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: opts.name,  item: pageUrl  },
+      ],
+    },
+  ];
+
+  // ── FAQPage (only if FAQs exist) ──────────────────────────
+  if (opts.faqs.length > 0) {
+    graph.push({
+      "@type":      "FAQPage",
+      "@id":        `${pageUrl}/#faq`,
+      name:         `FAQs — Doorstep Vehicle Repair in ${opts.name}`,
+      mainEntity:   opts.faqs.slice(0, 10).map((f) => ({
+        "@type":         "Question",
+        name:            f.q,
+        acceptedAnswer:  { "@type": "Answer", text: f.a },
+      })),
+    });
+  }
+
+  return { "@context": "https://schema.org", "@graph": graph };
+}
+
+export function cityServiceCategorySchema(opts: {
+  cityName:     string;
+  citySlug:     string;
+  categoryName: string;
+  categorySlug: string;
+  metaTitle:    string;
+  metaDesc:     string;
+  rating:       number;
+  reviewCount:  number;
+  phone:        string;
+  ogImageUrl:   string | null;
+  services: { slug: string; title: string; tagline: string; price: string }[];
+  faqs:     { q: string; a: string }[];
+}) {
+  const pageUrl   = `${SITE_URL}/${opts.citySlug}/services/${opts.categorySlug}`;
+  const image     = opts.ogImageUrl ?? OG_IMAGE;
+  const cityPageUrl = `${SITE_URL}/${opts.citySlug}`;
+
+  const graph: object[] = [
+    // ── WebPage ──────────────────────────────────────────────
+    {
+      "@type":       "WebPage",
+      "@id":         `${pageUrl}/#webpage`,
+      url:           pageUrl,
+      name:          opts.metaTitle,
+      description:   opts.metaDesc,
+      inLanguage:    "en-IN",
+      isPartOf:      { "@id": `${SITE_URL}/#website` },
+      breadcrumb:    { "@id": `${pageUrl}/#breadcrumb` },
+    },
+
+    // ── ItemList (services carousel) ─────────────────────────
+    {
+      "@type":           "ItemList",
+      "@id":             `${pageUrl}/#servicelist`,
+      name:              `${opts.categoryName} in ${opts.cityName}`,
+      description:       opts.metaDesc,
+      numberOfItems:     opts.services.length,
+      itemListElement:   opts.services.slice(0, 20).map((s, i) => ({
+        "@type":    "ListItem",
+        position:   i + 1,
+        name:       `${s.title} in ${opts.cityName}`,
+        url:        `${SITE_URL}/${opts.citySlug}/${s.slug}`,
+        description: s.tagline,
+        item: {
+          "@type":    "Service",
+          name:       `${s.title} in ${opts.cityName}`,
+          url:        `${SITE_URL}/${opts.citySlug}/${s.slug}`,
+          description: s.tagline,
+          offers: {
+            "@type":      "Offer",
+            price:        s.price.replace(/[₹\s]/g, ''),
+            priceCurrency: "INR",
+          },
+        },
+      })),
+    },
+
+    // ── LocalBusiness (city-category combo) ──────────────────
+    {
+      "@type":     ["AutoRepair", "LocalBusiness"],
+      "@id":       `${pageUrl}/#localbusiness`,
+      name:        `Fiixup ${opts.categoryName} in ${opts.cityName}`,
+      url:         pageUrl,
+      image,
+      telephone:   opts.phone,
+      description: opts.metaDesc,
+      parentOrganization: { "@id": ORG_ID },
+      sameAs:      cityPageUrl,
+      openingHours: "Mo-Su 00:00-24:00",
+      priceRange:  "₹₹",
+      aggregateRating: {
+        "@type":     "AggregateRating",
+        ratingValue:  String(opts.rating),
+        reviewCount:  String(opts.reviewCount),
+        bestRating:  "5",
+        worstRating: "1",
+      },
+    },
+
+    // ── BreadcrumbList ───────────────────────────────────────
+    {
+      "@type":   "BreadcrumbList",
+      "@id":     `${pageUrl}/#breadcrumb`,
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home",                 item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: opts.cityName,           item: cityPageUrl },
+        { "@type": "ListItem", position: 3, name: opts.categoryName,       item: pageUrl },
+      ],
+    },
+  ];
+
+  // ── FAQPage ──────────────────────────────────────────────
+  if (opts.faqs.length > 0) {
+    graph.push({
+      "@type":    "FAQPage",
+      "@id":      `${pageUrl}/#faq`,
+      mainEntity: opts.faqs.slice(0, 10).map((f) => ({
+        "@type":        "Question",
+        name:           f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    });
+  }
+
+  return { "@context": "https://schema.org", "@graph": graph };
+}
