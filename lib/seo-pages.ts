@@ -62,6 +62,10 @@ export interface PageData {
   faqs:                  { q: string; a: string }[]
   nearbyAreas:           { name: string; slug: string }[]
   relatedServices:       { name: string; slug: string; category: string }[]
+  seoIntroHeading:       string | null
+  seoIntroBody:          string | null
+  seoSections:           { heading: string; body: string }[]
+  seoConclusion:         string | null
 }
 
 export interface Breadcrumb {

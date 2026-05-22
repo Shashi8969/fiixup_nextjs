@@ -29,6 +29,10 @@ export interface LocationServiceData {
   faqs: { q: string; a: string }[];
   nearbyAreas: { name: string; slug: string }[];
   relatedServices: { name: string; slug: string; category: string }[];
+  seoIntroHeading: string | null;
+  seoIntroBody: string | null;
+  seoSections: { heading: string; body: string }[];
+  seoConclusion: string | null;
   schemaAggregateRating: number;
   schemaReviewCount: number;
   displayLocation: string;
@@ -66,6 +70,10 @@ function rowToLocationService(row: any): LocationServiceData {
     faqs:                  row.faqs ?? [],
     nearbyAreas:           row.nearby_areas ?? [],
     relatedServices:       row.related_services ?? [],
+    seoIntroHeading:       row.seo_intro_heading ?? null,
+    seoIntroBody:          row.seo_intro_body ?? null,
+    seoSections:           row.seo_sections ?? [],
+    seoConclusion:         row.seo_conclusion ?? null,
     schemaAggregateRating: parseFloat(row.schema_aggregate_rating) || 4.9,
     schemaReviewCount:     row.schema_review_count ?? 150,
     displayLocation:       isCity ? row.city_name : `${row.area_name}, ${row.city_name}`,

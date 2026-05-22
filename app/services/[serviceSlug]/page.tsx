@@ -341,6 +341,7 @@ const cat = categories.find((c) => c.slug === serviceSlug);
           <ServiceFAQ faqs={service.faqs} />
         </div>
       </section>
+      <WhyChooseDoorstep />
 
       {service.guide && <CompleteGuideSection guide={service.guide} />}
 
@@ -372,7 +373,7 @@ const cat = categories.find((c) => c.slug === serviceSlug);
         </section>
       )}
 
-      <WhyChooseDoorstep />
+      
 
       <BookingCTA serviceTitle={service.shortTitle} bgAccent={bgAccent} />
     </>

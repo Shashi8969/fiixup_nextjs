@@ -96,6 +96,10 @@ export default async function AreaServicePage({ params }: { params: Params }) {
           whyChoosePoints:       data.whyChoosePoints ?? [],
           pricingRows:           data.pricingRows ?? [],
           pricingDisclaimer:     data.pricingDisclaimer,
+          seoIntroHeading:       data.seoIntroHeading,
+          seoIntroBody:          data.seoIntroBody,
+          seoSections:           data.seoSections ?? [],
+          seoConclusion:         data.seoConclusion,
           testimonials:          data.testimonials ?? [],
           faqs:                  data.faqs ?? [],
           nearbyAreas:           data.nearbyAreas ?? [],
@@ -113,6 +117,7 @@ export default async function AreaServicePage({ params }: { params: Params }) {
         } as any}
         breadcrumbs={page.breadcrumbs_json ?? []}
       />
+      
     </>
   )
 }
