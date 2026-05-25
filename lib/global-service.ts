@@ -34,18 +34,72 @@ export interface GlobalServicePage {
   schema_json: object | null;
 }
 
-// ... rest of the file remains the same
+type GlobalServicePricingRow = GlobalServicePage['pricing_rows'][number]
+type GlobalServiceTestimonial = GlobalServicePage['testimonials'][number]
+type GlobalServiceFaq = GlobalServicePage['faqs'][number]
+type GlobalServiceRelatedService = GlobalServicePage['related_services'][number]
 
 export const getGlobalServicePage = cache(async (serviceSlug: string): Promise<GlobalServicePage | null> => {
-  const { data, error } = await supabase
+  const { data: page, error } = await supabase
     .from('global_service_pages')
     .select('*')
-    .eq('service_slug', serviceSlug)
+    .eq('service_slug', serviceSlug.toLowerCase())
     .eq('is_active', true)
     .single()
   
-  if (error || !data) return null
-  return data as GlobalServicePage
+  if (error || !page) return null
+
+  const [pricingRows, testimonials, faqs, relatedServices] = await Promise.all([
+    supabase
+      .from('gsp_pricing_rows')
+      .select('label, price_from, price_to, note, highlight')
+      .eq('gsp_id', page.id)
+      .order('sort_order'),
+    supabase
+      .from('gsp_testimonials')
+      .select('name, rating, body, vehicle, location, date_label')
+      .eq('gsp_id', page.id)
+      .order('sort_order'),
+    supabase
+      .from('gsp_faqs')
+      .select('question, answer')
+      .eq('gsp_id', page.id)
+      .order('sort_order'),
+    supabase
+      .from('gsp_related_services')
+      .select('name, slug, category')
+      .eq('gsp_id', page.id)
+      .order('sort_order'),
+  ])
+
+  const childError = pricingRows.error
+    ?? testimonials.error
+    ?? faqs.error
+    ?? relatedServices.error
+
+  if (childError) {
+    console.error('getGlobalServicePage child rows error:', childError.message)
+  }
+
+  return {
+    ...(page as GlobalServicePage),
+    schema_aggregate_rating: Number(page.schema_aggregate_rating) || 4.9,
+    schema_review_count: page.schema_review_count ?? 0,
+    pricing_rows: (pricingRows.data ?? page.pricing_rows ?? []) as GlobalServicePricingRow[],
+    testimonials: (testimonials.data ?? []).map((row): GlobalServiceTestimonial => ({
+      name: row.name,
+      rating: row.rating,
+      text: row.body,
+      vehicle: row.vehicle ?? '',
+      location: row.location ?? '',
+      date: row.date_label ?? '',
+    })),
+    faqs: (faqs.data ?? []).map((row): GlobalServiceFaq => ({
+      q: row.question,
+      a: row.answer,
+    })),
+    related_services: (relatedServices.data ?? page.related_services ?? []) as GlobalServiceRelatedService[],
+  }
 })
 
 export async function getAllGlobalServiceSlugs(): Promise<string[]> {

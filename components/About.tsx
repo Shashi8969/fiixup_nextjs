@@ -32,7 +32,7 @@ export function About() {
           <div className="order-1 md:order-2">
             <div className="rounded-2xl overflow-hidden shadow-xl relative h-[420px]">
               <Image
-                src="/assets/carservice.webp"
+                src="https://vpnztzzsyzgesnpihxsu.supabase.co/storage/v1/object/public/images/general/about-us-fiixup-1779454912831.webp"
                 alt={aboutContent.imageAlt}
                 fill
                 className="object-cover"
