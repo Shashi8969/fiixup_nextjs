@@ -25,6 +25,7 @@ import { getGlobalServicePage, getAllGlobalServiceSlugs } from '@/lib/global-ser
 import { GlobalServicePage } from '@/components/global-service/GlobalServicePage';
 
 export const revalidate = 3600;
+export const dynamicParams = true;
 
 // ── Known city slugs — O(1) check, avoids a DB round-trip for 99% of traffic ─
 const CITY_SLUGS = new Set(['bangalore', 'chennai', 'hyderabad', 'mumbai']);
