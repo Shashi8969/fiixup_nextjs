@@ -12,6 +12,7 @@ import {
 // ─── Type Definitions ─────────────────────────────────────────────────────────
 
 export type Block =
+| { type: "rich_content"; html: string }
   | { type: "heading";      level: 1|2|3|4|5|6; content: string }
   | { type: "paragraph";    content: string }
   | { type: "list";         style: "bullet"|"numbered"; items: string[] }
@@ -393,6 +394,15 @@ function ComparisonBlock({
   );
 }
 
+function RichContentBlock({ html }: { html: string }) {
+  return (
+    <div
+      className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-red-600 prose-table:text-sm prose-th:bg-red-50 prose-th:text-red-800"
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  );
+}
+
 // ─── Main Renderer ────────────────────────────────────────────────────────────
 
 export function BlockRenderer({ blocks }: { blocks: unknown[] }) {
@@ -409,6 +419,9 @@ export function BlockRenderer({ blocks }: { blocks: unknown[] }) {
         switch (b.type) {
           case "heading":
             return <HeadingBlock key={i} level={Number(b.level) || 2} content={String(b.content ?? "")} />;
+
+            case "rich_content":
+  return <RichContentBlock key={i} html={String(b.html ?? "")} />;
 
           case "paragraph":
             return <ParagraphBlock key={i} content={String(b.content ?? "")} />;

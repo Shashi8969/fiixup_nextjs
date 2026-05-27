@@ -123,18 +123,34 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
               {/* Stats */}
               <div className="flex flex-wrap gap-6 mb-8">
                 <div>
-                  <p className={`text-2xl font-bold ${accentText}`}>24/7</p>
-                  <p className="text-xs text-gray-500 mt-0.5">Always Available</p>
+                  <p className={`text-2xl font-bold ${accentText}`}>
+                    {data.availability || "24/7"}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Always Available
+                  </p>
                 </div>
+
                 <div className="w-px bg-gray-200" />
+
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">60 min</p>
-                  <p className="text-xs text-gray-500 mt-0.5">Avg. Arrival</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {data.arrival_time || "20 min"}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Quick Arrival
+                  </p>
                 </div>
+
                 <div className="w-px bg-gray-200" />
+
                 <div>
-                  <p className="text-2xl font-bold text-green-600">30-Day</p>
-                  <p className="text-xs text-gray-500 mt-0.5">Warranty</p>
+                  <p className="text-2xl font-bold text-green-600">
+                    {data.warranty || "30-Day"}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Warranty
+                  </p>
                 </div>
               </div>
 
@@ -189,11 +205,11 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center gap-8">
             {[
-              { icon: Shield,      label: "Certified Technicians" },
+              { icon: Shield, label: "Certified Technicians" },
               { icon: CheckCircle, label: "30-Day Warranty" },
-              { icon: Clock,       label: "24/7 Available" },
+              { icon: Clock, label: "24/7 Available" },
               { icon: IndianRupee, label: "Transparent Pricing" },
-              { icon: MapPin,      label: `Doorstep in ${data.locationHeading}` },
+              { icon: MapPin, label: `Doorstep in ${data.locationHeading}` },
             ].map(({ icon: I, label }) => (
               <div key={label} className="flex items-center gap-2">
                 <I className="w-5 h-5 text-green-600" />
@@ -269,10 +285,10 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
           </h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
             {[
-              { step: "1", title: "Book Online or Call",   desc: `Call ${city.phone} or fill the form.` },
+              { step: "1", title: "Book Online or Call", desc: `Call ${city.phone} or fill the form.` },
               { step: "2", title: "We Confirm & Dispatch", desc: `Nearest ${data.locationHeading} technician dispatched.` },
-              { step: "3", title: "Tech Arrives at Door",  desc: "Certified technician with tools and parts." },
-              { step: "4", title: "Drive Away Happy",      desc: "30-day warranty and digital receipt." },
+              { step: "3", title: "Tech Arrives at Door", desc: "Certified technician with tools and parts." },
+              { step: "4", title: "Drive Away Happy", desc: "30-day warranty and digital receipt." },
             ].map(({ step, title, desc }) => (
               <div key={step} className="text-center">
                 <div className={`w-14 h-14 ${bgAccent} text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg`}>
@@ -285,7 +301,7 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
           </div>
         </div>
       </section>
-      
+
       <LocationServiceSeoContent data={data} />
 
 

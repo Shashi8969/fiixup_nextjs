@@ -37,6 +37,10 @@ export interface LocationServiceData {
   schemaReviewCount: number;
   displayLocation: string;
   locationHeading: string;
+   // Stats Fields
+  availability?: string;
+  arrival_time?: string;
+  warranty?: string;
 }
 
 function rowToLocationService(row: any): LocationServiceData {
