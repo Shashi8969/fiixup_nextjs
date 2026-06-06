@@ -25,7 +25,7 @@ const VALID_TAGS = [
   'redirects',
 ]
 
-export async function GET(request: NextRequest) {
+async function handleRevalidate(request: NextRequest) {
   const secret = request.nextUrl.searchParams.get('secret')
   const path   = request.nextUrl.searchParams.get('path')
   const tag    = request.nextUrl.searchParams.get('tag')
@@ -75,4 +75,13 @@ export async function GET(request: NextRequest) {
     { error: 'Provide path= or tag= parameter' },
     { status: 400 }
   )
+}
+
+
+export async function GET(request: NextRequest) {
+  return handleRevalidate(request)
+}
+
+export async function POST(request: NextRequest) {
+  return handleRevalidate(request)
 }

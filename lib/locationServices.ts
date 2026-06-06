@@ -126,7 +126,9 @@ export async function getAllCityServiceSlugs(citySlug: string): Promise<string[]
     .is("area_slug", null)
     .eq("is_active", true);
   if (error || !data) return [];
-  return data.map((r) => r.service_slug);
+  return (data ?? [])
+    .map((r) => typeof r.service_slug === "string" ? r.service_slug.trim() : "")
+    .filter((slug): slug is string => Boolean(slug));
 }
 
 export async function getAllAreaServiceParams(
@@ -139,7 +141,11 @@ export async function getAllAreaServiceParams(
     .not("area_slug", "is", null)
     .eq("is_active", true);
   if (error || !data) return [];
-  return data.map((r) => ({ areaSlug: r.area_slug, serviceSlug: r.service_slug }));
+  return (data ?? []).flatMap((r) => {
+    const areaSlug = typeof r.area_slug === 'string' ? r.area_slug.trim() : ''
+    const serviceSlug = typeof r.service_slug === 'string' ? r.service_slug.trim() : ''
+    return areaSlug && serviceSlug ? [{ areaSlug, serviceSlug }] : []
+  });
 }
 
 export async function getAllLocationServices(): Promise<

@@ -17,6 +17,7 @@
 
 import { cache } from 'react';
 import { supabase } from '@/lib/supabase';
+import { cleanPath, splitPath } from '@/lib/cms-guards';
 import type { SeoPage } from '@/lib/seo-pages';
 
 // ─── City Hub Page Data ──────────────────────────────────────────────────────
@@ -245,9 +246,10 @@ export async function getAllCityHubParams(): Promise<{ citySlug: string }[]> {
     .eq('page_type', 'city_hub')
     .eq('is_active', true);
 
-  return (data ?? []).map((r) => ({
-    citySlug: r.url_path.replace('/', ''),
-  }));
+  return (data ?? [])
+    .map((r) => cleanPath(r.url_path))
+    .filter((urlPath): urlPath is string => Boolean(urlPath))
+    .map((urlPath) => ({ citySlug: urlPath.replace('/', '') }));
 }
 
 /**
@@ -263,9 +265,14 @@ export async function getAllCityServiceCategoryParams(): Promise<{
     .eq('page_type', 'city_service_category')
     .eq('is_active', true);
 
-  return (data ?? []).map((r) => {
+  return (data ?? []).flatMap((r) => {
     // url_path = /bangalore/services/battery
-    const parts = r.url_path.split('/').filter(Boolean);
-    return { citySlug: parts[0], serviceSlug: parts[2] };
+    const parts = typeof r.url_path === 'string'
+      ? r.url_path.split('/').filter(Boolean)
+      : []
+
+    if (!parts[0] || !parts[2]) return []
+
+    return [{ citySlug: parts[0], serviceSlug: parts[2] }]
   });
 }

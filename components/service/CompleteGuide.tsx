@@ -2,6 +2,7 @@
 import type { CompleteGuide } from "@/lib/models/service.model";
 import { Lightbulb } from "lucide-react";
 import Link from "next/link";
+import { paragraphs } from "@/lib/cms-guards";
 
 interface Props {
   guide: CompleteGuide;
@@ -57,7 +58,7 @@ export default function CompleteGuideSection({ guide }: Props) {
                 </h3>
 
                 <div className="text-gray-700 leading-relaxed space-y-4 pl-11">
-                  {section.body.split("\n").filter(Boolean).map((para, pi) => (
+                  {String((section as any).body ?? (section as any).content ?? "").split("\n").filter(Boolean).map((para, pi) => (
                     <p key={pi}>{para}</p>
                   ))}
 

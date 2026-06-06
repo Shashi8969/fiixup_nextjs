@@ -16,6 +16,7 @@ import { CityContact } from '@/components/city/CityContact'
 import { CityFAQ } from '@/components/city/CityFAQ'
 import { CityServices } from '@/components/city/CityServices'
 import { SITE_URL } from '@/lib/constants'
+import { JsonLd } from '@/components/seo/JsonLd'
 
 export const revalidate = 3600
 export const dynamicParams = true
@@ -98,12 +99,7 @@ export default async function CityAreaPage({ params }: { params: Params }) {
     const data = page.page_data
     return (
       <>
-        {page.schema_json && (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(page.schema_json) }}
-          />
-        )}
+        <JsonLd data={page.schema_json} />
         <LocationServicePage
           data={{
             id:                    0,

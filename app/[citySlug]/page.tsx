@@ -23,6 +23,7 @@ import { CityBlogPosts }          from '@/components/city/CityBlogPosts';
 // ── Global service page imports ───────────────────────────────────────────────
 import { getGlobalServicePage, getAllGlobalServiceSlugs } from '@/lib/global-service';
 import { GlobalServicePage } from '@/components/global-service/GlobalServicePage';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -152,8 +153,7 @@ export default async function CityPage({
 
     return (
       <>
-        <script type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+        <JsonLd data={seo.schema_json ?? schema} />
 
         {seo.breadcrumbs_json && (
           <script type="application/ld+json"
@@ -194,12 +194,7 @@ export default async function CityPage({
 
   return (
     <>
-      {servicePage.schema_json && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(servicePage.schema_json) }}
-        />
-      )}
+      <JsonLd data={servicePage.schema_json} />
       <GlobalServicePage data={servicePage} />
     </>
   );

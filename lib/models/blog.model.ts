@@ -17,6 +17,7 @@ export interface BlogPost {
   metaTitle?: string;     // Overrides title for <head>
   metaDescription?: string; // Overrides excerpt for <head>
   featured?: boolean;     // Show on homepage Blog section
+  schemaJson?: unknown;   // Admin-built JSON-LD from Supabase
 }
 
 export type BlogCategory =

@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation'
 import { getPageByPath, getAllActiveUrlPaths } from '@/lib/seo-pages'
 import { LocationServicePage } from '@/components/location-service/LocationServicePage'
 import { SITE_URL } from '@/lib/constants'
+import { JsonLd } from '@/components/seo/JsonLd'
 
 export const revalidate = 3600
 export const dynamicParams = true
@@ -16,9 +17,14 @@ type Params = Promise<{ citySlug: string; areaSlug: string; serviceSlug: string 
 // ONE query at build time — replaces the old N+1 city loop
 export async function generateStaticParams() {
   const paths = await getAllActiveUrlPaths('area_service')
-  return paths.map(p => {
-    const [, citySlug, areaSlug, serviceSlug] = p.split('/')
-    return { citySlug, areaSlug, serviceSlug }
+  return paths.flatMap((p) => {
+    const parts = p.split('/').filter(Boolean)
+    if (parts.length !== 3) return []
+
+    const [citySlug, areaSlug, serviceSlug] = parts
+    if (!citySlug || !areaSlug || !serviceSlug) return []
+
+    return [{ citySlug, areaSlug, serviceSlug }]
   })
 }
 
@@ -64,12 +70,7 @@ export default async function AreaServicePage({ params }: { params: Params }) {
   return (
     <>
       {/* Schema injected server-side — precomputed in PostgreSQL */}
-      {page.schema_json && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(page.schema_json) }}
-        />
-      )}
+      <JsonLd data={page.schema_json} />
       <LocationServicePage
         data={{
           id:                    0,

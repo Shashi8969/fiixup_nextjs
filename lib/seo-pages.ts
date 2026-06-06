@@ -1,12 +1,9 @@
 // lib/seo-pages.ts
-// Single source for all page data — reads from seo_pages table
-// React.cache deduplicates calls within the same request
-// so generateMetadata + Page component share ONE Supabase call
+// DB-first SEO page access with safe CMS normalization.
 
 import { cache } from 'react'
 import { supabase } from '@/lib/supabase'
-
-// ─── Types ───────────────────────────────────────────────────────────────────
+import { asArray, asBoolean, asNumber, asObject, asString, cleanPath, normalizeJsonLd, normalizeSeoSections } from '@/lib/cms-guards'
 
 export interface SeoPage {
   url_path:              string
@@ -18,7 +15,7 @@ export interface SeoPage {
   og_image_url:          string | null
   og_image_width:        number | null
   og_image_height:       number | null
-  schema_json:           object | null
+  schema_json:           unknown[] | null
   page_data:             PageData
   breadcrumbs_json:      Breadcrumb[]
   nearby_areas_json:     { name: string; slug: string }[] | null
@@ -29,12 +26,7 @@ export interface SeoPage {
 }
 
 export interface PageData {
-  city: {
-    slug:     string
-    name:     string
-    phone:    string
-    whatsapp: string
-  }
+  city: { slug: string; name: string; phone: string; whatsapp: string }
   serviceCategory:       string
   serviceSlug:           string
   serviceName:           string
@@ -66,33 +58,117 @@ export interface PageData {
   seoIntroBody:          string | null
   seoSections:           { heading: string; body: string }[]
   seoConclusion:         string | null
+  [key: string]: unknown
 }
 
-export interface Breadcrumb {
-  name: string
-  url:  string
+export interface Breadcrumb { name: string; url: string }
+
+type SeoPageRow = Record<string, unknown>
+
+function normalizeArrayObject<T extends Record<string, unknown>>(value: unknown, map: (item: Record<string, unknown>) => T): T[] {
+  return asArray<Record<string, unknown>>(value).map(map).filter(Boolean)
 }
 
-// ─── Primary fetch — cached per request ──────────────────────────────────────
+function normalizePageData(value: unknown): PageData {
+  const pd = asObject(value)
+  const city = asObject(pd.city)
 
-/**
- * getPageByPath — the ONLY query most pages need.
- * React.cache deduplicates: generateMetadata() and the Page component
- * both call this with the same path → Supabase queried ONCE per request.
- */
+  return {
+    ...pd,
+    city: {
+      slug: asString(city.slug ?? pd.citySlug),
+      name: asString(city.name ?? pd.cityName),
+      phone: asString(city.phone),
+      whatsapp: asString(city.whatsapp),
+    },
+    serviceCategory: asString(pd.serviceCategory),
+    serviceSlug: asString(pd.serviceSlug),
+    serviceName: asString(pd.serviceName),
+    citySlug: asString(pd.citySlug ?? city.slug),
+    cityName: asString(pd.cityName ?? city.name),
+    areaSlug: asString(pd.areaSlug) || null,
+    areaName: asString(pd.areaName) || null,
+    isCityLevel: asBoolean(pd.isCityLevel, !asString(pd.areaSlug)),
+    locationHeading: asString(pd.locationHeading ?? pd.displayLocation),
+    displayLocation: asString(pd.displayLocation ?? pd.locationHeading),
+    heroHeading: asString(pd.heroHeading),
+    heroSubheading: asString(pd.heroSubheading),
+    heroBadgeText: asString(pd.heroBadgeText),
+    aboutHeading: asString(pd.aboutHeading),
+    aboutPara1: asString(pd.aboutPara1),
+    aboutPara2: asString(pd.aboutPara2),
+    aboutBullets: normalizeArrayObject(pd.aboutBullets, (item) => ({ heading: asString(item.heading), text: asString(item.text ?? item.desc) })),
+    serviceHighlights: normalizeArrayObject(pd.serviceHighlights, (item) => ({ title: asString(item.title), description: asString(item.description ?? item.text) })),
+    whyChoosePoints: normalizeArrayObject(pd.whyChoosePoints, (item) => ({ icon: asString(item.icon), title: asString(item.title), desc: asString(item.desc ?? item.text ?? item.description) })),
+    pricingDisclaimer: asString(pd.pricingDisclaimer),
+    schemaAggregateRating: asNumber(pd.schemaAggregateRating, 4.9),
+    schemaReviewCount: asNumber(pd.schemaReviewCount, 150),
+    pricingRows: normalizeArrayObject(pd.pricingRows, (item) => ({
+      label: asString(item.label),
+      priceFrom: asNumber(item.priceFrom ?? item.price_from, 0),
+      priceTo: item.priceTo ?? item.price_to ? asNumber(item.priceTo ?? item.price_to) : undefined,
+      note: asString(item.note),
+      highlight: asBoolean(item.highlight, false),
+    })),
+    testimonials: normalizeArrayObject(pd.testimonials, (item) => ({
+      name: asString(item.name),
+      rating: asNumber(item.rating, 5),
+      text: asString(item.text ?? item.body),
+      vehicle: asString(item.vehicle),
+      area: asString(item.area),
+      date: asString(item.date ?? item.date_label),
+    })),
+    faqs: normalizeArrayObject(pd.faqs, (item) => ({ q: asString(item.q ?? item.question), a: asString(item.a ?? item.answer) })),
+    nearbyAreas: normalizeArrayObject(pd.nearbyAreas, (item) => ({ name: asString(item.name), slug: asString(item.slug) })),
+    relatedServices: normalizeArrayObject(pd.relatedServices, (item) => ({ name: asString(item.name), slug: asString(item.slug), category: asString(item.category) })),
+    seoIntroHeading: asString(pd.seoIntroHeading) || null,
+    seoIntroBody: asString(pd.seoIntroBody) || null,
+    seoSections: normalizeSeoSections(pd.seoSections),
+    seoConclusion: asString(pd.seoConclusion) || null,
+  }
+}
+
+export function normalizeSeoPage(row: SeoPageRow): SeoPage | null {
+  const urlPath = cleanPath(row.url_path)
+  if (!urlPath) return null
+
+  const schemas = normalizeJsonLd(row.schema_json)
+
+  return {
+    url_path: urlPath,
+    page_type: asString(row.page_type),
+    meta_title: asString(row.meta_title),
+    meta_description: asString(row.meta_description),
+    meta_keywords: asString(row.meta_keywords) || null,
+    canonical_url: asString(row.canonical_url),
+    og_image_url: asString(row.og_image_url) || null,
+    og_image_width: row.og_image_width == null ? null : asNumber(row.og_image_width, 1200),
+    og_image_height: row.og_image_height == null ? null : asNumber(row.og_image_height, 630),
+    schema_json: schemas.length ? schemas : null,
+    page_data: normalizePageData(row.page_data),
+    breadcrumbs_json: normalizeArrayObject(row.breadcrumbs_json, (item) => ({ name: asString(item.name), url: asString(item.url ?? item.item) })),
+    nearby_areas_json: normalizeArrayObject(row.nearby_areas_json, (item) => ({ name: asString(item.name), slug: asString(item.slug) })),
+    related_services_json: normalizeArrayObject(row.related_services_json, (item) => ({ name: asString(item.name), slug: asString(item.slug), category: asString(item.category) })),
+    is_active: asBoolean(row.is_active, true),
+    is_indexed: asBoolean(row.is_indexed, true),
+    updated_at: asString(row.updated_at),
+  }
+}
+
 export const getPageByPath = cache(async (urlPath: string): Promise<SeoPage | null> => {
+  const safePath = cleanPath(urlPath)
+  if (!safePath) return null
+
   const { data, error } = await supabase
     .from('seo_pages')
     .select('*')
-    .eq('url_path', urlPath)
+    .eq('url_path', safePath)
     .eq('is_active', true)
-    .single()
+    .maybeSingle()
 
   if (error || !data) return null
-  return data as SeoPage
+  return normalizeSeoPage(data as SeoPageRow)
 })
-
-// ─── Sitemap — lightweight, no page_data needed ───────────────────────────────
 
 export async function getSitemapUrls(pageType?: string) {
   const q = supabase
@@ -105,10 +181,10 @@ export async function getSitemapUrls(pageType?: string) {
   if (pageType) q.eq('page_type', pageType)
 
   const { data } = await q
-  return data ?? []
+  return (data ?? [])
+    .map((row) => ({ ...row, url_path: cleanPath(row.url_path) }))
+    .filter((row): row is { url_path: string; updated_at: string; page_type: string } => Boolean(row.url_path))
 }
-
-// ─── generateStaticParams — all active URL paths by type ─────────────────────
 
 export async function getAllActiveUrlPaths(pageType: string): Promise<string[]> {
   const { data } = await supabase
@@ -117,5 +193,7 @@ export async function getAllActiveUrlPaths(pageType: string): Promise<string[]> 
     .eq('page_type', pageType)
     .eq('is_active', true)
 
-  return data?.map(r => r.url_path) ?? []
+  return (data ?? [])
+    .map((row) => cleanPath(row.url_path))
+    .filter((urlPath): urlPath is string => Boolean(urlPath))
 }

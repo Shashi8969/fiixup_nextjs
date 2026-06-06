@@ -25,6 +25,7 @@ import {
 import { getAllServiceCategories, getServiceCategoryBySlug } from "@/lib/data/serviceCategory";
 import { getCityServicesByCategory }                         from "@/lib/locationServices";
 import { getCityBySlug, getAllCities }                       from "@/lib/cities";
+import { getCityServiceCategoryPage } from "@/lib/cityPages";
 import { getAllServices, getServiceBySlug, getServicesByCategory } from "@/lib/services";
 
 import { TrustStrip as IconTrustStrip } from "@/components/ui/TrustStrip";
@@ -41,6 +42,7 @@ import { Testimonials }                  from "@/components/Testimonials";
 import Hero                              from "@/components/service/ServiceHero";
 import TrustStrip                        from "@/components/service/ServiceTrustStrip";
 import CityCoverage                      from "@/components/service/ServiceCities";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 import { iconMap }                       from "@/lib/icons";
 import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
@@ -101,6 +103,26 @@ export async function generateMetadata({
   if (!city) return {};
 
   if (cat) {
+    const dbPage = await getCityServiceCategoryPage(citySlug, serviceSlug);
+    if (dbPage) {
+      return {
+        title: dbPage.seo.meta_title,
+        description: dbPage.seo.meta_description,
+        keywords: dbPage.seo.meta_keywords ?? undefined,
+        alternates: { canonical: dbPage.seo.canonical_url },
+        openGraph: {
+          title: dbPage.seo.meta_title,
+          description: dbPage.seo.meta_description,
+          url: dbPage.seo.canonical_url,
+          type: "website",
+          locale: "en_IN",
+          siteName: "Fiixup",
+        },
+        twitter: { card: "summary_large_image", title: dbPage.seo.meta_title, description: dbPage.seo.meta_description },
+        robots: { index: true, follow: true },
+      };
+    }
+
     const title    = `${cat.title} in ${city.name} — Doorstep Service | Fiixup`;
     const desc     = `Get doorstep ${cat.title.toLowerCase()} in ${city.name}. Certified mechanics reach you in 30–60 minutes. Transparent pricing, 30-day warranty. Call ${city.phone}.`;
     const canonical = `${SITE_URL}/${city.slug}/services/${cat.slug}`;
@@ -156,7 +178,10 @@ export default async function CityServicePage({
     // WHERE city_slug = citySlug AND service_category = cat.categorySlug
     //   AND area_slug IS NULL AND is_active = true
     // This replaces the old getServicesByCategory() which was global/static
-    const cityServices = await getCityServicesByCategory(citySlug, cat.categorySlug);
+    const [cityServices, dbPage] = await Promise.all([
+      getCityServicesByCategory(citySlug, cat.categorySlug),
+      getCityServiceCategoryPage(citySlug, serviceSlug),
+    ]);
     // ──────────────────────────────────────────────────────────────────────
 
     // JSON-LD
@@ -194,10 +219,7 @@ export default async function CityServicePage({
 
     return (
       <>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-        />
+        <JsonLd data={dbPage?.seo.schema_json ?? schema} />
 
         {/* ── BREADCRUMB ─────────────────────────────────────────────── */}
         <nav aria-label="Breadcrumb" className="bg-gray-50 border-b border-gray-100">

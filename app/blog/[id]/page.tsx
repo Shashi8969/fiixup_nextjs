@@ -11,6 +11,7 @@ import { Clock, CalendarDays, Tag, ChevronRight } from "lucide-react";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { SITE_URL, MAIN_PHONE } from "@/lib/constants";
 import { blogPostSchema } from "@/lib/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 import BookingCTA from "@/components/ui/BookingCTA";
 import { BlockRenderer } from "@/components/ui/BlockRenderer"; // ← new
 
@@ -78,10 +79,7 @@ export default async function BlogPostPage({
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(postSchema) }}
-      />
+      <JsonLd data={(post as any).schemaJson ?? postSchema} />
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <div className="bg-gray-50 border-b border-gray-200 py-12">

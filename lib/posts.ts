@@ -31,6 +31,7 @@ function rowToPost(row: any): BlogPost {
     featured:        row.featured ?? false,
     metaTitle:       row.meta_title ?? undefined,
     metaDescription: row.meta_description ?? undefined,
+    schemaJson:       row.schema_json ?? undefined,
   };
 }
 
@@ -40,7 +41,7 @@ const POST_SELECT = `
   author, author_role, date, read_time,
   category, featured, image, image_alt,
   related_service, meta_title, meta_description, meta_keywords,
-  created_at, updated_at,
+  created_at, updated_at, schema_json,
   post_tags ( tags ( id, slug, name ) )
 `;
 
