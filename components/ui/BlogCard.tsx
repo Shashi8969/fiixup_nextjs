@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Calendar, Clock, ArrowRight } from "lucide-react";
+import { CmsImage } from "@/components/ui/CmsImage";
 
 interface BlogCardProps {
   readonly id: string | number;
@@ -34,15 +34,17 @@ export function BlogCard({
 
   return (
     <article className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow group">
-      <div className="relative h-48 overflow-hidden bg-gray-100">
-        <Image
-          src={src}
-          alt={imageAlt || title}
-          fill
-          priority={priority}
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        />
+     <div className="relative overflow-hidden bg-gray-100">
+  <CmsImage
+    src={src}
+    alt={imageAlt || title}
+    title={title}
+    ratio="blogCard"
+    fit="contain"
+    priority={priority}
+    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+    className="rounded-none"
+  />
         <div className="absolute top-4 left-4">
           <span className="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
             {category}

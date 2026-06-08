@@ -8,9 +8,8 @@ import Link from "next/link";
 import {
   Info, AlertTriangle, ChevronDown, CheckCircle2, XCircle, Copy, Check,
 } from "lucide-react";
-
+import { CmsImage } from "@/components/ui/CmsImage";
 // ─── Type Definitions ─────────────────────────────────────────────────────────
-
 export type Block =
 | { type: "rich_content"; html: string }
   | { type: "heading";      level: 1|2|3|4|5|6; content: string }
@@ -149,9 +148,14 @@ function WarningBlock({ content, label = "Important" }: { content: string; label
 function ImageBlock({ url, alt, caption }: { url: string; alt: string; caption?: string }) {
   return (
     <figure className="mb-6">
-      <div className="rounded-2xl overflow-hidden bg-gray-100">
-        <img src={url} alt={alt} className="w-full object-cover" loading="lazy" />
-      </div>
+      <CmsImage
+        src={url}
+        alt={alt}
+        title={caption || alt}
+        ratio="content"
+        fit="contain"
+        sizes="(max-width: 768px) 100vw, 768px"
+      />
       {caption && (
         <figcaption className="text-center text-xs text-gray-500 mt-2 italic">{caption}</figcaption>
       )}

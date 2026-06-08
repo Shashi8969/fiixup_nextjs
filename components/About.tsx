@@ -1,8 +1,8 @@
-import Image from "next/image";
 import { CheckCircle } from "lucide-react";
 import { aboutContent, stats, highlights } from "@/lib/data/about";
 import HowItWorks from "@/components/ui/HowItWorks";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { CmsImage } from "@/components/ui/CmsImage";
 
 export function About() {
   return (
@@ -30,15 +30,15 @@ export function About() {
           </div>
 
           <div className="order-1 md:order-2">
-            <div className="rounded-2xl overflow-hidden shadow-xl relative h-[420px]">
-              <Image
-                src="https://vpnztzzsyzgesnpihxsu.supabase.co/storage/v1/object/public/images/general/about-us-fiixup-1779454912831.webp"
-                alt={aboutContent.imageAlt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
+            <CmsImage
+  src="https://vpnztzzsyzgesnpihxsu.supabase.co/storage/v1/object/public/images/general/about-us-fiixup-1779454912831.webp"
+  alt={aboutContent.imageAlt}
+  title="About Fiixup doorstep car and bike service"
+  ratio="about"
+  fit="contain"
+  sizes="(max-width: 768px) 100vw, 50vw"
+  className="shadow-xl"
+/>
           </div>
         </div>
 

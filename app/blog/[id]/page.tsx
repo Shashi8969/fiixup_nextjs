@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Clock, CalendarDays, Tag, ChevronRight } from "lucide-react";
+import { CmsImage } from "@/components/ui/CmsImage";
 
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { SITE_URL, MAIN_PHONE } from "@/lib/constants";
@@ -100,14 +101,17 @@ export default async function BlogPostPage({
 
           {/* Cover image */}
           {post.image && (
-            <div className="rounded-2xl overflow-hidden mb-6 aspect-[16/7] bg-gray-100">
-              <img
-                src={post.image}
-                alt={post.imageAlt ?? post.title}
-                className="w-full h-full object-cover"
-                // priority
-              />
-            </div>
+            <div className="mb-6">
+  <CmsImage
+    src={post.image}
+    alt={post.imageAlt ?? post.title}
+    title={post.title}
+    ratio="blogHero"
+    fit="contain"
+    priority
+    sizes="(max-width: 768px) 100vw, 768px"
+  />
+</div>
           )}
 
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
