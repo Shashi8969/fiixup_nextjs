@@ -21,6 +21,18 @@ type SeoPageFaqRow = {
   } | null;
 };
 
+type FaqLibraryRow = {
+  question?: string | null;
+  answer?: string | null;
+  faq_type?: string | null;
+  service_category?: string | null;
+  service_slug?: string | null;
+  city_slug?: string | null;
+  area_slug?: string | null;
+  is_global?: boolean | null;
+  sort_order?: number | null;
+};
+
 const FAQ_PAGE_TYPES = [
   "global_service",
   "city_service",
@@ -31,6 +43,14 @@ const FAQ_PAGE_TYPES = [
 
 function cleanText(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
+}
+
+function titleCaseSlug(value: string) {
+  return value
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
 }
 
 function normalizeQuestion(question: string) {
@@ -61,7 +81,67 @@ function categoryName(row: SeoPageFaqRow) {
   return title || "Service FAQs";
 }
 
-export async function getFaqPageCategories(): Promise<FAQCategory[]> {
+function faqLibraryCategoryName(row: FaqLibraryRow) {
+  const type = cleanText(row.faq_type);
+  if (type) return titleCaseSlug(type);
+
+  const category = cleanText(row.service_category);
+  if (category) return `${titleCaseSlug(category)} FAQs`;
+
+  const serviceSlug = cleanText(row.service_slug);
+  if (serviceSlug) return `${titleCaseSlug(serviceSlug)} FAQs`;
+
+  const citySlug = cleanText(row.city_slug);
+  if (citySlug) return `${titleCaseSlug(citySlug)} FAQs`;
+
+  return "General FAQs";
+}
+
+function pushFaq(
+  categories: Map<string, FAQ[]>,
+  usedQuestions: Set<string>,
+  category: string,
+  faq: FAQ,
+  maxPerCategory = 12
+) {
+  const key = normalizeQuestion(faq.q);
+  if (!key || usedQuestions.has(key)) return;
+
+  const current = categories.get(category) ?? [];
+  if (current.length >= maxPerCategory) return;
+
+  usedQuestions.add(key);
+  categories.set(category, [...current, faq]);
+}
+
+async function getFaqLibraryCategories(): Promise<FAQCategory[]> {
+  const { data, error } = await supabase
+    .from("faq_library")
+    .select("question,answer,faq_type,service_category,service_slug,city_slug,area_slug,is_global,sort_order")
+    .eq("is_active", true)
+    .eq("is_global", true)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false })
+    .limit(160);
+
+  if (error || !data?.length) return [];
+
+  const categories = new Map<string, FAQ[]>();
+  const usedQuestions = new Set<string>();
+
+  for (const row of data as FaqLibraryRow[]) {
+    const q = cleanText(row.question);
+    const a = cleanText(row.answer);
+    if (!q || !a) continue;
+
+    pushFaq(categories, usedQuestions, faqLibraryCategoryName(row), { q, a });
+    if (categories.size >= 12 && usedQuestions.size >= 80) break;
+  }
+
+  return Array.from(categories.entries()).map(([category, faqs]) => ({ category, faqs }));
+}
+
+async function getSeoPageFaqCategories(): Promise<FAQCategory[]> {
   const { data, error } = await supabase
     .from("seo_pages")
     .select("url_path,page_type,meta_title,page_data")
@@ -71,7 +151,7 @@ export async function getFaqPageCategories(): Promise<FAQCategory[]> {
     .order("updated_at", { ascending: false })
     .limit(80);
 
-  if (error || !data?.length) return globalFAQs;
+  if (error || !data?.length) return [];
 
   const usedQuestions = new Set<string>();
   const categories: FAQCategory[] = [];
@@ -99,5 +179,15 @@ export async function getFaqPageCategories(): Promise<FAQCategory[]> {
     if (categories.length >= 12) break;
   }
 
-  return categories.length ? categories : globalFAQs;
+  return categories;
+}
+
+export async function getFaqPageCategories(): Promise<FAQCategory[]> {
+  const libraryCategories = await getFaqLibraryCategories();
+  if (libraryCategories.length) return libraryCategories;
+
+  const seoPageCategories = await getSeoPageFaqCategories();
+  if (seoPageCategories.length) return seoPageCategories;
+
+  return globalFAQs;
 }
