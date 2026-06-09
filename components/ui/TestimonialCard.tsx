@@ -1,7 +1,7 @@
 import { Star } from "lucide-react";
 import type { TestimonialCardProps } from "@/lib/models/testimonial.model";
 
-export function TestimonialCard({ name, rating, text, date, vehicle, area }: Readonly<TestimonialCardProps>) {
+export function TestimonialCard({ name, rating, text, date, vehicle, area, sourceLabel }: Readonly<TestimonialCardProps>) {
   return (
     <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex flex-col">
       <div className="flex gap-0.5 mb-3">
@@ -14,6 +14,11 @@ export function TestimonialCard({ name, rating, text, date, vehicle, area }: Rea
         <p className="font-semibold text-gray-900">{name}</p>
         {area && <p className="text-xs text-gray-500">{area}</p>}
         <p className="text-xs text-gray-600 mt-1">{vehicle} · {date}</p>
+        {sourceLabel && (
+          <p className="text-[11px] text-green-700 font-semibold mt-2">
+            {sourceLabel}
+          </p>
+        )}
       </div>
     </div>
   );

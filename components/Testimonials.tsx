@@ -1,10 +1,13 @@
 import { Star } from "lucide-react";
 import type { CityData } from "@/lib/models/city.model";
-import { globalTestimonials, globalStats } from "@/lib/data/testimonials";
+import { globalStats } from "@/lib/data/testimonials";
+import { getBrandReviews } from "@/lib/reviews";
 import { TestimonialCard } from "@/components/ui/TestimonialCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
-export function Testimonials() {
+export async function Testimonials() {
+  const testimonials = await getBrandReviews(4);
+
   return (
     <section id="testimonials" className="py-12 bg-blue-50">
       <div className="container mx-auto px-4">
@@ -14,11 +17,13 @@ export function Testimonials() {
           subtext="Customers book Fiixup for emergency breakdown support, doorstep car servicing, bike repair, battery replacement, puncture repair, and roadside mechanic assistance across Bengaluru, Chennai, Hyderabad, and Mumbai."
         />
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {globalTestimonials.map((t) => (
-            <TestimonialCard key={t.name} {...t} />
-          ))}
-        </div>
+        {testimonials.length > 0 && (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {testimonials.map((t) => (
+              <TestimonialCard key={`${t.name}-${t.text.slice(0, 24)}`} {...t} />
+            ))}
+          </div>
+        )}
 
         <div className="mt-12 bg-white rounded-xl p-6 flex flex-wrap items-center justify-center gap-10 shadow-sm max-w-3xl mx-auto">
 

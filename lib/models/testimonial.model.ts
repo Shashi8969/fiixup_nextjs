@@ -6,6 +6,8 @@ interface TestimonialCardProps {
   vehicle: string;
   area?: string;
   showArea?: boolean;
+  sourceLabel?: string;
+  sourceName?: string;
 }
 
 export type { TestimonialCardProps };
