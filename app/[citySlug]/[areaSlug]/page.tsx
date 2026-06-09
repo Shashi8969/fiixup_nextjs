@@ -17,6 +17,7 @@ import { CityFAQ } from '@/components/city/CityFAQ'
 import { CityServices } from '@/components/city/CityServices'
 import { SITE_URL } from '@/lib/constants'
 import { JsonLd } from '@/components/seo/JsonLd'
+import { metadataFromSeoPage, metadataFromBasicSeo } from '@/lib/seo/metadata'
 
 export const revalidate = 3600
 export const dynamicParams = true
@@ -49,23 +50,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { citySlug, areaSlug } = await params
 
-  // Try seo_pages first (city-level service)
+  // Try seo_pages first (city-level service). This keeps metadata, canonical, OG,
+  // Twitter and robots/noindex signals consistent with the CMS cache.
   const page = await getPageByPath(`/${citySlug}/${areaSlug}`)
-  if (page) {
-    return {
-      title:       page.meta_title,
-      description: page.meta_description,
-      keywords:    page.meta_keywords ?? undefined,
-      alternates:  { canonical: page.canonical_url },
-      openGraph: {
-        title:       page.meta_title,
-        description: page.meta_description,
-        url:         page.canonical_url,
-        type:        'website',
-        images: [{ url: `${SITE_URL}/assets/og-image.webp`, width: 1200, height: 630 }],
-      },
-    }
-  }
+  if (page) return metadataFromSeoPage(page, `/${citySlug}/${areaSlug}`)
 
   // Fallback: area hub metadata
   const city = await getCityBySlug(citySlug)
@@ -82,12 +70,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const title = `24/7 Doorstep Car & Bike Repair in ${areaName}, ${city.name}`
   const description = `Professional mechanic at your doorstep in ${areaName}. Emergency car breakdown and bike service in ${city.name}.`
 
-  return {
+  return metadataFromBasicSeo({
     title,
     description,
-    alternates: { canonical: `${SITE_URL}/${city.slug}/${areaSlug}` },
-    openGraph: { title, description, url: `${SITE_URL}/${city.slug}/${areaSlug}`, type: 'website' },
-  }
+    canonical: `${SITE_URL}/${city.slug}/${areaSlug}`,
+    path: `/${city.slug}/${areaSlug}`,
+    ogImageAlt: title,
+  })
 }
 
 export default async function CityAreaPage({ params }: { params: Params }) {

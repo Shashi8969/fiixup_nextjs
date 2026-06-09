@@ -27,6 +27,7 @@ import HowItWorks                          from "@/components/ui/HowItWorks";
 import WhyChooseDoorstep                   from "@/components/ui/WhyChooseDoorstep";
 import { CityServiceCard }                 from "@/components/ui/CityServiceCard";
 import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
+import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 
 export const revalidate = 3600;
 
@@ -66,18 +67,14 @@ export async function generateMetadata({
   const desc      = `Browse every doorstep car and bike repair service available in ${city.name}. Battery replacement, tyre puncture, oil change, bike service, towing, roadside assistance & more. Certified mechanics reach you in 30–60 minutes. Call ${city.phone}.`;
   const canonical = `${SITE_URL}/${city.slug}/services`;
 
-  return {
+  return metadataFromBasicSeo({
     title,
     description: desc,
-    keywords:    `car repair ${city.name}, bike repair ${city.name}, doorstep mechanic ${city.name}, battery replacement ${city.name}, tyre puncture ${city.name}, car service at home ${city.name}, mobile mechanic ${city.name}`,
-    alternates:  { canonical },
-    openGraph: {
-      title, description: desc, url: canonical,
-      type: "website", locale: "en_IN", siteName: "Fiixup",
-    },
-    twitter: { card: "summary_large_image", title, description: desc },
-    robots:  { index: true, follow: true },
-  };
+    keywords: `car repair ${city.name}, bike repair ${city.name}, doorstep mechanic ${city.name}, battery replacement ${city.name}, tyre puncture ${city.name}, car service at home ${city.name}, mobile mechanic ${city.name}`,
+    canonical,
+    path: `/${city.slug}/services`,
+    ogImageAlt: title,
+  });
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────────

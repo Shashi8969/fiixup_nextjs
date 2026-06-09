@@ -41,6 +41,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { CityServiceCard } from "@/components/ui/CityServiceCard";
 
 import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
+import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 
 export const revalidate  = 3600;
 export const dynamicParams = true;
@@ -95,47 +96,40 @@ export async function generateMetadata({
   if (cat) {
     const dbPage = await getCityServiceCategoryPage(citySlug, serviceSlug);
     if (dbPage) {
-      return {
+      return metadataFromBasicSeo({
         title: dbPage.seo.meta_title,
         description: dbPage.seo.meta_description,
-        keywords: dbPage.seo.meta_keywords ?? undefined,
-        alternates: { canonical: dbPage.seo.canonical_url },
-        openGraph: {
-          title: dbPage.seo.meta_title,
-          description: dbPage.seo.meta_description,
-          url: dbPage.seo.canonical_url,
-          type: "website",
-          locale: "en_IN",
-          siteName: "Fiixup",
-        },
-        twitter: { card: "summary_large_image", title: dbPage.seo.meta_title, description: dbPage.seo.meta_description },
-        robots: { index: true, follow: true },
-      };
+        keywords: dbPage.seo.meta_keywords,
+        canonical: dbPage.seo.canonical_url,
+        path: `/${citySlug}/services/${serviceSlug}`,
+        ogImage: dbPage.seo.og_image_url,
+        ogImageAlt: dbPage.seo.meta_title,
+      });
     }
 
     const title    = `${cat.title} in ${city.name} — Doorstep Service | Fiixup`;
     const desc     = `Get doorstep ${cat.title.toLowerCase()} in ${city.name}. Certified mechanics reach you in 30–60 minutes. Transparent pricing, 30-day warranty. Call ${city.phone}.`;
     const canonical = `${SITE_URL}/${city.slug}/services/${cat.slug}`;
-    return {
+    return metadataFromBasicSeo({
       title,
       description: desc,
-      keywords:    `${cat.title.toLowerCase()} ${city.name}, doorstep ${cat.title.toLowerCase()} ${city.name}, ${city.name} ${cat.title.toLowerCase()} service`,
-      alternates:  { canonical },
-      openGraph:   { title, description: desc, url: canonical, type: "website", locale: "en_IN", siteName: "Fiixup" },
-      twitter:     { card: "summary_large_image", title, description: desc },
-      robots:      { index: true, follow: true },
-    };
+      keywords: `${cat.title.toLowerCase()} ${city.name}, doorstep ${cat.title.toLowerCase()} ${city.name}, ${city.name} ${cat.title.toLowerCase()} service`,
+      canonical,
+      path: `/${city.slug}/services/${cat.slug}`,
+      ogImageAlt: title,
+    });
   }
 
   const service = await getServiceBySlug(serviceSlug);
   if (service) {
-    return {
+    return metadataFromBasicSeo({
       title: service.metaTitle,
       description: service.metaDescription,
       keywords: service.metaKeywords,
-      alternates: { canonical: `${SITE_URL}/${city.slug}/${service.slug}` },
-      robots: { index: false, follow: true },
-    };
+      canonical: `${SITE_URL}/${city.slug}/${service.slug}`,
+      path: `/${city.slug}/${service.slug}`,
+      index: false,
+    });
   }
 
   return {};

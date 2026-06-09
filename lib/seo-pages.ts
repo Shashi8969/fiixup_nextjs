@@ -173,7 +173,7 @@ export const getPageByPath = cache(async (urlPath: string): Promise<SeoPage | nu
 export async function getSitemapUrls(pageType?: string) {
   const q = supabase
     .from('seo_pages')
-    .select('url_path, updated_at, page_type')
+    .select('url_path, canonical_url, updated_at, page_type')
     .eq('is_active', true)
     .eq('is_indexed', true)
     .order('updated_at', { ascending: false })
@@ -183,7 +183,7 @@ export async function getSitemapUrls(pageType?: string) {
   const { data } = await q
   return (data ?? [])
     .map((row) => ({ ...row, url_path: cleanPath(row.url_path) }))
-    .filter((row): row is { url_path: string; updated_at: string; page_type: string } => Boolean(row.url_path))
+    .filter((row): row is { url_path: string; canonical_url: string | null; updated_at: string | null; page_type: string | null } => Boolean(row.url_path))
 }
 
 export async function getAllActiveUrlPaths(pageType: string): Promise<string[]> {
