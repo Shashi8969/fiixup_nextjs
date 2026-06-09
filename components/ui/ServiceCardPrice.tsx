@@ -4,6 +4,7 @@ import { Clock, ChevronRight, Wrench } from "lucide-react";
 
 interface ServiceCardPriceProps {
   slug: string;
+  href?: string;
   title: string;
   tagline: string;
   price: string;
@@ -13,13 +14,13 @@ interface ServiceCardPriceProps {
 }
 
 export function ServiceCardPrice({
-  slug, title, tagline, price, duration, accentColor, icon: Icon
+  slug, href, title, tagline, price, duration, accentColor, icon: Icon
 }: ServiceCardPriceProps) {
   const theme = serviceThemes[accentColor as ThemeColor] || serviceThemes.blue;
 
   return (
     <Link 
-      href={`/services/${slug}`}
+      href={href ?? `/services/${slug}`}
       className="group relative p-8 rounded-3xl bg-white transition-all duration-500 flex flex-col border border-gray-100 shadow-sm hover:shadow-xl hover:border-transparent hover:-translate-y-1.5"
     >
       {/* 1. Subtle Icon - No heavy boxes, just clean glyphs */}

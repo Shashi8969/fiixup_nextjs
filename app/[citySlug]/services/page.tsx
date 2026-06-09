@@ -16,7 +16,7 @@ import type { Metadata } from "next";
 import Link              from "next/link";
 import {
   Phone, MapPin, ArrowRight,
-  Clock, Shield, Zap, CheckCircle, Star,
+  Clock, Shield, Zap, CheckCircle,Star
 } from "lucide-react";
 
 import { getCityBySlug, getAllCities }      from "@/lib/cities";
@@ -25,7 +25,7 @@ import { getAllServiceCategories }          from "@/lib/data/serviceCategory";
 import { TrustStrip }                      from "@/components/ui/TrustStrip";
 import HowItWorks                          from "@/components/ui/HowItWorks";
 import WhyChooseDoorstep                   from "@/components/ui/WhyChooseDoorstep";
-import { iconMap }                         from "@/lib/icons";
+import { CityServiceCard }                 from "@/components/ui/CityServiceCard";
 import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
 
 export const revalidate = 3600;
@@ -278,86 +278,28 @@ export default async function CityServicesPage({
 
               {/* Service cards — from location_services table */}
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {services.map((svc) => {
-                  // Get icon from global iconMap — falls back gracefully
-                  const SvcIcon = iconMap[svc.serviceSlug] ?? iconMap[catSlug] ?? null;
-
-                  // Starting price from pricing_rows (first row's priceFrom)
-                  const startPrice = svc.pricingRows?.[0]?.priceFrom;
-
-                  return (
-                    <Link
-                      key={svc.id}
-                      href={`/${city.slug}/${svc.serviceSlug}`}
-                      className={`group bg-white border border-gray-100 ${theme.border} rounded-xl p-5 flex flex-col transition-all hover:shadow-lg hover:-translate-y-0.5`}
-                    >
-                      {/* Icon */}
-                      {SvcIcon && (
-                        <div className={`mb-3 p-2 rounded-lg ${theme.iconBg} w-fit group-hover:scale-105 transition-transform`}>
-                          <SvcIcon className={`w-5 h-5 ${theme.iconText}`} aria-hidden="true" />
-                        </div>
-                      )}
-
-                      {/* Service name — city in H3 for SEO */}
-                      <h3 className="font-bold text-gray-900 text-sm leading-snug mb-2 group-hover:text-blue-700 transition-colors">
-                        {svc.serviceName}
-                      </h3>
-
-                      {/* Tagline from hero_subheading */}
-                      <p className="text-gray-500 text-xs leading-relaxed flex-1 mb-4 line-clamp-2">
-                        {svc.heroSubheading}
-                      </p>
-
-                      {/* Price + rating + CTA */}
-                      <div className="pt-3 border-t border-gray-100 space-y-2">
-
-                        {/* Rating row */}
-                        <div className="flex items-center gap-1">
-                          <div className="flex">
-                            {[1, 2, 3, 4, 5].map((s) => (
-                              <Star
-                                key={s}
-                                className={`w-3 h-3 ${
-                                  s <= Math.round(svc.schemaAggregateRating)
-                                    ? "fill-yellow-400 text-yellow-400"
-                                    : "fill-gray-200 text-gray-200"
-                                }`}
-                                aria-hidden="true"
-                              />
-                            ))}
-                          </div>
-                          <span className="text-xs text-gray-400">
-                            {svc.schemaAggregateRating.toFixed(1)} ({svc.schemaReviewCount}+)
-                          </span>
-                        </div>
-
-                        {/* Price + book */}
-                        <div className="flex items-center justify-between">
-                          {startPrice ? (
-                            <div>
-                              <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider leading-none mb-0.5">
-                                Starting from
-                              </p>
-                              <p className={`text-sm font-extrabold ${theme.iconText}`}>
-                                ₹{startPrice.toLocaleString("en-IN")}
-                              </p>
-                            </div>
-                          ) : (
-                            <p className={`text-xs font-semibold ${theme.linkText}`}>
-                              Get quote
-                            </p>
-                          )}
-                          <span
-                            className={`text-xs font-bold ${theme.linkText} flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity`}
-                          >
-                            Book
-                            <ArrowRight className="w-3 h-3" aria-hidden="true" />
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
+                {services.map((svc) => (
+                  <CityServiceCard
+                    key={svc.id}
+                    citySlug={city.slug}
+                    cityName={city.name}
+                    serviceSlug={svc.serviceSlug}
+                    serviceName={svc.serviceName}
+                    serviceCategory={svc.serviceCategory}
+                    tagline={svc.heroSubheading}
+                    pricingRows={svc.pricingRows}
+                    rating={svc.schemaAggregateRating}
+                    reviewCount={svc.schemaReviewCount}
+                    categoryIcon={CatIcon}
+                    theme={{
+                      iconBg: theme.iconBg,
+                      iconText: theme.iconText,
+                      border: theme.border,
+                      linkText: theme.linkText,
+                    }}
+                    variant="index"
+                  />
+                ))}
               </div>
 
               {/* Category footer link */}

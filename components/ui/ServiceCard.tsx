@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { serviceThemes, type ThemeColor } from "@/lib/theme";
+import { asAbsolutePath, getGlobalServiceHref } from "@/lib/routes";
 
 interface ServiceCardProps {
   cat: any; // This is the category object from your array
@@ -10,7 +11,7 @@ export function ServiceCard({ cat, displayLocation }: ServiceCardProps) {  // Ke
   const theme = serviceThemes[cat.color as ThemeColor] || serviceThemes.blue;
   const title = displayLocation ? `${cat.title} in ${displayLocation}` : cat.title;
 
-  const targetHref = cat.link || `/services/${cat.slug || ''}`;
+  const targetHref = cat.link ? asAbsolutePath(cat.link) : getGlobalServiceHref(cat.slug || "");
 
   return (
     <Link 

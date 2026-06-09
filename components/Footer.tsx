@@ -75,7 +75,7 @@ export function Footer() {
             <ul className="space-y-3">
               {carServices.map((s) => (
                 <li key={s.slug}>
-                  <Link href={`/services/${s.slug}`} className="text-sm text-gray-400 hover:text-white transition-colors">
+                  <Link href={s.href ?? `/services/${s.slug}`} className="text-sm text-gray-400 hover:text-white transition-colors">
                     {s.label}
                   </Link>
                 </li>
@@ -91,7 +91,7 @@ export function Footer() {
             <ul className="space-y-3">
               {bikeServices.map((s) => (
                 <li key={s.slug}>
-                  <Link href={`/services/${s.slug}`} className="text-sm text-gray-400 hover:text-white transition-colors">
+                  <Link href={s.href ?? `/services/${s.slug}`} className="text-sm text-gray-400 hover:text-white transition-colors">
                     {s.label}
                   </Link>
                 </li>

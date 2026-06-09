@@ -1,14 +1,11 @@
-
 // ─────────────────────────────────────────────────────────────────────────────
 // FILE: components/city-service/CspServiceGrid.tsx
-// Grid of all services in this category for this city
-// Each card → /{city}/{service-slug} (the location_service page)
+// Grid of all services in this category for this city.
+// Each card → /{city}/{service-slug} (city-level location_service page)
 // ─────────────────────────────────────────────────────────────────────────────
 
-import Link from 'next/link';
-import { Wrench } from 'lucide-react';
 import type { CityServiceCategoryPageData } from '@/lib/cityPages';
-import { iconMap } from '@/lib/icons';
+import { CityServiceCard } from '@/components/ui/CityServiceCard';
 
 export function CspServiceGrid({ data }: { data: CityServiceCategoryPageData }) {
   const services = data.services ?? [];
@@ -25,37 +22,23 @@ export function CspServiceGrid({ data }: { data: CityServiceCategoryPageData }) 
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {services.map((s) => {
-            const Icon = iconMap[s.icon] ?? Wrench;
-            return (
-              <Link
-                key={s.slug}
-                href={`/${data.citySlug}/${s.slug}`}
-                className="group bg-white border border-gray-200 hover:border-blue-300 rounded-2xl p-6 hover:shadow-xl transition-all hover:-translate-y-1"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="bg-blue-50 group-hover:bg-blue-100 rounded-xl p-3 flex-shrink-0 transition-colors">
-                    <Icon className="w-7 h-7 text-blue-600" aria-hidden="true" />
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="font-bold text-gray-900 mb-1 group-hover:text-blue-700 transition-colors">
-                      {s.title} in {data.cityName}
-                    </h3>
-                    <p className="text-sm text-gray-500 mb-3 line-clamp-2">{s.tagline}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-blue-600 font-bold text-sm">From {s.price}</span>
-                      {s.duration && (
-                        <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">{s.duration}</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
+          {services.map((s) => (
+            <CityServiceCard
+              key={s.slug}
+              citySlug={data.citySlug}
+              cityName={data.cityName}
+              serviceSlug={s.slug}
+              serviceName={s.title}
+              serviceCategory={s.category}
+              tagline={s.tagline}
+              priceLabel={s.price}
+              duration={s.duration}
+              icon={s.icon}
+              variant="compact"
+            />
+          ))}
         </div>
       </div>
     </section>
   );
 }
-

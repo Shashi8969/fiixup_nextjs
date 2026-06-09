@@ -20,8 +20,8 @@ import type { Metadata }  from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import Link               from "next/link";
 import {
-  Phone, MapPin, Star, Clock,
-  ArrowRight, CheckCircle, Shield, Zap,
+  Phone, MapPin, Clock,
+  CheckCircle, Shield, Zap,
 } from "lucide-react";
 
 import { getAllServiceCategories, getServiceCategoryBySlug } from "@/lib/data/serviceCategory";
@@ -38,8 +38,8 @@ import PricingTable                      from "@/components/service/PricingTable
 import BrandsGrid                        from "@/components/service/BrandsGrid";
 import CompleteGuideSection              from "@/components/service/CompleteGuide";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { CityServiceCard } from "@/components/ui/CityServiceCard";
 
-import { iconMap }                       from "@/lib/icons";
 import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
 
 export const revalidate  = 3600;
@@ -296,95 +296,24 @@ export default async function CityServicePage({
               </div>
 
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {cityServices.map((svc) => {
-                  // Get icon — try service slug, then category slug, fallback to Wrench
-                  const SvcIcon = iconMap[svc.serviceSlug]
-                    ?? iconMap[svc.serviceCategory]
-                    ?? null;
-
-                  // Starting price from pricing_rows
-                  const startPrice = svc.pricingRows?.[0]?.priceFrom;
-                  const priceLabel = startPrice
-                    ? `₹${startPrice.toLocaleString("en-IN")}`
-                    : "Call for quote";
-
-                  return (
-                    <Link
-                      key={svc.id}
-                      // Links to the city-level location_service page
-                      // e.g. /bangalore/koramangala/car-battery-replacement
-                      // OR if you have a city-level route: /bangalore/car-battery-replacement
-                      href={`/${city.slug}/${svc.serviceSlug}`}
-                      className="group relative bg-white border border-gray-100 hover:border-blue-200 rounded-2xl p-6 flex flex-col transition-all hover:shadow-xl hover:-translate-y-1"
-                    >
-                      {/* Icon + title row */}
-                      <div className="flex items-start gap-4 mb-4">
-                        {SvcIcon ? (
-                          <div className={`flex-shrink-0 p-2.5 rounded-xl ${theme.iconBg} group-hover:scale-110 transition-transform`}>
-                            <SvcIcon className={`w-5 h-5 ${theme.iconText}`} aria-hidden="true" />
-                          </div>
-                        ) : (
-                          <div className={`flex-shrink-0 p-2.5 rounded-xl ${theme.iconBg}`}>
-                            <CategoryIcon className={`w-5 h-5 ${theme.iconText}`} aria-hidden="true" />
-                          </div>
-                        )}
-                        {/* H3 — service name from location_services.service_name */}
-                        <h3 className="font-bold text-gray-900 text-sm leading-snug group-hover:text-blue-700 transition-colors">
-                          {svc.serviceName}
-                        </h3>
-                      </div>
-
-                      {/* Tagline from location_services.hero_subheading (city-specific copy) */}
-                      <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-5 line-clamp-2">
-                        {svc.heroSubheading}
-                      </p>
-
-                      {/* Rating */}
-                      <div className="flex items-center gap-1.5 mb-4">
-                        <div className="flex">
-                          {[1, 2, 3, 4, 5].map((s) => (
-                            <Star
-                              key={s}
-                              className={`w-3 h-3 ${
-                                s <= Math.round(svc.schemaAggregateRating)
-                                  ? "fill-yellow-400 text-yellow-400"
-                                  : "fill-gray-200 text-gray-200"
-                              }`}
-                              aria-hidden="true"
-                            />
-                          ))}
-                        </div>
-                        <span className="text-xs text-gray-400">
-                          {svc.schemaAggregateRating.toFixed(1)} ({svc.schemaReviewCount}+ reviews)
-                        </span>
-                      </div>
-
-                      {/* Price + duration + CTA */}
-                      <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
-                        <div>
-                          <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold leading-none mb-0.5">
-                            Starting from
-                          </p>
-                          <p className={`text-base font-extrabold ${theme.iconText}`}>
-                            {priceLabel}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-1.5 text-gray-400 text-xs font-medium">
-                          <Clock className="w-3.5 h-3.5" aria-hidden="true" />
-                          30–60 min
-                        </div>
-                      </div>
-
-                      {/* Hover arrow */}
-                      <div
-                        aria-hidden="true"
-                        className={`absolute bottom-4 right-5 flex items-center gap-1 text-xs font-bold opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 ${theme.iconText}`}
-                      >
-                        Book Now <ArrowRight className="w-3.5 h-3.5" />
-                      </div>
-                    </Link>
-                  );
-                })}
+                {cityServices.map((svc) => (
+                  <CityServiceCard
+                    key={svc.id}
+                    citySlug={city.slug}
+                    cityName={city.name}
+                    serviceSlug={svc.serviceSlug}
+                    serviceName={svc.serviceName}
+                    serviceCategory={svc.serviceCategory}
+                    tagline={svc.heroSubheading}
+                    pricingRows={svc.pricingRows}
+                    duration={svc.duration}
+                    rating={svc.schemaAggregateRating}
+                    reviewCount={svc.schemaReviewCount}
+                    categoryIcon={CategoryIcon}
+                    theme={{ iconBg: theme.iconBg, iconText: theme.iconText }}
+                    variant="detailed"
+                  />
+                ))}
               </div>
             </div>
           </section>

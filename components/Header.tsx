@@ -6,8 +6,9 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { Phone, Menu, X } from "lucide-react";
 import { MAIN_PHONE } from "@/lib/constants";
+import { getSmartServicesHref } from "@/lib/routes";
 
-const navLinks = [
+const baseNavLinks = [
   { href: "/",        label: "Home"     },
   { href: "/services",label: "Services" },
   { href: "/about",   label: "About"    },
@@ -18,6 +19,10 @@ const navLinks = [
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const servicesHref = getSmartServicesHref(pathname);
+  const navLinks = baseNavLinks.map((link) =>
+    link.label === "Services" ? { ...link, href: servicesHref } : link
+  );
 
   const linkClass = (href: string) => {
     const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);

@@ -25,7 +25,7 @@ function rowToCategory(row: any) {
   return {
     slug:            row.slug,
     categorySlug:    row.category_slug   ?? row.slug,
-    link:            row.link            ?? `services/${row.slug}`,
+    link:            row.link            ?? `/services/${row.slug}`,
     title:           row.title           ?? "",
     tagline:         row.tagline         ?? "",
     description:     row.description     ?? "",
