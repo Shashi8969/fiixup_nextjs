@@ -5,6 +5,7 @@ import { CheckCircle, MapPin, Star } from "lucide-react";
 import { MAIN_PHONE } from "@/lib/constants";
 import { features, avatars } from "@/lib/data/homepageData";
 import { useState } from "react";
+import { submitLead } from "@/lib/send-lead";
 
 export function Hero() {
 
@@ -12,7 +13,7 @@ export function Hero() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   // ✅ Submit handler
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const form = e.currentTarget;
@@ -30,25 +31,15 @@ export function Hero() {
     formData.set("service", "Quick Booking");
     formData.set("message", "User submitted from Hero section");
 
-    import("@emailjs/browser").then((emailjs) => {
-      emailjs.default
-        .send(
-          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_CONTACT!,
-          Object.fromEntries(formData.entries()),
-          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-        )
-        .then(() => {
-          setIsSuccess(true);
-          form.reset();
-
-          setTimeout(() => setIsSuccess(false), 4000);
-        })
-        .catch((err) => {
-          console.error(err);
-          alert("Failed. Call us instead.");
-        });
-    });
+    try {
+      await submitLead(formData);
+      setIsSuccess(true);
+      form.reset();
+      setTimeout(() => setIsSuccess(false), 4000);
+    } catch (err) {
+      console.error(err);
+      alert("Failed. Call us instead.");
+    }
   };
 
   return (

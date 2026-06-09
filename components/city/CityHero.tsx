@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { CheckCircle, MapPin } from "lucide-react";
 import { useState } from "react";
+import { submitLead } from "@/lib/send-lead";
 import type { CityData } from "@/lib/models/city.model";
 
 export function CityHero({ city }: { city: CityData }) {
@@ -12,7 +13,7 @@ export function CityHero({ city }: { city: CityData }) {
   const [success, setSuccess] = useState(false);
   const [showError, setShowError] = useState(false); // Added missing state
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
@@ -30,26 +31,17 @@ export function CityHero({ city }: { city: CityData }) {
       service: "Callback Request",
     };
 
-    import("@emailjs/browser").then((emailjs) => {
-      emailjs.default
-        .send(
-          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_CONTACT!,
-          templateParams,
-          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-        )
-        .then(() => {
-          setSuccess(true);
-          setPhone("");
-          setLoading(false);
-          setTimeout(() => setSuccess(false), 4000);
-        })
-        .catch(() => {
-          setLoading(false);
-          setShowError(true);
-          alert("Failed. Please call instead.");
-        });
-    });
+    try {
+      await submitLead(templateParams);
+      setSuccess(true);
+      setPhone("");
+      setTimeout(() => setSuccess(false), 4000);
+    } catch {
+      setShowError(true);
+      alert("Failed. Please call instead.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

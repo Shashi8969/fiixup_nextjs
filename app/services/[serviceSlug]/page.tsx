@@ -25,11 +25,9 @@ import ServiceBenefits      from "@/components/service/ServiceBenefits";
 
 import { iconMap } from "@/lib/icons";
 import { getAllServices, getServiceBySlug, getServicesByCategory } from "@/lib/services";
-import { serviceCategories } from "@/lib/data/serviceCategory";
 import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
-import { getCategorySEO } from "@/lib/data/seo";
 import { serviceDetailSchema, serviceCategorySchema } from "@/lib/schema";
-import { getAllServiceCategories } from "@/lib/data/serviceCategory";
+import { getAllServiceCategories, getServiceCategoryBySlug } from "@/lib/data/serviceCategory";
 
 export const revalidate = 3600;
 
@@ -44,9 +42,13 @@ const heroTheme: Record<string, { gradient: string; iconBg: string; iconText: st
 };
 
 export async function generateStaticParams() {
-  const allServices = await getAllServices();
+  const [categories, allServices] = await Promise.all([
+    getAllServiceCategories(),
+    getAllServices(),
+  ]);
+
   return [
-    ...serviceCategories.map((c) => ({ serviceSlug: c.slug })),
+    ...categories.map((c) => ({ serviceSlug: c.slug })),
     ...allServices.map((s) => ({ serviceSlug: s.slug })),
   ];
 }
@@ -58,18 +60,24 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { serviceSlug } = await params;
 
-  const cat = serviceCategories.find((c) => c.slug === serviceSlug);
+  const cat = await getServiceCategoryBySlug(serviceSlug);
   if (cat) {
-    const seo = getCategorySEO(cat.slug);
+    const title = cat.metaTitle || `${cat.title} — Doorstep Vehicle Repair`;
+    const description = cat.metaDescription || cat.description;
+    const canonical = `${SITE_URL}/services/${cat.slug}`;
+
     return {
-      title:       seo?.title       ?? `${cat.title} — Doorstep Vehicle Repair`,
-      description: seo?.description ?? cat.description,
-      keywords:    seo?.keywords,
-      alternates:  { canonical: seo?.canonical ?? `${SITE_URL}/services/${cat.slug}` },
+      title,
+      description,
+      keywords: cat.keywords || undefined,
+      alternates: { canonical },
       openGraph: {
-        title:       seo?.ogTitle       ?? seo?.title       ?? cat.title,
-        description: seo?.ogDescription ?? seo?.description ?? cat.description,
-        url:         seo?.canonical     ?? `${SITE_URL}/services/${cat.slug}`,
+        title,
+        description,
+        url: canonical,
+        type: "website",
+        locale: "en_IN",
+        siteName: "Fiixup",
       },
     };
   }
@@ -100,8 +108,7 @@ export default async function Page({
   const { serviceSlug } = await params;
 
   // ── Category landing page ──────────────────────────────────────────────────
-const categories = await getAllServiceCategories();
-const cat = categories.find((c) => c.slug === serviceSlug);
+  const cat = await getServiceCategoryBySlug(serviceSlug);
   if (cat) {
     const theme = heroTheme[cat.color] ?? heroTheme.blue;
     const CategoryIcon = cat.icon;

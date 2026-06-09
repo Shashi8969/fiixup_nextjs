@@ -8,6 +8,7 @@ import Image      from 'next/image';
 import { useState } from 'react';
 import { CheckCircle, MapPin, Star, Shield, Clock, Zap } from 'lucide-react';
 import type { CityHubPageData } from '@/lib/cityPages';
+import { submitLead } from '@/lib/send-lead';
 
 const DEFAULT_BULLETS = (cityName: string, areaNames: string[]) => [
   `24/7 Emergency Service in ${cityName}`,
@@ -43,13 +44,14 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
     setLoading(true);
     try {
       const now = new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
-      const { default: emailjs } = await import('@emailjs/browser');
-      await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_CONTACT!,
-        { phone, city: data.cityName, form_type: 'City Hero Form', request_time: now, name: 'Not provided', service: 'Callback Request' },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-      );
+      await submitLead({
+        phone,
+        city: data.cityName,
+        form_type: 'City Hero Form',
+        request_time: now,
+        name: 'Not provided',
+        service: 'Callback Request',
+      });
       setSuccess(true);
       setPhone('');
       setTimeout(() => setSuccess(false), 5000);

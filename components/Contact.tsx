@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
+import { submitLead } from "@/lib/send-lead";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 
 import {
@@ -15,7 +15,6 @@ import {
 import { SERVICE_OPTIONS } from "@/lib/data/serviceOptions";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
-emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!);
 
 function useEmailForm() {
 
@@ -25,7 +24,7 @@ function useEmailForm() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
 
-  const sendEmail = (e: React.FormEvent) => {
+  const sendEmail = async (e: React.FormEvent) => {
 
     e.preventDefault();
 
@@ -42,35 +41,18 @@ function useEmailForm() {
 
     formData.set("request_time", requestTime);
 
-    emailjs
-      .send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_CONTACT!,
-        Object.fromEntries(formData.entries()),
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-      )
+    try {
+      await submitLead(formData);
 
-      .then(() => {
-
-        setLoading(false);
-
-        setShowSuccess(true);
-
-        form.current?.reset();
-
-        setTimeout(() => setShowSuccess(false), 4000);
-
-      })
-
-      .catch(() => {
-
-        setLoading(false);
-
-        setShowError(true);
-
-        setTimeout(() => setShowError(false), 4000);
-
-      });
+      setShowSuccess(true);
+      form.current?.reset();
+      setTimeout(() => setShowSuccess(false), 4000);
+    } catch {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 4000);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return {

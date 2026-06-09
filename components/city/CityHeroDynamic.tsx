@@ -5,6 +5,7 @@ import Image from "next/image";
 import { CheckCircle, MapPin, Shield, Clock, Zap, Star } from "lucide-react";
 import { useState } from "react";
 import type { CityHubPageData } from "@/lib/cityPages";
+import { submitLead } from "@/lib/send-lead";
 
 // ── Defaults (used when DB columns are empty) ─────────────────────────────────
 const DEFAULT_BULLETS = (cityName: string, areaNames: string[]) => [
@@ -42,7 +43,7 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
     ? (data.heroStats as { value: string; label: string }[])
     : DEFAULT_STATS(data);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
@@ -51,32 +52,23 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
       timeStyle: "short",
     });
 
-    import("@emailjs/browser").then((emailjs) => {
-      emailjs.default
-        .send(
-          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_CONTACT!,
-          {
-            phone,
-            city:         data.cityName,
-            form_type:    "City Hero Form",
-            request_time: now,
-            name:         "Not provided",
-            service:      "Callback Request",
-          },
-          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-        )
-        .then(() => {
-          setSuccess(true);
-          setPhone("");
-          setLoading(false);
-          setTimeout(() => setSuccess(false), 4000);
-        })
-        .catch(() => {
-          setLoading(false);
-          alert("Failed. Please call instead.");
-        });
-    });
+    try {
+      await submitLead({
+        phone,
+        city:         data.cityName,
+        form_type:    "City Hero Form",
+        request_time: now,
+        name:         "Not provided",
+        service:      "Callback Request",
+      });
+      setSuccess(true);
+      setPhone("");
+      setTimeout(() => setSuccess(false), 4000);
+    } catch {
+      alert("Failed. Please call instead.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

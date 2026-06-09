@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Phone } from "lucide-react";
 import { MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
 import { faqSchema } from "@/lib/schema";
-import { globalFAQs as faqCategories } from "@/lib/data/faqs";
+import { getFaqPageCategories } from "@/lib/faqs";
 import { getStaticPageSEO } from "@/lib/data/seo";
 import { PageHero } from "@/components/ui/PageHero";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
@@ -24,9 +24,10 @@ export const metadata: Metadata = {
   },
 };
 
-const allFaqs = faqCategories.flatMap((c) => c.faqs);
+export default async function FAQPage() {
+  const faqCategories = await getFaqPageCategories();
+  const allFaqs = faqCategories.flatMap((c) => c.faqs);
 
-export default function FAQPage() {
   return (
     <>
       <script

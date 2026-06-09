@@ -21,7 +21,7 @@ npm install
 
 # 2. Set up environment variables
 cp .env.local.example .env.local
-# Edit .env.local with your EmailJS keys
+# Edit .env.local with your Gmail SMTP keys
 
 # 3. Run dev server
 npm run dev
@@ -35,18 +35,19 @@ npm run build
 Rename `.env.local.example` to `.env.local` and fill in:
 
 ```
-NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
-NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
-NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
+GMAIL_USER=your-gmail-address@gmail.com
+GMAIL_APP_PASSWORD=your-gmail-app-password
+LEAD_TO_EMAIL=your-receiving-email@gmail.com
+LEAD_FROM_NAME=Fiixup Website
 ```
 
-These are the same values as your old `VITE_EMAILJS_*` variables — just renamed.
+The website forms now submit to `/api/send-lead`, and the server sends the email using Nodemailer + Gmail SMTP. Do not use normal Gmail account password; use a Gmail app password.
 
 ## Deploy to Vercel
 
 1. Push this repo to GitHub
 2. Import into Vercel at vercel.com/new
-3. Add your `NEXT_PUBLIC_EMAILJS_*` environment variables in Vercel dashboard
+3. Add `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `LEAD_TO_EMAIL`, and `LEAD_FROM_NAME` in Vercel dashboard
 4. Connect `fiixup.in` domain under Settings → Domains
 5. Deploy — done!
 

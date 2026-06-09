@@ -1,8 +1,10 @@
 // app/[citySlug]/services/[serviceSlug]/page.tsx
 //
-// THIS FILE HANDLES TWO ROUTES:
+// THIS FILE HANDLES CITY CATEGORY ROUTES ONLY:
 //   /bangalore/services/battery   → Category page (shows all battery services IN BANGALORE)
-//   /bangalore/services/car-oil-change  → Individual service page (if ever needed here)
+//
+// Individual service URLs must live at /{citySlug}/{serviceSlug}.
+// If someone opens /{citySlug}/services/{serviceSlug}, this page redirects there.
 //
 // KEY FIX vs previous version:
 //   BEFORE: Category grid fetched from getServicesByCategory() → services table (GLOBAL, not city-specific)
@@ -15,7 +17,7 @@
 //   Add a new row to location_services → it appears on the page at next ISR.
 
 import type { Metadata }  from "next";
-import { notFound }       from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Link               from "next/link";
 import {
   Phone, MapPin, Star, Clock,
@@ -26,22 +28,15 @@ import { getAllServiceCategories, getServiceCategoryBySlug } from "@/lib/data/se
 import { getCityServicesByCategory }                         from "@/lib/locationServices";
 import { getCityBySlug, getAllCities }                       from "@/lib/cities";
 import { getCityServiceCategoryPage } from "@/lib/cityPages";
-import { getAllServices, getServiceBySlug, getServicesByCategory } from "@/lib/services";
+import { getServiceBySlug } from "@/lib/services";
 
 import { TrustStrip as IconTrustStrip } from "@/components/ui/TrustStrip";
 import HowItWorks                        from "@/components/ui/HowItWorks";
 import WhyChooseDoorstep                 from "@/components/ui/WhyChooseDoorstep";
-import BookingCTA                        from "@/components/ui/BookingCTA";
 import ServiceBenefits                  from "@/components/service/ServiceBenefits";
 import PricingTable                      from "@/components/service/PricingTable";
 import BrandsGrid                        from "@/components/service/BrandsGrid";
 import CompleteGuideSection              from "@/components/service/CompleteGuide";
-import ServiceTestimonials               from "@/components/service/ServiceTestimonials";
-import ServiceFAQ                        from "@/components/service/ServiceFAQ";
-import { Testimonials }                  from "@/components/Testimonials";
-import Hero                              from "@/components/service/ServiceHero";
-import TrustStrip                        from "@/components/service/ServiceTrustStrip";
-import CityCoverage                      from "@/components/service/ServiceCities";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 import { iconMap }                       from "@/lib/icons";
@@ -65,10 +60,9 @@ const heroTheme: Record<string, {
 
 // ── Static params ────────────────────────────────────────────────────────────
 export async function generateStaticParams() {
-  const [cities, categories, allServices] = await Promise.all([
+  const [cities, categories] = await Promise.all([
     getAllCities(),
     getAllServiceCategories(),
-    getAllServices(),
   ]);
 
   const params: { citySlug: string; serviceSlug: string }[] = [];
@@ -77,10 +71,6 @@ export async function generateStaticParams() {
     // One param per city × category
     for (const cat of categories) {
       params.push({ citySlug: city.slug, serviceSlug: cat.slug });
-    }
-    // One param per city × individual service (future use)
-    for (const svc of allServices) {
-      params.push({ citySlug: city.slug, serviceSlug: svc.slug });
     }
   }
 
@@ -140,10 +130,11 @@ export async function generateMetadata({
   const service = await getServiceBySlug(serviceSlug);
   if (service) {
     return {
-      title:       service.metaTitle,
+      title: service.metaTitle,
       description: service.metaDescription,
-      keywords:    service.metaKeywords,
-      alternates:  { canonical: `${SITE_URL}/${city.slug}/services/${service.slug}` },
+      keywords: service.metaKeywords,
+      alternates: { canonical: `${SITE_URL}/${city.slug}/${service.slug}` },
+      robots: { index: false, follow: true },
     };
   }
 
@@ -509,124 +500,12 @@ export default async function CityServicePage({
   }
 
   // ══════════════════════════════════════════════════════════════════════════
-  // BRANCH B: INDIVIDUAL SERVICE PAGE (unchanged from original)
-  // e.g. /bangalore/services/car-oil-change  (if this route is ever used)
+  // BRANCH B: INDIVIDUAL SERVICE PAGE
+  // Individual city services must live at /{citySlug}/{serviceSlug}.
+  // This keeps /{citySlug}/services/{slug} category-only and prevents duplicate SEO pages.
   // ══════════════════════════════════════════════════════════════════════════
   const service = await getServiceBySlug(serviceSlug ?? "");
-  if (!service) return notFound();
+  if (service) permanentRedirect(`/${city.slug}/${service.slug}`);
 
-  const Icon         = iconMap[service.icon];
-  const isCar        = service.category === "car";
-  const accentBlue   = isCar ? "text-blue-600"   : "text-red-600";
-  const bgAccent     = isCar ? "bg-blue-600"     : "bg-red-600";
-  const borderAccent = isCar ? "border-blue-300" : "border-red-300";
-  const bgLight      = isCar ? "bg-blue-50"      : "bg-red-50";
-  const accentColor  = (isCar ? "blue" : "red") as "blue" | "red";
-
-  const sameCategory = await getServicesByCategory(service.category as any);
-  const relatedSlugs = service.relatedSlugs ?? [];
-  const related = sameCategory
-    .filter((s) => s.slug !== service.slug)
-    .filter((s) => relatedSlugs.length === 0 || relatedSlugs.includes(s.slug))
-    .slice(0, 3);
-
-  const brands     = isCar ? (service.carBrands ?? []) : (service.bikeBrands ?? []);
-  const pricingRows = service.pricing?.rows ?? [];
-  const minPrice   = pricingRows.length > 0
-    ? Math.min(...pricingRows.map((r) => r.priceFrom))
-    : parseInt(service.price.replace(/[^\d]/g, ""), 10) || 499;
-
-  return (
-    <>
-      <Hero service={service} Icon={Icon} isCar={isCar} bgAccent={bgAccent} accentBlue={accentBlue} bgLight={bgLight} />
-      <TrustStrip />
-
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12">
-          <div>
-            <h2 className="text-2xl font-bold mb-4 text-gray-900">About This Service</h2>
-            <p className="text-gray-700 text-lg leading-relaxed">{service.description}</p>
-          </div>
-          <div className={`${bgLight} rounded-2xl p-8`}>
-            <h2 className="text-2xl font-bold mb-6 text-gray-900">What&apos;s Included</h2>
-            <ul className="space-y-4">
-              {service.features.map((f) => (
-                <li key={f} className="flex items-start gap-3">
-                  <span className="text-green-600 font-bold flex-shrink-0 mt-0.5">✔</span>
-                  <span className="text-gray-700">{f}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {service.benefits && service.benefits.length > 0 && (
-        <ServiceBenefits benefits={service.benefits} serviceTitle={service.shortTitle} accentColor={accentColor} />
-      )}
-
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
-            How Doorstep {service.shortTitle} Works
-          </h2>
-          <HowItWorks />
-        </div>
-      </section>
-
-      {service.pricing && (
-        <PricingTable pricing={service.pricing} serviceTitle={service.shortTitle} accentColor={accentColor} />
-      )}
-      {brands.length > 0 && (
-        <BrandsGrid brands={brands} heading={`${isCar ? "Car" : "Bike"} Brands We Service`} accentColor={accentColor} />
-      )}
-
-      <CityCoverage service={service} borderAccent={borderAccent} accentBlue={accentBlue} />
-
-      {service.testimonials && service.testimonials.length > 0 ? (
-        <ServiceTestimonials testimonials={service.testimonials} serviceTitle={service.shortTitle} />
-      ) : (
-        <Testimonials />
-      )}
-
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-2">
-            {service.shortTitle} — Frequently Asked Questions
-          </h2>
-          <ServiceFAQ faqs={service.faqs} />
-        </div>
-      </section>
-
-      {service.guide && <CompleteGuideSection guide={service.guide} />}
-
-      {related.length > 0 && (
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <h2 className="text-2xl font-bold mb-8">
-              Other {isCar ? "Car" : "Bike"} Services You May Need
-            </h2>
-            <div className="grid sm:grid-cols-3 gap-6">
-              {related.map((s) => {
-                const RelIcon = iconMap[s.icon];
-                if (!RelIcon) return null;
-                return (
-                  <Link key={s.slug} href={`/${city.slug}/${s.slug}`}
-                    className="bg-white p-6 border border-gray-200 rounded-2xl hover:shadow-lg transition-all">
-                    <RelIcon className={`w-10 h-10 ${accentBlue} mb-3`} aria-hidden="true" />
-                    <h3 className="font-bold mb-1 text-gray-900">{s.shortTitle}</h3>
-                    <p className="text-sm text-gray-500 mb-3">{s.tagline}</p>
-                    <p className={`text-sm font-bold ${accentBlue}`}>From {s.price}</p>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      )}
-
-      <WhyChooseDoorstep />
-      <BookingCTA serviceTitle={service.shortTitle} bgAccent={bgAccent} phoneNumber={city.phone ?? MAIN_PHONE} />
-    </>
-  );
+  return notFound();
 }

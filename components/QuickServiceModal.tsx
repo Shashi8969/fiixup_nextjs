@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { X, Phone } from "lucide-react";
-import emailjs from "@emailjs/browser";
 import { MAIN_PHONE } from "@/lib/constants";
+import { submitLead } from "@/lib/send-lead";
 
 const MODAL_SESSION_KEY = "hasSeenQuickServiceModal";
 const MODAL_DELAY_MS = 2000;
@@ -26,7 +26,7 @@ export function QuickServiceModal() {
     setIsOpen(false);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formRef.current) return;
     setLoading(true);
@@ -40,15 +40,12 @@ export function QuickServiceModal() {
     data.service      = "Callback Request";
     data.message      = "Customer requested a quick callback";
 
-    emailjs
-      .send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_CONTACT!,
-        data,
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-      )
-      .then(dismiss)
-      .catch(() => setLoading(false));
+    try {
+      await submitLead(data);
+      dismiss();
+    } catch {
+      setLoading(false);
+    }
   };
 
   if (!isOpen) return null;

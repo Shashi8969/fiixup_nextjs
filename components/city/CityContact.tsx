@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
+import { submitLead } from "@/lib/send-lead";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import type { CityData } from "@/lib/models/city.model";
 import { MAIN_EMAIL, TRUST_BADGES } from "@/lib/constants";
@@ -19,7 +19,7 @@ export function CityContact({ city }: { city: CityData }) {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const sendEmail = (e: React.FormEvent) => {
+  const sendEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.current) return;
 
@@ -35,24 +35,18 @@ export function CityContact({ city }: { city: CityData }) {
     if (input) input.value = now;
 
     setLoading(true);
-    emailjs
-      .sendForm(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_CONTACT!,
-        form.current,
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-      )
-      .then(() => {
-        setLoading(false);
-        setShowSuccess(true);
-        form.current?.reset();
-        setTimeout(() => setShowSuccess(false), 4000);
-      })
-      .catch(() => {
-        setLoading(false);
-        setShowError(true);
-        setTimeout(() => setShowError(false), 4000);
-      });
+
+    try {
+      await submitLead(new FormData(form.current));
+      setShowSuccess(true);
+      form.current?.reset();
+      setTimeout(() => setShowSuccess(false), 4000);
+    } catch {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 4000);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
