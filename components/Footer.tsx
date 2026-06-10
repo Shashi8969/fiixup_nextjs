@@ -1,11 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Car, Bike, MapPin, Phone, Mail } from "lucide-react";
-import { cities, carServices, bikeServices, quickLinks, socials } from "@/lib/data/site";
+import { socials } from "@/lib/data/site";
 import { MAIN_PHONE, MAIN_PHONE_DISPLAY, MAIN_EMAIL } from "@/lib/constants";
+import { getFooterNavigationGroups } from "@/lib/navigation";
 
-export function Footer() {
+export async function Footer() {
   const year = new Date().getFullYear();
+  const footerLinks = await getFooterNavigationGroups();
 
   return (
     <footer className="bg-gray-950 text-gray-400">
@@ -73,9 +75,9 @@ export function Footer() {
               <h3 className="text-white font-bold text-sm uppercase tracking-widest">Car Services</h3>
             </div>
             <ul className="space-y-3">
-              {carServices.map((s) => (
-                <li key={s.slug}>
-                  <Link href={s.href ?? `/services/${s.slug}`} className="text-sm text-gray-400 hover:text-white transition-colors">
+              {footerLinks.carServices.map((s) => (
+                <li key={`${s.href}-${s.label}`}>
+                  <Link href={s.href} className="text-sm text-gray-400 hover:text-white transition-colors">
                     {s.label}
                   </Link>
                 </li>
@@ -89,9 +91,9 @@ export function Footer() {
               <h3 className="text-white font-bold text-sm uppercase tracking-widest">Bike Services</h3>
             </div>
             <ul className="space-y-3">
-              {bikeServices.map((s) => (
-                <li key={s.slug}>
-                  <Link href={s.href ?? `/services/${s.slug}`} className="text-sm text-gray-400 hover:text-white transition-colors">
+              {footerLinks.bikeServices.map((s) => (
+                <li key={`${s.href}-${s.label}`}>
+                  <Link href={s.href} className="text-sm text-gray-400 hover:text-white transition-colors">
                     {s.label}
                   </Link>
                 </li>
@@ -105,10 +107,10 @@ export function Footer() {
               <h3 className="text-white font-bold text-sm uppercase tracking-widest">Cities</h3>
             </div>
             <ul className="space-y-3">
-              {cities.map((c) => (
-                <li key={c.slug}>
-                  <Link href={`/${c.slug}`} className="text-sm text-gray-400 hover:text-white transition-colors">
-                    Fiixup {c.name}
+              {footerLinks.cities.map((c) => (
+                <li key={`${c.href}-${c.label}`}>
+                  <Link href={c.href} className="text-sm text-gray-400 hover:text-white transition-colors">
+                    {c.label}
                   </Link>
                 </li>
               ))}
@@ -118,8 +120,8 @@ export function Footer() {
           <div>
             <h3 className="text-white font-bold text-sm uppercase tracking-widest mb-5">Quick Links</h3>
             <ul className="space-y-3">
-              {quickLinks.map((l) => (
-                <li key={l.href}>
+              {footerLinks.quickLinks.map((l) => (
+                <li key={`${l.href}-${l.label}`}>
                   <Link href={l.href} className="text-sm text-gray-400 hover:text-white transition-colors">
                     {l.label}
                   </Link>

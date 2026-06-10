@@ -1,0 +1,91 @@
+import { supabase } from "@/lib/supabase";
+import type { FooterNavigationGroups, NavigationArea, NavigationLink } from "@/lib/navigation-types";
+import { fallbackFooterGroups, fallbackHeaderLinks } from "@/lib/navigation-fallbacks";
+
+const AREAS: NavigationArea[] = [
+  "header",
+  "footer_car_services",
+  "footer_bike_services",
+  "footer_cities",
+  "footer_quick_links",
+];
+
+function normalizeHref(href?: string | null) {
+  const value = String(href ?? "").trim();
+  if (!value) return "/";
+  if (
+    value.startsWith("http://") ||
+    value.startsWith("https://") ||
+    value.startsWith("tel:") ||
+    value.startsWith("mailto:") ||
+    value.startsWith("#")
+  ) {
+    return value;
+  }
+  return value.startsWith("/") ? value : `/${value}`;
+}
+
+function normalizeLink(row: Record<string, any>): NavigationLink | null {
+  const label = String(row.label ?? row.title ?? "").trim();
+  const href = normalizeHref(row.href ?? row.url ?? row.path);
+  const navArea = String(row.nav_area ?? row.area ?? "").trim() as NavigationArea;
+
+  if (!label || !href || !AREAS.includes(navArea)) return null;
+
+  return {
+    id: row.id,
+    label,
+    href,
+    nav_area: navArea,
+    sort_order: Number.isFinite(Number(row.sort_order)) ? Number(row.sort_order) : 0,
+    opens_new_tab: Boolean(row.opens_new_tab ?? row.open_new_tab ?? false),
+    is_active: row.is_active !== false,
+  };
+}
+
+function bySortThenLabel(a: NavigationLink, b: NavigationLink) {
+  const sortDiff = Number(a.sort_order ?? 0) - Number(b.sort_order ?? 0);
+  if (sortDiff !== 0) return sortDiff;
+  return a.label.localeCompare(b.label);
+}
+
+async function fetchNavigationLinks(): Promise<NavigationLink[]> {
+  try {
+    const { data, error } = await supabase
+      .from("navigation_links")
+      .select("id,label,href,nav_area,sort_order,opens_new_tab,is_active")
+      .eq("is_active", true)
+      .order("nav_area", { ascending: true })
+      .order("sort_order", { ascending: true });
+
+    if (error || !data) return [];
+
+    return data
+      .map((row) => normalizeLink(row))
+      .filter(Boolean) as NavigationLink[];
+  } catch {
+    return [];
+  }
+}
+
+export async function getHeaderNavigationLinks() {
+  const rows = await fetchNavigationLinks();
+  const headerLinks = rows.filter((link) => link.nav_area === "header").sort(bySortThenLabel);
+  return headerLinks.length ? headerLinks : fallbackHeaderLinks;
+}
+
+export async function getFooterNavigationGroups(): Promise<FooterNavigationGroups> {
+  const rows = await fetchNavigationLinks();
+
+  const group = (area: NavigationArea, fallback: NavigationLink[]) => {
+    const links = rows.filter((link) => link.nav_area === area).sort(bySortThenLabel);
+    return links.length ? links : fallback;
+  };
+
+  return {
+    carServices: group("footer_car_services", fallbackFooterGroups.carServices),
+    bikeServices: group("footer_bike_services", fallbackFooterGroups.bikeServices),
+    cities: group("footer_cities", fallbackFooterGroups.cities),
+    quickLinks: group("footer_quick_links", fallbackFooterGroups.quickLinks),
+  };
+}

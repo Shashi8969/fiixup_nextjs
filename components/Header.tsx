@@ -7,21 +7,19 @@ import Image from "next/image";
 import { Phone, Menu, X } from "lucide-react";
 import { MAIN_PHONE } from "@/lib/constants";
 import { getSmartServicesHref } from "@/lib/routes";
+import type { NavigationLink } from "@/lib/navigation-types";
+import { fallbackHeaderLinks } from "@/lib/navigation-fallbacks";
 
-const baseNavLinks = [
-  { href: "/",        label: "Home"     },
-  { href: "/services",label: "Services" },
-  { href: "/about",   label: "About"    },
-  { href: "/blog",    label: "Blog"     },
-  { href: "/contact", label: "Contact"  },
-];
+type HeaderProps = {
+  navLinks?: NavigationLink[];
+};
 
-export function Header() {
+export function Header({ navLinks: navLinksProp }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const servicesHref = getSmartServicesHref(pathname);
-  const navLinks = baseNavLinks.map((link) =>
-    link.label === "Services" ? { ...link, href: servicesHref } : link
+  const navLinks = (navLinksProp?.length ? navLinksProp : fallbackHeaderLinks).map((link) =>
+    link.label.toLowerCase() === "services" ? { ...link, href: servicesHref } : link
   );
 
   const linkClass = (href: string) => {

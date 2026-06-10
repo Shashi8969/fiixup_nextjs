@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import { FloatingButtons } from "@/components/FloatingButtons";
 import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE, DEFAULT_KEYWORDS } from "@/lib/constants";
 import { QuickServiceModal } from "@/components/QuickServiceModal";
+import { getHeaderNavigationLinks } from "@/lib/navigation";
 
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -72,12 +73,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const headerLinks = await getHeaderNavigationLinks();
+
   return (
     <html lang="en-IN" className={inter.variable} suppressHydrationWarning>
       <head />
       <body suppressHydrationWarning>
-        <Header />
+        <Header navLinks={headerLinks} />
         <main>{children}</main>
         <Footer />
         <FloatingButtons />
