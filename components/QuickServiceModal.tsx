@@ -8,7 +8,15 @@ import { submitLead } from "@/lib/send-lead";
 const MODAL_SESSION_KEY = "hasSeenQuickServiceModal";
 const MODAL_DELAY_MS = 2000;
 
-export function QuickServiceModal() {
+type QuickServiceModalProps = {
+  phonePlaceholder?: string;
+  availableText?: string;
+};
+
+export function QuickServiceModal({
+  phonePlaceholder = MAIN_PHONE,
+  availableText = "Available 24/7 across Bengaluru, Chennai, Hyderabad & Mumbai",
+}: QuickServiceModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(false);
@@ -82,7 +90,7 @@ export function QuickServiceModal() {
               name="phone"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder={MAIN_PHONE}
+              placeholder={phonePlaceholder}
               required
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
             />
@@ -103,7 +111,7 @@ export function QuickServiceModal() {
         </form>
 
         <p className="text-xs text-gray-500 text-center mt-4">
-          Available 24/7 across Bengaluru, Chennai, Hyderabad &amp; Mumbai
+          {availableText}
         </p>
       </div>
     </div>

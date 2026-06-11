@@ -4,10 +4,21 @@ import { Car, Bike, MapPin, Phone, Mail } from "lucide-react";
 import { socials } from "@/lib/data/site";
 import { MAIN_PHONE, MAIN_PHONE_DISPLAY, MAIN_EMAIL } from "@/lib/constants";
 import { getFooterNavigationGroups } from "@/lib/navigation";
+import type { PublicSiteSettings } from "@/lib/site-settings";
 
-export async function Footer() {
+type FooterProps = {
+  siteSettings?: PublicSiteSettings;
+};
+
+export async function Footer({ siteSettings }: FooterProps = {}) {
   const year = new Date().getFullYear();
   const footerLinks = await getFooterNavigationGroups();
+  const mainPhone = siteSettings?.mainPhone || MAIN_PHONE;
+  const mainPhoneDisplay = siteSettings?.mainPhoneDisplay || MAIN_PHONE_DISPLAY;
+  const mainEmail = siteSettings?.mainEmail || MAIN_EMAIL;
+  const footerDescription = siteSettings?.footerDescription ||
+    "India\'s 24/7 doorstep car & bike repair service. Certified technicians at your home or office.";
+  const serviceAreaText = siteSettings?.serviceAreaText || "Available 24/7 · Bengaluru · Chennai · Hyderabad · Mumbai";
 
   return (
     <footer className="bg-gray-950 text-gray-400">
@@ -25,25 +36,25 @@ export async function Footer() {
                 style={{ width: 'auto' }}
               />
               <p className="text-sm text-gray-400 max-w-xs leading-relaxed">
-                India&apos;s 24/7 doorstep car &amp; bike repair service. Certified technicians at your home or office.
+                {footerDescription}
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-6 sm:items-center">
               <div className="space-y-2 text-sm">
                 <a
-                  href={`tel:${MAIN_PHONE}`}
+                  href={`tel:${mainPhone}`}
                   className="flex items-center gap-2 text-white font-semibold hover:text-blue-400 transition-colors"
                 >
                   <Phone className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                  {MAIN_PHONE_DISPLAY}
+                  {mainPhoneDisplay}
                 </a>
                 <a
-                  href={`mailto:${MAIN_EMAIL}`}
+                  href={`mailto:${mainEmail}`}
                   className="flex items-center gap-2 hover:text-blue-400 transition-colors"
                 >
                   <Mail className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                  {MAIN_EMAIL}
+                  {mainEmail}
                 </a>
               </div>
 
@@ -136,7 +147,7 @@ export async function Footer() {
       <div className="border-t border-gray-800">
         <div className="container mx-auto px-4 py-5 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-gray-400">
           <p>&copy; {year} Fiixup. All rights reserved. | Doorstep Auto Repair Across India</p>
-          <p>Available 24/7 · Bengaluru · Chennai · Hyderabad · Mumbai</p>
+          <p>{serviceAreaText}</p>
         </div>
       </div>
     </footer>

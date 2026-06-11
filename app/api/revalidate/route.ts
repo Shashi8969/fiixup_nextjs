@@ -9,7 +9,7 @@
 //   By tag:            /api/revalidate?secret=fiixup2026secret&tag=cities
 //
 // Available tags: cities, areas, services, service-categories,
-//                 location-services, posts, redirects
+//                 location-services, posts, redirects, site-settings
 // ============================================================
 
 import { revalidatePath, revalidateTag } from 'next/cache'
@@ -23,6 +23,7 @@ const VALID_TAGS = [
   'location-services',
   'posts',
   'redirects',
+  'site-settings',
 ]
 
 async function handleRevalidate(request: NextRequest) {
@@ -44,6 +45,9 @@ async function handleRevalidate(request: NextRequest) {
       )
     }
     revalidateTag(tag, "pages")
+    if (tag === 'site-settings') {
+      revalidatePath('/', 'layout')
+    }
     return NextResponse.json({
       revalidated: true,
       tag,

@@ -12,9 +12,10 @@ import { fallbackHeaderLinks } from "@/lib/navigation-fallbacks";
 
 type HeaderProps = {
   navLinks?: NavigationLink[];
+  mainPhone?: string;
 };
 
-export function Header({ navLinks: navLinksProp }: HeaderProps) {
+export function Header({ navLinks: navLinksProp, mainPhone = MAIN_PHONE }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const servicesHref = getSmartServicesHref(pathname);
@@ -51,7 +52,7 @@ export function Header({ navLinks: navLinksProp }: HeaderProps) {
           {/* Right CTAs */}
           <div className="flex items-center gap-3">
             <a
-              href={`tel:${MAIN_PHONE}`}
+              href={`tel:${mainPhone}`}
               className="flex items-center gap-2 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-semibold"
             >
               <Phone className="w-4 h-4" />

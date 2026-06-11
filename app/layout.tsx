@@ -9,6 +9,7 @@ import { FloatingButtons } from "@/components/FloatingButtons";
 import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE, DEFAULT_KEYWORDS } from "@/lib/constants";
 import { QuickServiceModal } from "@/components/QuickServiceModal";
 import { getHeaderNavigationLinks } from "@/lib/navigation";
+import { getPublicSiteSettings } from "@/lib/site-settings";
 
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -74,17 +75,27 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const headerLinks = await getHeaderNavigationLinks();
+  const [headerLinks, siteSettings] = await Promise.all([
+    getHeaderNavigationLinks(),
+    getPublicSiteSettings(),
+  ]);
 
   return (
     <html lang="en-IN" className={inter.variable} suppressHydrationWarning>
       <head />
       <body suppressHydrationWarning>
-        <Header navLinks={headerLinks} />
+        <Header navLinks={headerLinks} mainPhone={siteSettings.mainPhone} />
         <main>{children}</main>
-        <Footer />
-        <FloatingButtons />
-        <QuickServiceModal />
+        <Footer siteSettings={siteSettings} />
+        <FloatingButtons
+          mainPhone={siteSettings.mainPhone}
+          whatsappNumber={siteSettings.whatsappNumber}
+          whatsappMessage={siteSettings.floatingWhatsAppMessage}
+        />
+        <QuickServiceModal
+          phonePlaceholder={siteSettings.mainPhoneDisplay}
+          availableText={siteSettings.quickModalAvailableText}
+        />
       </body>
     </html>
   );
