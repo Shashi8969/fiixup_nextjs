@@ -75,7 +75,7 @@ export function QuickServiceModal({
           </div>
           <h2 className="text-2xl font-bold mb-2">Need Quick Service?</h2>
           <p className="text-gray-600">
-            Share your mobile number and our team will call you back within 1 minute!
+            Book in 30 seconds. Mechanic at your doorstep in 30 minutes. 
           </p>
         </div>
 
