@@ -12,9 +12,27 @@ type DynamicInternalLinkProps = {
   validPaths?: string[];
 };
 
+function isExternalHref(href: string) {
+  return /^(https?:|tel:|mailto:|#)/i.test(href);
+}
+
 export function DynamicInternalLink({ href, className, children, validPaths }: DynamicInternalLinkProps) {
   const pathname = usePathname();
   const safeHref = getContextAwareHref(href, pathname, validPaths);
+
+  if (isExternalHref(safeHref)) {
+    const isHttp = /^https?:/i.test(safeHref);
+    return (
+      <a
+        href={safeHref}
+        className={className}
+        target={isHttp ? "_blank" : undefined}
+        rel={isHttp ? "noopener noreferrer" : undefined}
+      >
+        {children}
+      </a>
+    );
+  }
 
   return (
     <Link href={safeHref} className={className}>

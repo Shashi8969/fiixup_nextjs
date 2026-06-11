@@ -10,7 +10,7 @@
 //
 // Available tags: cities, areas, services, service-categories,
 //                 location-services, posts, redirects, site-settings,
-//                 navigation-links, faq-library, reviews, seo-pages
+//                 navigation-links, page-link-overrides, faq-library, reviews, seo-pages
 // ============================================================
 
 import { revalidatePath, revalidateTag } from 'next/cache'
@@ -26,6 +26,7 @@ const VALID_TAGS = [
   'redirects',
   'site-settings',
   'navigation-links',
+  'page-link-overrides',
   'faq-library',
   'reviews',
   'seo-pages',
@@ -47,6 +48,10 @@ function revalidateRelatedPaths(tag: ValidTag) {
     case 'site-settings':
     case 'navigation-links':
       revalidatePath('/', 'layout')
+      break
+    case 'page-link-overrides':
+      revalidatePath('/', 'layout')
+      revalidatePath('/')
       break
     case 'faq-library':
       revalidatePath('/faq')

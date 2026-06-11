@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { Car, Bike, MapPin, Phone, Mail } from "lucide-react";
+import { Phone, Mail } from "lucide-react";
 import { socials } from "@/lib/data/site";
 import { MAIN_PHONE, MAIN_PHONE_DISPLAY, MAIN_EMAIL } from "@/lib/constants";
 import { getFooterNavigationGroups } from "@/lib/navigation";
-import { DynamicInternalLink } from "@/components/DynamicInternalLink";
+import { FooterNavigationColumns } from "@/components/FooterNavigationColumns";
 import type { PublicSiteSettings } from "@/lib/site-settings";
 
 type FooterProps = {
@@ -80,68 +80,7 @@ export async function Footer({ siteSettings, validPaths }: FooterProps = {}) {
 
       {/* Links Grid */}
       <div className="container mx-auto px-4 py-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div>
-            <div className="flex items-center gap-2 mb-5">
-              <Car className="w-4 h-4 text-blue-400 flex-shrink-0" />
-              <h3 className="text-white font-bold text-sm uppercase tracking-widest">Car Services</h3>
-            </div>
-            <ul className="space-y-3">
-              {footerLinks.carServices.map((s) => (
-                <li key={`${s.href}-${s.label}`}>
-                  <DynamicInternalLink href={s.href} validPaths={validPaths} className="text-sm text-gray-400 hover:text-white transition-colors">
-                    {s.label}
-                  </DynamicInternalLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <div className="flex items-center gap-2 mb-5">
-              <Bike className="w-4 h-4 text-red-400 flex-shrink-0" />
-              <h3 className="text-white font-bold text-sm uppercase tracking-widest">Bike Services</h3>
-            </div>
-            <ul className="space-y-3">
-              {footerLinks.bikeServices.map((s) => (
-                <li key={`${s.href}-${s.label}`}>
-                  <DynamicInternalLink href={s.href} validPaths={validPaths} className="text-sm text-gray-400 hover:text-white transition-colors">
-                    {s.label}
-                  </DynamicInternalLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <div className="flex items-center gap-2 mb-5">
-              <MapPin className="w-4 h-4 text-green-400 flex-shrink-0" />
-              <h3 className="text-white font-bold text-sm uppercase tracking-widest">Cities</h3>
-            </div>
-            <ul className="space-y-3">
-              {footerLinks.cities.map((c) => (
-                <li key={`${c.href}-${c.label}`}>
-                  <DynamicInternalLink href={c.href} validPaths={validPaths} className="text-sm text-gray-400 hover:text-white transition-colors">
-                    {c.label}
-                  </DynamicInternalLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-white font-bold text-sm uppercase tracking-widest mb-5">Quick Links</h3>
-            <ul className="space-y-3">
-              {footerLinks.quickLinks.map((l) => (
-                <li key={`${l.href}-${l.label}`}>
-                  <DynamicInternalLink href={l.href} validPaths={validPaths} className="text-sm text-gray-400 hover:text-white transition-colors">
-                    {l.label}
-                  </DynamicInternalLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        <FooterNavigationColumns footerLinks={footerLinks} validPaths={validPaths} />
       </div>
 
       {/* Bottom Bar */}

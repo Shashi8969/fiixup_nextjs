@@ -14,6 +14,8 @@ import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
 import { LocationServiceSeoContent } from "./LocationServiceSeoContent";
 import { filterValidItemsByPath, getPublicPathList } from "@/lib/public-links";
+import { getSmartNearbyAreasForService, getSmartRelatedServicesForLocation } from "@/lib/smart-internal-links";
+import { getPageLinkOverrides } from "@/lib/page-link-overrides";
 
 // ─── Theme config ────────────────────────────────────────────────────────────
 const CATEGORY_THEME: Record<string, {
@@ -83,15 +85,60 @@ interface Props {
 export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
   const theme = CATEGORY_THEME[data.serviceCategory] ?? DEFAULT_THEME;
   const { bgAccent, btnHover, bgLight, accentText, borderClr, heroImage } = theme;
-  const activePaths = await getPublicPathList();
-  const nearbyAreas = filterValidItemsByPath(
+  const sourcePath = data.isCityLevel
+    ? `/${data.citySlug}/${data.serviceSlug}`
+    : `/${data.citySlug}/${data.areaSlug}/${data.serviceSlug}`;
+
+  const [
+    activePaths,
+    overrideNearbyAreas,
+    overrideRelatedServices,
+    smartNearbyAreas,
+    smartRelatedServices,
+  ] = await Promise.all([
+    getPublicPathList(),
+    getPageLinkOverrides(sourcePath, "nearby_areas"),
+    getPageLinkOverrides(sourcePath, "related_services"),
+    getSmartNearbyAreasForService(data.citySlug, data.serviceSlug),
+    getSmartRelatedServicesForLocation(
+      data.citySlug,
+      data.serviceSlug,
+      data.serviceCategory,
+      data.areaSlug
+    ),
+  ]);
+
+  const configuredNearbyAreas = filterValidItemsByPath(
     data.nearbyAreas ?? [],
     (area) => `/${data.citySlug}/${area.slug}/${data.serviceSlug}`,
     activePaths,
     `${data.citySlug}/${data.areaSlug ?? data.serviceSlug} nearby area service links`,
     (area) => area.name
   );
-  const relatedServices = filterValidItemsByPath(
+  const overrideNearby = filterValidItemsByPath(
+    overrideNearbyAreas.map((link) => ({
+      name: link.label,
+      slug: link.href.split("/").filter(Boolean).at(-2) ?? link.href,
+      href: link.href,
+    })),
+    (area) => area.href,
+    activePaths,
+    `${sourcePath} override nearby area links`,
+    (area) => area.name
+  );
+  const nearbyAreas = overrideNearby.length
+    ? overrideNearby
+    : configuredNearbyAreas.length
+      ? configuredNearbyAreas
+      : filterValidItemsByPath(
+          smartNearbyAreas,
+          (area) => area.href,
+          activePaths,
+          `${data.citySlug}/${data.serviceSlug} smart nearby area links`,
+          (area) => area.name
+        );
+
+  const configuredRelatedServices = filterValidItemsByPath(
     data.relatedServices ?? [],
     (service) => data.isCityLevel
       ? `/${data.citySlug}/${service.slug}`
@@ -100,6 +147,29 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
     `${data.citySlug}/${data.areaSlug ?? data.serviceSlug} related service links`,
     (service) => service.name
   );
+  const overrideRelated = filterValidItemsByPath(
+    overrideRelatedServices.map((link) => ({
+      name: link.label,
+      slug: link.href.split("/").filter(Boolean).at(-1) ?? link.href,
+      category: "",
+      href: link.href,
+    })),
+    (service) => service.href,
+    activePaths,
+    `${sourcePath} override related service links`,
+    (service) => service.name
+  );
+  const relatedServices = overrideRelated.length
+    ? overrideRelated
+    : configuredRelatedServices.length
+      ? configuredRelatedServices
+      : filterValidItemsByPath(
+          smartRelatedServices,
+          (service) => service.href,
+          activePaths,
+          `${data.citySlug}/${data.serviceSlug} smart related service links`,
+          (service) => service.name
+        );
 
   return (
     <>
@@ -425,7 +495,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
               {nearbyAreas.map((area) => (
                 <Link
                   key={area.slug}
-                  href={`/${data.citySlug}/${area.slug}/${data.serviceSlug}`}
+                  href={(area as { href?: string }).href ?? `/${data.citySlug}/${area.slug}/${data.serviceSlug}`}
                   className={`flex items-center gap-2 border-2 ${borderClr} ${accentText} font-semibold px-5 py-2 rounded-full text-sm hover:bg-blue-50 transition-colors`}
                 >
                   <Navigation className="w-4 h-4" />
@@ -454,11 +524,11 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
               {relatedServices.map((s) => (
                 <Link
                   key={s.slug}
-                  href={
+                  href={(s as { href?: string }).href ?? (
                     data.isCityLevel
                       ? `/${data.citySlug}/${s.slug}`
                       : `/${data.citySlug}/${data.areaSlug}/${s.slug}`
-                  }
+                  )}
                   className="bg-white p-6 border border-gray-200 rounded-xl hover:shadow-lg transition-all group"
                 >
                   <h3 className={`font-bold text-gray-900 group-hover:${accentText} transition-colors mb-1`}>

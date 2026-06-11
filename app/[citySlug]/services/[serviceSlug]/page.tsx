@@ -39,6 +39,7 @@ import BrandsGrid                        from "@/components/service/BrandsGrid";
 import CompleteGuideSection              from "@/components/service/CompleteGuide";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { CityServiceCard } from "@/components/ui/CityServiceCard";
+import { getSmartAreasForCityCategory } from "@/lib/smart-internal-links";
 
 import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
 import { metadataFromBasicSeo } from "@/lib/seo/metadata";
@@ -163,10 +164,17 @@ export default async function CityServicePage({
     // WHERE city_slug = citySlug AND service_category = cat.categorySlug
     //   AND area_slug IS NULL AND is_active = true
     // This replaces the old getServicesByCategory() which was global/static
-    const [cityServices, dbPage] = await Promise.all([
+    const [cityServices, dbPage, smartCategoryAreas] = await Promise.all([
       getCityServicesByCategory(citySlug, cat.categorySlug),
       getCityServiceCategoryPage(citySlug, serviceSlug),
+      getSmartAreasForCityCategory(citySlug, cat.categorySlug),
     ]);
+    const categoryAreas = smartCategoryAreas.length
+      ? smartCategoryAreas
+      : ((city.areas as { name: string; slug: string }[] | undefined) ?? []).map((area) => ({
+          ...area,
+          href: `/${city.slug}/${area.slug}`,
+        }));
     // ──────────────────────────────────────────────────────────────────────
 
     // JSON-LD
@@ -366,7 +374,7 @@ export default async function CityServicePage({
         <WhyChooseDoorstep />
 
         {/* ── AREA LINKS — internal SEO linking ──────────────────────── */}
-        {(city.areas as { name: string; slug: string }[] | undefined)?.length ? (
+        {categoryAreas.length ? (
           <section className="py-12 bg-white border-t border-gray-100">
             <div className="container mx-auto px-4">
               <h2 className="text-xl font-bold text-gray-900 mb-2">
@@ -376,10 +384,10 @@ export default async function CityServicePage({
                 We provide doorstep {cat.title.toLowerCase()} across all major areas:
               </p>
               <div className="flex flex-wrap gap-2">
-                {(city.areas as { name: string; slug: string }[]).map((area) => (
+                {categoryAreas.map((area) => (
                   <Link
                     key={area.slug}
-                    href={`/${city.slug}/${area.slug}`}
+                    href={area.href}
                     className="inline-flex items-center gap-1.5 bg-gray-50 border border-gray-200 hover:border-blue-300 hover:bg-blue-50 text-gray-600 hover:text-blue-700 text-sm font-medium px-3 py-1.5 rounded-lg transition-all"
                   >
                     <MapPin className="w-3 h-3 text-gray-400" aria-hidden="true" />
