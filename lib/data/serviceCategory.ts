@@ -4,6 +4,7 @@
 // Return shape is IDENTICAL to the old static array — zero component changes.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { unstable_cache } from "next/cache";
 import { Car, Bike, Truck, Battery, ShipWheel, Wrench, ShieldCheck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/lib/supabase";
@@ -19,6 +20,24 @@ const iconMap: Record<string, LucideIcon> = {
   Wrench,
   ShieldCheck,
 };
+
+// ── Raw DB rows are cache-safe; React icon functions are mapped after cache ──
+const getServiceCategoryRows = unstable_cache(
+  async () => {
+    const { data, error } = await supabase
+      .from("service_categories")
+      .select("*")
+      .order("slug");
+
+    if (error) {
+      console.error("getAllServiceCategories error:", error.message);
+      return [];
+    }
+    return data ?? [];
+  },
+  ["service-category-rows"],
+  { revalidate: 3600, tags: ["service-categories", "services"] }
+);
 
 // ── DB row → exact shape all components expect ────────────────────────────────
 function rowToCategory(row: any) {
@@ -45,32 +64,18 @@ function rowToCategory(row: any) {
 
 // ── Get all categories ────────────────────────────────────────────────────────
 export async function getAllServiceCategories() {
-  const { data, error } = await supabase
-    .from("service_categories")
-    .select("*")
-    .order("slug");
-
-  if (error) {
-    console.error("getAllServiceCategories error:", error.message);
-    return [];
-  }
-  return (data ?? []).map(rowToCategory);
+  const rows = await getServiceCategoryRows();
+  return rows.map(rowToCategory);
 }
 
 // ── Get one category by slug ──────────────────────────────────────────────────
 export async function getServiceCategoryBySlug(slug: string) {
-  const { data, error } = await supabase
-    .from("service_categories")
-    .select("*")
-    .eq("slug", slug)
-    .single();
-
-  if (error || !data) return null;
-  return rowToCategory(data);
+  const rows = await getServiceCategoryRows();
+  const row = rows.find((item: any) => item.slug === slug);
+  return row ? rowToCategory(row) : null;
 }
 
 // ── Backwards compatibility ───────────────────────────────────────────────────
 // Keeps old `import { serviceCategories }` imports from breaking at build time.
 // Replace those imports with: const cats = await getAllServiceCategories();
 export const serviceCategories: ReturnType<typeof rowToCategory>[] = [];
-

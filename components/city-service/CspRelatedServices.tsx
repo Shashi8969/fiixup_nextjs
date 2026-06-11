@@ -5,9 +5,17 @@
 
 import Link from 'next/link';
 import type { CityServiceCategoryPageData } from '@/lib/cityPages';
+import { filterValidItemsByPath, getPublicPathList } from '@/lib/public-links';
 
-export function CspRelatedServices({ data }: { data: CityServiceCategoryPageData }) {
-  const related = data.relatedServices ?? [];
+export async function CspRelatedServices({ data }: { data: CityServiceCategoryPageData }) {
+  const activePaths = await getPublicPathList();
+  const related = filterValidItemsByPath(
+    data.relatedServices ?? [],
+    (service) => `/${data.citySlug}/services/${service.slug}`,
+    activePaths,
+    `${data.citySlug}/${data.categorySlug} related services`,
+    (service) => service.name
+  );
   if (related.length === 0) return null;
 
   return (

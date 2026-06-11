@@ -13,12 +13,13 @@ import { fallbackHeaderLinks } from "@/lib/navigation-fallbacks";
 type HeaderProps = {
   navLinks?: NavigationLink[];
   mainPhone?: string;
+  validPaths?: string[];
 };
 
-export function Header({ navLinks: navLinksProp, mainPhone = MAIN_PHONE }: HeaderProps) {
+export function Header({ navLinks: navLinksProp, mainPhone = MAIN_PHONE, validPaths }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
-  const servicesHref = getSmartServicesHref(pathname);
+  const servicesHref = getSmartServicesHref(pathname, validPaths);
   const navLinks = (navLinksProp?.length ? navLinksProp : fallbackHeaderLinks).map((link) =>
     link.label.toLowerCase() === "services" ? { ...link, href: servicesHref } : link
   );

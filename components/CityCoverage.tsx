@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { MapPin, ArrowRight } from "lucide-react";
+import type { HomeCityCoverageData } from "@/lib/homepage";
 
-const coverageCities = [
+const fallbackCoverageCities = [
   {
     name: "Bengaluru",
     slug: "bangalore",
@@ -31,7 +32,16 @@ const coverageCities = [
   },
 ];
 
-export function CityCoverage() {
+type CityCoverageProps = Partial<HomeCityCoverageData>;
+
+export function CityCoverage({
+  heading = "Doorstep Car & Bike Mechanic Services Across Major Indian Cities",
+  subtext = "Book nearby car and bike mechanics for doorstep repair, emergency breakdown help, battery replacement, puncture repair, oil change, and roadside assistance across Bengaluru, Chennai, Hyderabad, and Mumbai.",
+  expansionText = "Expanding soon to Delhi, Pune, Kolkata, Ahmedabad, and more Indian cities",
+  cities = fallbackCoverageCities,
+}: CityCoverageProps = {}) {
+  if (!cities.length) return null;
+
   return (
     <section className="py-12 bg-white">
       <div className="container mx-auto px-4">
@@ -39,20 +49,18 @@ export function CityCoverage() {
         <div className="text-center mb-12">
 
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-            Doorstep Car & Bike Mechanic Services Across Major Indian Cities
+            {heading}
           </h2>
 
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Book nearby car and bike mechanics for doorstep repair, emergency breakdown help,
-            battery replacement, puncture repair, oil change, and roadside assistance across
-            Bengaluru, Chennai, Hyderabad, and Mumbai.
+            {subtext}
           </p>
 
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-          {coverageCities.map((city) => (
+          {cities.map((city) => (
 
             <Link
               key={city.slug}
@@ -87,7 +95,7 @@ export function CityCoverage() {
         </div>
 
         <p className="text-center text-gray-500 text-sm mt-8">
-          Expanding soon to Delhi, Pune, Kolkata, Ahmedabad, and more Indian cities
+          {expansionText}
         </p>
 
       </div>

@@ -6,9 +6,17 @@
 import Link from 'next/link';
 import { MapPin } from 'lucide-react';
 import type { CityServiceCategoryPageData } from '@/lib/cityPages';
+import { filterValidItemsByPath, getPublicPathList } from '@/lib/public-links';
 
-export function CspAreaLinks({ data }: { data: CityServiceCategoryPageData }) {
-  const areas = data.areas ?? [];
+export async function CspAreaLinks({ data }: { data: CityServiceCategoryPageData }) {
+  const activePaths = await getPublicPathList();
+  const areas = filterValidItemsByPath(
+    data.areas ?? [],
+    (area) => `/${data.citySlug}/${area.slug}`,
+    activePaths,
+    `${data.citySlug}/${data.categorySlug} area links`,
+    (area) => area.name
+  );
   if (areas.length === 0) return null;
 
   return (

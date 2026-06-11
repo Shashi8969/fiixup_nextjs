@@ -1,16 +1,17 @@
-import Link from "next/link";
 import Image from "next/image";
 import { Car, Bike, MapPin, Phone, Mail } from "lucide-react";
 import { socials } from "@/lib/data/site";
 import { MAIN_PHONE, MAIN_PHONE_DISPLAY, MAIN_EMAIL } from "@/lib/constants";
 import { getFooterNavigationGroups } from "@/lib/navigation";
+import { DynamicInternalLink } from "@/components/DynamicInternalLink";
 import type { PublicSiteSettings } from "@/lib/site-settings";
 
 type FooterProps = {
   siteSettings?: PublicSiteSettings;
+  validPaths?: string[];
 };
 
-export async function Footer({ siteSettings }: FooterProps = {}) {
+export async function Footer({ siteSettings, validPaths }: FooterProps = {}) {
   const year = new Date().getFullYear();
   const footerLinks = await getFooterNavigationGroups();
   const mainPhone = siteSettings?.mainPhone || MAIN_PHONE;
@@ -88,9 +89,9 @@ export async function Footer({ siteSettings }: FooterProps = {}) {
             <ul className="space-y-3">
               {footerLinks.carServices.map((s) => (
                 <li key={`${s.href}-${s.label}`}>
-                  <Link href={s.href} className="text-sm text-gray-400 hover:text-white transition-colors">
+                  <DynamicInternalLink href={s.href} validPaths={validPaths} className="text-sm text-gray-400 hover:text-white transition-colors">
                     {s.label}
-                  </Link>
+                  </DynamicInternalLink>
                 </li>
               ))}
             </ul>
@@ -104,9 +105,9 @@ export async function Footer({ siteSettings }: FooterProps = {}) {
             <ul className="space-y-3">
               {footerLinks.bikeServices.map((s) => (
                 <li key={`${s.href}-${s.label}`}>
-                  <Link href={s.href} className="text-sm text-gray-400 hover:text-white transition-colors">
+                  <DynamicInternalLink href={s.href} validPaths={validPaths} className="text-sm text-gray-400 hover:text-white transition-colors">
                     {s.label}
-                  </Link>
+                  </DynamicInternalLink>
                 </li>
               ))}
             </ul>
@@ -120,9 +121,9 @@ export async function Footer({ siteSettings }: FooterProps = {}) {
             <ul className="space-y-3">
               {footerLinks.cities.map((c) => (
                 <li key={`${c.href}-${c.label}`}>
-                  <Link href={c.href} className="text-sm text-gray-400 hover:text-white transition-colors">
+                  <DynamicInternalLink href={c.href} validPaths={validPaths} className="text-sm text-gray-400 hover:text-white transition-colors">
                     {c.label}
-                  </Link>
+                  </DynamicInternalLink>
                 </li>
               ))}
             </ul>
@@ -133,9 +134,9 @@ export async function Footer({ siteSettings }: FooterProps = {}) {
             <ul className="space-y-3">
               {footerLinks.quickLinks.map((l) => (
                 <li key={`${l.href}-${l.label}`}>
-                  <Link href={l.href} className="text-sm text-gray-400 hover:text-white transition-colors">
+                  <DynamicInternalLink href={l.href} validPaths={validPaths} className="text-sm text-gray-400 hover:text-white transition-colors">
                     {l.label}
-                  </Link>
+                  </DynamicInternalLink>
                 </li>
               ))}
             </ul>

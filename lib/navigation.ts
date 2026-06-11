@@ -2,6 +2,7 @@ import { unstable_cache } from "next/cache";
 import { supabase } from "@/lib/supabase";
 import type { FooterNavigationGroups, NavigationArea, NavigationLink } from "@/lib/navigation-types";
 import { fallbackFooterGroups, fallbackHeaderLinks } from "@/lib/navigation-fallbacks";
+import { filterValidNavigationLinks, getPublicLinkRegistry } from "@/lib/public-links";
 
 const AREAS: NavigationArea[] = [
   "header",
@@ -74,17 +75,21 @@ const fetchNavigationLinks = unstable_cache(
 );
 
 export async function getHeaderNavigationLinks() {
-  const rows = await fetchNavigationLinks();
+  const [rows, registry] = await Promise.all([fetchNavigationLinks(), getPublicLinkRegistry()]);
   const headerLinks = rows.filter((link) => link.nav_area === "header").sort(bySortThenLabel);
-  return headerLinks.length ? headerLinks : fallbackHeaderLinks;
+  const sourceLinks = headerLinks.length ? headerLinks : fallbackHeaderLinks;
+  const validLinks = filterValidNavigationLinks(sourceLinks, registry.activePaths, "header navigation");
+  return validLinks.length ? validLinks : fallbackHeaderLinks;
 }
 
 export async function getFooterNavigationGroups(): Promise<FooterNavigationGroups> {
-  const rows = await fetchNavigationLinks();
+  const [rows, registry] = await Promise.all([fetchNavigationLinks(), getPublicLinkRegistry()]);
 
   const group = (area: NavigationArea, fallback: NavigationLink[]) => {
     const links = rows.filter((link) => link.nav_area === area).sort(bySortThenLabel);
-    return links.length ? links : fallback;
+    const sourceLinks = links.length ? links : fallback;
+    const validLinks = filterValidNavigationLinks(sourceLinks, registry.activePaths, `${area} footer navigation`);
+    return validLinks.length ? validLinks : fallback;
   };
 
   return {

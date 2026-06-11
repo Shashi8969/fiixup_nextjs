@@ -11,6 +11,8 @@ import {
   CITIES_LIST,
   TRUST_BADGES
 } from "@/lib/constants";
+import type { HomeContactData } from "@/lib/homepage";
+import type { PublicSiteSettings } from "@/lib/site-settings";
 
 import { SERVICE_OPTIONS } from "@/lib/data/serviceOptions";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -71,37 +73,46 @@ interface ContactInfoItem {
   href?: string;
 }
 
-const contactInfo: ContactInfoItem[] = [
+function buildContactInfo(data: HomeContactData | undefined, siteSettings: Pick<PublicSiteSettings, "mainPhone" | "mainPhoneDisplay" | "mainEmail"> | undefined): ContactInfoItem[] {
+  const cities = data?.cities?.length ? data.cities : [...CITIES_LIST];
+  const mainPhone = siteSettings?.mainPhone || MAIN_PHONE;
+  const mainPhoneDisplay = siteSettings?.mainPhoneDisplay || MAIN_PHONE_DISPLAY;
+  const mainEmail = siteSettings?.mainEmail || MAIN_EMAIL;
 
-  {
-    Icon: MapPin,
-    title: "Cities We Serve",
-    content: `${CITIES_LIST.join(" · ")}\nDoorstep mechanic support expanding to more cities soon`
-  },
+  return [
+    {
+      Icon: MapPin,
+      title: "Cities We Serve",
+      content: `${cities.join(" · ")}
+Doorstep mechanic support expanding to more cities soon`
+    },
+    {
+      Icon: Phone,
+      title: "24/7 Booking Support",
+      content: mainPhoneDisplay,
+      href: `tel:${mainPhone}`
+    },
+    {
+      Icon: Mail,
+      title: "Customer Support Email",
+      content: mainEmail,
+      href: `mailto:${mainEmail}`
+    },
+    {
+      Icon: Clock,
+      title: "Available Anytime",
+      content:
+        "24/7 support for emergency breakdowns, roadside assistance, puncture repair, battery problems, and scheduled vehicle servicing"
+    },
+  ];
+}
 
-  {
-    Icon: Phone,
-    title: "24/7 Booking Support",
-    content: MAIN_PHONE_DISPLAY,
-    href: `tel:${MAIN_PHONE}`
-  },
+type ContactProps = {
+  data?: HomeContactData;
+  siteSettings?: Pick<PublicSiteSettings, "mainPhone" | "mainPhoneDisplay" | "mainEmail">;
+};
 
-  {
-    Icon: Mail,
-    title: "Customer Support Email",
-    content: MAIN_EMAIL,
-    href: `mailto:${MAIN_EMAIL}`
-  },
-
-  {
-    Icon: Clock,
-    title: "Available Anytime",
-    content:
-      "24/7 support for emergency breakdowns, roadside assistance, puncture repair, battery problems, and scheduled vehicle servicing"
-  },
-];
-
-export function Contact() {
+export function Contact({ data, siteSettings }: ContactProps = {}) {
 
   const {
     form,
@@ -111,6 +122,16 @@ export function Contact() {
     sendEmail
   } = useEmailForm();
 
+  const cities = data?.cities?.length ? data.cities : [...CITIES_LIST];
+  const contactInfo = buildContactInfo(data, siteSettings);
+  const trustBadges = data?.trustBadges?.length ? data.trustBadges : [...TRUST_BADGES];
+  const heading = data?.heading || "Book a Nearby Car or Bike Mechanic at Your Location";
+  const subtext = data?.subtext || `Need help with a dead battery, puncture, engine issue, oil change, brake problem, or vehicle not starting? Fiixup provides doorstep car and bike repair services across ${cities.join(", ")}. Mechanics arrive at your home, office, apartment parking, or roadside location for quick repair and servicing support.`;
+  const formTitle = data?.formTitle || "Request Doorstep Repair or Vehicle Service";
+  const formSubtitle = data?.formSubtitle || "Share your vehicle issue and our nearby mechanic team will contact you shortly for booking confirmation and assistance.";
+  const successText = data?.successText || "✅ Booking request received successfully. Our team will contact you shortly.";
+  const errorText = data?.errorText || `❌ Unable to send your request right now. Please call us directly at ${siteSettings?.mainPhoneDisplay || MAIN_PHONE_DISPLAY}.`;
+
   return (
 
     <section id="contact" className="py-20 bg-white">
@@ -118,9 +139,8 @@ export function Contact() {
       <div className="container mx-auto px-4">
 
         <SectionHeader
-          heading="Book a Nearby Car or Bike Mechanic at Your Location"
-
-          subtext={`Need help with a dead battery, puncture, engine issue, oil change, brake problem, or vehicle not starting? Fiixup provides doorstep car and bike repair services across ${CITIES_LIST.join(", ")}. Mechanics arrive at your home, office, apartment parking, or roadside location for quick repair and servicing support.`}
+          heading={heading}
+          subtext={subtext}
         />
 
         <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
@@ -174,7 +194,7 @@ export function Contact() {
 
             <div className="bg-blue-50 rounded-xl p-5 space-y-3">
 
-              {TRUST_BADGES.map((badge) => (
+              {trustBadges.map((badge) => (
 
                 <p
                   key={badge}
@@ -197,18 +217,18 @@ export function Contact() {
           >
 
             <h3 className="text-xl font-semibold mb-2 text-gray-900">
-              Request Doorstep Repair or Vehicle Service
+              {formTitle}
             </h3>
 
             <p className="text-sm text-gray-600 mb-6">
-              Share your vehicle issue and our nearby mechanic team will contact you shortly for booking confirmation and assistance.
+              {formSubtitle}
             </p>
 
             {showSuccess && (
 
               <div className="mb-4 bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 text-sm font-medium">
 
-                ✅ Booking request received successfully. Our team will contact you shortly.
+                {successText}
 
               </div>
 
@@ -218,7 +238,7 @@ export function Contact() {
 
               <div className="mb-4 bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 text-sm font-medium">
 
-                ❌ Unable to send your request right now. Please call us directly at {MAIN_PHONE_DISPLAY}.
+                {errorText}
 
               </div>
 
@@ -316,7 +336,7 @@ export function Contact() {
                     Choose your city
                   </option>
 
-                  {CITIES_LIST.map((c) => (
+                  {cities.map((c) => (
                     <option key={c} value={c}>
                       {c}
                     </option>

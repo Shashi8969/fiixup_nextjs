@@ -13,6 +13,7 @@ import type { CityData } from "@/lib/models/city.model";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
 import { LocationServiceSeoContent } from "./LocationServiceSeoContent";
+import { filterValidItemsByPath, getPublicPathList } from "@/lib/public-links";
 
 // ─── Theme config ────────────────────────────────────────────────────────────
 const CATEGORY_THEME: Record<string, {
@@ -79,9 +80,26 @@ interface Props {
 }
 
 // ─── Component (Server) ──────────────────────────────────────────────────────
-export function LocationServicePage({ data, city, breadcrumbs }: Props) {
+export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
   const theme = CATEGORY_THEME[data.serviceCategory] ?? DEFAULT_THEME;
   const { bgAccent, btnHover, bgLight, accentText, borderClr, heroImage } = theme;
+  const activePaths = await getPublicPathList();
+  const nearbyAreas = filterValidItemsByPath(
+    data.nearbyAreas ?? [],
+    (area) => `/${data.citySlug}/${area.slug}/${data.serviceSlug}`,
+    activePaths,
+    `${data.citySlug}/${data.areaSlug ?? data.serviceSlug} nearby area service links`,
+    (area) => area.name
+  );
+  const relatedServices = filterValidItemsByPath(
+    data.relatedServices ?? [],
+    (service) => data.isCityLevel
+      ? `/${data.citySlug}/${service.slug}`
+      : `/${data.citySlug}/${data.areaSlug}/${service.slug}`,
+    activePaths,
+    `${data.citySlug}/${data.areaSlug ?? data.serviceSlug} related service links`,
+    (service) => service.name
+  );
 
   return (
     <>
@@ -397,14 +415,14 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
       )}
 
       {/* NEARBY AREAS */}
-      {data.nearbyAreas.length > 0 && (
+      {nearbyAreas.length > 0 && (
         <section className="py-14 bg-gray-50">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold text-center mb-8">
               {data.serviceName} in Nearby Areas
             </h2>
             <div className="flex flex-wrap gap-3 justify-center">
-              {data.nearbyAreas.map((area) => (
+              {nearbyAreas.map((area) => (
                 <Link
                   key={area.slug}
                   href={`/${data.citySlug}/${area.slug}/${data.serviceSlug}`}
@@ -428,12 +446,12 @@ export function LocationServicePage({ data, city, breadcrumbs }: Props) {
       )}
 
       {/* RELATED SERVICES */}
-      {data.relatedServices.length > 0 && (
+      {relatedServices.length > 0 && (
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold mb-8">Other Services in {data.locationHeading}</h2>
             <div className="grid sm:grid-cols-3 gap-6">
-              {data.relatedServices.map((s) => (
+              {relatedServices.map((s) => (
                 <Link
                   key={s.slug}
                   href={

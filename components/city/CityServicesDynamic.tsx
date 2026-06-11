@@ -7,6 +7,7 @@
 import Link from 'next/link';
 import type { CityHubPageData } from '@/lib/cityPages';
 import { getAllServiceCategories } from '@/lib/data/serviceCategory';
+import { filterValidItemsByPath, getPublicPathList } from '@/lib/public-links';
 
 // SERVICE ICON MAP — maps DB color strings to Tailwind classes
 const THEME: Record<string, { border: string; iconBg: string; iconText: string; badge: string }> = {
@@ -20,8 +21,17 @@ const THEME: Record<string, { border: string; iconBg: string; iconText: string; 
 };
 
 export async function CityServicesDynamic({ data }: { data: CityHubPageData }) {
-  // Fetch service categories (cached at module level in prod)
-  const categories = await getAllServiceCategories();
+  // Fetch service categories and keep only active city-category pages.
+  const [allCategories, activePaths] = await Promise.all([getAllServiceCategories(), getPublicPathList()]);
+  const categories = filterValidItemsByPath(
+    allCategories,
+    (cat: any) => `/${data.citySlug}/services/${cat.slug}`,
+    activePaths,
+    `${data.citySlug} service category grid`,
+    (cat: any) => cat.title ?? cat.slug
+  );
+
+  if (!categories.length) return null;
 
   return (
     <section id="service-categories" className="py-16 bg-white">

@@ -3,11 +3,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { CheckCircle, MapPin, Star } from "lucide-react";
 import { MAIN_PHONE } from "@/lib/constants";
-import { features, avatars } from "@/lib/data/homepageData";
 import { useState } from "react";
 import { submitLead } from "@/lib/send-lead";
+import type { HomeHeroData } from "@/lib/homepage";
 
-export function Hero() {
+type HeroProps = {
+  data: HomeHeroData;
+  mainPhone?: string;
+};
+
+export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
 
   // ✅ State (correct place)
   const [isSuccess, setIsSuccess] = useState(false);
@@ -51,21 +56,19 @@ export function Hero() {
           <div className="space-y-6">
             <div className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
               <MapPin className="w-4 h-4" />
-              Bengaluru · Chennai · Hyderabad · Mumbai
+              {data.badgeText}
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-  Trusted Doorstep Car & Bike Mechanic Service in Bangalore, Chennai, Hyderabad & Mumbai
-</h1>
+              {data.heading}
+            </h1>
 
             <p className="text-lg text-gray-700">
-  Stuck with a bike that won’t start? Car battery dead in your apartment parking? 
-  Our local mechanics come directly to your home, office, or roadside location for fast car and bike repair services. 
-  Available 24/7 for breakdown help, emergency repairs, periodic servicing, battery jumpstart, puncture repair, oil change, and more.
-</p>
+              {data.subheading}
+            </p>
 
             <div className="space-y-3">
-              {features.map((point) => (
+              {data.features.map((point) => (
                 <div key={point} className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
                   <span className="text-gray-800">{point}</span>
@@ -75,7 +78,7 @@ export function Hero() {
 
             <div className="flex items-center gap-4 pt-2">
               <div className="flex -space-x-2">
-                {avatars.map((initials) => (
+                {data.avatars.map((initials) => (
                   <div key={initials} className="w-9 h-9 rounded-full bg-blue-600 border-2 border-white flex items-center justify-center text-white text-xs font-bold">
                     {initials}
                   </div>
@@ -88,17 +91,17 @@ export function Hero() {
                   ))}
                 </div>
                 <p className="text-sm text-gray-600 font-medium">
-  Drivers across Bangalore, Chennai, Hyderabad & Mumbai trust us for quick and reliable doorstep repairs
-</p>
+                  {data.reviewText}
+                </p>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-4 pt-2">
-              <Link href="/contact#contact-form" className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
-                Book Service Now
+              <Link href={data.primaryCtaHref} className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                {data.primaryCtaLabel}
               </Link>
-              <a href={`tel:${MAIN_PHONE}`} className="bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold">
-                Call Now — Free
+              <a href={`tel:${mainPhone}`} className="bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold">
+                {data.secondaryCtaLabel}
               </a>
             </div>
           </div>
@@ -107,8 +110,8 @@ export function Hero() {
           <div className="relative">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[500px] w-full">
               <Image
-                src="/assets/Car_mechanic_700x1049.webp"
-                alt="Certified mechanic performing doorstep car repair in India"
+                src={data.imageUrl}
+                alt={data.imageAlt}
                 fill
                 className="object-cover"
                 priority
@@ -131,10 +134,12 @@ export function Hero() {
                     <div className="bg-white bg-opacity-90 p-6 rounded-xl shadow-xl backdrop-blur-sm h-full">
 
                       <h2 className="text-lg font-bold text-gray-900 mb-1">
-Get a Mechanic at Your Location                      </h2>
+                        {data.formTitle}
+                      </h2>
 
                       <p className="text-xs text-gray-500 mb-4">
-Tell us your issue — our nearby mechanic team will contact you shortly                      </p>
+                        {data.formSubtitle}
+                      </p>
 
                       <form onSubmit={handleSubmit} className="space-y-3">
 
@@ -167,10 +172,9 @@ Tell us your issue — our nearby mechanic team will contact you shortly        
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
                           >
                             <option value="" disabled>Select your city</option>
-                            <option value="Bengaluru">Bengaluru</option>
-                            <option value="Chennai">Chennai</option>
-                            <option value="Hyderabad">Hyderabad</option>
-                            <option value="Mumbai">Mumbai</option>
+                            {data.cityOptions.map((city) => (
+                              <option key={city} value={city}>{city}</option>
+                            ))}
                           </select>
                         </div>
 
@@ -194,11 +198,11 @@ Tell us your issue — our nearby mechanic team will contact you shortly        
                       <div className="text-4xl mb-2">✅</div>
 
                       <h3 className="text-lg font-bold text-green-700">
-                        Request Sent!
+                        {data.successTitle}
                       </h3>
 
                       <p className="text-sm text-gray-600 mt-1">
-                        Our team will call you within 2 minutes 🚀
+                        {data.successText}
                       </p>
 
                     </div>
@@ -210,8 +214,8 @@ Tell us your issue — our nearby mechanic team will contact you shortly        
 
             {/* ✅ YOUR BADGE (UNCHANGED POSITION) */}
             <div className="absolute -bottom-6 -left-6 bg-yellow-400 text-gray-900 p-5 rounded-xl shadow-lg">
-              <p className="text-3xl font-bold">20+</p>
-              <p className="text-xs font-semibold">Years Experience</p>
+              <p className="text-3xl font-bold">{data.experienceValue}</p>
+              <p className="text-xs font-semibold">{data.experienceLabel}</p>
             </div>
 
           </div>

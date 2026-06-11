@@ -29,6 +29,7 @@ const VALID_TAGS = [
   'faq-library',
   'reviews',
   'seo-pages',
+  'homepage',
 ] as const
 
 type ValidTag = (typeof VALID_TAGS)[number]
@@ -51,11 +52,14 @@ function revalidateRelatedPaths(tag: ValidTag) {
       revalidatePath('/faq')
       break
     case 'reviews':
+    case 'homepage':
       revalidatePath('/')
       break
     case 'seo-pages':
       revalidatePath('/sitemap.xml')
       revalidatePath('/robots.txt')
+      revalidatePath('/')
+      revalidatePath('/', 'layout')
       break
     case 'posts':
       revalidatePath('/blog')

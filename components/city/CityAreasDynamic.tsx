@@ -6,9 +6,17 @@
 import Link from 'next/link';
 import { MapPin } from 'lucide-react';
 import type { CityHubPageData } from '@/lib/cityPages';
+import { filterValidItemsByPath, getPublicPathList } from '@/lib/public-links';
 
-export function CityAreasDynamic({ data }: { data: CityHubPageData }) {
-  const areas = data.areas ?? [];
+export async function CityAreasDynamic({ data }: { data: CityHubPageData }) {
+  const activePaths = await getPublicPathList();
+  const areas = filterValidItemsByPath(
+    data.areas ?? [],
+    (area) => `/${data.citySlug}/${area.slug}`,
+    activePaths,
+    `${data.citySlug} city area grid`,
+    (area) => area.name
+  );
   if (areas.length === 0) return null;
 
   return (
