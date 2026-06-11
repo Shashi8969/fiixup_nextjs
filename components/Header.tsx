@@ -44,7 +44,7 @@ export function Header({ navLinks: navLinksProp, mainPhone = MAIN_PHONE, validPa
 
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <Image src="/assets/logo.webp" alt="Fiixup" width={120} height={40} className="h-12 w-auto" style={{ width: 'auto' }} priority />
+            <Image src="/assets/logo.webp" alt="Fiixup" width={120} height={40} className="h-12 w-auto" style={{ width: 'auto', height: 'auto' }} priority />
           </Link>
 
           {/* Desktop Nav */}

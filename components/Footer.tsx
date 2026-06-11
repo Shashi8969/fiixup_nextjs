@@ -34,7 +34,7 @@ export async function Footer({ siteSettings, validPaths }: FooterProps = {}) {
                 width={120}
                 height={40}
                 className="h-10 w-auto mb-3 brightness-0 invert"
-                style={{ width: 'auto' }}
+                style={{ width: 'auto', height: 'auto' }}
               />
               <p className="text-sm text-gray-400 max-w-xs leading-relaxed">
                 {footerDescription}
