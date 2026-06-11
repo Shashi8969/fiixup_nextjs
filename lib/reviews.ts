@@ -1,4 +1,4 @@
-import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { supabase } from "@/lib/supabase";
 import { asBoolean, asNumber, asString } from "@/lib/cms-guards";
 import type { TestimonialCardProps } from "@/lib/models/testimonial.model";
@@ -61,7 +61,8 @@ function dedupeReviews(reviews: PublicReview[]) {
   });
 }
 
-export const getBrandReviews = cache(async (limit = 4): Promise<PublicReview[]> => {
+export const getBrandReviews = unstable_cache(
+  async (limit = 4): Promise<PublicReview[]> => {
   const { data, error } = await supabase
     .from("review_sources")
     .select("*")
@@ -75,5 +76,8 @@ export const getBrandReviews = cache(async (limit = 4): Promise<PublicReview[]> 
     .filter((review): review is PublicReview => Boolean(review))
     .filter((review) => review.usageType === "brand" || review.usageType === "category");
 
-  return dedupeReviews(reviews).slice(0, limit);
-});
+    return dedupeReviews(reviews).slice(0, limit);
+  },
+  ["brand-reviews"],
+  { revalidate: 3600, tags: ["reviews"] }
+);

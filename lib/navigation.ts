@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { supabase } from "@/lib/supabase";
 import type { FooterNavigationGroups, NavigationArea, NavigationLink } from "@/lib/navigation-types";
 import { fallbackFooterGroups, fallbackHeaderLinks } from "@/lib/navigation-fallbacks";
@@ -49,8 +50,9 @@ function bySortThenLabel(a: NavigationLink, b: NavigationLink) {
   return a.label.localeCompare(b.label);
 }
 
-async function fetchNavigationLinks(): Promise<NavigationLink[]> {
-  try {
+const fetchNavigationLinks = unstable_cache(
+  async (): Promise<NavigationLink[]> => {
+    try {
     const { data, error } = await supabase
       .from("navigation_links")
       .select("id,label,href,nav_area,sort_order,opens_new_tab,is_active")
@@ -65,8 +67,11 @@ async function fetchNavigationLinks(): Promise<NavigationLink[]> {
       .filter(Boolean) as NavigationLink[];
   } catch {
     return [];
-  }
-}
+    }
+  },
+  ["navigation-links"],
+  { revalidate: 3600, tags: ["navigation-links"] }
+);
 
 export async function getHeaderNavigationLinks() {
   const rows = await fetchNavigationLinks();

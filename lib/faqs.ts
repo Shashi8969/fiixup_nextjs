@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { supabase } from "@/lib/supabase";
 import { globalFAQs } from "@/lib/data/faqs";
 import type { FAQ, FAQCategory } from "@/lib/models/faq.model";
@@ -182,12 +183,16 @@ async function getSeoPageFaqCategories(): Promise<FAQCategory[]> {
   return categories;
 }
 
-export async function getFaqPageCategories(): Promise<FAQCategory[]> {
-  const libraryCategories = await getFaqLibraryCategories();
-  if (libraryCategories.length) return libraryCategories;
+export const getFaqPageCategories = unstable_cache(
+  async (): Promise<FAQCategory[]> => {
+    const libraryCategories = await getFaqLibraryCategories();
+    if (libraryCategories.length) return libraryCategories;
 
-  const seoPageCategories = await getSeoPageFaqCategories();
-  if (seoPageCategories.length) return seoPageCategories;
+    const seoPageCategories = await getSeoPageFaqCategories();
+    if (seoPageCategories.length) return seoPageCategories;
 
-  return globalFAQs;
-}
+    return globalFAQs;
+  },
+  ["faq-page-categories"],
+  { revalidate: 3600, tags: ["faq-library", "seo-pages"] }
+);

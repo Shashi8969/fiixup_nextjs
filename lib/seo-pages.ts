@@ -1,7 +1,7 @@
 // lib/seo-pages.ts
 // DB-first SEO page access with safe CMS normalization.
 
-import { cache } from 'react'
+import { unstable_cache } from 'next/cache'
 import { supabase } from '@/lib/supabase'
 import { asArray, asBoolean, asNumber, asObject, asString, cleanPath, normalizeJsonLd, normalizeSeoSections } from '@/lib/cms-guards'
 
@@ -155,7 +155,8 @@ export function normalizeSeoPage(row: SeoPageRow): SeoPage | null {
   }
 }
 
-export const getPageByPath = cache(async (urlPath: string): Promise<SeoPage | null> => {
+export const getPageByPath = unstable_cache(
+  async (urlPath: string): Promise<SeoPage | null> => {
   const safePath = cleanPath(urlPath)
   if (!safePath) return null
 
@@ -166,11 +167,15 @@ export const getPageByPath = cache(async (urlPath: string): Promise<SeoPage | nu
     .eq('is_active', true)
     .maybeSingle()
 
-  if (error || !data) return null
-  return normalizeSeoPage(data as SeoPageRow)
-})
+    if (error || !data) return null
+    return normalizeSeoPage(data as SeoPageRow)
+  },
+  ['seo-page-by-path'],
+  { revalidate: 3600, tags: ['seo-pages'] }
+)
 
-export async function getSitemapUrls(pageType?: string) {
+export const getSitemapUrls = unstable_cache(
+  async (pageType?: string) => {
   const q = supabase
     .from('seo_pages')
     .select('url_path, canonical_url, updated_at, page_type')
@@ -180,20 +185,27 @@ export async function getSitemapUrls(pageType?: string) {
 
   if (pageType) q.eq('page_type', pageType)
 
-  const { data } = await q
-  return (data ?? [])
-    .map((row) => ({ ...row, url_path: cleanPath(row.url_path) }))
-    .filter((row): row is { url_path: string; canonical_url: string | null; updated_at: string | null; page_type: string | null } => Boolean(row.url_path))
-}
+    const { data } = await q
+    return (data ?? [])
+      .map((row) => ({ ...row, url_path: cleanPath(row.url_path) }))
+      .filter((row): row is { url_path: string; canonical_url: string | null; updated_at: string | null; page_type: string | null } => Boolean(row.url_path))
+  },
+  ['seo-pages-sitemap-urls'],
+  { revalidate: 3600, tags: ['seo-pages'] }
+)
 
-export async function getAllActiveUrlPaths(pageType: string): Promise<string[]> {
+export const getAllActiveUrlPaths = unstable_cache(
+  async (pageType: string): Promise<string[]> => {
   const { data } = await supabase
     .from('seo_pages')
     .select('url_path')
     .eq('page_type', pageType)
     .eq('is_active', true)
 
-  return (data ?? [])
-    .map((row) => cleanPath(row.url_path))
-    .filter((urlPath): urlPath is string => Boolean(urlPath))
-}
+    return (data ?? [])
+      .map((row) => cleanPath(row.url_path))
+      .filter((urlPath): urlPath is string => Boolean(urlPath))
+  },
+  ['seo-pages-active-url-paths'],
+  { revalidate: 3600, tags: ['seo-pages'] }
+)
