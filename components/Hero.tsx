@@ -108,7 +108,7 @@ export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
 
           {/* RIGHT */}
           <div className="relative">
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[500px] w-full">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[560px] sm:h-[520px] md:h-[500px] w-full">
               <Image
                 src={data.imageUrl}
                 alt={data.imageAlt}
@@ -120,100 +120,83 @@ export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
             </div>
 
             {/* FORM OVERLAY */}
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center justify-center px-4">
+              <div className="w-full max-w-sm">
+                {!isSuccess ? (
+                  <div className="bg-white/90 p-5 sm:p-6 rounded-xl shadow-xl backdrop-blur-sm">
+                    <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 leading-snug">
+                      {data.formTitle}
+                    </h2>
 
-              {/* FLIP WRAPPER (ONLY THIS PART CHANGED) */}
-              <div className="w-[90%] max-w-sm h-[320px] [perspective:1000px]">
-                <div
-                  className={`relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] ${isSuccess ? "[transform:rotateY(180deg)]" : ""
-                    }`}
-                >
+                    <p className="text-xs sm:text-sm text-gray-600 mb-4 leading-relaxed">
+                      {data.formSubtitle}
+                    </p>
 
-                  {/* FRONT */}
-                  <div className="absolute w-full h-full [backface-visibility:hidden]">
-                    <div className="bg-white bg-opacity-90 p-6 rounded-xl shadow-xl backdrop-blur-sm h-full">
+                    <form onSubmit={handleSubmit} className="space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Mobile Number
+                        </label>
+                        <input
+                          type="tel"
+                          name="phone"
+                          required
+                          placeholder="+91 98765 43210"
+                          className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 bg-white text-gray-900"
+                        />
+                      </div>
 
-                      <h2 className="text-lg font-bold text-gray-900 mb-1">
-                        {data.formTitle}
-                      </h2>
-
-                      <p className="text-xs text-gray-500 mb-4">
-                        {data.formSubtitle}
-                      </p>
-
-                      <form onSubmit={handleSubmit} className="space-y-3">
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Mobile Number
-                          </label>
-                          <input
-                            type="tel"
-                            name="phone"
-                            required
-                            placeholder="+91 98765 43210"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
-                          />
-                        </div>
-
-                        <div>
-                          <label
-                            htmlFor="city"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                          >
-                            Your City
-                          </label>
-
-                          <select
-                            id="city"
-                            name="city"
-                            required
-                            defaultValue=""
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
-                          >
-                            <option value="" disabled>Select your city</option>
-                            {data.cityOptions.map((city) => (
-                              <option key={city} value={city}>{city}</option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <input type="hidden" name="request_time" />
-                        <input type="hidden" name="form_type" value="Hero Quick Booking" />
-
-                        <button
-                          type="submit"
-                          className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                      <div>
+                        <label
+                          htmlFor="city"
+                          className="block text-sm font-medium text-gray-700 mb-1"
                         >
-                          Request Service Now
-                        </button>
-                      </form>
-                    </div>
+                          Your City
+                        </label>
+
+                        <select
+                          id="city"
+                          name="city"
+                          required
+                          defaultValue=""
+                          className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 bg-white text-gray-900"
+                        >
+                          <option value="" disabled>Select your city</option>
+                          {data.cityOptions.map((city) => (
+                            <option key={city} value={city}>{city}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <input type="hidden" name="request_time" />
+                      <input type="hidden" name="form_type" value="Hero Quick Booking" />
+
+                      <button
+                        type="submit"
+                        className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                      >
+                        Request Service Now
+                      </button>
+                    </form>
                   </div>
+                ) : (
+                  <div className="bg-white/90 p-6 rounded-xl shadow-xl backdrop-blur-sm min-h-[260px] flex flex-col items-center justify-center text-center">
+                    <div className="text-4xl mb-2">✅</div>
 
-                  {/* BACK (MATCHED STYLE) */}
-                  <div className="absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)]">
-                    <div className="bg-white bg-opacity-90 p-6 rounded-xl shadow-xl backdrop-blur-sm h-full flex flex-col items-center justify-center text-center">
+                    <h3 className="text-lg font-bold text-green-700">
+                      {data.successTitle}
+                    </h3>
 
-                      <div className="text-4xl mb-2">✅</div>
-
-                      <h3 className="text-lg font-bold text-green-700">
-                        {data.successTitle}
-                      </h3>
-
-                      <p className="text-sm text-gray-600 mt-1">
-                        {data.successText}
-                      </p>
-
-                    </div>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {data.successText}
+                    </p>
                   </div>
-
-                </div>
+                )}
               </div>
             </div>
 
             {/* ✅ YOUR BADGE (UNCHANGED POSITION) */}
-            <div className="absolute -bottom-6 -left-6 bg-yellow-400 text-gray-900 p-5 rounded-xl shadow-lg">
+            <div className="absolute -bottom-6 left-4 md:-left-6 bg-yellow-400 text-gray-900 p-4 sm:p-5 rounded-xl shadow-lg">
               <p className="text-3xl font-bold">{data.experienceValue}</p>
               <p className="text-xs font-semibold">{data.experienceLabel}</p>
             </div>

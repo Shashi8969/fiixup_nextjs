@@ -10,7 +10,7 @@
 //
 // Available tags: cities, areas, services, service-categories,
 //                 location-services, posts, redirects, site-settings,
-//                 navigation-links, page-link-overrides, faq-library, reviews, seo-pages
+//                 navigation-links, page-link-overrides, faq-library, reviews, seo-pages, leads
 // ============================================================
 
 import { revalidatePath, revalidateTag } from 'next/cache'
@@ -31,6 +31,7 @@ const VALID_TAGS = [
   'reviews',
   'seo-pages',
   'homepage',
+  'leads',
 ] as const
 
 type ValidTag = (typeof VALID_TAGS)[number]
@@ -68,6 +69,10 @@ function revalidateRelatedPaths(tag: ValidTag) {
       break
     case 'posts':
       revalidatePath('/blog')
+      break
+    case 'leads':
+      // Leads are consumed by the admin app. Keep this tag valid so admin actions
+      // can request a clean revalidation response without touching public pages.
       break
     default:
       break

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { createClient } from "@supabase/supabase-js";
 import { MAIN_EMAIL, SITE_NAME } from "@/lib/constants";
 
 export const runtime = "nodejs";
@@ -50,6 +51,55 @@ function normalizePayload(payload: LeadPayload): Record<string, string> {
   }
 
   return normalized;
+}
+
+function getLeadDatabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey) return null;
+
+  return createClient(supabaseUrl, supabaseKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
+
+function normalizeOptionalSlug(value?: string) {
+  const cleaned = String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return cleaned || null;
+}
+
+async function saveLeadToDatabase(data: Record<string, string>) {
+  const db = getLeadDatabaseClient();
+  if (!db) return { saved: false, reason: "supabase_not_configured" };
+
+  const pagePath = data.page_path || data.page_url || data.source_url || data.source || null;
+
+  const { error } = await db.from("leads").insert({
+    name: data.name || null,
+    phone: data.phone || null,
+    email: data.email || null,
+    message: data.message || null,
+    page_path: pagePath,
+    form_type: data.form_type || "Website Lead",
+    city_slug: normalizeOptionalSlug(data.city_slug || data.city || data.city_name),
+    area_slug: normalizeOptionalSlug(data.area_slug || data.area),
+    service_slug: normalizeOptionalSlug(data.service_slug || data.service),
+    status: "new",
+    metadata: data,
+  });
+
+  if (error) {
+    console.error("Lead database save failed", error);
+    return { saved: false, reason: error.message };
+  }
+
+  return { saved: true };
 }
 
 function buildLeadTable(data: Record<string, string>) {
@@ -105,6 +155,7 @@ export async function POST(request: NextRequest) {
     const phone = data.phone || "Phone not provided";
 
     const subject = `New Fiixup Lead: ${service} - ${city} - ${phone}`;
+    const databaseResult = await saveLeadToDatabase(data);
 
     const html = `
       <div style="font-family:Arial,sans-serif;line-height:1.5;color:#111827;">
@@ -139,7 +190,7 @@ export async function POST(request: NextRequest) {
       html,
     });
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, lead_saved: databaseResult.saved });
   } catch (error) {
     console.error("Lead email failed", error);
     return NextResponse.json(
