@@ -10,13 +10,31 @@ function normalizeLeadPayload(input: FormData | LeadPayload): LeadPayload {
   return payload;
 }
 
+function getTrackingPayload(): LeadPayload {
+  if (typeof window === "undefined") return {};
+
+  const params = new URLSearchParams(window.location.search);
+  const tracking: LeadPayload = {
+    page_url: window.location.href,
+    referrer: document.referrer || undefined,
+  };
+
+  ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"].forEach((key) => {
+    const value = params.get(key);
+    if (value) tracking[key] = value;
+  });
+
+  return tracking;
+}
+
 export async function submitLead(input: FormData | LeadPayload) {
   const payload = normalizeLeadPayload(input);
 
-  const response = await fetch("/api/send-lead", {
+  const response = await fetch("/api/leads", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
+      ...getTrackingPayload(),
       ...payload,
       page_url:
         typeof window !== "undefined" ? window.location.href : payload.page_url,
