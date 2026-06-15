@@ -16,6 +16,7 @@ function getTrackingPayload(): LeadPayload {
   const params = new URLSearchParams(window.location.search);
   const tracking: LeadPayload = {
     page_url: window.location.href,
+    page_path: window.location.pathname || "/",
     referrer: document.referrer || undefined,
   };
 

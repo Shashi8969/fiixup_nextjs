@@ -7,6 +7,15 @@ export const runtime = "nodejs";
 
 type LeadPayload = Record<string, unknown>;
 
+type SavedLeadRow = {
+  id?: string | null;
+  page_path?: string | null;
+  is_duplicate?: boolean | null;
+  duplicate_lead_count_before?: number | null;
+  first_seen_at?: string | null;
+  duplicate_note?: string | null;
+};
+
 const IMPORTANT_FIELDS = [
   "form_type",
   "name",
@@ -92,6 +101,34 @@ function getIpAddress(request: NextRequest) {
   return request.headers.get("x-real-ip") || null;
 }
 
+function getPagePath(pageUrl?: string | null) {
+  if (!pageUrl) return "";
+  try {
+    return new URL(pageUrl).pathname || "/";
+  } catch {
+    if (pageUrl.startsWith("/")) return pageUrl.split("?")[0] || "/";
+    return "";
+  }
+}
+
+function buildSuccessMessage(lead: SavedLeadRow | null) {
+  if (lead?.is_duplicate) {
+    return "Request received. This mobile number has contacted us before, so our team will check the earlier enquiry and call you shortly.";
+  }
+
+  return "Booking request received successfully. Our team will contact you shortly.";
+}
+
+function buildLeadResponseMeta(lead: SavedLeadRow | null) {
+  return {
+    success_message: buildSuccessMessage(lead),
+    is_duplicate: Boolean(lead?.is_duplicate),
+    duplicate_lead_count_before: lead?.duplicate_lead_count_before ?? 0,
+    duplicate_note: lead?.duplicate_note ?? null,
+    page_path: lead?.page_path ?? null,
+  };
+}
+
 function buildLeadInsert(data: Record<string, string>, request: NextRequest) {
   return {
     status: "new",
@@ -108,6 +145,7 @@ function buildLeadInsert(data: Record<string, string>, request: NextRequest) {
     service: data.service || data.service_name || null,
     message: data.message || data.problem || data.description || null,
     page_url: data.page_url || null,
+    page_path: data.page_path || getPagePath(data.page_url) || null,
     referrer: data.referrer || request.headers.get("referer") || null,
     user_agent: request.headers.get("user-agent") || null,
     ip_address: getIpAddress(request),
@@ -125,6 +163,7 @@ async function saveLeadToDatabase(data: Record<string, string>, request: NextReq
   const sb = getServiceSupabaseClient();
   if (!sb) {
     return {
+      lead: null as SavedLeadRow | null,
       leadId: null as string | null,
       error: "SUPABASE_SERVICE_ROLE_KEY is not configured",
     };
@@ -133,11 +172,12 @@ async function saveLeadToDatabase(data: Record<string, string>, request: NextReq
   const { data: row, error } = await sb
     .from("leads")
     .insert(buildLeadInsert(data, request))
-    .select("id")
+    .select("id,page_path,is_duplicate,duplicate_lead_count_before,first_seen_at,duplicate_note")
     .single();
 
-  if (error) return { leadId: null as string | null, error: error.message };
-  return { leadId: row?.id ? String(row.id) : null, error: null as string | null };
+  if (error) return { lead: null as SavedLeadRow | null, leadId: null as string | null, error: error.message };
+  const lead = (row ?? null) as SavedLeadRow | null;
+  return { lead, leadId: lead?.id ? String(lead.id) : null, error: null as string | null };
 }
 
 async function updateLeadNotification(
@@ -180,7 +220,7 @@ export async function POST(request: NextRequest) {
 
     data.request_time = requestTime;
 
-    const { leadId, error: dbError } = await saveLeadToDatabase(data, request);
+    const { lead, leadId, error: dbError } = await saveLeadToDatabase(data, request);
 
     const smtpUser = process.env.GMAIL_USER || process.env.SMTP_USER;
     const smtpPass = process.env.GMAIL_APP_PASSWORD || process.env.SMTP_PASS;
@@ -196,7 +236,13 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      return NextResponse.json({ ok: true, lead_saved: Boolean(leadId), email_sent: false });
+      return NextResponse.json({
+        ok: true,
+        lead_saved: Boolean(leadId),
+        email_sent: false,
+        db_error: dbError,
+        ...buildLeadResponseMeta(lead),
+      });
     }
 
     const formType = data.form_type || "Website Lead";
@@ -211,6 +257,7 @@ export async function POST(request: NextRequest) {
         <h2 style="margin:0 0 12px;color:#2563eb;">${escapeHtml(SITE_NAME)} Website Lead</h2>
         <p style="margin:0 0 16px;">New enquiry received from <strong>${escapeHtml(formType)}</strong>.</p>
         ${dbError ? `<p style="margin:0 0 16px;color:#b45309;">Database note: ${escapeHtml(dbError)}</p>` : ""}
+        ${lead?.is_duplicate ? `<p style="margin:0 0 16px;color:#b45309;"><strong>Duplicate mobile:</strong> ${escapeHtml(lead.duplicate_note || "This customer has submitted before.")}</p>` : ""}
         <table style="border-collapse:collapse;width:100%;max-width:720px;font-size:14px;">
           ${buildLeadTable(data)}
         </table>
@@ -257,6 +304,7 @@ export async function POST(request: NextRequest) {
         lead_saved: true,
         email_sent: false,
         email_error: message,
+        ...buildLeadResponseMeta(lead),
       });
     }
 
@@ -265,6 +313,7 @@ export async function POST(request: NextRequest) {
       lead_saved: Boolean(leadId),
       email_sent: true,
       db_error: dbError,
+      ...buildLeadResponseMeta(lead),
     });
   } catch (error) {
     console.error("Lead request failed", error);

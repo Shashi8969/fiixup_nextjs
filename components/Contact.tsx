@@ -25,6 +25,7 @@ function useEmailForm() {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const sendEmail = async (e: React.FormEvent) => {
 
@@ -44,13 +45,18 @@ function useEmailForm() {
     formData.set("request_time", requestTime);
 
     try {
-      await submitLead(formData);
+      const result = await submitLead(formData) as { success_message?: string };
 
+      setSuccessMessage(result?.success_message || "");
       setShowSuccess(true);
       form.current?.reset();
-      setTimeout(() => setShowSuccess(false), 4000);
+      setTimeout(() => {
+        setShowSuccess(false);
+        setSuccessMessage("");
+      }, 5000);
     } catch {
       setShowError(true);
+      setSuccessMessage("");
       setTimeout(() => setShowError(false), 4000);
     } finally {
       setLoading(false);
@@ -61,6 +67,7 @@ function useEmailForm() {
     form,
     loading,
     showSuccess,
+    successMessage,
     showError,
     sendEmail
   };
@@ -119,6 +126,7 @@ export function Contact({ data, siteSettings }: ContactProps = {}) {
     loading,
     showSuccess,
     showError,
+    successMessage,
     sendEmail
   } = useEmailForm();
 
@@ -228,7 +236,7 @@ export function Contact({ data, siteSettings }: ContactProps = {}) {
 
               <div className="mb-4 bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 text-sm font-medium">
 
-                {successText}
+                {successMessage || successText}
 
               </div>
 

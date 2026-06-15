@@ -6,6 +6,7 @@ import { MAIN_PHONE } from "@/lib/constants";
 import { useState } from "react";
 import { submitLead } from "@/lib/send-lead";
 import type { HomeHeroData } from "@/lib/homepage";
+import { SERVICE_OPTIONS } from "@/lib/data/serviceOptions";
 
 type HeroProps = {
   data: HomeHeroData;
@@ -16,6 +17,7 @@ export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
 
   // ✅ State (correct place)
   const [isSuccess, setIsSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   // ✅ Submit handler
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,14 +35,18 @@ export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
     formData.set("form_type", "Hero Quick Booking");
     formData.set("name", "Not provided");
     formData.set("vehicle", "Not specified");
-    formData.set("service", "Quick Booking");
+    if (!formData.get("service")) formData.set("service", "Quick Booking");
     formData.set("message", "User submitted from Hero section");
 
     try {
-      await submitLead(formData);
+      const result = await submitLead(formData) as { success_message?: string };
+      setSuccessMessage(result?.success_message || data.successText);
       setIsSuccess(true);
       form.reset();
-      setTimeout(() => setIsSuccess(false), 4000);
+      setTimeout(() => {
+        setIsSuccess(false);
+        setSuccessMessage("");
+      }, 5000);
     } catch (err) {
       console.error(err);
       alert("Failed. Call us instead.");
@@ -168,6 +174,29 @@ export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
                         </select>
                       </div>
 
+                      <div>
+                        <label
+                          htmlFor="hero-service"
+                          className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                          Service Required
+                        </label>
+
+                        <select
+                          id="hero-service"
+                          name="service"
+                          defaultValue=""
+                          className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 bg-white text-gray-900"
+                        >
+                          <option value="">Quick Booking</option>
+                          {SERVICE_OPTIONS.slice(0, 12).map((service) => (
+                            <option key={service} value={service}>
+                              {service}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
                       <input type="hidden" name="request_time" />
                       <input type="hidden" name="form_type" value="Hero Quick Booking" />
 
@@ -188,7 +217,7 @@ export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
                     </h3>
 
                     <p className="text-sm text-gray-600 mt-1">
-                      {data.successText}
+                      {successMessage || data.successText}
                     </p>
                   </div>
                 )}
