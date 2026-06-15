@@ -32,6 +32,20 @@ export type Block =
   | { type: "meta";         title: string; description: string } // skip render
   | { type: string; [key: string]: unknown }; // unknown future blocks
 
+
+function cleanHtml(html: string) {
+  return html
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, "")
+    .replace(/\son\w+=("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
+    .replace(/\s(href|src)=("|')\s*javascript:[\s\S]*?\2/gi, " $1=\"#\"")
+    .replace(/<a\b(?![^>]*\brel=)([^>]*)>/gi, '<a$1 rel="noopener noreferrer">');
+}
+
+function HtmlSpan({ html }: { html: string }) {
+  return <span dangerouslySetInnerHTML={{ __html: cleanHtml(html) }} />;
+}
+
 // ─── Heading ─────────────────────────────────────────────────────────────────
 
 const HEADING_TAGS: Record<number, ElementType> = {
@@ -59,7 +73,7 @@ function ParagraphBlock({ content }: { content: string }) {
   return (
     <p
       className="text-gray-700 leading-relaxed mb-5 text-base md:text-[1.05rem]"
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: cleanHtml(content) }}
     />
   );
 }
@@ -74,7 +88,7 @@ function ListBlock({ style, items }: { style: string; items: string[] }) {
         <li
           key={i}
           className="text-gray-700 leading-relaxed marker:text-red-500"
-          dangerouslySetInnerHTML={{ __html: item }}
+          dangerouslySetInnerHTML={{ __html: cleanHtml(item) }}
         />
       ))}
     </Tag>
@@ -104,7 +118,7 @@ function TableBlock({ headers, rows, caption }: { headers: string[]; rows: strin
             <tr key={ri} className={ri % 2 === 0 ? "bg-white" : "bg-gray-50/60"}>
               {row.map((cell, ci) => (
                 <td key={ci} className="px-4 py-3 text-gray-700 border-t border-gray-100 align-top">
-                  {cell}
+                  <HtmlSpan html={cell} />
                 </td>
               ))}
             </tr>
@@ -123,7 +137,7 @@ function TipBlock({ content, label = "Fiixup Tip" }: { content: string; label?: 
       <Info className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
       <div>
         <p className="text-xs font-bold text-amber-700 uppercase tracking-wider mb-1">{label}</p>
-        <p className="text-amber-900 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: content }} />
+        <p className="text-amber-900 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: cleanHtml(content) }} />
       </div>
     </div>
   );
@@ -137,7 +151,7 @@ function WarningBlock({ content, label = "Important" }: { content: string; label
       <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
       <div>
         <p className="text-xs font-bold text-red-700 uppercase tracking-wider mb-1">{label}</p>
-        <p className="text-red-900 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: content }} />
+        <p className="text-red-900 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: cleanHtml(content) }} />
       </div>
     </div>
   );
@@ -387,7 +401,7 @@ function ComparisonBlock({
                     <span className="text-green-600 font-bold">✓</span>
                   ) : val === "false" || val === "✗" ? (
                     <span className="text-red-500 font-bold">✗</span>
-                  ) : val}
+                  ) : <HtmlSpan html={val} />}
                 </td>
               ))}
             </tr>
@@ -401,8 +415,8 @@ function ComparisonBlock({
 function RichContentBlock({ html }: { html: string }) {
   return (
     <div
-      className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-red-600 prose-table:text-sm prose-th:bg-red-50 prose-th:text-red-800"
-      dangerouslySetInnerHTML={{ __html: html }}
+      className="blog-rich-content"
+      dangerouslySetInnerHTML={{ __html: cleanHtml(html) }}
     />
   );
 }

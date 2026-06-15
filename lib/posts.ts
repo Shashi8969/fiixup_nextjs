@@ -32,6 +32,9 @@ function rowToPost(row: any): BlogPost {
     metaTitle:       row.meta_title ?? undefined,
     metaDescription: row.meta_description ?? undefined,
     schemaJson:       row.schema_json ?? undefined,
+    nearbyAreas:      Array.isArray(row.nearby_areas_json) ? row.nearby_areas_json : [],
+    relatedServices:  Array.isArray(row.related_services_json) ? row.related_services_json : [],
+    internalLinks:    Array.isArray(row.internal_links_json) ? row.internal_links_json : [],
   };
 }
 
@@ -42,6 +45,7 @@ const POST_SELECT = `
   category, featured, image, image_alt,
   related_service, meta_title, meta_description, meta_keywords,
   created_at, updated_at, schema_json,
+  nearby_areas_json, related_services_json, internal_links_json,
   post_tags ( tags ( id, slug, name ) )
 `;
 
@@ -50,6 +54,7 @@ const POST_LIST_SELECT = `
   author, author_role, date, read_time,
   category, featured, image, image_alt,
   meta_title, meta_description,
+  nearby_areas_json, related_services_json, internal_links_json,
   post_tags ( tags ( id, slug, name ) )
 `;
 

@@ -1,5 +1,19 @@
 // lib/models/blog.model.ts
 
+export interface BlogLinkAttachment {
+  label?: string;
+  title?: string;
+  name?: string;
+  href?: string;
+  url?: string;
+  path?: string;
+  description?: string;
+}
+
+export interface BlogServiceAttachment extends BlogLinkAttachment {
+  price?: string;
+}
+
 export interface BlogPost {
   id: string;             // Unique slug / ID for URL → /blog/[id]
   title: string;
@@ -18,6 +32,9 @@ export interface BlogPost {
   metaDescription?: string; // Overrides excerpt for <head>
   featured?: boolean;     // Show on homepage Blog section
   schemaJson?: unknown;   // Admin-built JSON-LD from Supabase
+  nearbyAreas?: BlogLinkAttachment[];
+  relatedServices?: BlogServiceAttachment[];
+  internalLinks?: BlogLinkAttachment[];
 }
 
 export type BlogCategory =

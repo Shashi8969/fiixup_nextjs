@@ -8,3 +8,26 @@ html:not([data-scroll-behavior]) { scroll-behavior: smooth; }
   body { @apply text-gray-900 bg-white antialiased; }
 }
 
+
+@layer components {
+  .blog-rich-content {
+    @apply text-gray-700 leading-relaxed text-base md:text-[1.05rem];
+  }
+  .blog-rich-content h1 { @apply text-3xl md:text-4xl font-bold text-gray-900 mt-10 mb-4 leading-tight; }
+  .blog-rich-content h2 { @apply text-2xl md:text-3xl font-bold text-gray-900 mt-8 mb-3 pb-2 border-b border-gray-200; }
+  .blog-rich-content h3 { @apply text-xl font-semibold text-gray-800 mt-7 mb-3; }
+  .blog-rich-content h4 { @apply text-lg font-semibold text-gray-800 mt-5 mb-2; }
+  .blog-rich-content p { @apply mb-5; }
+  .blog-rich-content a,
+  .blog-content a { @apply text-red-600 font-medium underline underline-offset-2 decoration-red-300 hover:text-red-700; }
+  .blog-rich-content ul { @apply mb-5 pl-5 list-disc space-y-2; }
+  .blog-rich-content ol { @apply mb-5 pl-5 list-decimal space-y-2; }
+  .blog-rich-content li { @apply leading-relaxed; }
+  .blog-rich-content li::marker { color: #ef4444; }
+  .blog-rich-content blockquote { @apply mb-5 border-l-4 border-red-400 pl-5 py-2 bg-red-50/50 rounded-r-2xl italic; }
+  .blog-rich-content table { @apply my-6 w-full text-sm border-collapse overflow-hidden rounded-2xl; }
+  .blog-rich-content th { @apply bg-red-50 text-red-800 font-semibold text-left px-4 py-3 border border-red-100; }
+  .blog-rich-content td { @apply px-4 py-3 text-gray-700 border border-gray-100 align-top; }
+  .blog-rich-content caption { @apply text-xs text-gray-500 text-left px-4 pt-3 caption-top; }
+  .blog-rich-content img { @apply my-6 rounded-2xl border border-gray-200 max-w-full h-auto; }
+}

@@ -14,7 +14,8 @@ import { SITE_URL, MAIN_PHONE } from "@/lib/constants";
 import { blogPostSchema } from "@/lib/schema";
 import { JsonLd } from "@/components/seo/JsonLd";
 import BookingCTA from "@/components/ui/BookingCTA";
-import { BlockRenderer } from "@/components/ui/BlockRenderer"; // ← new
+import { BlockRenderer } from "@/components/ui/BlockRenderer";
+import { BlogAttachments } from "@/components/blog/BlogAttachments";
 
 export async function generateStaticParams() {
   const posts = await getAllPosts();
@@ -145,6 +146,12 @@ export default async function BlogPostPage({
         <div className="container mx-auto px-4 max-w-3xl">
           {/* All blocks rendered by BlockRenderer */}
           <BlockRenderer blocks={blocks} />
+
+          <BlogAttachments
+            nearbyAreas={post.nearbyAreas}
+            relatedServices={post.relatedServices}
+            internalLinks={post.internalLinks}
+          />
 
           {/* Tags */}
           {(post.tags ?? []).length > 0 && (
