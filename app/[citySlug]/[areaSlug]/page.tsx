@@ -7,14 +7,14 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getPageByPath } from '@/lib/seo-pages'
 import { getAllCities, getCityBySlug } from '@/lib/cities'
-import { getAllCityServiceSlugs } from '@/lib/locationServices'
+import { getAllCityServiceSlugs, getAreaServices } from '@/lib/locationServices'
 import { areaPageSchema, CITY_DATA, type CityKey } from '@/lib/schema'
 import { LocationServicePage } from '@/components/location-service/LocationServicePage'
-import { CityHero } from '@/components/city/CityHero'
+import { AreaHero } from '@/components/city/AreaHero'
 import { CityAbout } from '@/components/city/CityAbout'
 import { CityContact } from '@/components/city/CityContact'
 import { CityFAQ } from '@/components/city/CityFAQ'
-import { CityServices } from '@/components/city/CityServices'
+import { AreaServices } from '@/components/city/AreaServices'
 import { SITE_URL } from '@/lib/constants'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { metadataFromSeoPage, metadataFromBasicSeo } from '@/lib/seo/metadata'
@@ -155,6 +155,7 @@ export default async function CityAreaPage({ params }: { params: Params }) {
   const areaHighlight = typeof area === 'string' ? '' : (area as any).highlight ?? ''
   const allFaqs      = city.faqCategories?.flatMap((cat: any) => cat.faqs) ?? []
   const cityGeo      = CITY_DATA[citySlug as CityKey]
+  const areaServices = await getAreaServices(citySlug, areaSlug)
 
   const areaCity = {
     ...city,
@@ -184,11 +185,13 @@ export default async function CityAreaPage({ params }: { params: Params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
       />
-      <CityHero city={areaCity} />
-      <div className="bg-blue-600 py-4 text-white text-center font-medium">
-        📍 Now Serving: {areaName} and surrounding blocks
-      </div>
-      <CityServices city={city} areaName={areaName} />
+      <AreaHero city={city} areaName={areaName} />
+      <AreaServices
+        citySlug={citySlug}
+        areaSlug={areaSlug}
+        areaName={areaName}
+        services={areaServices}
+      />
       <CityAbout city={areaCity} />
       <CityFAQ city={city} />
       <CityContact city={city} />

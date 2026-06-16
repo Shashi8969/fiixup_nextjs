@@ -131,6 +131,49 @@ export async function getAllCityServiceSlugs(citySlug: string): Promise<string[]
     .filter((slug): slug is string => Boolean(slug));
 }
 
+
+export interface AreaServiceListItem {
+  id: number;
+  serviceSlug: string;
+  serviceName: string;
+  serviceCategory: string;
+  heroSubheading: string;
+  canonicalUrl: string;
+}
+
+export async function getAreaServices(
+  citySlug: string,
+  areaSlug: string
+): Promise<AreaServiceListItem[]> {
+  const { data, error } = await supabase
+    .from("location_services")
+    .select("id, service_slug, service_name, service_category, hero_subheading, canonical_url")
+    .eq("city_slug", citySlug.toLowerCase())
+    .eq("area_slug", areaSlug.toLowerCase())
+    .eq("is_active", true)
+    .order("service_name");
+
+  if (error) {
+    console.error("getAreaServices error:", error.message);
+    return [];
+  }
+
+  return (data ?? []).flatMap((row) => {
+    const serviceSlug = typeof row.service_slug === "string" ? row.service_slug.trim() : "";
+    const serviceName = typeof row.service_name === "string" ? row.service_name.trim() : "";
+    if (!serviceSlug || !serviceName) return [];
+
+    return [{
+      id: row.id,
+      serviceSlug,
+      serviceName,
+      serviceCategory: row.service_category ?? "",
+      heroSubheading: row.hero_subheading ?? "",
+      canonicalUrl: row.canonical_url ?? `/${citySlug}/${areaSlug}/${serviceSlug}`,
+    }];
+  });
+}
+
 export async function getAllAreaServiceParams(
   citySlug: string
 ): Promise<{ areaSlug: string; serviceSlug: string }[]> {
