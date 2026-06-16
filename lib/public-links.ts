@@ -12,6 +12,12 @@ type ServiceCategoryRow = {
   slug: string | null;
 };
 
+type PublicRouteRegistryRow = {
+  url_path: string | null;
+  page_type: string | null;
+  is_active?: boolean | null;
+};
+
 export type PublicLinkRegistry = {
   activePaths: string[];
   citySlugs: string[];
@@ -56,9 +62,44 @@ function getCitySlugFromPath(path: string, pageData?: Record<string, unknown> | 
   return parts[0]?.toLowerCase() || "";
 }
 
+function getServiceCategorySlugFromPath(path: string) {
+  const parts = normalizePublicPath(path).split("/").filter(Boolean);
+  if (parts[0] === "services" && parts[1]) return parts[1].toLowerCase();
+  if (parts[1] === "services" && parts[2]) return parts[2].toLowerCase();
+  return "";
+}
+
+function addRegistryRow(
+  row: PublicRouteRegistryRow,
+  activePaths: Set<string>,
+  citySlugs: Set<string>,
+  serviceCategorySlugs: Set<string>
+) {
+  if (row.is_active === false) return;
+
+  const path = normalizePublicPath(row.url_path);
+  if (!path || path === "//") return;
+
+  activePaths.add(path);
+
+  const pageType = String(row.page_type ?? "");
+  if (["city", "city_hub", "city_services_index"].includes(pageType)) {
+    const citySlug = getCitySlugFromPath(path);
+    if (citySlug) {
+      citySlugs.add(citySlug);
+      activePaths.add(`/${citySlug}/services`);
+    }
+  }
+
+  if (["global_service_category", "city_service_category"].includes(pageType)) {
+    const slug = getServiceCategorySlugFromPath(path);
+    if (slug) serviceCategorySlugs.add(slug);
+  }
+}
+
 export const getPublicLinkRegistry = unstable_cache(
   async (): Promise<PublicLinkRegistry> => {
-    const [seoResult, categoryResult] = await Promise.all([
+    const [seoResult, categoryResult, registryResult] = await Promise.all([
       supabase
         .from("seo_pages")
         .select("url_path,page_type,page_data")
@@ -66,6 +107,10 @@ export const getPublicLinkRegistry = unstable_cache(
       supabase
         .from("service_categories")
         .select("slug"),
+      supabase
+        .from("cms_public_route_registry")
+        .select("url_path,page_type,is_active")
+        .eq("is_active", true),
     ]);
 
     const activePaths = new Set<string>(STATIC_PUBLIC_PATHS);
@@ -102,6 +147,15 @@ export const getPublicLinkRegistry = unstable_cache(
       }
     }
 
+    if (registryResult.error && process.env.NODE_ENV !== "production") {
+      console.warn("[Fiixup link warning] cms_public_route_registry unavailable", registryResult.error.message);
+    }
+
+    const registryRows = (registryResult.data ?? []) as PublicRouteRegistryRow[];
+    for (const row of registryRows) {
+      addRegistryRow(row, activePaths, citySlugs, serviceCategorySlugs);
+    }
+
     return {
       activePaths: unique(Array.from(activePaths)),
       citySlugs: unique(Array.from(citySlugs)),
@@ -109,7 +163,21 @@ export const getPublicLinkRegistry = unstable_cache(
     };
   },
   ["public-link-registry"],
-  { revalidate: 3600, tags: ["seo-pages", "navigation-links", "services", "service-categories", "cities", "areas"] }
+  {
+    revalidate: 60,
+    tags: [
+      "seo-pages",
+      "navigation-links",
+      "page-link-overrides",
+      "services",
+      "service-categories",
+      "cities",
+      "areas",
+      "location-services",
+      "posts",
+      "redirects",
+    ],
+  }
 );
 
 export async function getPublicPathList() {
