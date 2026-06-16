@@ -41,24 +41,35 @@ export function AreaHero({ city, areaName }: AreaHeroProps) {
           <p className="mt-5 max-w-xl text-base leading-7 text-slate-700 sm:text-lg">
             Book doorstep vehicle repair, breakdown support, towing and puncture assistance in {areaName}. Choose a service below and connect directly with Fiixup.
           </p>
-          
+          <br />
+{/* QUICK BOOKING HIGHLIGHT */}
+<div className="relative overflow-hidden rounded-2xl border border-orange-300 bg-gradient-to-r from-orange-50 via-white to-amber-50 p-[1px] shadow-[0_10px_30px_rgba(249,115,22,0.16)]">
+  <div className="relative rounded-[15px] bg-white/85 px-4 py-4 backdrop-blur-sm sm:px-5">
+    {/* Decorative glow */}
+    <div
+      aria-hidden="true"
+      className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-orange-200/40 blur-2xl"
+    />
 
-          <div className="mt-7 grid grid-cols-2 gap-3 rounded-2xl border border-white/80 bg-white/90 p-4 shadow-xl backdrop-blur md:grid-cols-4">
-            {[
-              { icon: Clock3, title: "Fast response", text: "Area-based dispatch" },
-              { icon: ShieldCheck, title: "30-Day", text: "Repair warranty" },
-              { icon: Wrench, title: "Skilled", text: "Technicians" },
-              { icon: IndianRupee, title: "Upfront", text: "Pricing" },
-            ].map(({ icon: Icon, title, text }) => (
-              <div key={title} className="flex min-w-0 items-start gap-2 border-slate-200 md:border-r md:last:border-r-0">
-                <Icon className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" aria-hidden="true" />
-                <div>
-                  <p className="text-sm font-bold text-slate-950">{title}</p>
-                  <p className="text-xs leading-5 text-slate-600">{text}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+    <p className="relative text-center text-[15px] font-semibold leading-6 text-slate-800 sm:text-left sm:text-base">
+      <span className="font-extrabold text-orange-600">
+        Book in 30 seconds.
+      </span>{" "}
+      Mechanic at your doorstep in{" "}
+      <span className="font-extrabold text-slate-950">
+        30 minutes.
+      </span>{" "}
+      <span className="inline-flex items-center rounded-full border border-orange-200 bg-orange-100 px-2.5 py-0.5 font-extrabold text-orange-700">
+        From ₹450
+      </span>{" "}
+      <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 font-bold text-emerald-700">
+        30-day warranty
+      </span>
+    </p>
+  </div>
+</div>
+
+
 
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             <a
@@ -78,11 +89,23 @@ export function AreaHero({ city, areaName }: AreaHeroProps) {
               WhatsApp Us
             </a>
           </div>
-
-          <div className="mt-4 flex items-center gap-2 text-sm font-medium text-slate-700">
-            <BadgeCheck className="h-4 w-4 text-green-600" aria-hidden="true" />
-            Select an active service available for this area
+             <div className="mt-7 grid grid-cols-2 gap-3 rounded-2xl border border-white/80 bg-white/90 p-4 shadow-xl backdrop-blur md:grid-cols-4">
+            {[
+              { icon: Clock3, title: "Fast response", text: "Area-based dispatch" },
+              { icon: ShieldCheck, title: "30-Day", text: "Repair warranty" },
+              { icon: Wrench, title: "Skilled", text: "Technicians" },
+              { icon: IndianRupee, title: "Upfront", text: "Pricing" },
+            ].map(({ icon: Icon, title, text }) => (
+              <div key={title} className="flex min-w-0 items-start gap-2 border-slate-200 md:border-r md:last:border-r-0">
+                <Icon className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" aria-hidden="true" />
+                <div>
+                  <p className="text-sm font-bold text-slate-950">{title}</p>
+                  <p className="text-xs leading-5 text-slate-600">{text}</p>
+                </div>
+              </div>
+            ))}
           </div>
+       
         </div>
       </div>
     </section>
