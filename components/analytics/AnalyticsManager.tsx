@@ -15,7 +15,7 @@ const ENGAGEMENT_THRESHOLDS = [30, 60, 120, 300];
 const SCROLL_THRESHOLDS = [25, 50, 75, 90];
 
 function ensureGoogleAnalytics(): boolean {
-  if (typeof window === "undefined" || !hasAnalyticsConsent()) return false;
+  if (typeof window === "undefined" || !hasAnalyticsConsent()) {return false;}
 
   window.dataLayer = window.dataLayer || [];
   window.gtag =
@@ -31,15 +31,22 @@ function ensureGoogleAnalytics(): boolean {
     ad_user_data: preferences?.advertising ? "granted" : "denied",
     ad_personalization: preferences?.advertising ? "granted" : "denied",
   });
+  if (!GA_MEASUREMENT_ID) {
+  console.warn(
+    "Google Analytics disabled: NEXT_PUBLIC_GA_MEASUREMENT_ID is missing.",
+  );
+  return false;
+}
 
-  if (!document.querySelector(`script[data-fiixup-ga="${GA_MEASUREMENT_ID}"]`)) {
-    const script = document.createElement("script");
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-    script.dataset.fiixupGa = GA_MEASUREMENT_ID;
-    document.head.appendChild(script);
-  }
+if (!document.querySelector(`script[data-fiixup-ga="${GA_MEASUREMENT_ID}"]`)) {
+  const script = document.createElement("script");
 
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+  script.dataset.fiixupGa = GA_MEASUREMENT_ID;
+
+  document.head.appendChild(script);
+}
   if (!window.sessionStorage.getItem("fiixup_ga_configured")) {
     window.gtag("js", new Date());
     window.gtag("config", GA_MEASUREMENT_ID, {

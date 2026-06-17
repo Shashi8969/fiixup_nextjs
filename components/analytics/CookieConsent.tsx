@@ -56,7 +56,12 @@ export function CookieConsent() {
     };
 
     window.addEventListener(OPEN_CONSENT_EVENT, openPreferences);
-    return () => window.removeEventListener(OPEN_CONSENT_EVENT, openPreferences);
+    return () => {
+  window.removeEventListener(
+    OPEN_CONSENT_EVENT,
+    openPreferences
+  );
+};
   }, []);
 
   const confirm = (analyticsAllowed: boolean, advertisingAllowed: boolean) => {

@@ -13,7 +13,7 @@ import { getPublicSiteSettings } from "@/lib/site-settings";
 import { getPublicPathList } from "@/lib/public-links";
 import { AnalyticsManager } from "@/components/analytics/AnalyticsManager";
 import { CookieConsent } from "@/components/analytics/CookieConsent";
-
+import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -88,7 +88,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en-IN" className={inter.variable} suppressHydrationWarning>
       <head />
       <body suppressHydrationWarning>
-        <AnalyticsManager />
+        <Suspense fallback={null}>
+  <AnalyticsManager />
+</Suspense>
         <Header navLinks={headerLinks} mainPhone={siteSettings.mainPhone} validPaths={publicPaths} />
         <main>{children}</main>
         <Footer siteSettings={siteSettings} validPaths={publicPaths} />
