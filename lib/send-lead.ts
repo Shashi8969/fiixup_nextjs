@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics";
+
 export type LeadPayload = Record<string, unknown>;
 
 function normalizeLeadPayload(input: FormData | LeadPayload): LeadPayload {
@@ -43,6 +45,10 @@ export async function submitLead(input: FormData | LeadPayload) {
   });
 
   if (!response.ok) {
+    trackEvent("lead_submit_failed", {
+      page_path: typeof window !== "undefined" ? window.location.pathname : undefined,
+      status_code: response.status,
+    });
     let message = "Unable to send lead request";
     try {
       const data = await response.json();
@@ -52,6 +58,11 @@ export async function submitLead(input: FormData | LeadPayload) {
     }
     throw new Error(message);
   }
+
+  trackEvent("generate_lead", {
+    page_path: typeof window !== "undefined" ? window.location.pathname : undefined,
+    form_type: typeof payload.form_type === "string" ? payload.form_type : "website_form",
+  });
 
   return response.json();
 }

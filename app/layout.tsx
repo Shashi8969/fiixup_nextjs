@@ -11,6 +11,8 @@ import { QuickServiceModal } from "@/components/QuickServiceModal";
 import { getHeaderNavigationLinks } from "@/lib/navigation";
 import { getPublicSiteSettings } from "@/lib/site-settings";
 import { getPublicPathList } from "@/lib/public-links";
+import { AnalyticsManager } from "@/components/analytics/AnalyticsManager";
+import { CookieConsent } from "@/components/analytics/CookieConsent";
 
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -86,6 +88,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en-IN" className={inter.variable} suppressHydrationWarning>
       <head />
       <body suppressHydrationWarning>
+        <AnalyticsManager />
         <Header navLinks={headerLinks} mainPhone={siteSettings.mainPhone} validPaths={publicPaths} />
         <main>{children}</main>
         <Footer siteSettings={siteSettings} validPaths={publicPaths} />
@@ -98,6 +101,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           phonePlaceholder={siteSettings.mainPhoneDisplay}
           availableText={siteSettings.quickModalAvailableText}
         />
+        <CookieConsent />
       </body>
     </html>
   );

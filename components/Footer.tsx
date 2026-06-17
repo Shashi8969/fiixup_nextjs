@@ -1,10 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Phone, Mail } from "lucide-react";
 import { socials } from "@/lib/data/site";
 import { MAIN_PHONE, MAIN_PHONE_DISPLAY, MAIN_EMAIL } from "@/lib/constants";
 import { getFooterNavigationGroups } from "@/lib/navigation";
 import { FooterNavigationColumns } from "@/components/FooterNavigationColumns";
 import type { PublicSiteSettings } from "@/lib/site-settings";
+import { CookieSettingsButton } from "@/components/analytics/CookieConsent";
 
 type FooterProps = {
   siteSettings?: PublicSiteSettings;
@@ -87,7 +89,13 @@ export async function Footer({ siteSettings, validPaths }: FooterProps = {}) {
       <div className="border-t border-gray-800">
         <div className="container mx-auto px-4 py-5 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-gray-400">
           <p>&copy; {year} Fiixup. All rights reserved. | Doorstep Auto Repair Across India</p>
-          <p>{serviceAreaText}</p>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <p>{serviceAreaText}</p>
+            <Link href="/privacy-policy" className="transition-colors hover:text-white">
+              Privacy & Cookies
+            </Link>
+            <CookieSettingsButton />
+          </div>
         </div>
       </div>
     </footer>
