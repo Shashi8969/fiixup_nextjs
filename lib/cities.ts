@@ -2,6 +2,7 @@
 // Areas now come from the `areas` table, not cities.areas JSONB.
 // CityData shape is unchanged — zero component changes needed.
 
+import { cache } from "react";
 import { supabase } from "./supabase";
 import type { CityData } from "./models/city.model";
 
@@ -60,7 +61,7 @@ export async function getAllCities(): Promise<CityData[]> {
 }
 
 // ── Get one city by slug (with areas from areas table) ────────────────────────
-export async function getCityBySlug(slug: string | undefined): Promise<CityData | undefined> {
+export const getCityBySlug = cache(async (slug: string | undefined): Promise<CityData | undefined> => {
   if (!slug) return undefined;
 
   const [cityRes, areasRes] = await Promise.all([
@@ -74,7 +75,7 @@ export async function getCityBySlug(slug: string | undefined): Promise<CityData 
     ...rowToCity(cityRes.data),
     areas: (areasRes.data ?? []).map((a) => ({ name: a.name, slug: a.slug, highlight: a.highlight ?? "" })),
   };
-}
+});
 
 // ── Get area inside a city ────────────────────────────────────────────────────
 export async function getAreaBySlug(citySlug: string, areaSlug: string) {

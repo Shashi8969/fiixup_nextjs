@@ -1,6 +1,5 @@
 // app/blog/[id]/page.tsx
 // ─── DROP-IN REPLACEMENT — supports all block types ──────────────────────────
-export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
 import type { Metadata } from "next";

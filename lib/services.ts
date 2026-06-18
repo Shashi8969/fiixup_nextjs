@@ -2,6 +2,7 @@
 // Reads from normalized tables — service_faqs, service_testimonials, service_brands
 // Return shape is IDENTICAL to before — zero component changes needed
 
+import { cache } from "react";
 import { supabase } from "./supabase";
 import type { ServiceData } from "./models/service.model";
 
@@ -84,7 +85,7 @@ export async function getAllServices(): Promise<ServiceData[]> {
 }
 
 // ── Get service by slug (full data with normalized child tables) ───────────────
-export async function getServiceBySlug(slug: string): Promise<ServiceData | undefined> {
+export const getServiceBySlug = cache(async (slug: string): Promise<ServiceData | undefined> => {
   const { data, error } = await supabase
     .from("services")
     .select(`
@@ -125,7 +126,7 @@ export async function getServiceBySlug(slug: string): Promise<ServiceData | unde
     testimonialsRes.data ?? [],
     brandsRes.data ?? []
   );
-}
+});
 
 // ── Get services by category ──────────────────────────────────────────────────
 export async function getServicesByCategory(

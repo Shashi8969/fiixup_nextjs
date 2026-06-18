@@ -2,6 +2,7 @@
 // Reads tags from normalized post_tags → tags table
 // Return shape is IDENTICAL to before — zero component changes needed
 
+import { cache } from "react";
 import { supabase } from "./supabase";
 import type { BlogPost } from "./models/blog.model";
 
@@ -73,7 +74,7 @@ export async function getAllPosts(): Promise<BlogPost[]> {
 }
 
 // ── Get post by slug ──────────────────────────────────────────────────────────
-export async function getPostBySlug(slug: string): Promise<BlogPost | undefined> {
+export const getPostBySlug = cache(async (slug: string): Promise<BlogPost | undefined> => {
   const { data, error } = await supabase
     .from("posts")
     .select(POST_SELECT)
@@ -82,7 +83,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | undefined>
 
   if (error || !data) return undefined;
   return rowToPost(data);
-}
+});
 
 // ── Get multiple posts by slug array (used by CityBlogPosts) ─────────────────
 export async function getPostsBySlugs(slugs: string[]): Promise<BlogPost[]> {

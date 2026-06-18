@@ -164,7 +164,7 @@ export const getPublicLinkRegistry = unstable_cache(
   },
   ["public-link-registry"],
   {
-    revalidate: 60,
+    revalidate: 3600,
     tags: [
       "seo-pages",
       "navigation-links",
