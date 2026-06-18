@@ -14,10 +14,9 @@ function pickLinks(links: NavigationLink[], pathname: string, area: NavigationLi
 
 type Props = {
   footerLinks: FooterNavigationGroups;
-  validPaths?: string[];
 };
 
-export function FooterNavigationColumns({ footerLinks, validPaths }: Props) {
+export function FooterNavigationColumns({ footerLinks }: Props) {
   const pathname = usePathname();
 
   const groups = useMemo(() => ({
@@ -37,7 +36,7 @@ export function FooterNavigationColumns({ footerLinks, validPaths }: Props) {
         <ul className="space-y-3">
           {groups.carServices.map((s) => (
             <li key={`${s.href}-${s.label}`}>
-              <DynamicInternalLink href={s.href} validPaths={validPaths} className="text-sm text-gray-400 hover:text-white transition-colors">
+              <DynamicInternalLink href={s.href} targetType={s.target_type} className="text-sm text-gray-400 hover:text-white transition-colors">
                 {s.label}
               </DynamicInternalLink>
             </li>
@@ -53,7 +52,7 @@ export function FooterNavigationColumns({ footerLinks, validPaths }: Props) {
         <ul className="space-y-3">
           {groups.bikeServices.map((s) => (
             <li key={`${s.href}-${s.label}`}>
-              <DynamicInternalLink href={s.href} validPaths={validPaths} className="text-sm text-gray-400 hover:text-white transition-colors">
+              <DynamicInternalLink href={s.href} targetType={s.target_type} className="text-sm text-gray-400 hover:text-white transition-colors">
                 {s.label}
               </DynamicInternalLink>
             </li>
@@ -69,7 +68,7 @@ export function FooterNavigationColumns({ footerLinks, validPaths }: Props) {
         <ul className="space-y-3">
           {groups.cities.map((c) => (
             <li key={`${c.href}-${c.label}`}>
-              <DynamicInternalLink href={c.href} validPaths={validPaths} className="text-sm text-gray-400 hover:text-white transition-colors">
+              <DynamicInternalLink href={c.href} targetType={c.target_type} className="text-sm text-gray-400 hover:text-white transition-colors">
                 {c.label}
               </DynamicInternalLink>
             </li>
@@ -82,7 +81,7 @@ export function FooterNavigationColumns({ footerLinks, validPaths }: Props) {
         <ul className="space-y-3">
           {groups.quickLinks.map((l) => (
             <li key={`${l.href}-${l.label}`}>
-              <DynamicInternalLink href={l.href} validPaths={validPaths} className="text-sm text-gray-400 hover:text-white transition-colors">
+              <DynamicInternalLink href={l.href} targetType={l.target_type} className="text-sm text-gray-400 hover:text-white transition-colors">
                 {l.label}
               </DynamicInternalLink>
             </li>

@@ -14,13 +14,12 @@ import { fallbackHeaderLinks } from "@/lib/navigation-fallbacks";
 type HeaderProps = {
   navLinks?: NavigationLink[];
   mainPhone?: string;
-  validPaths?: string[];
 };
 
-export function Header({ navLinks: navLinksProp, mainPhone = MAIN_PHONE, validPaths }: HeaderProps) {
+export function Header({ navLinks: navLinksProp, mainPhone = MAIN_PHONE }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
-  const servicesHref = getSmartServicesHref(pathname, validPaths);
+  const servicesHref = getSmartServicesHref(pathname);
   const scopedHeaderLinks = selectScopedNavigationLinks(
     navLinksProp?.length ? navLinksProp : fallbackHeaderLinks,
     pathname,

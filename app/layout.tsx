@@ -10,7 +10,6 @@ import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE, DEFAULT_KEYWORDS } from "@/lib/c
 import { QuickServiceModal } from "@/components/QuickServiceModal";
 import { getHeaderNavigationLinks } from "@/lib/navigation";
 import { getPublicSiteSettings } from "@/lib/site-settings";
-import { getPublicPathList } from "@/lib/public-links";
 import { AnalyticsManager } from "@/components/analytics/AnalyticsManager";
 import { CookieConsent } from "@/components/analytics/CookieConsent";
 import { Suspense } from "react";
@@ -78,10 +77,9 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [headerLinks, siteSettings, publicPaths] = await Promise.all([
+  const [headerLinks, siteSettings] = await Promise.all([
     getHeaderNavigationLinks(),
     getPublicSiteSettings(),
-    getPublicPathList(),
   ]);
 
   return (
@@ -91,9 +89,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Suspense fallback={null}>
   <AnalyticsManager />
 </Suspense>
-        <Header navLinks={headerLinks} mainPhone={siteSettings.mainPhone} validPaths={publicPaths} />
+        <Header navLinks={headerLinks} mainPhone={siteSettings.mainPhone} />
         <main>{children}</main>
-        <Footer siteSettings={siteSettings} validPaths={publicPaths} />
+        <Footer siteSettings={siteSettings} />
         <FloatingButtons
           mainPhone={siteSettings.mainPhone}
           whatsappNumber={siteSettings.whatsappNumber}

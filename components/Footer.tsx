@@ -10,10 +10,9 @@ import { CookieSettingsButton } from "@/components/analytics/CookieConsent";
 
 type FooterProps = {
   siteSettings?: PublicSiteSettings;
-  validPaths?: string[];
 };
 
-export async function Footer({ siteSettings, validPaths }: FooterProps = {}) {
+export async function Footer({ siteSettings }: FooterProps = {}) {
   const year = new Date().getFullYear();
   const footerLinks = await getFooterNavigationGroups();
   const mainPhone = siteSettings?.mainPhone || MAIN_PHONE;
@@ -82,7 +81,7 @@ export async function Footer({ siteSettings, validPaths }: FooterProps = {}) {
 
       {/* Links Grid */}
       <div className="container mx-auto px-4 py-10">
-        <FooterNavigationColumns footerLinks={footerLinks} validPaths={validPaths} />
+        <FooterNavigationColumns footerLinks={footerLinks} />
       </div>
 
       {/* Bottom Bar */}

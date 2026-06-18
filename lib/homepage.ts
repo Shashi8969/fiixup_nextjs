@@ -6,7 +6,7 @@ import { getAllServiceCategories } from "@/lib/data/serviceCategory";
 import { SITE_URL, DEFAULT_OG_IMAGE, DEFAULT_KEYWORDS, CITIES_LIST, MAIN_EMAIL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
 import { asArray, asObject, asString, normalizeJsonLd } from "@/lib/cms-guards";
 import { getGlobalServiceHref } from "@/lib/routes";
-import { filterValidItemsByPath, getPublicLinkRegistry, normalizePublicPath, warnBrokenPublicLink } from "@/lib/public-links";
+import { normalizePublicPath } from "@/lib/public-links";
 
 type HomeSeoRow = {
   meta_title?: string | null;
@@ -322,7 +322,7 @@ async function fetchHomeSeoPage(): Promise<HomeSeoRow | null> {
   return data as HomeSeoRow;
 }
 
-async function fetchHomepageCities(activePaths: string[]): Promise<HomeCoverageCity[]> {
+async function fetchHomepageCities(): Promise<HomeCoverageCity[]> {
   const { data, error } = await supabase
     .from("seo_pages")
     .select("url_path,page_data")
@@ -339,10 +339,6 @@ async function fetchHomepageCities(activePaths: string[]): Promise<HomeCoverageC
 
   for (const row of rows) {
     const path = normalizePublicPath(row.url_path);
-    if (!activePaths.includes(path)) {
-      warnBrokenPublicLink("homepage city coverage", path);
-      continue;
-    }
 
     const pd = asObject(row.page_data);
     const citySlug = clean(pd.citySlug, path.split("/").filter(Boolean)[0] ?? "").toLowerCase();
@@ -367,7 +363,7 @@ async function fetchHomepageCities(activePaths: string[]): Promise<HomeCoverageC
   return cities;
 }
 
-async function getHomepageServiceCategories(activePaths: string[]) {
+async function getHomepageServiceCategories() {
   const categories = await getAllServiceCategories();
   const seen = new Set<string>();
   const deduped = categories.filter((cat: any) => {
@@ -377,36 +373,31 @@ async function getHomepageServiceCategories(activePaths: string[]) {
     return true;
   });
 
-  return filterValidItemsByPath(
-    deduped.map((cat: any) => ({ ...cat, link: getGlobalServiceHref(cat.slug) })),
-    (cat: any) => cat.link,
-    activePaths,
-    "homepage service card",
-    (cat: any) => cat.title ?? cat.slug
-  );
+  return deduped.map((cat: any) => ({
+    ...cat,
+    link: getGlobalServiceHref(cat.slug),
+  }));
 }
 
 const getHomepageDbPayload = unstable_cache(
   async () => {
-    const registry = await getPublicLinkRegistry();
     const [homeRow, coverageCities] = await Promise.all([
       fetchHomeSeoPage(),
-      fetchHomepageCities(registry.activePaths),
+      fetchHomepageCities(),
     ]);
 
-    return { homeRow, coverageCities, activePaths: registry.activePaths };
+    return { homeRow, coverageCities };
   },
   ["homepage-db-payload"],
   { revalidate: 3600, tags: ["homepage", "seo-pages", "cities", "areas", "navigation-links"] }
 );
 
 export async function getHomepageData(): Promise<HomePageData> {
-  const { homeRow, coverageCities, activePaths } = await getHomepageDbPayload() as {
+  const { homeRow, coverageCities } = await getHomepageDbPayload() as {
     homeRow: HomeSeoRow | null;
     coverageCities: HomeCoverageCity[];
-    activePaths: string[];
   };
-  const categories = await getHomepageServiceCategories(activePaths);
+  const categories = await getHomepageServiceCategories();
   const pd = asObject(homeRow?.page_data);
   const cityNames = coverageCities.map((city) => city.name).filter(Boolean);
   const schemaJson = normalizeJsonLd(homeRow?.schema_json);

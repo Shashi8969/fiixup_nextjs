@@ -2,7 +2,6 @@ import { unstable_cache } from "next/cache";
 import { supabase } from "@/lib/supabase";
 import type { FooterNavigationGroups, NavigationArea, NavigationLink } from "@/lib/navigation-types";
 import { fallbackFooterGroups, fallbackHeaderLinks } from "@/lib/navigation-fallbacks";
-import { filterValidNavigationLinks, getPublicLinkRegistry } from "@/lib/public-links";
 
 const AREAS: NavigationArea[] = [
   "header",
@@ -104,37 +103,12 @@ const fetchNavigationLinks = unstable_cache(
   { revalidate: 3600, tags: ["navigation-links"] }
 );
 
-function hasScopedLinks(links: NavigationLink[]) {
-  return links.some((link) => (link.scope_type ?? "global") !== "global");
-}
-
-async function validateGlobalNavigationLinks(links: NavigationLink[], context: string) {
-  // Scoped links are selected client-side by current pathname. We only validate global rows here,
-  // while admin shows scoped/manual broken-link warnings through cms_scoped_navigation_link_issues.
-  const globalLinks = links.filter((link) => (link.scope_type ?? "global") === "global");
-  if (!globalLinks.length) return links;
-
-  const registry = await getPublicLinkRegistry();
-  const validGlobal = filterValidNavigationLinks(globalLinks, registry.activePaths, context);
-
-  if (validGlobal.length === globalLinks.length) return links;
-
-  const validGlobalKeys = new Set(validGlobal.map((link) => `${link.nav_area}::${link.href}::${link.label}`));
-  return links.filter((link) => {
-    if ((link.scope_type ?? "global") !== "global") return true;
-    return validGlobalKeys.has(`${link.nav_area}::${link.href}::${link.label}`);
-  });
-}
-
 export async function getHeaderNavigationLinks() {
   const rows = await fetchNavigationLinks();
   const headerLinks = rows.filter((link) => link.nav_area === "header").sort(bySortThenLabel);
 
   if (!headerLinks.length) return fallbackHeaderLinks;
-  if (hasScopedLinks(headerLinks)) return headerLinks;
-
-  const validLinks = await validateGlobalNavigationLinks(headerLinks, "header navigation");
-  return validLinks.length ? validLinks : fallbackHeaderLinks;
+  return headerLinks;
 }
 
 export async function getFooterNavigationGroups(): Promise<FooterNavigationGroups> {
@@ -143,9 +117,7 @@ export async function getFooterNavigationGroups(): Promise<FooterNavigationGroup
   const group = async (area: NavigationArea, fallback: NavigationLink[]) => {
     const links = rows.filter((link) => link.nav_area === area).sort(bySortThenLabel);
     if (!links.length) return fallback;
-    if (hasScopedLinks(links)) return links;
-    const validLinks = await validateGlobalNavigationLinks(links, `${area} footer navigation`);
-    return validLinks.length ? validLinks : fallback;
+    return links;
   };
 
   const [carServices, bikeServices, cities, quickLinks] = await Promise.all([
