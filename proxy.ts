@@ -1,8 +1,27 @@
-// middleware.ts
+// proxy.ts
 // ─────────────────────────────────────────────────────────────────────────────
-// Runtime redirect handler — reads from Supabase `redirects` table.
-// Caches results for 5 minutes so Supabase is not hit on every request.
-// Handles simple path redirects (no wildcards — those go in next.config.ts).
+// Fiixup Advanced Runtime Redirect Proxy
+//
+// Supports:
+// 1. Exact redirects
+//    /tag/car-mechanic-bangalore -> /bangalore/car-mechanic-near-me
+//
+// 2. Wildcard/master redirects
+//    /tag/*       -> /blog
+//    /tag/:path*  -> /blog
+//
+// 3. Exact redirect priority over wildcard
+//    If exact /tag/car-mechanic-bangalore exists, it wins.
+//    Other /tag/... URLs follow /tag/* or /tag/:path*.
+//
+// 4. Path preserve redirects
+//    /chennai/:path* -> /bangalore/:path*
+//
+// 5. Trailing slash normalization
+//    /whitefield and /whitefield/ both work.
+//
+// 6. Low Supabase requests
+//    Uses in-memory cache + single refresh promise.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { NextResponse } from "next/server";
@@ -14,80 +33,258 @@ interface RedirectRow {
   is_permanent: boolean;
 }
 
-// In-memory cache (per Edge runtime instance — resets on cold start)
-let redirectCache: RedirectRow[] = [];
-let cacheExpiry = 0;
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+interface WildcardRedirectRow extends RedirectRow {
+  prefix: string;
+}
 
-async function getRedirects(): Promise<RedirectRow[]> {
-  if (Date.now() < cacheExpiry && redirectCache.length > 0) {
-    return redirectCache;
+const DEFAULT_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+const STATIC_FILE_REGEX =
+  /\.(?:avif|webp|png|jpe?g|gif|svg|ico|css|js|mjs|map|txt|xml|json|woff2?|ttf|otf|eot|pdf|docx?|xlsx?|csv)$/i;
+
+let exactRedirectMap = new Map<string, RedirectRow>();
+let wildcardRedirects: WildcardRedirectRow[] = [];
+let cacheExpiry = 0;
+let refreshPromise: Promise<void> | null = null;
+
+function getCacheTtlMs() {
+  const raw = process.env.REDIRECT_CACHE_TTL_SECONDS;
+  const seconds = raw ? Number(raw) : NaN;
+
+  // Minimum 60 seconds safety so wrong env does not overload Supabase
+  if (Number.isFinite(seconds) && seconds >= 60) {
+    return seconds * 1000;
   }
 
+  return DEFAULT_CACHE_TTL_MS;
+}
+
+function stripTrailingSlash(path: string) {
+  if (!path || path === "/") return "/";
+  return path.replace(/\/+$/, "") || "/";
+}
+
+function normalizeSourcePath(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+
+  try {
+    if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+      return stripTrailingSlash(new URL(trimmed).pathname).toLowerCase();
+    }
+  } catch {
+    return "";
+  }
+
+  const pathOnly = trimmed.split("?")[0].split("#")[0];
+  const withSlash = pathOnly.startsWith("/") ? pathOnly : `/${pathOnly}`;
+
+  return stripTrailingSlash(withSlash).toLowerCase();
+}
+
+function isWildcardSource(source: string) {
+  return source.includes(":path*") || source.includes("*");
+}
+
+function getWildcardPrefix(source: string) {
+  const normalized = normalizeSourcePath(source);
+  if (!normalized) return "";
+
+  if (normalized.includes(":path*")) {
+    return stripTrailingSlash(normalized.split(":path*")[0]);
+  }
+
+  if (normalized.includes("*")) {
+    return stripTrailingSlash(normalized.split("*")[0]);
+  }
+
+  return "";
+}
+
+function shouldSkipProxy(pathname: string) {
+  return (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/assets") ||
+    pathname === "/favicon.ico" ||
+    pathname === "/robots.txt" ||
+    pathname === "/sitemap.xml" ||
+    pathname === "/site.webmanifest" ||
+    STATIC_FILE_REGEX.test(pathname)
+  );
+}
+
+function buildDestinationUrl(
+  row: RedirectRow,
+  requestUrl: string,
+  capturedPath = ""
+) {
+  const rawDestination = row.destination.trim();
+
+  if (rawDestination.startsWith("http://") || rawDestination.startsWith("https://")) {
+    return new URL(rawDestination);
+  }
+
+  const safeCapturedPath = capturedPath.replace(/^\/+/, "");
+
+  let destination = rawDestination.startsWith("/")
+    ? rawDestination
+    : `/${rawDestination}`;
+
+  // Supports destination templates:
+  // /bangalore/:path*
+  // /bangalore/*
+  if (destination.includes(":path*")) {
+    destination = destination.replace(":path*", safeCapturedPath);
+  }
+
+  if (destination.includes("*")) {
+    destination = destination.replace("*", safeCapturedPath);
+  }
+
+  destination = destination.replace(/\/{2,}/g, "/");
+
+  return new URL(destination, requestUrl);
+}
+
+async function refreshRedirects() {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const serviceKey  = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    if (!supabaseUrl || !serviceKey) return redirectCache; // return stale on missing config
+    if (!supabaseUrl || !serviceKey) {
+      console.warn("[proxy] Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY.");
+      return;
+    }
 
     const res = await fetch(
       `${supabaseUrl}/rest/v1/redirects?select=source,destination,is_permanent&is_active=eq.true`,
       {
         headers: {
-          apikey:        serviceKey,
+          apikey: serviceKey,
           Authorization: `Bearer ${serviceKey}`,
           "Content-Type": "application/json",
         },
-        // next: { revalidate: 0 } is default in middleware — always fresh from Supabase
+        cache: "no-store",
       }
     );
 
     if (!res.ok) {
-      console.warn("[middleware] Redirects fetch failed:", res.status);
-      return redirectCache; // stale cache on error — never crash middleware
+      console.warn("[proxy] Redirect fetch failed:", res.status);
+      return;
     }
 
     const data: RedirectRow[] = await res.json();
 
-    // Only cache simple (non-wildcard) redirects — wildcard handled by next.config.ts
-    redirectCache = data.filter(
-      (r) => !r.source.includes(":path*") && !r.source.includes("*")
-    );
-    cacheExpiry = Date.now() + CACHE_TTL_MS;
-  } catch {
-    // Return stale cache — never crash middleware
-  }
+    const nextExactMap = new Map<string, RedirectRow>();
+    const nextWildcardRows: WildcardRedirectRow[] = [];
 
-  return redirectCache;
+    for (const row of data) {
+      if (!row?.source || !row?.destination) continue;
+
+      if (isWildcardSource(row.source)) {
+        const prefix = getWildcardPrefix(row.source);
+        if (!prefix) continue;
+
+        nextWildcardRows.push({
+          ...row,
+          prefix,
+        });
+
+        continue;
+      }
+
+      const normalizedSource = normalizeSourcePath(row.source);
+      if (!normalizedSource) continue;
+
+      nextExactMap.set(normalizedSource, row);
+    }
+
+    // Longest wildcard first.
+    // Example:
+    // /tag/car/:path* wins before /tag/:path*
+    nextWildcardRows.sort((a, b) => b.prefix.length - a.prefix.length);
+
+    exactRedirectMap = nextExactMap;
+    wildcardRedirects = nextWildcardRows;
+    cacheExpiry = Date.now() + getCacheTtlMs();
+  } catch (error) {
+    console.warn("[proxy] Redirect fetch error:", error);
+  }
 }
 
-// IMPORTANT: Next.js 16 requires this exported as `proxy` (not `middleware`)
-export async function proxy(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
+async function ensureRedirectCache() {
+  const hasCache = exactRedirectMap.size > 0 || wildcardRedirects.length > 0;
 
-  // Skip middleware for static assets and API routes
-  if (
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/api") ||
-    pathname.includes(".")
-  ) {
+  if (Date.now() < cacheExpiry && hasCache) {
+    return;
+  }
+
+  // Prevent multiple Supabase calls when many users hit at same time
+  if (!refreshPromise) {
+    refreshPromise = refreshRedirects().finally(() => {
+      refreshPromise = null;
+    });
+  }
+
+  await refreshPromise;
+}
+
+function findWildcardMatch(pathname: string) {
+  for (const row of wildcardRedirects) {
+    const prefix = row.prefix;
+
+    if (pathname === prefix || pathname.startsWith(`${prefix}/`)) {
+      const capturedPath =
+        pathname === prefix
+          ? ""
+          : pathname.slice(prefix.length).replace(/^\/+/, "");
+
+      return {
+        row,
+        capturedPath,
+      };
+    }
+  }
+
+  return null;
+}
+
+// IMPORTANT: Next.js 16 uses proxy(), not middleware()
+export async function proxy(request: NextRequest) {
+  const rawPathname = request.nextUrl.pathname;
+
+  if (shouldSkipProxy(rawPathname)) {
     return NextResponse.next();
   }
 
-  const redirects = await getRedirects();
-  const match = redirects.find((r) => r.source === pathname);
+  await ensureRedirectCache();
 
-  if (match) {
-    const url = request.nextUrl.clone();
-    // Support both absolute and relative destinations
-    if (match.destination.startsWith("http")) {
-      return NextResponse.redirect(match.destination, {
-        status: match.is_permanent ? 301 : 302,
-      });
-    }
-    url.pathname = match.destination;
-    return NextResponse.redirect(url, {
-      status: match.is_permanent ? 301 : 302,
+  const pathname = normalizeSourcePath(rawPathname);
+
+  // 1. Exact redirect priority
+  const exactMatch = exactRedirectMap.get(pathname);
+
+  if (exactMatch) {
+    const destinationUrl = buildDestinationUrl(exactMatch, request.url);
+
+    return NextResponse.redirect(destinationUrl, {
+      status: exactMatch.is_permanent ? 301 : 302,
+    });
+  }
+
+  // 2. Wildcard/master redirect fallback
+  const wildcardMatch = findWildcardMatch(pathname);
+
+  if (wildcardMatch) {
+    const destinationUrl = buildDestinationUrl(
+      wildcardMatch.row,
+      request.url,
+      wildcardMatch.capturedPath
+    );
+
+    return NextResponse.redirect(destinationUrl, {
+      status: wildcardMatch.row.is_permanent ? 301 : 302,
     });
   }
 
@@ -95,7 +292,6 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Run on all routes except Next.js internals and static files
   matcher: [
     "/((?!_next/static|_next/image|favicon.ico|robots.txt|site.webmanifest|assets/).*)",
   ],
