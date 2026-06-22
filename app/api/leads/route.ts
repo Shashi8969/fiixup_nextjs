@@ -2,8 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { createClient } from "@supabase/supabase-js";
 import { MAIN_EMAIL, SITE_NAME } from "@/lib/constants";
+import { rateLimitRequest, readJsonBody } from "@/lib/api-security";
 
 export const runtime = "nodejs";
+
+const LEAD_RATE_LIMIT = { limit: 8, windowMs: 15 * 60 * 1000 };
+const MAX_LEAD_BODY_BYTES = 32 * 1024;
 
 type LeadPayload = Record<string, unknown>;
 
@@ -201,7 +205,13 @@ async function updateLeadNotification(
 
 export async function POST(request: NextRequest) {
   try {
-    const rawPayload = (await request.json()) as LeadPayload;
+    const limited = rateLimitRequest(request, "lead-submit", LEAD_RATE_LIMIT);
+    if (limited) return limited;
+
+    const parsed = await readJsonBody<LeadPayload>(request, { maxBytes: MAX_LEAD_BODY_BYTES });
+    if (!parsed.ok) return parsed.response;
+
+    const rawPayload = parsed.data;
     const data = normalizePayload(rawPayload);
 
     if (!data.phone && !data.email) {

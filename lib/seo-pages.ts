@@ -65,8 +65,18 @@ export interface Breadcrumb { name: string; url: string }
 
 type SeoPageRow = Record<string, unknown>
 
-function normalizeArrayObject<T extends Record<string, unknown>>(value: unknown, map: (item: Record<string, unknown>) => T): T[] {
-  return asArray<Record<string, unknown>>(value).map(map).filter(Boolean)
+function normalizeArrayObject<T extends Record<string, unknown>>(
+  value: unknown,
+  map: (item: Record<string, unknown>) => T
+): T[] {
+  return asArray<unknown>(value).flatMap((item) => {
+    if (!item || typeof item !== "object" || Array.isArray(item)) {
+      return []
+    }
+
+    const mapped = map(item as Record<string, unknown>)
+    return mapped ? [mapped] : []
+  })
 }
 
 function normalizePageData(value: unknown): PageData {

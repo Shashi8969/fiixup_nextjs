@@ -34,12 +34,39 @@ export type Block =
 
 
 function cleanHtml(html: string) {
-  return html
+  return String(html ?? "")
     .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, "")
+    .replace(/<\/?(?:iframe|object|embed|form|input|button|textarea|select|option|meta|link|base)[\s\S]*?>/gi, "")
     .replace(/\son\w+=("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
-    .replace(/\s(href|src)=("|')\s*javascript:[\s\S]*?\2/gi, " $1=\"#\"")
+    .replace(/\s(?:srcdoc|formaction)=("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
+    .replace(/\sstyle=("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
+    .replace(/\s(href|src|xlink:href)=("|')\s*(?:javascript|vbscript|data:text\/html):[\s\S]*?\2/gi, ' $1="#"')
+    .replace(/\s(href|src|xlink:href)=\s*(?:javascript|vbscript|data:text\/html):[^\s>]*/gi, ' $1="#"')
     .replace(/<a\b(?![^>]*\brel=)([^>]*)>/gi, '<a$1 rel="noopener noreferrer">');
+}
+
+function safeHref(value: string, fallback = "#") {
+  const href = String(value || "").trim();
+  if (!href) return fallback;
+
+  const lower = href.toLowerCase();
+  if (lower.startsWith("javascript:") || lower.startsWith("vbscript:") || lower.startsWith("data:")) {
+    return fallback;
+  }
+
+  if (
+    href.startsWith("/") ||
+    href.startsWith("#") ||
+    lower.startsWith("tel:") ||
+    lower.startsWith("mailto:") ||
+    lower.startsWith("https://") ||
+    lower.startsWith("http://")
+  ) {
+    return href;
+  }
+
+  return fallback;
 }
 
 function HtmlSpan({ html }: { html: string }) {
@@ -227,13 +254,13 @@ function DividerBlock() {
 function CtaBlock({
   heading, subtext, buttonText, buttonHref,
 }: { heading: string; subtext?: string; buttonText: string; buttonHref: string }) {
-  const isPhone = buttonHref.startsWith("tel:");
+  const safeButtonHref = safeHref(buttonHref, "/contact");
   return (
     <div className="mb-6 bg-red-600 rounded-2xl p-6 md:p-8 text-center shadow-md">
       <h3 className="text-white text-xl md:text-2xl font-bold mb-2">{heading}</h3>
       {subtext && <p className="text-red-100 text-sm mb-5">{subtext}</p>}
       <a
-        href={buttonHref}
+        href={safeButtonHref}
         className="inline-block bg-white text-red-600 font-bold text-sm px-7 py-3 rounded-xl hover:bg-red-50 transition-colors shadow"
       >
         {buttonText}
@@ -264,7 +291,7 @@ function FaqBlock({ items }: { items: { question: string; answer: string }[] }) 
             </button>
             {open === i && (
               <div className="px-5 pb-4 pt-3 text-gray-600 text-sm leading-relaxed border-t border-gray-100"
-                dangerouslySetInnerHTML={{ __html: item.answer }}
+                dangerouslySetInnerHTML={{ __html: cleanHtml(item.answer) }}
               />
             )}
           </div>
@@ -300,7 +327,7 @@ function LinkBlock({ text, href, external }: { text: string; href: string; exter
   return (
     <p className="mb-3">
       <a
-        href={href}
+        href={safeHref(href)}
         target={external ? "_blank" : undefined}
         rel={external ? "noopener noreferrer" : undefined}
         className="inline-flex items-center gap-1.5 text-red-600 font-medium hover:text-red-700 underline underline-offset-2 decoration-red-300"
@@ -333,7 +360,7 @@ function ServiceCardBlock({
   );
   return (
     <div className="mb-4">
-      {href ? <Link href={href}>{inner}</Link> : inner}
+      {href ? <Link href={safeHref(href, "/services")}>{inner}</Link> : inner}
     </div>
   );
 }

@@ -38,6 +38,7 @@ interface WildcardRedirectRow extends RedirectRow {
 }
 
 const DEFAULT_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+const MAX_REDIRECT_ROWS = 5000;
 
 const STATIC_FILE_REGEX =
   /\.(?:avif|webp|png|jpe?g|gif|svg|ico|css|js|mjs|map|txt|xml|json|woff2?|ttf|otf|eot|pdf|docx?|xlsx?|csv)$/i;
@@ -101,6 +102,15 @@ function getWildcardPrefix(source: string) {
   return "";
 }
 
+function isSafeAbsoluteUrl(value: string) {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "https:" || parsed.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
 function shouldSkipProxy(pathname: string) {
   return (
     pathname.startsWith("/_next") ||
@@ -119,11 +129,11 @@ function buildDestinationUrl(
   requestUrl: string,
   capturedPath = ""
 ) {
-  const rawDestination = row.destination.trim();
+const rawDestination = String(row.destination || "").trim();
 
-  if (rawDestination.startsWith("http://") || rawDestination.startsWith("https://")) {
-    return new URL(rawDestination);
-  }
+if (isSafeAbsoluteUrl(rawDestination)) {
+  return new URL(rawDestination);
+}
 
   const safeCapturedPath = capturedPath.replace(/^\/+/, "");
 
@@ -158,7 +168,7 @@ async function refreshRedirects() {
     }
 
     const res = await fetch(
-      `${supabaseUrl}/rest/v1/redirects?select=source,destination,is_permanent&is_active=eq.true`,
+      `${supabaseUrl}/rest/v1/redirects?select=source,destination,is_permanent&is_active=eq.true&limit=${MAX_REDIRECT_ROWS}`,
       {
         headers: {
           apikey: serviceKey,
