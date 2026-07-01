@@ -30,18 +30,9 @@ npm run dev
 npm run build
 ```
 
-## Environment variables
-
-Rename `.env.local.example` to `.env.local` and fill in:
-
-```
-GMAIL_USER=your-gmail-address@gmail.com
-GMAIL_APP_PASSWORD=your-gmail-app-password
-LEAD_TO_EMAIL=your-receiving-email@gmail.com
-LEAD_FROM_NAME=Fiixup Website
-```
-
-The website forms now submit to `/api/send-lead`, and the server sends the email using Nodemailer + Gmail SMTP. Do not use normal Gmail account password; use a Gmail app password.
+## Links of pages
+24/7 Doorstep Car Mechanics in Bangalore - https://fiixup.in/bangalore
+24/7 Doorstep Car Mechanics in HSR Layout Bangalore - https://fiixup.in/bangalore/hsr-layout/car-mechanic-near-me
 
 ## Deploy to Vercel
 
