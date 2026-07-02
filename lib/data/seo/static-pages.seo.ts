@@ -50,7 +50,7 @@ export const staticPagesSEO: PageSEO[] = [
     route: "/contact",
     title: "Contact Fiixup | Book Doorstep Car & Bike Repair 24/7",
     description:
-      "Book a doorstep car or bike repair with Fiixup. Call +91 81974 59732 or fill the form. Available 24/7 across Bengaluru, Chennai, Hyderabad & Mumbai.",
+      "Book a doorstep car or bike repair with Fiixup. Call +91 8197459732 or fill the form. Available 24/7 across Bengaluru, Chennai, Hyderabad & Mumbai.",
     keywords:
       "contact fiixup, book car service at home, doorstep mechanic booking, car repair booking India, emergency bike repair near me",
     ogTitle: "Contact Fiixup — Book Your Doorstep Service Now",

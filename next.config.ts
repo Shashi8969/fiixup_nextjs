@@ -1,13 +1,8 @@
-// next.config.ts
 import type { NextConfig } from "next";
-
-const HARDCODED_REDIRECTS = [
-  { source: "/car-mechanic-in-bangalore", destination: "/bangalore/car-mechanic", permanent: true },
-];
 
 const ADMIN_PREVIEW_ORIGINS = [
   process.env.NEXT_PUBLIC_FIIXUP_ADMIN_URL,
-  "https://admin.fiixup.in",
+  "https://fiixup-admin.vercel.app",
   process.env.NODE_ENV !== "production" ? "http://localhost:3001" : undefined,
 ]
   .filter(Boolean)
@@ -47,7 +42,6 @@ function normalizeRedirectSource(value: string) {
   const trimmed = String(value || "").trim();
   if (!trimmed) return "";
 
-  // Keep Next.js path patterns valid.
   if (trimmed.includes(":path*") || trimmed.includes("*")) {
     const withSlash = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
     return stripTrailingSlash(withSlash);
@@ -105,6 +99,8 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  trailingSlash: true,
+
   async redirects() {
     let dbRedirects: { source: string; destination: string; permanent: boolean }[] = [];
 
@@ -132,19 +128,25 @@ const nextConfig: NextConfig = {
             if (!source || !destination || source === destination) return [];
             return [{ source, destination, permanent: Boolean(r.is_permanent) }];
           });
-          console.log(`[next.config] Loaded ${dbRedirects.length} redirects from Supabase`);
-        } else {
-          console.warn("[next.config] Supabase redirects fetch returned:", res.status);
         }
       } catch (err) {
-        console.warn("[next.config] Could not fetch Supabase redirects:", (err as Error).message);
+        console.warn("[next.config] Could not fetch Supabase redirects");
       }
     }
 
-    const dbSources = new Set(dbRedirects.map((r) => r.source));
     return [
       ...dbRedirects,
-      ...HARDCODED_REDIRECTS.filter((r) => !dbSources.has(r.source)),
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "www.fiixup.in",
+          },
+        ],
+        destination: "https://fiixup.in/:path*",
+        permanent: true,
+      },
     ];
   },
 };

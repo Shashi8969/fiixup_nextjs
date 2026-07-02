@@ -1,7 +1,7 @@
 export const SITE_URL             = "https://fiixup.in";
 export const SITE_NAME            = "Fiixup";
 export const MAIN_PHONE           = "+918197459732";
-export const MAIN_PHONE_DISPLAY   = "+91 81974 59732";
+export const MAIN_PHONE_DISPLAY   = "+91 8197459732";
 export const MAIN_EMAIL           = "support@fiixup.com";
 export const WHATSAPP_NUMBER      = "918197459732";
 export const DEFAULT_OG_IMAGE     = `${SITE_URL}/assets/og-image.webp`;
