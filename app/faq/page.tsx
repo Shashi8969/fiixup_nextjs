@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Phone } from "lucide-react";
 import { MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
-import { faqSchema } from "@/lib/schema";
+import { faqPageSchema } from "@/lib/schema";
 import { getFaqPageCategories } from "@/lib/faqs";
 import { getStaticPageSEO } from "@/lib/data/seo";
 import { PageHero } from "@/components/ui/PageHero";
@@ -32,7 +32,7 @@ export default async function FAQPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(allFaqs)) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageSchema(allFaqs)) }}
       />
 
       <PageHero

@@ -3,8 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { CheckCircle, MapPin, Star } from "lucide-react";
 import { MAIN_PHONE } from "@/lib/constants";
-import { useState } from "react";
-import { submitLead } from "@/lib/send-lead";
+import { useLeadForm } from "@/lib/hooks/useLeadForm";
 import type { HomeHeroData } from "@/lib/homepage";
 import { SERVICE_OPTIONS } from "@/lib/data/serviceOptions";
 
@@ -15,9 +14,9 @@ type HeroProps = {
 
 export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
 
-  // ✅ State (correct place)
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+  const { isSuccess, successMessage, submit } = useLeadForm({
+    fallbackSuccessMessage: data.successText,
+  });
 
   // ✅ Submit handler
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,31 +25,14 @@ export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
     const form = e.currentTarget;
     const formData = new FormData(form);
 
-    const now = new Date().toLocaleString("en-IN", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    });
-
-    formData.set("request_time", now);
-    formData.set("form_type", "Hero Quick Booking");
     formData.set("name", "Not provided");
     formData.set("vehicle", "Not specified");
     if (!formData.get("service")) formData.set("service", "Quick Booking");
     formData.set("message", "User submitted from Hero section");
 
-    try {
-      const result = await submitLead(formData) as { success_message?: string };
-      setSuccessMessage(result?.success_message || data.successText);
-      setIsSuccess(true);
-      form.reset();
-      setTimeout(() => {
-        setIsSuccess(false);
-        setSuccessMessage("");
-      }, 5000);
-    } catch (err) {
-      console.error(err);
-      alert("Failed. Call us instead.");
-    }
+    const result = await submit(formData, "Hero Quick Booking");
+    if (result.ok) form.reset();
+    else alert("Failed. Call us instead.");
   };
 
   return (

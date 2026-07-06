@@ -1,6 +1,7 @@
 // app/page.tsx
 export const revalidate = 3600;
 
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Hero }         from "@/components/Hero";
 import { About }        from "@/components/About";
@@ -12,6 +13,7 @@ import { Contact }      from "@/components/Contact";
 import { homeSchema } from "@/lib/schema";
 import { getHomepageData } from "@/lib/homepage";
 import { getPublicSiteSettings } from "@/lib/site-settings";
+import { SectionSkeleton } from "@/components/ui/SectionSkeleton";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { seo } = await getHomepageData();
@@ -52,8 +54,12 @@ export default async function HomePage() {
       <Services {...homeData.services} />
       <About data={homeData.about} />
       <CityCoverage {...homeData.cityCoverage} />
-      <Testimonials />
-      <Blog {...homeData.blog} />
+     <Suspense fallback={<SectionSkeleton rows={4} />}>
+        <Testimonials />
+      </Suspense>
+      <Suspense fallback={<SectionSkeleton rows={3} />}>
+        <Blog {...homeData.blog} />
+      </Suspense>
       <Contact data={homeData.contact} siteSettings={siteSettings} />
     </>
   );

@@ -11,7 +11,7 @@ import { SITE_URL }       from '@/lib/constants';
 // ── City hub imports (unchanged) ─────────────────────────────────────────────
 import { getCityHubPage, getAllCityHubParams } from '@/lib/cityPages';
 import { cityHubSchema }                       from '@/lib/schema';
-import { CityHeroDynamic }        from '@/components/city/CityHeroDynamic 3';
+import { CityHeroDynamic }        from '@/components/city/CityHeroDynamic';
 import { CityServicesDynamic }    from '@/components/city/CityServicesDynamic';
 import { CityAreasDynamic }       from '@/components/city/CityAreasDynamic';
 import { CityAboutDynamic }       from '@/components/city/CityAboutDynamic';

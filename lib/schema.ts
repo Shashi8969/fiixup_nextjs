@@ -1020,36 +1020,6 @@ export function contactPageSchema() {
 // All existing page files continue to work without changes.
 // ═════════════════════════════════════════════════════════════════════════════
 
-/** @deprecated — use cityPageSchema() */
-export function localBusinessSchema(city: LocalBusinessCity) {
-  return cityPageSchema(city, []);
-}
-
-/** @deprecated — use serviceDetailSchema() */
-export function serviceSchema(opts: {
-  name: string; description: string; slug: string;
-  minPrice: number; maxPrice: number;
-  reviews?: { author: string; rating: number; body: string }[];
-}) {
-  return serviceDetailSchema({
-    name: opts.name, slug: opts.slug, description: opts.description,
-    minPrice: opts.minPrice, maxPrice: opts.maxPrice,
-    testimonials: opts.reviews?.map((r) => ({
-      name: r.author, rating: r.rating, review: r.body,
-    })),
-  });
-}
-
-/** @deprecated — use faqPageSchema() */
-export function faqSchema(faqs: { q: string; a: string }[]) {
-  return faqPageSchema(faqs);
-}
-
-/** @deprecated — included automatically in all schema functions */
-export function breadcrumbSchema(crumbs: { name: string; url: string }[]) {
-  return _breadcrumb(crumbs);
-}
-
 export function cityHubSchema(opts: {
   name:        string;
   slug:        string;

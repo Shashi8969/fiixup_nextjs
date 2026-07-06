@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { supabase } from "@/lib/supabase";
 import { features as fallbackFeatures, avatars as fallbackAvatars } from "@/lib/data/homepageData";
@@ -392,7 +393,7 @@ const getHomepageDbPayload = unstable_cache(
   { revalidate: 3600, tags: ["homepage", "seo-pages", "cities", "areas", "navigation-links"] }
 );
 
-export async function getHomepageData(): Promise<HomePageData> {
+export const getHomepageData = cache(async (): Promise<HomePageData> => {
   const { homeRow, coverageCities } = await getHomepageDbPayload() as {
     homeRow: HomeSeoRow | null;
     coverageCities: HomeCoverageCity[];
@@ -418,4 +419,4 @@ export async function getHomepageData(): Promise<HomePageData> {
     blog: mergeBlog(pd),
     contact: mergeContact(pd, cityNames),
   };
-}
+});

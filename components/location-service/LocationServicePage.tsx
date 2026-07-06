@@ -279,10 +279,12 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                   sizes="50vw"
                 />
               </div>
-              <div className="absolute -bottom-4 -left-4 bg-yellow-400 text-gray-900 p-4 rounded-xl shadow-lg">
-                <p className="text-2xl font-bold">{data.schemaAggregateRating}/5</p>
-                <p className="text-xs font-semibold">{data.schemaReviewCount}+ Reviews</p>
-              </div>
+              {Number(data.schemaReviewCount) > 0 ? (
+                <div className="absolute -bottom-4 -left-4 bg-yellow-400 text-gray-900 p-4 rounded-xl shadow-lg">
+                  <p className="text-2xl font-bold">{data.schemaAggregateRating}/5</p>
+                  <p className="text-xs font-semibold">{data.schemaReviewCount}+ Reviews</p>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

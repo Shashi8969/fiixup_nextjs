@@ -23,12 +23,12 @@ export async function Blog({
         />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredPosts.map((post, i) => (
+          {featuredPosts.map((post) => (
             <BlogCard
               key={post.id}
               {...post}
               readTime={String(post.readTime)}
-              priority={i === 0}
+              priority={false}
             />
           ))}
         </div>

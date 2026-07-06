@@ -15,7 +15,17 @@ const ENGAGEMENT_THRESHOLDS = [30, 60, 120, 300];
 const SCROLL_THRESHOLDS = [25, 50, 75, 90];
 
 function ensureGoogleAnalytics(): boolean {
-  if (typeof window === "undefined" || !hasAnalyticsConsent()) {return false;}
+  if (typeof window === "undefined") return false;
+
+  if (!hasAnalyticsConsent()) {
+    if (process.env.NODE_ENV !== "production") {
+      console.info(
+        "[Fiixup Analytics] Skipped — no analytics consent yet. Accept cookies " +
+          "(or enable Analytics under Cookie settings) to test GA locally."
+      );
+    }
+    return false;
+  }
 
   window.dataLayer = window.dataLayer || [];
   window.gtag =

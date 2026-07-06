@@ -11,6 +11,10 @@ import {
   readConsentPreferences,
 } from "@/lib/analytics";
 
+// Show after a short pause instead of instantly on load — reduces the
+// "wall on arrival" feeling without weakening the consent choice itself.
+const BANNER_DELAY_MS = 2500;
+
 function savePreferences(analytics: boolean, advertising: boolean) {
   const preferences: ConsentPreferences = {
     necessary: true,
@@ -37,13 +41,25 @@ export function CookieConsent() {
 
   useEffect(() => {
     const existing = readConsentPreferences();
-    if (!existing) {
-      setVisible(true);
+    if (existing) {
+      setAnalytics(existing.analytics);
+      setAdvertising(existing.advertising);
       return;
     }
 
-    setAnalytics(existing.analytics);
-    setAdvertising(existing.advertising);
+    // Whichever comes first — a short delay, or the person starting to
+    // scroll — shows the banner once they've seen there's a real page here.
+    const timer = window.setTimeout(() => setVisible(true), BANNER_DELAY_MS);
+    const onScroll = () => {
+      setVisible(true);
+      window.clearTimeout(timer);
+    };
+    window.addEventListener("scroll", onScroll, { once: true, passive: true });
+
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   useEffect(() => {
