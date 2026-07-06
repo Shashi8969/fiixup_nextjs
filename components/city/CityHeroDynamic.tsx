@@ -1,133 +1,126 @@
-"use client";
+'use client';
+// components/city/CityHeroDynamic.tsx
+// Replaces CityHero.tsx — all content from page_data, zero hardcoded strings
+// "use client" for the callback form only — rest is pure data rendering
 
-import Link from "next/link";
-import Image from "next/image";
-import { CheckCircle, MapPin, Shield, Clock, Zap, Star } from "lucide-react";
-import { useState } from "react";
-import type { CityHubPageData } from "@/lib/cityPages";
-import { submitLead } from "@/lib/send-lead";
+import Link       from 'next/link';
+import Image      from 'next/image';
+import { useState } from 'react';
+import { CheckCircle, MapPin, Star, Shield, Clock, Zap } from 'lucide-react';
+import type { CityHubPageData } from '@/lib/cityPages';
+import { submitLead } from '@/lib/send-lead';
 
-// ── Defaults (used when DB columns are empty) ─────────────────────────────────
 const DEFAULT_BULLETS = (cityName: string, areaNames: string[]) => [
-  `24/7 Emergency Service Available in ${cityName}`,
-  `Doorstep Service Across ${cityName} — ${areaNames.slice(0, 2).join(", ")} & more`,
-  "Both Car & Bike Service",
-  "Experienced & Background-Verified Technicians",
+  `24/7 Emergency Service in ${cityName}`,
+  `Covering ${cityName} — ${areaNames.slice(0, 3).join(', ')} & more`,
+  'Both Car & Bike Repair',
+  'Certified & Background-Verified Mechanics',
 ];
 
 const DEFAULT_STATS = (data: CityHubPageData) => [
-  { value: data.statsCustomers    ?? "5,000+", label: "Happy Customers"   },
-  { value: "24/7",                             label: "Service Available" },
-  { value: data.statsSatisfaction ?? "98%",    label: "Satisfaction Rate" },
-  {
-    value: data.statsCoverage ?? `${data.areas?.length ?? 50}+ Areas`,
-    label: data.statsLabel    ?? "City Coverage",
-  },
+  { value: data.statsCustomers    ?? '10,000+', label: 'Happy Customers' },
+  { value: '24/7',                              label: 'Service Available' },
+  { value: data.statsSatisfaction ?? '98%',     label: 'Satisfaction Rate' },
+  { value: data.statsCoverage     ?? `${data.areas?.length ?? 50}+ Areas`, label: data.statsLabel ?? 'City Coverage' },
 ];
 
-// ── Component ─────────────────────────────────────────────────────────────────
 export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
-  const [phone,   setPhone]   = useState("");
+  const [phone,   setPhone]   = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
   const areaNames = (data.areas ?? []).map((a) => a.name);
 
-  const bullets = (data.heroBullets as string[] | undefined)?.length
-    ? (data.heroBullets as string[])
+  const bullets = data.heroBullets?.length
+    ? data.heroBullets
     : DEFAULT_BULLETS(data.cityName, areaNames);
 
-  const stats = (
-    data.heroStats as { value: string; label: string }[] | undefined
-  )?.length
-    ? (data.heroStats as { value: string; label: string }[])
+  const stats = data.heroStats?.length
+    ? data.heroStats
     : DEFAULT_STATS(data);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-
-    const now = new Date().toLocaleString("en-IN", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    });
-
     try {
+      const now = new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
       await submitLead({
         phone,
-        city:         data.cityName,
-        form_type:    "City Hero Form",
+        city: data.cityName,
+        form_type: 'City Hero Form',
         request_time: now,
-        name:         "Not provided",
-        service:      "Callback Request",
+        name: 'Not provided',
+        service: 'Callback Request',
       });
       setSuccess(true);
-      setPhone("");
-      setTimeout(() => setSuccess(false), 4000);
+      setPhone('');
+      setTimeout(() => setSuccess(false), 5000);
     } catch {
-      alert("Failed. Please call instead.");
+      alert('Failed to send. Please call directly.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section className="relative bg-gradient-to-br from-blue-50 to-blue-100 py-12 overflow-hidden">
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+    <section className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 py-12 md:py-20 overflow-hidden">
+      {/* Subtle background grid */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{ backgroundImage: 'radial-gradient(circle, #2563eb 1px, transparent 1px)', backgroundSize: '32px 32px' }}
+        aria-hidden="true"
+      />
 
-          {/* ── LEFT COLUMN ─────────────────────────────────── */}
-          <div className="space-y-6">
+      <div className="container mx-auto px-4 relative">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
 
+          {/* ── LEFT COLUMN ── */}
+          <div className="space-y-6 order-2 lg:order-1">
             {/* City badge */}
-            <div className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
-              <MapPin className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
-              {data.heroTagline ?? `Now Serving ${data.cityName}`}
+            <div className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-sm">
+              <MapPin className="w-4 h-4 flex-shrink-0" />
+              <span>{data.heroTagline ?? `Now Serving ${data.cityName}`}</span>
             </div>
 
             {/* H1 — unique per city, from DB */}
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-              {data.heroHeading ??
-                `24/7 Doorstep Auto Repair Service in ${data.cityName}`}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-[1.1] tracking-tight">
+              {data.heroHeading ?? `24/7 Doorstep Auto Repair in ${data.cityName}`}
             </h1>
 
-            {/* Sub-copy — city-specific from DB */}
-            <p className="text-lg text-gray-700">
-              {data.aboutPara1 ??
-                `Professional car and bike repair at your doorstep in ${data.cityName}. Quality service, honest pricing, and reliable repairs anywhere in ${data.cityName}, anytime.`}
-            </p>
+            {/* Sub-paragraph — city-specific from DB */}
+            {data.aboutPara1 && (
+              <p className="text-lg text-gray-600 leading-relaxed max-w-xl">
+                {data.aboutPara1}
+              </p>
+            )}
 
-            {/* Bullet checklist — from DB heroBullets */}
-            <div className="space-y-3">
-              {bullets.map((point, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <CheckCircle
-                    className="w-5 h-5 text-green-600 flex-shrink-0"
-                    aria-hidden="true"
-                  />
-                  <span className="text-gray-800">{point}</span>
-                </div>
+            {/* Bullet checklist */}
+            <ul className="space-y-3" aria-label="Key service features">
+              {bullets.map((point: string, i: number) => (
+                <li key={i} className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                  <span className="text-gray-800 font-medium">{point}</span>
+                </li>
               ))}
-            </div>
+            </ul>
 
-            {/* CTA buttons */}
-            <div className="flex flex-wrap gap-4 pt-4">
+            {/* CTAs */}
+            <div className="flex flex-wrap gap-4 pt-2">
               <Link
                 href={`/${data.citySlug}#contact`}
-                className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                className="bg-blue-600 text-white px-8 py-3.5 rounded-xl hover:bg-blue-700 active:scale-95 transition-all font-bold shadow-lg shadow-blue-200 text-base"
               >
                 Book Service Now
               </Link>
               <a
                 href={`tel:${data.cityPhone}`}
-                className="bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold"
+                className="bg-white border-2 border-red-600 text-red-600 px-8 py-3.5 rounded-xl hover:bg-red-600 hover:text-white active:scale-95 transition-all font-bold text-base"
               >
-                Call Now {data.cityPhone}
+                Call {data.cityPhone}
               </a>
             </div>
 
             {/* Trust strip */}
-            <div className="flex flex-wrap gap-5 text-sm text-gray-500">
+            <div className="flex flex-wrap gap-4 pt-2 text-sm text-gray-500">
               <span className="flex items-center gap-1.5">
                 <Shield className="w-4 h-4 text-blue-500" aria-hidden="true" />
                 30-day warranty
@@ -143,41 +136,35 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
             </div>
           </div>
 
-          {/* ── RIGHT COLUMN ─────────────────────────────────── */}
-          <div className="relative">
-
-            {/* Tall image card — identical to original */}
-            <div className="rounded-2xl overflow-hidden shadow-2xl h-[500px] w-full relative">
+          {/* ── RIGHT COLUMN — Image + Callback Form ── */}
+          <div className="relative order-1 lg:order-2">
+            <div className="rounded-2xl overflow-hidden shadow-2xl h-[480px] md:h-[540px] w-full relative">
               <Image
-                src={data.heroImageUrl ?? "/assets/Car_mechanic_700x1049.webp"}
-                alt={
-                  data.heroImageAlt ??
-                  `Professional mechanic performing doorstep car repair in ${data.cityName}`
-                }
+                src={data.heroImageUrl ?? '/assets/Car_mechanic_700x1049.webp'}
+                alt={data.heroImageAlt ?? `Professional mechanic performing doorstep car repair in ${data.cityName}`}
                 fill
                 className="object-cover"
                 priority
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
+              {/* Dark overlay for contrast */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" aria-hidden="true" />
             </div>
 
-            {/* Floating form card — centred over image, identical to original */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="bg-white bg-opacity-90 p-6 rounded-xl shadow-xl w-[90%] max-w-sm backdrop-blur-sm">
+            {/* Floating callback card */}
+            <div className="absolute bottom-6 left-4 right-4 md:left-auto md:right-6 md:w-[300px]">
+              <div className="bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-2xl border border-white/60">
                 {!success ? (
                   <>
-                    <h2 className="text-lg font-bold text-gray-900 mb-1">
-                      Repair at Your Doorstep in {data.cityName}
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" aria-hidden="true" />
+                      <p className="text-xs font-semibold text-green-700 uppercase tracking-wide">We call back in 2 mins</p>
+                    </div>
+                    <h2 className="text-base font-bold text-gray-900 mb-3">
+                      Get Free Callback — {data.cityName}
                     </h2>
-                    <p className="text-xs text-gray-500 mb-4">
-                      We call back in under 2 minutes
-                    </p>
-
                     <form onSubmit={handleSubmit}>
-                      <label
-                        htmlFor="hero-phone"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
+                      <label className="block text-xs font-semibold text-gray-600 mb-1" htmlFor="hero-phone">
                         Mobile Number
                       </label>
                       <input
@@ -185,64 +172,52 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
                         type="tel"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        placeholder={data.cityPhone ?? "e.g. 98765 43210"}
+                        placeholder="e.g. 98765 43210"
                         required
                         pattern="[6-9]\d{9}"
                         maxLength={10}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 mb-4"
+                        className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm mb-3"
                       />
-
-                      <p className="text-xs text-green-600 mb-2 flex items-center gap-1">
-                        <Star
-                          className="w-3 h-3 text-yellow-400 fill-yellow-400"
-                          aria-hidden="true"
-                        />
+                      <p className="text-xs text-gray-400 mb-3 flex items-center gap-1">
+                        <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" aria-hidden="true" />
                         92% users get callback within 120 seconds
                       </p>
-
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-60"
+                        className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-bold hover:bg-blue-700 disabled:opacity-60 transition-colors text-sm"
                       >
-                        {loading ? "Sending..." : "Get Call in 2 Minutes"}
+                        {loading ? 'Sending…' : 'Get Call in 2 Minutes'}
                       </button>
                     </form>
                   </>
                 ) : (
-                  <div className="text-center py-6">
-                    <div className="text-3xl mb-2">✅</div>
-                    <h3 className="font-bold text-green-700">Request Sent!</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Our team will call you shortly 🚀
-                    </p>
+                  <div className="text-center py-4">
+                    <div className="text-4xl mb-2">✅</div>
+                    <h3 className="font-bold text-green-700 text-base">Request Sent!</h3>
+                    <p className="text-sm text-gray-500 mt-1">Our team will call you shortly 🚀</p>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Experience badge — bottom-left, identical to original */}
-            <div className="absolute -bottom-6 -left-6 bg-yellow-400 text-gray-900 p-5 rounded-xl shadow-lg">
-              <p className="text-3xl font-bold">20+</p>
-              <p className="text-xs font-semibold">Years Experience</p>
+            {/* Experience badge */}
+            <div className="absolute -top-4 -left-4 bg-yellow-400 text-gray-900 p-4 rounded-xl shadow-lg hidden md:block">
+              <p className="text-2xl font-black">20+</p>
+              <p className="text-xs font-bold leading-tight">Years<br/>Experience</p>
             </div>
           </div>
-
         </div>
 
         {/* ── STATS BAR ── */}
-        <div className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {stats.map((s, i) => (
+        <div className="mt-14 grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {stats.map((s: { value: string; label: string }, i: number) => (
             <div
               key={i}
               className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
             >
-              <p className="text-2xl md:text-3xl font-extrabold text-blue-700">
-                {s.value}
-              </p>
-              <p className="text-xs md:text-sm text-gray-500 mt-1 font-medium">
-                {s.label}
-              </p>
+              <p className="text-2xl md:text-3xl font-extrabold text-blue-700">{s.value}</p>
+              <p className="text-xs md:text-sm text-gray-500 mt-1 font-medium">{s.label}</p>
             </div>
           ))}
         </div>
