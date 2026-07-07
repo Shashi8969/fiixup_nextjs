@@ -7,6 +7,7 @@ import { Testimonials } from "@/components/Testimonials";
 import { mvvItems, differentiators } from "@/lib/data/about";
 import { getStaticPageSEO } from "@/lib/data/seo";
 import { aboutPageSchema } from "@/lib/schema";
+import { getPublicSiteSettings } from "@/lib/site-settings";
 import { PageHero } from "@/components/ui/PageHero";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
@@ -25,12 +26,30 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const siteSettings = await getPublicSiteSettings();
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutPageSchema()) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            aboutPageSchema({
+              phone: siteSettings.mainPhone,
+              email: siteSettings.mainEmail,
+              address: siteSettings.addressStreet
+                ? {
+                    street: siteSettings.addressStreet,
+                    locality: siteSettings.addressLocality,
+                    region: siteSettings.addressRegion,
+                    postalCode: siteSettings.addressPostalCode,
+                    country: siteSettings.addressCountry,
+                  }
+                : undefined,
+            })
+          ),
+        }}
       />
       <PageHero
         heading="About Fiixup"

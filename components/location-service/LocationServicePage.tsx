@@ -205,7 +205,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
               </h1>
               <p className="text-lg text-gray-600 mb-2">{data.heroSubheading}</p>
               <p className={`text-sm ${accentText} ${bgLight} border ${borderClr} rounded-lg px-4 py-2 mb-6`}>
-                📍 {data.heroBadgeText || `Serving all areas in ${data.displayLocation}`}
+                {data.heroBadgeText || `📍 Serving all areas in ${data.displayLocation}`}
               </p>
 
               {/* Stats */}

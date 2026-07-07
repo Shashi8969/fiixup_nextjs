@@ -909,7 +909,21 @@ export function faqPageSchema(faqs: { q: string; a: string }[]) {
 //    ✓ E-E-A-T trust signal
 //    ✓ Breadcrumbs
 // ═════════════════════════════════════════════════════════════════════════════
-export function aboutPageSchema() {
+export function aboutPageSchema(opts?: {
+  phone?: string;
+  email?: string;
+  address?: {
+    street?: string;
+    locality?: string;
+    region?: string;
+    postalCode?: string;
+    country?: string;
+  };
+}) {
+  const phone = opts?.phone || MAIN_PHONE;
+  const email = opts?.email || MAIN_EMAIL;
+  const address = opts?.address;
+
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -931,8 +945,18 @@ export function aboutPageSchema() {
         logo:          { "@type": "ImageObject", url: LOGO, width: 200, height: 60 },
         foundingDate:  "2020",
         description:   "India's leading 24/7 doorstep car and bike repair service in Bangalore, Chennai, Hyderabad and Mumbai.",
-        telephone:     MAIN_PHONE,
-        email:         MAIN_EMAIL,
+        telephone:     phone,
+        email:         email,
+        ...(address?.street && {
+          address: {
+            "@type":         "PostalAddress",
+            streetAddress:   address.street,
+            addressLocality: address.locality,
+            addressRegion:   address.region,
+            postalCode:      address.postalCode,
+            addressCountry:  address.country || "IN",
+          },
+        }),
         areaServed:    { "@type": "Country", name: "India" },
         numberOfEmployees: { "@type": "QuantitativeValue", minValue: 50, maxValue: 500 },
         knowsAbout:    [
@@ -963,7 +987,23 @@ export function aboutPageSchema() {
 //    ✓ E-E-A-T trust signal
 //    ✓ Breadcrumbs
 // ═════════════════════════════════════════════════════════════════════════════
-export function contactPageSchema() {
+export function contactPageSchema(opts?: {
+  phone?: string;
+  email?: string;
+  emergencyPhone?: string;
+  address?: {
+    street?: string;
+    locality?: string;
+    region?: string;
+    postalCode?: string;
+    country?: string;
+  };
+}) {
+  const phone = opts?.phone || MAIN_PHONE;
+  const email = opts?.email || MAIN_EMAIL;
+  const emergencyPhone = opts?.emergencyPhone || phone;
+  const address = opts?.address;
+
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -982,10 +1022,20 @@ export function contactPageSchema() {
         name:          "Fiixup",
         url:           SITE_URL,
         image:         OG_IMAGE,
-        telephone:     MAIN_PHONE,
-        email:         MAIN_EMAIL,
+        telephone:     phone,
+        email:         email,
         openingHours:  "Mo-Su 00:00-24:00",
         priceRange:    "₹₹",
+        ...(address?.street && {
+          address: {
+            "@type":         "PostalAddress",
+            streetAddress:   address.street,
+            addressLocality: address.locality,
+            addressRegion:   address.region,
+            postalCode:      address.postalCode,
+            addressCountry:  address.country || "IN",
+          },
+        }),
         areaServed: [
           { "@type": "City", name: "Bangalore" },
           { "@type": "City", name: "Chennai" },
@@ -995,13 +1045,13 @@ export function contactPageSchema() {
         parentOrganization: { "@id": ORG_ID },
         contactPoint: [
           {
-            "@type": "ContactPoint", telephone: MAIN_PHONE,
+            "@type": "ContactPoint", telephone: phone,
             contactType: "customer support",
             hoursAvailable: "Mo-Su 00:00-24:00",
             availableLanguage: ["English","Hindi","Kannada","Tamil","Telugu"],
           },
           {
-            "@type": "ContactPoint", telephone: MAIN_PHONE,
+            "@type": "ContactPoint", telephone: emergencyPhone,
             contactType: "emergency",
             hoursAvailable: "Mo-Su 00:00-24:00",
           },
