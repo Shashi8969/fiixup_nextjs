@@ -33,11 +33,13 @@ export function FAQAccordion({ faqs, accentText = "text-blue-600" }: Props) {
               ? <ChevronUp className={`w-5 h-5 ${accentText} flex-shrink-0`} />
               : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
           </button>
-          {openFaq === i && (
-            <div className="px-5 pb-5 pt-3 text-gray-600 leading-relaxed border-t border-gray-100">
-              {faq.a}
-            </div>
-          )}
+          <div
+            className={`px-5 pb-5 pt-3 text-gray-600 leading-relaxed border-t border-gray-100 ${
+              openFaq === i ? "block" : "hidden"
+            }`}
+          >
+            {faq.a}
+          </div>
         </div>
       ))}
     </div>

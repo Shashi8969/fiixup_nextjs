@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { submitLead } from "@/lib/send-lead";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import React, { useRef } from "react";
+import { MapPin, Phone, Mail, Clock, ShieldAlert } from "lucide-react";
+import { useLeadForm } from "@/lib/hooks/useLeadForm";
 
 import {
   MAIN_PHONE,
@@ -17,62 +17,6 @@ import type { PublicSiteSettings } from "@/lib/site-settings";
 import { SERVICE_OPTIONS } from "@/lib/data/serviceOptions";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
-
-function useEmailForm() {
-
-  const form = useRef<HTMLFormElement>(null);
-
-  const [loading, setLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showError, setShowError] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-
-  const sendEmail = async (e: React.FormEvent) => {
-
-    e.preventDefault();
-
-    if (!form.current) return;
-
-    setLoading(true);
-
-    const requestTime = new Date().toLocaleString("en-IN", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    });
-
-    const formData = new FormData(form.current);
-
-    formData.set("request_time", requestTime);
-
-    try {
-      const result = await submitLead(formData) as { success_message?: string };
-
-      setSuccessMessage(result?.success_message || "");
-      setShowSuccess(true);
-      form.current?.reset();
-      setTimeout(() => {
-        setShowSuccess(false);
-        setSuccessMessage("");
-      }, 5000);
-    } catch {
-      setShowError(true);
-      setSuccessMessage("");
-      setTimeout(() => setShowError(false), 4000);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return {
-    form,
-    loading,
-    showSuccess,
-    successMessage,
-    showError,
-    sendEmail
-  };
-}
-
 interface ContactInfoItem {
   Icon: React.ElementType;
   title: string;
@@ -80,25 +24,66 @@ interface ContactInfoItem {
   href?: string;
 }
 
-function buildContactInfo(data: HomeContactData | undefined, siteSettings: Pick<PublicSiteSettings, "mainPhone" | "mainPhoneDisplay" | "mainEmail"> | undefined): ContactInfoItem[] {
+type ContactSiteSettings = Pick<
+  PublicSiteSettings,
+  | "mainPhone"
+  | "mainPhoneDisplay"
+  | "mainEmail"
+  | "emergencyPhone"
+  | "addressStreet"
+  | "addressLocality"
+  | "addressRegion"
+  | "addressPostalCode"
+>;
+
+function buildContactInfo(data: HomeContactData | undefined, siteSettings: ContactSiteSettings | undefined): ContactInfoItem[] {
   const cities = data?.cities?.length ? data.cities : [...CITIES_LIST];
   const mainPhone = siteSettings?.mainPhone || MAIN_PHONE;
   const mainPhoneDisplay = siteSettings?.mainPhoneDisplay || MAIN_PHONE_DISPLAY;
   const mainEmail = siteSettings?.mainEmail || MAIN_EMAIL;
+  const emergencyPhone = siteSettings?.emergencyPhone;
 
-  return [
+  const items: ContactInfoItem[] = [
     {
       Icon: MapPin,
       title: "Cities We Serve",
       content: `${cities.join(" · ")}
 Doorstep mechanic support expanding to more cities soon`
     },
-    {
-      Icon: Phone,
-      title: "24/7 Booking Support",
-      content: mainPhoneDisplay,
-      href: `tel:${mainPhone}`
-    },
+  ];
+
+  if (siteSettings?.addressStreet) {
+    items.push({
+      Icon: MapPin,
+      title: "Our Address",
+      content: [
+        siteSettings.addressStreet,
+        [siteSettings.addressLocality, siteSettings.addressRegion, siteSettings.addressPostalCode]
+          .filter(Boolean)
+          .join(", "),
+      ]
+        .filter(Boolean)
+        .join("\n"),
+    });
+  }
+
+  items.push({
+    Icon: Phone,
+    title: "24/7 Booking Support",
+    content: mainPhoneDisplay,
+    href: `tel:${mainPhone}`
+  });
+
+  if (emergencyPhone) {
+    items.push({
+      Icon: ShieldAlert,
+      title: "24/7 Emergency Line",
+      content: emergencyPhone,
+      href: `tel:${emergencyPhone.replace(/\s+/g, "")}`
+    });
+  }
+
+  items.push(
     {
       Icon: Mail,
       title: "Customer Support Email",
@@ -111,24 +96,34 @@ Doorstep mechanic support expanding to more cities soon`
       content:
         "24/7 support for emergency breakdowns, roadside assistance, puncture repair, battery problems, and scheduled vehicle servicing"
     },
-  ];
+  );
+
+  return items;
 }
 
 type ContactProps = {
   data?: HomeContactData;
-  siteSettings?: Pick<PublicSiteSettings, "mainPhone" | "mainPhoneDisplay" | "mainEmail">;
+  siteSettings?: ContactSiteSettings;
 };
 
 export function Contact({ data, siteSettings }: ContactProps = {}) {
 
+  const form = useRef<HTMLFormElement>(null);
   const {
-    form,
     loading,
-    showSuccess,
+    isSuccess,
     showError,
     successMessage,
-    sendEmail
-  } = useEmailForm();
+    submit
+  } = useLeadForm();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.current) return;
+    const formData = new FormData(form.current);
+    const result = await submit(formData, "Doorstep Mechanic Booking Form");
+    if (result.ok) form.current.reset();
+  };
 
   const cities = data?.cities?.length ? data.cities : [...CITIES_LIST];
   const contactInfo = buildContactInfo(data, siteSettings);
@@ -232,7 +227,7 @@ export function Contact({ data, siteSettings }: ContactProps = {}) {
               {formSubtitle}
             </p>
 
-            {showSuccess && (
+            {isSuccess && (
 
               <div className="mb-4 bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 text-sm font-medium">
 
@@ -254,21 +249,9 @@ export function Contact({ data, siteSettings }: ContactProps = {}) {
 
             <form
               ref={form}
-              onSubmit={sendEmail}
+              onSubmit={handleSubmit}
               className="space-y-4"
             >
-
-              <input
-                type="hidden"
-                name="form_type"
-                value="Doorstep Mechanic Booking Form"
-              />
-
-              <input
-                type="hidden"
-                name="request_time"
-                value=""
-              />
 
               {[
                 {

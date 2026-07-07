@@ -41,11 +41,13 @@ export function CityFAQDynamic({ data }: { data: CityHubPageData }) {
                   aria-hidden="true"
                 />
               </button>
-              {open === i && (
-                <div className="px-6 pb-5 bg-gray-50 border-t border-gray-100">
-                  <p className="text-gray-600 leading-relaxed pt-3 text-sm md:text-base">{faq.a}</p>
-                </div>
-              )}
+              <div
+                className={`px-6 pb-5 bg-gray-50 border-t border-gray-100 ${
+                  open === i ? "block" : "hidden"
+                }`}
+              >
+                <p className="text-gray-600 leading-relaxed pt-3 text-sm md:text-base">{faq.a}</p>
+              </div>
             </div>
           ))}
         </div>

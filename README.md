@@ -1,120 +1,48 @@
-# Fiixup — Next.js 14 (Migrated from Vite + React Router)
+# Fiixup
 
-## What changed
+Doorstep car & bike repair + 24/7 roadside assistance (towing, jump start, puncture repair, battery replacement, fuel delivery, locksmith). Live in Bangalore, Chennai, Hyderabad, Mumbai — scaling toward 100+ cities.
 
-| Old (Vite SPA) | New (Next.js 14) |
-|---|---|
-| `react-router` `<Link to>` | `next/link` `<Link href>` |
-| `react-router` `useParams` | `params` props (server components) |
-| `<SEO>` + `react-helmet-async` | `generateMetadata()` — server-side |
-| `import.meta.env.VITE_*` | `process.env.NEXT_PUBLIC_*` |
-| `vite.config.ts` + `index.html` | `next.config.ts` |
-| `generate-sitemap.js` (manual) | `app/sitemap.ts` (auto, built-in) |
-| `vercel.json` rewrites (SPA fallback) | Next.js App Router (native routing) |
-| Client-side rendering only | SSR + SSG (Google sees full HTML) |
+Production: https://fiixup.in
+Admin panel: https://admin.fiixup.in (separate `fiixup-admin` repo)
 
-## Quick start
+## Stack
 
-```bash
-# 1. Install dependencies
+- Next.js 16 (App Router, Turbopack), TypeScript, Tailwind CSS, Radix UI, React Hook Form
+- Supabase (Postgres, Singapore region) — single source of truth for all content
+- Deploy: GitHub → Hostinger, auto-deploy on every push to `main`
+
+## ⚠️ Content workflow — read this before touching anything
+
+Cities, areas, services, location-service pages, blog posts, FAQs, testimonials, navigation, media, and site settings all live in Supabase and are edited through the admin panel — **not** in this repo.
+
+**Never push content changes to GitHub.** Only push actual code/architecture changes. To add a new city or service, use the Admin Panel (`/cities`, `/services`) — the page, sitemap entry, and metadata are generated from the database automatically. There is no `lib/cities.ts` array to hand-edit anymore.
+
+## Lead capture
+
+Contact and quick-booking forms submit to `/api/leads`, which:
+
+1. Writes to the `leads` table via the service-role client (a lead is never lost even if the email step fails)
+2. Runs duplicate-phone detection
+3. Sends a notification email over SMTP (`nodemailer`)
+
+No EmailJS. No client-to-third-party form submission.
+
+## Local development
+
+```
 npm install
-
-# 2. Set up environment variables
-cp .env.local.example .env.local
-# Edit .env.local with your Gmail SMTP keys
-
-# 3. Run dev server
 npm run dev
-
-# 4. Build for production
-npm run build
 ```
 
-## Links of pages
-24/7 Doorstep Car Mechanics in Bangalore - https://fiixup.in/bangalore
-24/7 Doorstep Car Mechanics in HSR Layout Bangalore - https://fiixup.in/bangalore/hsr-layout/car-mechanic-near-me
+Requires a `.env.local` with your Supabase URL/anon key and SMTP credentials.
+**TODO:** paste the real variable names here — not guessing at these to avoid documenting something wrong again.
 
-## Deploy to Vercel
+## Folder structure
 
-1. Push this repo to GitHub
-2. Import into Vercel at vercel.com/new
-3. Add `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `LEAD_TO_EMAIL`, and `LEAD_FROM_NAME` in Vercel dashboard
-4. Connect `fiixup.in` domain under Settings → Domains
-5. Deploy — done!
-
-## Adding a new city
-
-Edit `lib/cities.ts` — add a new entry to the `cities` array following the same pattern as Bengaluru/Chennai. The city page, sitemap entry, and metadata will all generate automatically on next build.
-
-## Adding a new service
-
-Edit `lib/services.ts` — add a new entry to the `services` array. The service page, sitemap entry, and metadata generate automatically.
-
-## File structure
+See `CLAUDE.md` for the current architecture and data model. If it drifts from reality again, regenerate the tree with:
 
 ```
-app/
-  layout.tsx          ← Global layout, Header, Footer, schema
-  page.tsx            ← Homepage
-  sitemap.ts          ← Auto-generates sitemap.xml for all pages
-  not-found.tsx       ← 404 page
-  [citySlug]/
-    page.tsx          ← SSG city pages (bengaluru, chennai, hyderabad, mumbai)
-  services/
-    page.tsx          ← Services index
-    [serviceSlug]/
-      page.tsx        ← SSG individual service pages (12 services)
-  about/page.tsx
-  blog/
-    page.tsx
-    [id]/page.tsx     ← SSG blog post pages
-  contact/page.tsx
-  faq/page.tsx
-
-components/
-  Header.tsx          ← "use client" — uses usePathname
-  Footer.tsx          ← Server component
-  Hero.tsx            ← Server component
-  Services.tsx        ← Server component
-  About.tsx           ← Server component
-  CityCoverage.tsx    ← Server component
-  Testimonials.tsx    ← Server component (exports Testimonials + CityTestimonials)
-  Blog.tsx            ← Server component
-  Contact.tsx         ← "use client" — EmailJS form
-  FloatingButtons.tsx ← "use client" — fixed position buttons
-  city/
-    CityHero.tsx      ← Server component
-    CityAbout.tsx     ← Server component
-    CityServices.tsx  ← Server component
-    CityTestimonials.tsx
-    CityFAQ.tsx       ← "use client" — accordion state
-    CityContact.tsx   ← "use client" — EmailJS form
-
-lib/
-  cities.ts           ← All city data (SEO, FAQs, testimonials)
-  services.ts         ← All service data (SEO, features, FAQs)
-  blogPosts.json      ← Blog post content
-  constants.ts        ← Phone numbers, site URL, trust badges
-  schema.ts           ← JSON-LD schema helpers
-  utils.ts            ← cn() utility
-
-public/
-  assets/             ← All images (copied from original project)
-  robots.txt          ← Allows all crawlers, references sitemap
-  favicon.ico
-  site.webmanifest
+find app components lib -type f \( -name "*.ts" -o -name "*.tsx" \) | sort
 ```
 
-## SEO improvements over the old site
-
-- ✅ Googlebot now sees full HTML on first request (SSG/SSR)
-- ✅ Every page has unique `<title>`, `<meta description>`, canonical URL
-- ✅ Open Graph tags for WhatsApp sharing on every page
-- ✅ `LocalBusiness` + `Service` + `FAQPage` JSON-LD schema — server-side
-- ✅ `sitemap.xml` auto-generated — covers all 22+ pages
-- ✅ `robots.txt` in place
-- ✅ 301 redirects from all old WordPress URLs
-- ✅ `next/image` — automatic WebP conversion + lazy loading
-- ✅ City pages: `/bengaluru`, `/chennai`, `/hyderabad`, `/mumbai`
-- ✅ Service pages: 12 individual service landing pages
-- ✅ Blog pages: all 6 posts pre-rendered as static HTML
+and paste the output back in rather than hand-editing this section from memory.

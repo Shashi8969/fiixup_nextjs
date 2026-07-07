@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Phone, Mail } from "lucide-react";
+import { Phone, Mail, MapPin, ShieldAlert } from "lucide-react";
 import { socials } from "@/lib/data/site";
 import { MAIN_PHONE, MAIN_PHONE_DISPLAY, MAIN_EMAIL } from "@/lib/constants";
 import { getFooterNavigationGroups } from "@/lib/navigation";
@@ -21,6 +21,17 @@ export async function Footer({ siteSettings }: FooterProps = {}) {
   const footerDescription = siteSettings?.footerDescription ||
     "India\'s 24/7 doorstep car & bike repair service. Certified technicians at your home or office.";
   const serviceAreaText = siteSettings?.serviceAreaText || "Available 24/7 · Bengaluru · Chennai · Hyderabad · Mumbai";
+  const emergencyPhone = siteSettings?.emergencyPhone;
+  const addressLine = siteSettings?.addressStreet
+    ? [
+        siteSettings.addressStreet,
+        [siteSettings.addressLocality, siteSettings.addressRegion, siteSettings.addressPostalCode]
+          .filter(Boolean)
+          .join(", "),
+      ]
+        .filter(Boolean)
+        .join(", ")
+    : null;
 
   return (
     <footer className="bg-gray-950 text-gray-400">
@@ -51,6 +62,15 @@ export async function Footer({ siteSettings }: FooterProps = {}) {
                   <Phone className="w-4 h-4 text-blue-500 flex-shrink-0" />
                   {mainPhoneDisplay}
                 </a>
+                {emergencyPhone && (
+                  <a
+                    href={`tel:${emergencyPhone.replace(/\s+/g, "")}`}
+                    className="flex items-center gap-2 hover:text-blue-400 transition-colors"
+                  >
+                    <ShieldAlert className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                    {emergencyPhone} <span className="text-gray-500">(24/7 Emergency)</span>
+                  </a>
+                )}
                 <a
                   href={`mailto:${mainEmail}`}
                   className="flex items-center gap-2 hover:text-blue-400 transition-colors"
@@ -58,6 +78,12 @@ export async function Footer({ siteSettings }: FooterProps = {}) {
                   <Mail className="w-4 h-4 text-blue-500 flex-shrink-0" />
                   {mainEmail}
                 </a>
+                {addressLine && (
+                  <p className="flex items-start gap-2 text-gray-400">
+                    <MapPin className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <span>{addressLine}</span>
+                  </p>
+                )}
               </div>
 
               <div className="flex gap-2">

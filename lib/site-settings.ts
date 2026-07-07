@@ -20,6 +20,12 @@ export type PublicSiteSettings = {
   serviceAreaText: string;
   quickModalAvailableText: string;
   floatingWhatsAppMessage: string;
+  emergencyPhone: string;
+  addressStreet: string;
+  addressLocality: string;
+  addressRegion: string;
+  addressPostalCode: string;
+  addressCountry: string;
 };
 
 export const fallbackSiteSettings: PublicSiteSettings = {
@@ -34,6 +40,12 @@ export const fallbackSiteSettings: PublicSiteSettings = {
   serviceAreaText: "Available 24/7 · Bengaluru · Chennai · Hyderabad · Mumbai",
   quickModalAvailableText: "Available 24/7 across Bengaluru, Chennai, Hyderabad & Mumbai",
   floatingWhatsAppMessage: "Hi Fiixup, I need roadside assistance for my vehicle.",
+  emergencyPhone: "",
+  addressStreet: "",
+  addressLocality: "",
+  addressRegion: "",
+  addressPostalCode: "",
+  addressCountry: "IN",
 };
 
 const SETTING_MAP: Record<string, keyof PublicSiteSettings> = {
@@ -47,6 +59,12 @@ const SETTING_MAP: Record<string, keyof PublicSiteSettings> = {
   service_area_text: "serviceAreaText",
   quick_modal_available_text: "quickModalAvailableText",
   floating_whatsapp_message: "floatingWhatsAppMessage",
+  phone: "emergencyPhone",
+  address_street: "addressStreet",
+  address_locality: "addressLocality",
+  address_region: "addressRegion",
+  address_postal_code: "addressPostalCode",
+  address_country: "addressCountry",
 };
 
 function clean(value: unknown) {
