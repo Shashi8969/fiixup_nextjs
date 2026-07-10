@@ -99,7 +99,7 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  trailingSlash: true,
+  trailingSlash: false, // FIX: was true. Aligns served URL with the no-slash canonical + sitemap the DB already emits, and 308-redirects the /x/ duplicates.
 
   async redirects() {
     let dbRedirects: { source: string; destination: string; permanent: boolean }[] = [];
