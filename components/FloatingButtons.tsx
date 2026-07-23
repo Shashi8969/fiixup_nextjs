@@ -1,5 +1,3 @@
-"use client";
-
 import { Phone, MessageCircle } from "lucide-react";
 import { MAIN_PHONE, WHATSAPP_NUMBER } from "@/lib/constants";
 

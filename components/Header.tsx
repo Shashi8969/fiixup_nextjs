@@ -70,7 +70,13 @@ export function Header({ navLinks: navLinksProp, mainPhone = MAIN_PHONE }: Heade
             >
               Scheduled Service
             </Link>
-            <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
+            <button
+              className="md:hidden"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle menu"
+              aria-expanded={menuOpen}
+              aria-controls="mobile-nav-menu"
+            >
               {menuOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
           </div>
@@ -78,7 +84,7 @@ export function Header({ navLinks: navLinksProp, mainPhone = MAIN_PHONE }: Heade
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="md:hidden mt-4 border-t pt-4 flex flex-col gap-4">
+          <div id="mobile-nav-menu" className="md:hidden mt-4 border-t pt-4 flex flex-col gap-4">
             {navLinks.map((l) => (
               <Link key={l.href} href={l.href} className={linkClass(l.href)} onClick={() => setMenuOpen(false)}>
                 {l.label}

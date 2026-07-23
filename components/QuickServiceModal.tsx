@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
 import { X, Phone } from "lucide-react";
 import { MAIN_PHONE } from "@/lib/constants";
 import { submitLead } from "@/lib/send-lead";
@@ -56,64 +57,73 @@ export function QuickServiceModal({
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 backdrop-blur-md bg-black/30 flex items-center justify-center z-[100] p-4">
-      <div className="bg-white rounded-2xl max-w-md w-full p-8 relative">
-        <button
-          onClick={dismiss}
-          aria-label="Close modal"
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+    <Dialog.Root open={isOpen} onOpenChange={(open) => { if (!open) dismiss(); }}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 backdrop-blur-md bg-black/30 z-[100] data-[state=open]:animate-in data-[state=open]:fade-in" />
+        <Dialog.Content
+          aria-modal="true"
+          className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl max-w-md w-[calc(100%-2rem)] p-8 z-[100] focus:outline-none"
+          onOpenAutoFocus={(e) => {
+            e.preventDefault();
+            formRef.current?.querySelector("input")?.focus();
+          }}
         >
-          <X className="w-6 h-6" />
-        </button>
+          <Dialog.Close asChild>
+            <button
+              aria-label="Close modal"
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </Dialog.Close>
 
-        <div className="text-center mb-6">
-          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Phone className="w-8 h-8 text-blue-600" />
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Phone className="w-8 h-8 text-blue-600" />
+            </div>
+            <Dialog.Title className="text-2xl font-bold mb-2">Need Quick Service?</Dialog.Title>
+            <Dialog.Description className="text-gray-600">
+              Book in 30 seconds. Mechanic at your doorstep in 30 minutes.
+            </Dialog.Description>
           </div>
-          <h2 className="text-2xl font-bold mb-2">Need Quick Service?</h2>
-          <p className="text-gray-600">
-            Book in 30 seconds. Mechanic at your doorstep in 30 minutes. 
+
+          <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="modal-phone" className="block text-sm font-medium mb-2 text-gray-700">
+                Mobile Number
+              </label>
+              <input
+                id="modal-phone"
+                type="tel"
+                name="phone"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder={phonePlaceholder}
+                required
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+              />
+            </div>
+
+            <input type="hidden" name="form_type" value="Quick Callback Request" />
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-semibold disabled:opacity-60"
+            >
+              {loading ? "Sending…" : "Request Callback"}
+            </button>
+            <button type="button" onClick={dismiss} className="w-full text-gray-500 py-2 text-sm hover:text-gray-700">
+              Maybe Later
+            </button>
+          </form>
+
+          <p className="text-xs text-gray-500 text-center mt-4">
+            {availableText}
           </p>
-        </div>
-
-        <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="modal-phone" className="block text-sm font-medium mb-2 text-gray-700">
-              Mobile Number
-            </label>
-            <input
-              id="modal-phone"
-              type="tel"
-              name="phone"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder={phonePlaceholder}
-              required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
-            />
-          </div>
-
-          <input type="hidden" name="form_type" value="Quick Callback Request" />
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-semibold disabled:opacity-60"
-          >
-            {loading ? "Sending…" : "Request Callback"}
-          </button>
-          <button type="button" onClick={dismiss} className="w-full text-gray-500 py-2 text-sm hover:text-gray-700">
-            Maybe Later
-          </button>
-        </form>
-
-        <p className="text-xs text-gray-500 text-center mt-4">
-          {availableText}
-        </p>
-      </div>
-    </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

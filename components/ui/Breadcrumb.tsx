@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ChevronRight, Home } from "lucide-react";
 import { SITE_URL } from "@/lib/constants";
+import { jsonLdString } from "@/lib/schema";
 
 export interface BreadcrumbItem {
   label: string;
@@ -46,7 +47,7 @@ export function Breadcrumb({ items, withSchema = true }: BreadcrumbProps) {
       {schema && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdString(schema) }}
         />
       )}
       <nav aria-label="Breadcrumb" className="py-3">

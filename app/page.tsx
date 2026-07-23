@@ -10,7 +10,7 @@ import { CityCoverage } from "@/components/CityCoverage";
 import { Testimonials } from "@/components/Testimonials";
 import { Blog }         from "@/components/Blog";
 import { Contact }      from "@/components/Contact";
-import { homeSchema } from "@/lib/schema";
+import { homeSchema, jsonLdString } from "@/lib/schema";
 import { getHomepageData } from "@/lib/homepage";
 import { getPublicSiteSettings } from "@/lib/site-settings";
 import { SectionSkeleton } from "@/components/ui/SectionSkeleton";
@@ -48,7 +48,7 @@ export default async function HomePage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeData.seo.schemaJson ?? homeSchema()) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(homeData.seo.schemaJson ?? homeSchema()) }}
       />
       <Hero data={homeData.hero} mainPhone={siteSettings.mainPhone} />
       <Services {...homeData.services} />

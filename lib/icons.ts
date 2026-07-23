@@ -1,13 +1,13 @@
 // lib/icons.ts
-import { 
-  Wrench, 
-  Bike, 
-  Battery, 
-  Truck, 
-  Car, 
-  Settings, 
-  Droplets, 
-  Wind, 
+import {
+  Wrench,
+  Bike,
+  Battery,
+  Truck,
+  Car,
+  Settings,
+  Droplets,
+  Wind,
   ShieldAlert,
   Search,
   MapPin,
@@ -18,12 +18,13 @@ import {
   Shield,
   Tag
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 /**
- * iconMap connects the string names in your serviceCategory data 
+ * iconMap connects the string names in your serviceCategory data
  * to the actual Lucide React components.
  */
-export const iconMap: Record<string, any> = {
+export const iconMap: Record<string, LucideIcon> = {
   Wrench,
   Bike,
   Battery,

@@ -6,7 +6,7 @@ import { About } from "@/components/About";
 import { Testimonials } from "@/components/Testimonials";
 import { mvvItems, differentiators } from "@/lib/data/about";
 import { getStaticPageSEO } from "@/lib/data/seo";
-import { aboutPageSchema } from "@/lib/schema";
+import { aboutPageSchema, jsonLdString } from "@/lib/schema";
 import { getPublicSiteSettings } from "@/lib/site-settings";
 import { PageHero } from "@/components/ui/PageHero";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -34,7 +34,7 @@ export default async function AboutPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
+          __html: jsonLdString(
             aboutPageSchema({
               phone: siteSettings.mainPhone,
               email: siteSettings.mainEmail,

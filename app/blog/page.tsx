@@ -3,7 +3,7 @@ export const revalidate = 3600;
 
 import type { Metadata } from "next";
 import { getAllPosts } from "@/lib/posts";
-import { blogListingSchema } from "@/lib/schema";
+import { blogListingSchema, jsonLdString } from "@/lib/schema";
 import { getStaticPageSEO } from "@/lib/data/seo";
 import { PageHero } from "@/components/ui/PageHero";
 import { BlogCard } from "@/components/ui/BlogCard";
@@ -30,7 +30,7 @@ export default async function BlogPage() {
   return (
     <>
       <script type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+        dangerouslySetInnerHTML={{ __html: jsonLdString(schema) }} />
       <PageHero
         heading="Fiixup Blog"
         subtext="Expert tips, maintenance guides, and industry insights to help you keep your car and bike in perfect condition."

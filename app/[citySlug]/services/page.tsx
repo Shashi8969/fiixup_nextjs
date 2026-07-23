@@ -28,6 +28,7 @@ import WhyChooseDoorstep                   from "@/components/ui/WhyChooseDoorst
 import { CityServiceCard }                 from "@/components/ui/CityServiceCard";
 import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
 import { metadataFromBasicSeo } from "@/lib/seo/metadata";
+import { jsonLdString } from "@/lib/schema";
 
 export const revalidate = 3600;
 
@@ -149,7 +150,7 @@ export default async function CityServicesPage({
       {/* JSON-LD */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(schema) }}
       />
 
       {/* ── BREADCRUMB ─────────────────────────────────────────────────── */}

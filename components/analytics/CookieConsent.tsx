@@ -36,16 +36,16 @@ function savePreferences(analytics: boolean, advertising: boolean) {
 export function CookieConsent() {
   const [visible, setVisible] = useState(false);
   const [customizing, setCustomizing] = useState(false);
-  const [analytics, setAnalytics] = useState(true);
-  const [advertising, setAdvertising] = useState(false);
+  const [analytics, setAnalytics] = useState(
+    () => readConsentPreferences()?.analytics ?? true,
+  );
+  const [advertising, setAdvertising] = useState(
+    () => readConsentPreferences()?.advertising ?? false,
+  );
 
   useEffect(() => {
-    const existing = readConsentPreferences();
-    if (existing) {
-      setAnalytics(existing.analytics);
-      setAdvertising(existing.advertising);
-      return;
-    }
+    // Already decided — nothing to show.
+    if (readConsentPreferences()) return;
 
     // Whichever comes first — a short delay, or the person starting to
     // scroll — shows the banner once they've seen there's a real page here.
@@ -73,11 +73,8 @@ export function CookieConsent() {
 
     window.addEventListener(OPEN_CONSENT_EVENT, openPreferences);
     return () => {
-  window.removeEventListener(
-    OPEN_CONSENT_EVENT,
-    openPreferences
-  );
-};
+      window.removeEventListener(OPEN_CONSENT_EVENT, openPreferences);
+    };
   }, []);
 
   const confirm = (analyticsAllowed: boolean, advertisingAllowed: boolean) => {

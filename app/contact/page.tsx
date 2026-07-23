@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Contact } from "@/components/Contact";
 import { getStaticPageSEO } from "@/lib/data/seo";
-import { contactPageSchema } from "@/lib/schema";
+import { contactPageSchema, jsonLdString } from "@/lib/schema";
 import { getPublicSiteSettings } from "@/lib/site-settings";
 import { PageHero } from "@/components/ui/PageHero";
 export const revalidate = 3600; // refreshes every 1 hour
@@ -29,7 +29,7 @@ export default async function ContactPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
+          __html: jsonLdString(
             contactPageSchema({
               phone: siteSettings.mainPhone,
               email: siteSettings.mainEmail,

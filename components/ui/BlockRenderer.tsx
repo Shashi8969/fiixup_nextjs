@@ -209,7 +209,7 @@ function ImageBlock({ url, alt, caption }: { url: string; alt: string; caption?:
 function QuoteBlock({ content, author }: { content: string; author?: string }) {
   return (
     <blockquote className="mb-5 border-l-4 border-red-400 pl-5 py-2 bg-red-50/50 rounded-r-2xl">
-      <p className="text-gray-800 italic text-[1.05rem] leading-relaxed mb-1">"{content}"</p>
+      <p className="text-gray-800 italic text-[1.05rem] leading-relaxed mb-1">&quot;{content}&quot;</p>
       {author && <cite className="text-sm text-gray-500 not-italic font-medium">— {author}</cite>}
     </blockquote>
   );

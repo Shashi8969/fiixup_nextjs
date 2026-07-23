@@ -86,11 +86,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en-IN" className={inter.variable} suppressHydrationWarning>
       <head />
       <body suppressHydrationWarning>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:rounded-lg focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:outline-none focus:ring-2 focus:ring-white"
+        >
+          Skip to main content
+        </a>
         <Suspense fallback={null}>
   <AnalyticsManager />
 </Suspense>
         <Header navLinks={headerLinks} mainPhone={siteSettings.mainPhone} />
-        <main>{children}</main>
+        <main id="main-content">{children}</main>
         <Footer siteSettings={siteSettings} />
         <FloatingButtons
           mainPhone={siteSettings.mainPhone}

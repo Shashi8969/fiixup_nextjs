@@ -1,8 +1,22 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+import { timingSafeEqual } from "crypto";
 import { rateLimitRequest, readJsonBody } from "@/lib/api-security";
 
 export const runtime = "nodejs";
+
+function secretsMatch(expected: string, provided: string): boolean {
+  const expectedBuf = Buffer.from(expected);
+  const providedBuf = Buffer.from(provided);
+  // Length must match before timingSafeEqual (it throws on mismatched
+  // lengths); comparing against a fixed-size buffer keeps that check itself
+  // from leaking the expected secret's length via timing.
+  if (expectedBuf.length !== providedBuf.length) {
+    timingSafeEqual(expectedBuf, expectedBuf);
+    return false;
+  }
+  return timingSafeEqual(expectedBuf, providedBuf);
+}
 
 const VALID_TAGS = [
   "cities",
@@ -111,7 +125,7 @@ async function handleRevalidate(request: NextRequest, payload?: RevalidatePayloa
   const expectedSecret = process.env.REVALIDATE_SECRET || "";
   const providedSecret = getSecret(request);
 
-  if (!expectedSecret || providedSecret !== expectedSecret) {
+  if (!expectedSecret || !providedSecret || !secretsMatch(expectedSecret, providedSecret)) {
     return unauthorized();
   }
 

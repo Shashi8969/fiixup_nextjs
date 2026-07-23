@@ -55,6 +55,16 @@ export function rateLimitRequest(
   return null;
 }
 
+// Logs the real error server-side but never forwards internal details
+// (query structure, column names, driver messages) to the client.
+export function safeErrorResponse(context: string, error: unknown, status = 500) {
+  console.error(`[${context}]`, error);
+  return NextResponse.json(
+    { success: false, error: "Something went wrong. Please try again later." },
+    { status, headers: { "Cache-Control": "no-store" } }
+  );
+}
+
 export async function readJsonBody<T>(
   request: NextRequest,
   options: { maxBytes: number }

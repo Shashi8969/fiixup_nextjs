@@ -114,7 +114,7 @@ export function CityContact({ city }: { city: CityData }) {
 
             {showSuccess && (
               <div className="mb-4 bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 text-sm font-medium">
-                ✅ Booking received! We'll call you back within 2 minutes.
+                ✅ Booking received! We&apos;ll call you back within 2 minutes.
               </div>
             )}
             {showError && (

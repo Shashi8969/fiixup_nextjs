@@ -76,7 +76,7 @@ export function CityContactDynamic({ data }: { data: CityHubPageData }) {
           {/* Right — book form link */}
           <div className="bg-white/10 border border-white/20 rounded-2xl p-8 backdrop-blur-sm">
             <h3 className="text-xl font-bold mb-2">Book Online — It Takes 60 Seconds</h3>
-            <p className="text-blue-200 text-sm mb-6">Fill our quick form and we'll confirm your booking within minutes.</p>
+            <p className="text-blue-200 text-sm mb-6">Fill our quick form and we&apos;ll confirm your booking within minutes.</p>
             <Link
               href="/contact#contact-form"
               className="block w-full bg-yellow-400 text-gray-900 text-center font-bold py-4 rounded-xl hover:bg-yellow-300 transition-colors text-lg shadow-lg shadow-yellow-500/20"

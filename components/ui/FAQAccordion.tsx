@@ -27,6 +27,8 @@ export function FAQAccordion({ faqs, accentText = "text-blue-600" }: Props) {
             onClick={() => setOpenFaq(openFaq === i ? null : i)}
             className="w-full flex items-center justify-between p-5 text-left font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
             aria-expanded={openFaq === i}
+            aria-controls={`faq-answer-${i}`}
+            id={`faq-question-${i}`}
           >
             <span>{faq.q}</span>
             {openFaq === i
@@ -34,6 +36,9 @@ export function FAQAccordion({ faqs, accentText = "text-blue-600" }: Props) {
               : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
           </button>
           <div
+            id={`faq-answer-${i}`}
+            role="region"
+            aria-labelledby={`faq-question-${i}`}
             className={`px-5 pb-5 pt-3 text-gray-600 leading-relaxed border-t border-gray-100 ${
               openFaq === i ? "block" : "hidden"
             }`}

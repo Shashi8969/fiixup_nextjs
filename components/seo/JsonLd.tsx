@@ -1,4 +1,5 @@
 import { normalizeJsonLd } from '@/lib/cms-guards'
+import { jsonLdString } from '@/lib/schema'
 
 export function JsonLd({ data }: { data: unknown }) {
   const schemas = normalizeJsonLd(data)
@@ -10,7 +11,7 @@ export function JsonLd({ data }: { data: unknown }) {
         <script
           key={index}
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdString(schema) }}
         />
       ))}
     </>

@@ -22,7 +22,7 @@ export function CspCTA({ data }: { data: CityServiceCategoryPageData }) {
             href="/contact#contact-form"
             className="bg-yellow-400 text-gray-900 px-10 py-4 rounded-xl font-extrabold hover:bg-yellow-300 transition-colors text-lg shadow-xl"
           >
-            Book Now — It's Free
+            Book Now — It&apos;s Free
           </Link>
           <a
             href={`tel:${data.cityPhone}`}

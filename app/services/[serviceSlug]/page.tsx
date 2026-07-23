@@ -26,7 +26,7 @@ import ServiceBenefits      from "@/components/service/ServiceBenefits";
 import { iconMap } from "@/lib/icons";
 import { getAllServices, getServiceBySlug, getServicesByCategory } from "@/lib/services";
 import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
-import { serviceDetailSchema, serviceCategorySchema } from "@/lib/schema";
+import { serviceDetailSchema, serviceCategorySchema, jsonLdString } from "@/lib/schema";
 import { getAllServiceCategories, getServiceCategoryBySlug } from "@/lib/data/serviceCategory";
 
 export const revalidate = 3600;
@@ -132,7 +132,7 @@ export default async function Page({
       <>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(catSchema) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdString(catSchema) }}
         />
         <section className={`py-16 bg-gradient-to-br ${theme.gradient}`}>
           <div className="container mx-auto px-4 text-center">
@@ -276,7 +276,7 @@ export default async function Page({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchemaData) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(serviceSchemaData) }}
       />
 
       <Hero service={service} Icon={Icon} isCar={isCar} bgAccent={bgAccent} accentBlue={accentBlue} bgLight={bgLight} />

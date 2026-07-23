@@ -46,16 +46,6 @@ function formatPrice(pricingRows?: PricingRow[] | null, fallback?: string | null
   return "Call for quote";
 }
 
-function resolveIcon(
-  icon?: string | LucideIcon | null,
-  serviceCategory?: string | null,
-  categoryIcon?: LucideIcon | null
-): LucideIcon {
-  if (typeof icon === "string") return iconMap[icon] ?? iconMap[serviceCategory ?? ""] ?? categoryIcon ?? Wrench;
-  if (icon) return icon;
-  return iconMap[serviceCategory ?? ""] ?? categoryIcon ?? Wrench;
-}
-
 export function CityServiceCard({
   citySlug,
   cityName,
@@ -73,7 +63,14 @@ export function CityServiceCard({
   theme,
   variant = "detailed",
 }: CityServiceCardProps) {
-  const Icon = resolveIcon(icon, serviceCategory, categoryIcon);
+  // Inlined (not a function call) so the JSX tag below always resolves to a
+  // statically-known icon reference instead of a value freshly created on
+  // every render, which would otherwise defeat component identity checks.
+  const Icon: LucideIcon =
+    (typeof icon === "string" ? iconMap[icon] : icon) ??
+    iconMap[serviceCategory ?? ""] ??
+    categoryIcon ??
+    Wrench;
   const href = getCityServiceHref(citySlug, serviceSlug);
   const iconBg = theme?.iconBg ?? "bg-blue-50";
   const iconText = theme?.iconText ?? "text-blue-600";

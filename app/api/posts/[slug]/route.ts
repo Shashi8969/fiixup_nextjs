@@ -1,15 +1,19 @@
 // app/api/posts/[slug]/route.ts
 // GET /api/posts/how-to-jump-start-car-safely
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { rateLimitRequest, safeErrorResponse } from "@/lib/api-security";
 
 export const revalidate = 3600;
 
 export async function GET(
-  _request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  const limited = rateLimitRequest(request, "api-posts-slug", { limit: 60, windowMs: 60 * 1000 });
+  if (limited) return limited;
+
   try {
     const { slug } = await params;
 
@@ -27,10 +31,7 @@ export async function GET(
     }
 
     return NextResponse.json({ success: true, data });
-  } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
+  } catch (error) {
+    return safeErrorResponse("api/posts/[slug]", error);
   }
 }

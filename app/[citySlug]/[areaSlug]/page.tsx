@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation'
 import { getPageByPath } from '@/lib/seo-pages'
 import { getAllCities, getCityBySlug } from '@/lib/cities'
 import { getAllCityServiceSlugs, getAreaServices } from '@/lib/locationServices'
-import { areaPageSchema, CITY_DATA, type CityKey } from '@/lib/schema'
+import { areaPageSchema, CITY_DATA, jsonLdString, type CityKey } from '@/lib/schema'
 import { LocationServicePage } from '@/components/location-service/LocationServicePage'
 import { AreaHero } from '@/components/city/AreaHero'
 import { CityAbout } from '@/components/city/CityAbout'
@@ -183,7 +183,7 @@ export default async function CityAreaPage({ params }: { params: Params }) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(schemas) }}
       />
       <AreaHero city={city} areaName={areaName} />
       <AreaServices

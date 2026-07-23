@@ -28,6 +28,15 @@
 
 import { SITE_URL, MAIN_PHONE, MAIN_EMAIL } from "./constants";
 
+// ── Safe JSON-LD serialization ──────────────────────────────────────────────
+// CMS-editable strings (testimonial quotes, FAQ answers, business copy) can
+// contain "</script>" — JSON.stringify alone would let that close the
+// <script type="application/ld+json"> tag early and inject arbitrary markup.
+// Escaping "<" as < neutralizes that without changing the parsed JSON.
+export function jsonLdString(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}
+
 // ── Constants ────────────────────────────────────────────────────────────────
 const LOGO     = `${SITE_URL}/assets/logo.webp`;
 const OG_IMAGE = `${SITE_URL}/assets/og-image.webp`;

@@ -100,7 +100,10 @@ function classifyLink(href: string) {
 
 export function AnalyticsManager() {
   const pathname = usePathname();
-  const pageStartedAt = useRef(Date.now());
+  // Real value is set by sendCurrentPageView() before it's ever read (see
+  // handlePageHide below) — 0 here is just an inert placeholder, not a
+  // timestamp read during render.
+  const pageStartedAt = useRef(0);
   const activeSeconds = useRef(0);
   const engagementSent = useRef(new Set<number>());
   const scrollSent = useRef(new Set<number>());
