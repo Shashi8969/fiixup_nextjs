@@ -59,7 +59,7 @@ export function Header({ navLinks: navLinksProp, mainPhone = MAIN_PHONE }: Heade
           <div className="flex items-center gap-3">
             <a
               href={`tel:${mainPhone}`}
-              className="flex items-center gap-2 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-semibold"
+              className="flex items-center gap-2 bg-blue-600 text-white px-3 py-2.5 rounded-lg hover:bg-blue-700 transition text-sm font-semibold"
             >
               <Phone className="w-4 h-4" />
               <span>Call Now</span>
@@ -71,13 +71,13 @@ export function Header({ navLinks: navLinksProp, mainPhone = MAIN_PHONE }: Heade
               Scheduled Service
             </Link>
             <button
-              className="md:hidden"
+              className="md:hidden p-2.5 -m-1"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label="Toggle menu"
               aria-expanded={menuOpen}
               aria-controls="mobile-nav-menu"
             >
-              {menuOpen ? <X size={26} /> : <Menu size={26} />}
+              {menuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>

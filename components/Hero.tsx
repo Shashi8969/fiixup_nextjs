@@ -40,8 +40,8 @@ export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center">
 
-          {/* LEFT */}
-          <div className="space-y-6">
+          {/* LEFT — ordered second on mobile so the booking form (RIGHT) is visible without scrolling; desktop order is unchanged. DOM order stays as written (H1 first) for SEO regardless of visual order. */}
+          <div className="order-2 md:order-1 space-y-6">
             <div className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
               <MapPin className="w-4 h-4" />
               {data.badgeText}
@@ -94,8 +94,8 @@ export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
             </div>
           </div>
 
-          {/* RIGHT */}
-          <div className="relative">
+          {/* RIGHT — image + booking form, ordered first on mobile so the form is above the fold */}
+          <div className="order-1 md:order-2 relative">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[560px] sm:h-[520px] md:h-[500px] w-full">
               <Image
                 src={data.imageUrl}

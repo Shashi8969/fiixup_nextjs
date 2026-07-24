@@ -3,6 +3,7 @@
 // Return shape is IDENTICAL to before — zero component changes needed
 
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { supabase } from "./supabase";
 import type { BlogPost } from "./models/blog.model";
 
@@ -112,17 +113,21 @@ export async function getPostsBySlugs(slugs: string[]): Promise<BlogPost[]> {
 }
 
 // ── Get featured posts ────────────────────────────────────────────────────────
-export async function getFeaturedPosts(limit = 3): Promise<BlogPost[]> {
-  const { data, error } = await supabase
-    .from("posts")
-    .select(POST_LIST_SELECT)
-    .eq("featured", true)
-    .order("date", { ascending: false })
-    .limit(limit);
+export const getFeaturedPosts = unstable_cache(
+  async (limit = 3): Promise<BlogPost[]> => {
+    const { data, error } = await supabase
+      .from("posts")
+      .select(POST_LIST_SELECT)
+      .eq("featured", true)
+      .order("date", { ascending: false })
+      .limit(limit);
 
-  if (error) return [];
-  return (data ?? []).map(rowToPost);
-}
+    if (error) return [];
+    return (data ?? []).map(rowToPost);
+  },
+  ["featured-posts"],
+  { revalidate: 3600, tags: ["posts"] }
+);
 
 // ── Get posts by tag — uses normalized tags table ─────────────────────────────
 export async function getPostsByTag(tag: string): Promise<BlogPost[]> {
