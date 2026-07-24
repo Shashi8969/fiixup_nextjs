@@ -15,6 +15,14 @@ function rowToPost(row: any): BlogPost {
         .filter(Boolean)
     : (row.tags ?? []);
 
+  // Real tag slugs from the normalized join — used to make tags clickable.
+  // Legacy jsonb `tags` column has no slug, so those posts fall back to plain text.
+  const tagLinks = row.post_tags?.length
+    ? row.post_tags
+        .map((pt: any) => ({ name: pt.tags?.name, slug: pt.tags?.slug }))
+        .filter((t: any) => t.name && t.slug)
+    : [];
+
   return {
     id:              row.slug,
     title:           row.title,
@@ -27,6 +35,7 @@ function rowToPost(row: any): BlogPost {
     readTime:        row.read_time,
     category:        row.category,
     tags,
+    tagLinks,
     image:           row.image ?? "",
     imageAlt:        row.image_alt ?? "",
     featured:        row.featured ?? false,
@@ -119,7 +128,7 @@ export async function getFeaturedPosts(limit = 3): Promise<BlogPost[]> {
 export async function getPostsByTag(tag: string): Promise<BlogPost[]> {
   const { data: tagRow } = await supabase
     .from("tags")
-    .select("id")
+    .select("id, name")
     .eq("slug", tag)
     .single();
 
@@ -136,6 +145,23 @@ export async function getPostsByTag(tag: string): Promise<BlogPost[]> {
     .map((row: any) => row.posts)
     .filter(Boolean)
     .map(rowToPost);
+}
+
+// ── Get the tag's display name for a given slug (for page title/heading) ──────
+export async function getTagBySlug(tag: string): Promise<{ name: string; slug: string } | undefined> {
+  const { data } = await supabase
+    .from("tags")
+    .select("name, slug")
+    .eq("slug", tag)
+    .single();
+  return data ?? undefined;
+}
+
+// ── All tag slugs — for generateStaticParams on the tag archive page ──────────
+export async function getAllTagSlugs(): Promise<string[]> {
+  const { data, error } = await supabase.from("tags").select("slug");
+  if (error) return [];
+  return (data ?? []).map((row) => row.slug).filter(Boolean);
 }
 
 // ── Get posts by category ─────────────────────────────────────────────────────

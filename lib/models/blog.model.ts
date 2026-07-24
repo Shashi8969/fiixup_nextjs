@@ -26,6 +26,7 @@ export interface BlogPost {
   readTime: string;       // e.g. "5 min read"
   category: BlogCategory;
   tags: string[];
+  tagLinks?: { name: string; slug: string }[]; // tag name + real DB slug, for clickable tag links
   image: string;          // Path to hero/thumbnail image
   imageAlt: string;
   metaTitle?: string;     // Overrides title for <head>

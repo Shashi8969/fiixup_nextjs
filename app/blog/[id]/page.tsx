@@ -129,7 +129,7 @@ export default async function BlogPostPage({
             </span>
             <span className="flex items-center gap-1.5">
               <Clock className="w-4 h-4" />
-              {post.readTime} min read
+              {/min read/i.test(String(post.readTime)) ? post.readTime : `${post.readTime} min read`}
             </span>
             <span className="flex items-center gap-1.5">
               <Tag className="w-4 h-4" />
@@ -152,19 +152,30 @@ export default async function BlogPostPage({
             internalLinks={post.internalLinks}
           />
 
-          {/* Tags */}
+          {/* Tags — linked to /blog/tag/[slug] where a real tag slug exists, plain text otherwise */}
           {(post.tags ?? []).length > 0 && (
             <div className="mt-10 pt-6 border-t border-gray-200">
               <p className="text-sm font-semibold text-gray-700 mb-3">Tags</p>
               <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag: string) => (
-                  <span
-                    key={tag}
-                    className="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full"
-                  >
-                    {tag}
-                  </span>
-                ))}
+                {post.tags.map((tag: string) => {
+                  const link = post.tagLinks?.find((t) => t.name === tag);
+                  return link ? (
+                    <Link
+                      key={tag}
+                      href={`/blog/tag/${link.slug}`}
+                      className="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full hover:bg-red-50 hover:text-red-700 transition-colors"
+                    >
+                      {tag}
+                    </Link>
+                  ) : (
+                    <span
+                      key={tag}
+                      className="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full"
+                    >
+                      {tag}
+                    </span>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -227,7 +238,9 @@ export default async function BlogPostPage({
                   <h3 className="font-bold text-gray-900 text-sm leading-tight mb-2 line-clamp-3">
                     {p.title}
                   </h3>
-                  <span className="text-xs text-gray-400">{p.readTime} min read</span>
+                  <span className="text-xs text-gray-400">
+                    {/min read/i.test(String(p.readTime)) ? p.readTime : `${p.readTime} min read`}
+                  </span>
                 </Link>
               ))}
             </div>

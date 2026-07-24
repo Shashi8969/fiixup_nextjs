@@ -13,13 +13,29 @@ interface BlogCardProps {
   readonly readTime?: string | number;
   readonly author?: string;
   readonly priority?: boolean;
+  readonly tagLinks?: { name: string; slug: string }[];
 }
 
 export function BlogCard({
   id, title, excerpt, image, imageAlt, date, category,
-  readTime, author, priority = false,
+  readTime, author, priority = false, tagLinks,
 }: BlogCardProps) {
-  
+
+  // readTime always arrives as a string from the page components, so the
+  // "min read" suffix needs adding here rather than relying on typeof === "number".
+  const readTimeLabel = readTime == null || readTime === ""
+    ? null
+    : /min read/i.test(String(readTime))
+      ? String(readTime)
+      : `${readTime} min read`;
+
+  // Dates are stored as plain ISO strings ("2026-04-18") — format for display
+  // rather than showing the raw string. Falls back to the raw value if invalid.
+  const parsedDate = new Date(date);
+  const dateLabel = Number.isNaN(parsedDate.getTime())
+    ? date
+    : parsedDate.toLocaleDateString("en-IN", { year: "numeric", month: "long", day: "numeric" });
+
 // 1. Define the fallback without a leading slash
   const fallbackImage = "assets/carservice.webp";
   
@@ -55,11 +71,11 @@ export function BlogCard({
       <div className="p-6">
         <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
           <span className="flex items-center gap-1">
-            <Calendar className="w-3.5 h-3.5" /> {date}
+            <Calendar className="w-3.5 h-3.5" /> {dateLabel}
           </span>
-          {readTime && (
+          {readTimeLabel && (
             <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" /> {" "}{typeof readTime === "number" ? `${readTime} min read` : readTime}
+              <Clock className="w-3.5 h-3.5" /> {readTimeLabel}
             </span>
           )}
         </div>
@@ -68,6 +84,20 @@ export function BlogCard({
           {title}
         </h3>
         <p className="text-gray-600 mb-4 line-clamp-3">{excerpt}</p>
+
+        {tagLinks && tagLinks.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {tagLinks.slice(0, 3).map((t) => (
+              <Link
+                key={t.slug}
+                href={`/blog/tag/${t.slug}`}
+                className="text-[11px] bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full hover:bg-blue-50 hover:text-blue-700 transition-colors"
+              >
+                {t.name}
+              </Link>
+            ))}
+          </div>
+        )}
 
         <div className="flex items-center justify-between">
           {author && <span className="text-sm text-gray-500">By {author}</span>}

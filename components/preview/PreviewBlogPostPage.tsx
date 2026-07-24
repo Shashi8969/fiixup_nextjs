@@ -38,7 +38,12 @@ export function PreviewBlogPostPage({ post }: { post: any }) {
       </div>
       <article className="py-12"><div className="container mx-auto px-4 max-w-3xl"><BlockRenderer blocks={blocks as any[]} />
         <BlogAttachments nearbyAreas={post.nearby_areas_json ?? post.nearbyAreas} relatedServices={post.related_services_json ?? post.relatedServices} internalLinks={post.internal_links_json ?? post.internalLinks} />
-        {tags.length > 0 && <div className="mt-10 pt-6 border-t border-gray-200"><p className="text-sm font-semibold text-gray-700 mb-3">Tags</p><div className="flex flex-wrap gap-2">{tags.map((tag: string) => <span key={tag} className="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full">{tag}</span>)}</div></div>}
+        {tags.length > 0 && <div className="mt-10 pt-6 border-t border-gray-200"><p className="text-sm font-semibold text-gray-700 mb-3">Tags</p><div className="flex flex-wrap gap-2">{tags.map((tag: string) => {
+          const link = Array.isArray(post.tagLinks) ? post.tagLinks.find((t: any) => t.name === tag) : null;
+          return link
+            ? <Link key={tag} href={`/blog/tag/${link.slug}`} className="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full hover:bg-red-50 hover:text-red-700 transition-colors">{tag}</Link>
+            : <span key={tag} className="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full">{tag}</span>;
+        })}</div></div>}
         <div className="mt-10 bg-red-600 rounded-2xl p-8 text-white text-center"><h3 className="text-xl font-bold mb-2">Need a Mechanic Right Now?</h3><p className="text-red-100 mb-6 text-sm">Fiixup sends certified mechanics to your doorstep in 30–60 minutes across major cities.</p><a href={"tel:" + MAIN_PHONE} className="bg-white text-red-600 font-bold px-6 py-3 rounded-xl hover:bg-red-50 transition-colors text-sm">Call +91 8197459732</a></div>
       </div></article><BookingCTA serviceTitle="Doorstep Mechanic" bgAccent="bg-gray-900" />
     </>
