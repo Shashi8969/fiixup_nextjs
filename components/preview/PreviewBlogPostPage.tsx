@@ -44,7 +44,7 @@ export function PreviewBlogPostPage({ post }: { post: any }) {
             ? <Link key={tag} href={`/blog/tag/${link.slug}`} className="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full hover:bg-red-50 hover:text-red-700 transition-colors">{tag}</Link>
             : <span key={tag} className="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full">{tag}</span>;
         })}</div></div>}
-        <div className="mt-10 bg-red-600 rounded-2xl p-8 text-white text-center"><h3 className="text-xl font-bold mb-2">Need a Mechanic Right Now?</h3><p className="text-red-100 mb-6 text-sm">Fiixup sends certified mechanics to your doorstep in 30–60 minutes across major cities.</p><a href={"tel:" + MAIN_PHONE} className="bg-white text-red-600 font-bold px-6 py-3 rounded-xl hover:bg-red-50 transition-colors text-sm">Call +91 8197459732</a></div>
+        <div className="mt-10 bg-red-600 rounded-2xl p-8 text-white text-center"><h3 className="text-xl font-bold mb-2">Need a Mechanic Right Now?</h3><p className="text-red-100 mb-6 text-sm">Fiixup sends certified mechanics to your doorstep in 20 minutes across major cities.</p><a href={"tel:" + MAIN_PHONE} className="bg-white text-red-600 font-bold px-6 py-3 rounded-xl hover:bg-red-50 transition-colors text-sm">Call +91 8197459732</a></div>
       </div></article><BookingCTA serviceTitle="Doorstep Mechanic" bgAccent="bg-gray-900" />
     </>
   );

@@ -6,6 +6,7 @@ import { getCityServiceHref } from "@/lib/routes";
 
 type PricingRow = {
   priceFrom?: number | string | null;
+  highlight?: boolean | null;
 };
 
 type CityServiceCardProps = {
@@ -31,19 +32,25 @@ type CityServiceCardProps = {
   variant?: "detailed" | "compact" | "index";
 };
 
+// Prefers the admin-curated "highlight" row (the price they intend to feature)
+// over whichever row happens to be first in the DB — previously this always
+// showed pricingRows[0], which could be a cheap ancillary line item rather
+// than the service's actual representative price.
+export function getStartingPrice(pricingRows?: PricingRow[] | null): number | null {
+  const source = pricingRows?.find((r) => r.highlight)?.priceFrom ?? pricingRows?.[0]?.priceFrom;
+
+  if (typeof source === "number" && Number.isFinite(source)) return source;
+  if (typeof source === "string" && source.trim()) {
+    const n = Number(source.replace(/[^0-9.]/g, ""));
+    return Number.isFinite(n) ? n : null;
+  }
+  return null;
+}
+
 function formatPrice(pricingRows?: PricingRow[] | null, fallback?: string | null) {
   if (fallback) return fallback;
-
-  const first = pricingRows?.[0]?.priceFrom;
-  if (typeof first === "number" && Number.isFinite(first)) {
-    return `₹${first.toLocaleString("en-IN")}`;
-  }
-
-  if (typeof first === "string" && first.trim()) {
-    return first.includes("₹") ? first : `₹${first}`;
-  }
-
-  return "Call for quote";
+  const price = getStartingPrice(pricingRows);
+  return price !== null ? `₹${price.toLocaleString("en-IN")}` : "Call for quote";
 }
 
 export function CityServiceCard({
@@ -77,7 +84,7 @@ export function CityServiceCard({
   const border = theme?.border ?? "hover:border-blue-200";
   const linkText = theme?.linkText ?? "text-blue-600";
   const displayPrice = formatPrice(pricingRows, priceLabel);
-  const displayDuration = duration || "30–60 min";
+  const displayDuration = duration || "20 min";
   const displayRating = typeof rating === "number" && Number.isFinite(rating) ? rating : 4.9;
   const displayReviews = typeof reviewCount === "number" && Number.isFinite(reviewCount) ? reviewCount : 150;
 
@@ -100,7 +107,7 @@ export function CityServiceCard({
         </p>
 
         <div className="pt-3 border-t border-gray-100 space-y-2">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 flex-wrap">
             <div className="flex">
               {[1, 2, 3, 4, 5].map((s) => (
                 <Star
@@ -116,6 +123,11 @@ export function CityServiceCard({
             </div>
             <span className="text-xs text-gray-400">
               {displayRating.toFixed(1)} ({displayReviews}+)
+            </span>
+            <span className="text-gray-300" aria-hidden="true">·</span>
+            <span className="text-xs text-gray-400 inline-flex items-center gap-0.5">
+              <Clock className="w-3 h-3" aria-hidden="true" />
+              {displayDuration}
             </span>
           </div>
 

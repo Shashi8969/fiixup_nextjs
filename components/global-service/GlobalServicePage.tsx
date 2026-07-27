@@ -168,7 +168,7 @@ export function GlobalServicePage({ data }: Props) {
   {/* DURATION */}
   <div>
     <p className="text-2xl font-bold text-gray-900">
-      {data.service_duration || "30–60 Min"}
+      {data.service_duration || "20 Min"}
     </p>
 
     <p className="text-xs text-gray-500">

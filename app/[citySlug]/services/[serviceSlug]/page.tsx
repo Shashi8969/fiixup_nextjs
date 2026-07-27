@@ -109,7 +109,7 @@ export async function generateMetadata({
     }
 
     const title    = `${cat.title} in ${city.name} — Doorstep Service | Fiixup`;
-    const desc     = `Get doorstep ${cat.title.toLowerCase()} in ${city.name}. Certified mechanics reach you in 30–60 minutes. Transparent pricing, 30-day warranty. Call ${city.phone}.`;
+    const desc     = `Get doorstep ${cat.title.toLowerCase()} in ${city.name}. Certified mechanics reach you in 20 minutes. Transparent pricing, 30-day warranty. Call ${city.phone}.`;
     const canonical = `${SITE_URL}/${city.slug}/services/${cat.slug}`;
     return metadataFromBasicSeo({
       title,
@@ -253,7 +253,7 @@ export default async function CityServicePage({
             {/* Trust micro-row */}
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-500 mb-8">
               {[
-                { icon: Clock,       text: "30–60 min arrival" },
+                { icon: Clock,       text: "20 min arrival" },
                 { icon: Shield,      text: "30-day warranty"   },
                 { icon: Zap,         text: "Upfront pricing"   },
                 { icon: CheckCircle, text: "All brands covered" },

@@ -15,7 +15,7 @@ export function CspCTA({ data }: { data: CityServiceCategoryPageData }) {
           Ready to Book {data.categoryTitle} in {data.cityName}?
         </h2>
         <p className="text-blue-200 text-lg mb-8">
-          Certified technicians arrive in 30–60 minutes. Upfront pricing, no hidden charges.
+          Certified technicians arrive in 20 minutes. Upfront pricing, no hidden charges.
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
           <Link

@@ -225,7 +225,7 @@ export interface CityServiceListItem {
   serviceName:     string;
   serviceCategory: string;
   heroSubheading:  string;   // used as the card tagline
-  pricingRows:     { label: string; priceFrom: number; priceTo?: number }[];
+  pricingRows:     { label: string; priceFrom: number; priceTo?: number; highlight?: boolean }[];
   schemaAggregateRating: number;
   schemaReviewCount:     number;
   canonicalUrl:    string;
@@ -309,7 +309,7 @@ export async function getCityServicesByCategory(
     serviceCategory: row.service_category,
     heroSubheading:  row.hero_subheading ?? "",
     pricingRows:     row.pricing_rows    ?? [],
-    duration:        null,   // location_services has no duration column — shown as "30–60 min"
+    duration:        null,   // location_services has no duration column — shown as "20 min"
     schemaAggregateRating: parseFloat(row.schema_aggregate_rating) || 4.9,
     schemaReviewCount:     row.schema_review_count ?? 150,
     canonicalUrl:    row.canonical_url,

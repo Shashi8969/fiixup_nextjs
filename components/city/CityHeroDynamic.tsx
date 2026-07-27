@@ -17,6 +17,14 @@ const DEFAULT_BULLETS = (cityName: string, areaNames: string[]) => [
   'Certified & Background-Verified Mechanics',
 ];
 
+// Fallback when data.heroSubheading is empty (e.g. not yet filled in via CMS)
+const HERO_SUBHEADING = (cityName: string, areaNames: string[]) => {
+  const sample = areaNames.slice(0, 2).join(' to ');
+  return sample
+    ? `Real ITI-certified mechanics come to you anywhere in ${cityName} — ${sample} and beyond — with upfront pricing and zero garage visits.`
+    : `Real ITI-certified mechanics come to you anywhere in ${cityName}, with upfront pricing and zero garage visits.`;
+};
+
 const DEFAULT_STATS = (data: CityHubPageData) => [
   { value: data.statsCustomers    ?? '10,000+', label: 'Happy Customers' },
   { value: '24/7',                              label: 'Service Available' },
@@ -86,12 +94,10 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
               {data.heroHeading ?? `24/7 Doorstep Auto Repair in ${data.cityName}`}
             </h1>
 
-            {/* Sub-paragraph — city-specific from DB */}
-            {data.aboutPara1 && (
-              <p className="text-lg text-gray-600 leading-relaxed max-w-xl">
-                {data.aboutPara1}
-              </p>
-            )}
+            {/* Sub-paragraph — editable per city via CMS; falls back to a generated line when empty */}
+            <p className="text-lg text-gray-600 leading-relaxed max-w-xl">
+              {data.heroSubheading ?? HERO_SUBHEADING(data.cityName, areaNames)}
+            </p>
 
             {/* Bullet checklist */}
             <ul className="space-y-3" aria-label="Key service features">
@@ -127,7 +133,7 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
               </span>
               <span className="flex items-center gap-1.5">
                 <Clock className="w-4 h-4 text-blue-500" aria-hidden="true" />
-                30–60 min response
+                20 min response
               </span>
               <span className="flex items-center gap-1.5">
                 <Zap className="w-4 h-4 text-blue-500" aria-hidden="true" />

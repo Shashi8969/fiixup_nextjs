@@ -694,6 +694,10 @@ export function serviceDetailSchema(opts: {
   }));
 
   const graph: object[] = [
+    // Service — drives organic rich results (price, availability). Google does NOT
+    // accept aggregateRating/review directly on a bare "Service" type — see
+    // "Invalid object type for field <parent_node>" in Search Console. Rating
+    // signals live on the AutoRepair/LocalBusiness node below instead.
     {
       "@type":    "Service",
       "@id":      `${baseUrl}/#service`,
@@ -714,16 +718,28 @@ export function serviceDetailSchema(opts: {
           minPrice, maxPrice, priceCurrency: "INR",
         },
       },
+      ...(features.length > 0 && {
+        serviceOutput: features.map((f) => ({ "@type": "Thing", name: f })),
+      }),
+    },
+    // AutoRepair/LocalBusiness — a Google-supported parent type for review
+    // snippets. Carries the star rating shown in SERP.
+    {
+      "@type":      ["AutoRepair", "LocalBusiness"],
+      "@id":        `${baseUrl}/#business`,
+      name:         label,
+      image:        OG_IMAGE,
+      url:          baseUrl,
+      telephone:    MAIN_PHONE,
+      priceRange:   "₹₹",
       aggregateRating: {
         "@type": "AggregateRating",
         ratingValue: avgRating,
         reviewCount: String(totalRatings),
         bestRating: "5", worstRating: "1",
       },
-      ...(reviews.length > 0  && { review: reviews }),
-      ...(features.length > 0 && {
-        serviceOutput: features.map((f) => ({ "@type": "Thing", name: f })),
-      }),
+      ...(reviews.length > 0 && { review: reviews }),
+      parentOrganization: { "@id": ORG_ID },
     },
     _breadcrumb(crumbs),
   ];
@@ -734,7 +750,7 @@ export function serviceDetailSchema(opts: {
       "@type":       "HowTo",
       "@id":         `${baseUrl}/#howto`,
       name:          `How to Book ${name} at Your Doorstep — Fiixup`,
-      description:   `Book ${name} at your home in 3 easy steps. Certified mechanic arrives in 30–60 min.`,
+      description:   `Book ${name} at your home in 3 easy steps. Certified mechanic arrives in 20 min.`,
       totalTime:     "PT60M",
       estimatedCost: { "@type": "MonetaryAmount", currency: "INR", minValue: minPrice, maxValue: maxPrice },
       step: [
@@ -746,7 +762,7 @@ export function serviceDetailSchema(opts: {
         {
           "@type": "HowToStep", position: 2,
           name: "Certified Mechanic Dispatched",
-          text: "A certified mechanic is dispatched to your exact location within 30–60 minutes.",
+          text: "A certified mechanic is dispatched to your exact location within 20 minutes.",
         },
         {
           "@type": "HowToStep", position: 3,

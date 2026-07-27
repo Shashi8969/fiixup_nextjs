@@ -83,7 +83,7 @@ export function CspHero({ data, cityPhone }: { data: CityServiceCategoryPageData
           <div className="flex flex-wrap justify-center gap-5 text-sm text-gray-500">
             {[
               { icon: Shield, text: '30-day warranty' },
-              { icon: Clock,  text: '30–60 min response' },
+              { icon: Clock,  text: '20 min response' },
               { icon: Zap,    text: 'No hidden charges' },
             ].map(({ icon: Icon, text }) => (
               <span key={text} className="flex items-center gap-1.5">

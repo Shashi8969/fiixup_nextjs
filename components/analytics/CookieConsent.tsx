@@ -11,9 +11,9 @@ import {
   readConsentPreferences,
 } from "@/lib/analytics";
 
-// Show after a short pause instead of instantly on load — reduces the
-// "wall on arrival" feeling without weakening the consent choice itself.
-const BANNER_DELAY_MS = 2500;
+// Show a minute after arrival instead of on load — visitors get a full
+// first look at the page before being asked anything.
+const BANNER_DELAY_MS = 60_000;
 
 function savePreferences(analytics: boolean, advertising: boolean) {
   const preferences: ConsentPreferences = {
@@ -47,19 +47,8 @@ export function CookieConsent() {
     // Already decided — nothing to show.
     if (readConsentPreferences()) return;
 
-    // Whichever comes first — a short delay, or the person starting to
-    // scroll — shows the banner once they've seen there's a real page here.
     const timer = window.setTimeout(() => setVisible(true), BANNER_DELAY_MS);
-    const onScroll = () => {
-      setVisible(true);
-      window.clearTimeout(timer);
-    };
-    window.addEventListener("scroll", onScroll, { once: true, passive: true });
-
-    return () => {
-      window.clearTimeout(timer);
-      window.removeEventListener("scroll", onScroll);
-    };
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -89,36 +78,33 @@ export function CookieConsent() {
 
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-[100] p-3 sm:p-5"
+      className="fixed inset-x-3 bottom-3 z-[100] sm:inset-x-auto sm:right-5 sm:bottom-5 sm:w-[340px]"
       role="dialog"
       aria-modal="true"
       aria-label="Cookie preferences"
     >
-      <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-orange-200 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.28)]">
-        <div className="border-b border-orange-100 bg-gradient-to-r from-orange-50 via-white to-amber-50 px-4 py-4 sm:px-6">
-          <div className="flex items-start gap-3">
-            <div className="rounded-xl bg-orange-100 p-2.5 text-orange-700">
-              <Cookie className="h-5 w-5" aria-hidden="true" />
+      <div className="overflow-hidden rounded-xl border border-orange-200 bg-white shadow-[0_16px_40px_rgba(15,23,42,0.25)]">
+        <div className="border-b border-orange-100 bg-gradient-to-r from-orange-50 via-white to-amber-50 px-3.5 py-3.5">
+          <div className="flex items-start gap-2.5">
+            <div className="rounded-lg bg-orange-100 p-1.5 text-orange-700 flex-shrink-0">
+              <Cookie className="h-4 w-4" aria-hidden="true" />
             </div>
             <div className="min-w-0 flex-1">
-              <h2 className="text-base font-extrabold text-slate-950 sm:text-lg">
+              <h2 className="text-sm font-extrabold text-slate-950">
                 Your privacy, your choice
               </h2>
-              <p className="mt-1 text-sm leading-6 text-slate-600">
-                Necessary storage keeps the site working. With your permission,
-                analytics helps us understand page visits, active time, scrolling
-                and clicks. We do not send form text or customer phone numbers to
-                Google Analytics.
+              <p className="mt-1 text-xs leading-5 text-slate-600">
+                Necessary cookies keep the site working. With permission, analytics
+                helps us understand visits — we never send form text or phone
+                numbers to Google Analytics.
               </p>
-              <p className="mt-2 text-xs text-slate-500">
-                Read our{" "}
+              <p className="mt-1.5 text-[11px] text-slate-500">
                 <Link
                   href="/privacy-policy"
                   className="font-semibold text-orange-700 underline underline-offset-2"
                 >
-                  Privacy & Cookie Policy
+                  Privacy &amp; Cookie Policy
                 </Link>
-                .
               </p>
             </div>
             {customizing ? (
@@ -126,89 +112,84 @@ export function CookieConsent() {
                 type="button"
                 onClick={() => setVisible(false)}
                 aria-label="Close cookie settings"
-                className="rounded-lg p-2 text-slate-500 hover:bg-white hover:text-slate-900"
+                className="rounded-md p-1 text-slate-400 hover:bg-white hover:text-slate-900 flex-shrink-0"
               >
-                <X className="h-5 w-5" aria-hidden="true" />
+                <X className="h-4 w-4" aria-hidden="true" />
               </button>
             ) : null}
           </div>
         </div>
 
         {customizing ? (
-          <div className="space-y-3 px-4 py-4 sm:px-6">
-            <div className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 p-4">
+          <div className="space-y-2 px-3.5 py-3">
+            <div className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 p-2.5">
               <div>
-                <p className="font-bold text-slate-900">Necessary</p>
-                <p className="text-sm text-slate-500">
-                  Basic functions and remembering your consent choice.
-                </p>
+                <p className="text-xs font-bold text-slate-900">Necessary</p>
+                <p className="text-[11px] text-slate-500">Always required.</p>
               </div>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">
-                Always on
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600 flex-shrink-0">
+                On
               </span>
             </div>
 
-            <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-slate-200 p-4">
+            <label className="flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-slate-200 p-2.5">
               <div>
-                <p className="font-bold text-slate-900">Analytics</p>
-                <p className="text-sm text-slate-500">
-                  Page views, active time, scroll depth and button or link interactions.
-                </p>
+                <p className="text-xs font-bold text-slate-900">Analytics</p>
+                <p className="text-[11px] text-slate-500">Page views and interactions.</p>
               </div>
               <input
                 type="checkbox"
                 checked={analytics}
                 onChange={(event) => setAnalytics(event.target.checked)}
-                className="h-5 w-5 accent-orange-600"
+                className="h-4 w-4 accent-orange-600 flex-shrink-0"
               />
             </label>
 
-            <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-slate-200 p-4">
+            <label className="flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-slate-200 p-2.5">
               <div>
-                <p className="font-bold text-slate-900">Advertising</p>
-                <p className="text-sm text-slate-500">
-                  Advertising measurement and personalization. No advertising tag
-                  is loaded by this patch.
-                </p>
+                <p className="text-xs font-bold text-slate-900">Advertising</p>
+                <p className="text-[11px] text-slate-500">Not currently used.</p>
               </div>
               <input
                 type="checkbox"
                 checked={advertising}
                 onChange={(event) => setAdvertising(event.target.checked)}
-                className="h-5 w-5 accent-orange-600"
+                className="h-4 w-4 accent-orange-600 flex-shrink-0"
               />
             </label>
           </div>
         ) : null}
 
-        <div className="flex flex-col gap-2 px-4 py-4 sm:flex-row sm:items-center sm:justify-end sm:px-6">
-          {!customizing ? (
+        <div className="flex flex-col gap-1.5 p-3.5">
+          <div className="flex gap-1.5">
+            {!customizing ? (
+              <button
+                type="button"
+                onClick={() => setCustomizing(true)}
+                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-slate-300 px-2 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
+              >
+                <Settings className="h-3.5 w-3.5" aria-hidden="true" />
+                Customize
+              </button>
+            ) : null}
+
             <button
               type="button"
-              onClick={() => setCustomizing(true)}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50"
+              onClick={() => confirm(false, false)}
+              className="flex-1 rounded-lg border border-slate-300 px-2 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
             >
-              <Settings className="h-4 w-4" aria-hidden="true" />
-              Customize
+              Reject
             </button>
-          ) : null}
-
-          <button
-            type="button"
-            onClick={() => confirm(false, false)}
-            className="rounded-xl border border-slate-300 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50"
-          >
-            Reject non-essential
-          </button>
+          </div>
 
           <button
             type="button"
             onClick={() =>
               confirm(customizing ? analytics : true, customizing ? advertising : true)
             }
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-600 px-5 py-3 text-sm font-extrabold text-white shadow-lg shadow-orange-600/20 hover:bg-orange-700"
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-orange-600 px-4 py-2.5 text-xs font-extrabold text-white shadow-lg shadow-orange-600/20 hover:bg-orange-700"
           >
-            <ShieldCheck className="h-4 w-4" aria-hidden="true" />
+            <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
             {customizing ? "Save choices" : "Accept all"}
           </button>
         </div>

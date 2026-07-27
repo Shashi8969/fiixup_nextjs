@@ -25,7 +25,7 @@ import { getAllServiceCategories }          from "@/lib/data/serviceCategory";
 import { TrustStrip }                      from "@/components/ui/TrustStrip";
 import HowItWorks                          from "@/components/ui/HowItWorks";
 import WhyChooseDoorstep                   from "@/components/ui/WhyChooseDoorstep";
-import { CityServiceCard }                 from "@/components/ui/CityServiceCard";
+import { CityServiceCard, getStartingPrice } from "@/components/ui/CityServiceCard";
 import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
 import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 import { jsonLdString } from "@/lib/schema";
@@ -65,7 +65,7 @@ export async function generateMetadata({
   if (!city) return {};
 
   const title     = `All Car & Bike Services in ${city.name} — Doorstep Repair | Fiixup`;
-  const desc      = `Browse every doorstep car and bike repair service available in ${city.name}. Battery replacement, tyre puncture, oil change, bike service, towing, roadside assistance & more. Certified mechanics reach you in 30–60 minutes. Call ${city.phone}.`;
+  const desc      = `Browse every doorstep car and bike repair service available in ${city.name}. Battery replacement, tyre puncture, oil change, bike service, towing, roadside assistance & more. Certified mechanics reach you in 20 minutes. Call ${city.phone}.`;
   const canonical = `${SITE_URL}/${city.slug}/services`;
 
   return metadataFromBasicSeo({
@@ -135,12 +135,26 @@ export default async function CityServicesPage({
         name:            `Vehicle Repair Services in ${city.name}`,
         description:     `All doorstep car and bike repair services in ${city.name}`,
         numberOfItems:   totalServices,
-        itemListElement: cityServices.map((svc, i) => ({
-          "@type":    "ListItem",
-          position:   i + 1,
-          name:       svc.serviceName,
-          url:        svc.canonicalUrl,
-        })),
+        itemListElement: cityServices.map((svc, i) => {
+          const price = getStartingPrice(svc.pricingRows);
+          return {
+            "@type":    "ListItem",
+            position:   i + 1,
+            name:       svc.serviceName,
+            url:        svc.canonicalUrl,
+            item: {
+              "@type":      "Service",
+              name:         svc.serviceName,
+              url:          svc.canonicalUrl,
+              description:  svc.heroSubheading || undefined,
+              areaServed:   { "@type": "City", name: city.name },
+              provider:     { "@id": `${SITE_URL}/#organization` },
+              ...(price !== null && {
+                offers: { "@type": "Offer", price: String(price), priceCurrency: "INR" },
+              }),
+            },
+          };
+        }),
       },
     ],
   };
@@ -190,13 +204,13 @@ export default async function CityServicesPage({
 
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-7 leading-relaxed">
               {totalServices} doorstep services available across {city.name} — certified
-              mechanics come to your home, office, or roadside location in 30–60 minutes, 24/7.
+              mechanics come to your home, office, or roadside location in 20 minutes, 24/7.
             </p>
 
             {/* Trust row */}
             <div className="flex flex-wrap justify-center gap-x-7 gap-y-2.5 text-sm text-gray-600 mb-8">
               {[
-                { icon: Clock,       text: "30–60 min mechanic arrival"      },
+                { icon: Clock,       text: "20 min mechanic arrival"      },
                 { icon: Shield,      text: "30-day warranty on all repairs"  },
                 { icon: Zap,         text: "Transparent pricing — always"    },
                 { icon: CheckCircle, text: "All car & bike brands covered"   },

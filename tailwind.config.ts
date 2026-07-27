@@ -33,7 +33,10 @@ const config: Config = {
     extend: {
       colors: {
         brand: { blue: "#2563eb", red: "#dc2626",
-          green: "#16a34a", amber: "#d97706", orange: "#ea580c", purple: "#7c3aed", teal: "#14b8a6"
+          green: "#16a34a", amber: "#d97706", orange: "#ea580c", purple: "#7c3aed", teal: "#14b8a6",
+          // Editorial blog listing accents (app/blog only) — kept distinct from
+          // the site-wide blue/red above so nothing else silently reskins.
+          ink: "#1C3F88", crimson: "#D3252A", paper: "#F8FAFC",
          },
       },
     },

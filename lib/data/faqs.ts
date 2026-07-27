@@ -30,7 +30,7 @@ export const globalFAQs: FAQCategory[] = [
       },
       {
         q: "How quickly can a technician arrive?",
-        a: "Our technicians typically arrive within 30–60 minutes. For emergency breakdowns we prioritise dispatch within 30 minutes — often faster during off-peak hours.",
+        a: "Our technicians typically arrive within 20 minutes. For emergency breakdowns we prioritise immediate dispatch — often faster during off-peak hours.",
       },
       {
         q: "Do I need to take my vehicle to a garage?",
@@ -152,7 +152,7 @@ export const globalFAQs: FAQCategory[] = [
       },
       {
         q: "My car is not starting — what do I do?",
-        a: "Call Fiixup immediately. The most common causes are a dead battery, a faulty starter motor, or an immobiliser issue. Our technician arrives within 30–60 minutes for on-the-spot diagnosis and repair.",
+        a: "Call Fiixup immediately. The most common causes are a dead battery, a faulty starter motor, or an immobiliser issue. Our technician arrives within 20 minutes for on-the-spot diagnosis and repair.",
       },
       {
         q: "My car's check engine light is on — is it serious?",
@@ -219,7 +219,7 @@ export const globalFAQs: FAQCategory[] = [
       },
       {
         q: "How long does it take for a tow truck to arrive?",
-        a: "Typically 30–60 minutes within city limits. For highway breakdowns we aim to get the nearest available truck to you within 45 minutes.",
+        a: "We aim to reach you within 20 minutes, both within city limits and for highway breakdowns.",
       },
       {
         q: "Do you tow bikes and scooters too?",
@@ -281,7 +281,7 @@ export const globalFAQs: FAQCategory[] = [
     faqs: [
       {
         q: "Can you jump start my car near me?",
-        a: "Yes. Fiixup provides 24/7 battery jump start service for cars and bikes at your location — home, office, parking lot, or roadside. Our technician arrives with professional jump start equipment within 30–60 minutes.",
+        a: "Yes. Fiixup provides 24/7 battery jump start service for cars and bikes at your location — home, office, parking lot, or roadside. Our technician arrives with professional jump start equipment within 20 minutes.",
       },
       {
         q: "How much does a jump start service cost?",
@@ -413,7 +413,7 @@ export const cityFAQs: Record<string, FAQCategory[]> = {
         },
         {
           q: "My bike won't start in Bengaluru — can you help immediately?",
-          a: "Yes. Call Fiixup and a technician reaches you within 30–60 minutes anywhere in Bengaluru, 24 hours a day. We diagnose and fix most starting issues on the spot.",
+          a: "Yes. Call Fiixup and a technician reaches you within 20 minutes anywhere in Bengaluru, 24 hours a day. We diagnose and fix most starting issues on the spot.",
         },
         {
           q: "Do Bengaluru's roads damage bike tyres and suspension?",
@@ -484,7 +484,7 @@ export const cityFAQs: Record<string, FAQCategory[]> = {
         },
         {
           q: "My bike tyre is flat in Bengaluru — how fast can you reach me?",
-          a: "Typically within 30–60 minutes anywhere in Bengaluru. We repair tube and tubeless tyres on-site for both bikes and cars.",
+          a: "Typically within 20 minutes anywhere in Bengaluru. We repair tube and tubeless tyres on-site for both bikes and cars.",
         },
         {
           q: "Can you jump start my car in Bengaluru at night?",

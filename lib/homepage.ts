@@ -120,7 +120,7 @@ const FALLBACK_HOME_DATA: Omit<HomePageData, "services" | "cityCoverage"> & {
 } = {
   seo: {
     title: "24/7 Doorstep Car & Bike Repair | Fiixup",
-    description: "Certified mechanics at your home or office across India. Serving Bangalore, Chennai, Hyderabad & Mumbai. Starting ₹249. 30-min response. Book now.",
+    description: "Certified mechanics at your home or office across India. Serving Bangalore, Chennai, Hyderabad & Mumbai. Starting ₹249. 20-min response. Book now.",
     keywords: DEFAULT_KEYWORDS,
     canonical: SITE_URL,
     ogImage: DEFAULT_OG_IMAGE,
@@ -138,7 +138,7 @@ const FALLBACK_HOME_DATA: Omit<HomePageData, "services" | "cityCoverage"> & {
     secondaryCtaLabel: "Call Now",
     imageUrl: "/assets/Car_mechanic_700x1049.webp",
     imageAlt: "Certified mechanic performing doorstep car repair in India",
-    formTitle: "Book in 30 seconds. Mechanic at your doorstep in 30 minutes.",
+    formTitle: "Book in 30 seconds. Mechanic at your doorstep in 20 minutes.",
     formSubtitle: "Tell us your issue — our nearby mechanic team will contact you shortly",
     cityOptions: [...CITIES_LIST],
     successTitle: "Request Sent!",
@@ -177,13 +177,13 @@ const FALLBACK_HOME_DATA: Omit<HomePageData, "services" | "cityCoverage"> & {
   contact: {
     heading: "Book a Nearby Car or Bike Mechanic at Your Location",
     subtext: `Need help with a dead battery, puncture, engine issue, oil change, brake problem, or vehicle not starting? Fiixup provides doorstep car and bike repair services across ${CITIES_LIST.join(", ")}. Mechanics arrive at your home, office, apartment parking, or roadside location for quick repair and servicing support.`,
-    formTitle: "Book in 30 seconds. Mechanic at your doorstep in 30 minutes.",
+    formTitle: "Book in 30 seconds. Mechanic at your doorstep in 20 minutes.",
     formSubtitle: "Share your vehicle issue and our nearby mechanic team will contact you shortly for booking confirmation and assistance.",
     successText: "✅ Booking request received successfully. Our team will contact you shortly.",
     errorText: `❌ Unable to send your request right now. Please call us directly at ${MAIN_PHONE_DISPLAY}.`,
     cities: [...CITIES_LIST],
     trustBadges: [
-      "✅ Technician arrives in 30 minutes",
+      "✅ Technician arrives in 20 minutes",
       "✅ Upfront pricing — no hidden charges",
       "✅ 30-day warranty on all repairs",
       "✅ Certified & background-verified technicians",
@@ -247,7 +247,22 @@ function mergeServices(pd: Record<string, unknown>, categories: any[]): HomeServ
   };
 }
 
-function mergeAbout(pd: Record<string, unknown>): HomeAboutData {
+// "Vehicles Serviced" is a sum of every city's own area totals (see
+// fn_build_city_seo_page), not an independently-typed number — this keeps
+// the homepage claim mathematically tied to what each city page claims,
+// instead of the two silently drifting apart.
+function overrideVehiclesServiced(
+  stats: { value: string; label: string }[],
+  vehiclesTotal: number
+): { value: string; label: string }[] {
+  if (!Number.isFinite(vehiclesTotal) || vehiclesTotal <= 0) return stats;
+  const formatted = `${vehiclesTotal.toLocaleString("en-IN")}+`;
+  return stats.map((stat) =>
+    stat.label.trim().toLowerCase() === "vehicles serviced" ? { ...stat, value: formatted } : stat
+  );
+}
+
+function mergeAbout(pd: Record<string, unknown>, vehiclesTotal: number): HomeAboutData {
   const about = asObject(pd.about);
   return {
     title: clean(about.title, FALLBACK_HOME_DATA.about.title),
@@ -265,14 +280,17 @@ function mergeAbout(pd: Record<string, unknown>): HomeAboutData {
       },
       FALLBACK_HOME_DATA.about.highlights
     ),
-    stats: records(
-      about.stats,
-      (item) => {
-        const value = clean(item.value);
-        const label = clean(item.label);
-        return value && label ? { value, label } : null;
-      },
-      FALLBACK_HOME_DATA.about.stats
+    stats: overrideVehiclesServiced(
+      records(
+        about.stats,
+        (item) => {
+          const value = clean(item.value);
+          const label = clean(item.label);
+          return value && label ? { value, label } : null;
+        },
+        FALLBACK_HOME_DATA.about.stats
+      ),
+      vehiclesTotal
     ),
     howItWorksHeading: clean(about.howItWorksHeading, FALLBACK_HOME_DATA.about.howItWorksHeading),
   };
@@ -323,7 +341,7 @@ async function fetchHomeSeoPage(): Promise<HomeSeoRow | null> {
   return data as HomeSeoRow;
 }
 
-async function fetchHomepageCities(): Promise<HomeCoverageCity[]> {
+async function fetchHomepageCities(): Promise<{ cities: HomeCoverageCity[]; vehiclesTotal: number }> {
   const { data, error } = await supabase
     .from("seo_pages")
     .select("url_path,page_data")
@@ -332,11 +350,12 @@ async function fetchHomepageCities(): Promise<HomeCoverageCity[]> {
     .order("updated_at", { ascending: false })
     .limit(24);
 
-  if (error || !data?.length) return [];
+  if (error || !data?.length) return { cities: [], vehiclesTotal: 0 };
 
   const rows = data as CityHubRow[];
   const seen = new Set<string>();
   const cities: HomeCoverageCity[] = [];
+  let vehiclesTotal = 0;
 
   for (const row of rows) {
     const path = normalizePublicPath(row.url_path);
@@ -359,9 +378,12 @@ async function fetchHomepageCities(): Promise<HomeCoverageCity[]> {
       areas: areas || clean(pd.statsCoverage, "Major service areas"),
       highlight: clean(pd.heroTagline ?? pd.servicesSectionSubtext, `Doorstep repair service across ${cityName}`),
     });
+
+    const cityVehiclesTotal = Number(pd.vehiclesServicedTotal);
+    if (Number.isFinite(cityVehiclesTotal)) vehiclesTotal += cityVehiclesTotal;
   }
 
-  return cities;
+  return { cities, vehiclesTotal };
 }
 
 async function getHomepageServiceCategories() {
@@ -382,21 +404,22 @@ async function getHomepageServiceCategories() {
 
 const getHomepageDbPayload = unstable_cache(
   async () => {
-    const [homeRow, coverageCities] = await Promise.all([
+    const [homeRow, homepageCities] = await Promise.all([
       fetchHomeSeoPage(),
       fetchHomepageCities(),
     ]);
 
-    return { homeRow, coverageCities };
+    return { homeRow, coverageCities: homepageCities.cities, vehiclesTotal: homepageCities.vehiclesTotal };
   },
   ["homepage-db-payload"],
   { revalidate: 3600, tags: ["homepage", "seo-pages", "cities", "areas", "navigation-links"] }
 );
 
 export const getHomepageData = cache(async (): Promise<HomePageData> => {
-  const { homeRow, coverageCities } = await getHomepageDbPayload() as {
+  const { homeRow, coverageCities, vehiclesTotal } = await getHomepageDbPayload() as {
     homeRow: HomeSeoRow | null;
     coverageCities: HomeCoverageCity[];
+    vehiclesTotal: number;
   };
   const categories = await getHomepageServiceCategories();
   const pd = asObject(homeRow?.page_data);
@@ -414,7 +437,7 @@ export const getHomepageData = cache(async (): Promise<HomePageData> => {
     },
     hero: mergeHero(pd, cityNames),
     services: mergeServices(pd, categories),
-    about: mergeAbout(pd),
+    about: mergeAbout(pd, vehiclesTotal),
     cityCoverage: mergeCityCoverage(pd, coverageCities),
     blog: mergeBlog(pd),
     contact: mergeContact(pd, cityNames),

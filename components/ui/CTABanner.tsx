@@ -15,7 +15,7 @@ interface CTABannerProps {
 
 const defaultProps = {
   heading: "Need a Mechanic Right Now?",
-  subtext: "24/7 doorstep service — we arrive in 30–60 minutes.",
+  subtext: "24/7 doorstep service — we arrive in 20 minutes.",
   callLabel: "Call Now",
   waLabel: "WhatsApp Us",
   variant: "blue",
@@ -82,7 +82,7 @@ export function InlineCTA({
     <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6 text-center">
       <h3 className="text-xl font-bold text-gray-900 mb-2">{heading}</h3>
       <p className="text-gray-600 text-sm mb-4">
-        24/7 doorstep service — arrive in 30–60 min.
+        24/7 doorstep service — arrive in 20 min.
       </p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <a

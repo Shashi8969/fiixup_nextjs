@@ -33,7 +33,7 @@ export interface GlobalServicePage {
   schema_review_count: number;
   schema_json: object | null;
   hero_stats: Array<{ value: string; label: string }>;
-  service_duration: string | '30 min';
+  service_duration: string | '20 min';
 service_availability: string | '24/7';
 }
 

@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
 
   description:
-    "Certified mechanics at your home or office across India. Serving Bangalore, Chennai, Hyderabad & Mumbai. Starting ₹249. 30-min response. Book now.",
+    "Certified mechanics at your home or office across India. Serving Bangalore, Chennai, Hyderabad & Mumbai. Starting ₹249. 20-min response. Book now.",
 
   keywords: DEFAULT_KEYWORDS,
   authors: [{ name: "Fiixup" }],

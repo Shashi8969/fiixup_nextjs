@@ -5,8 +5,8 @@ import type { Metadata } from "next";
 import { getAllPosts } from "@/lib/posts";
 import { blogListingSchema, jsonLdString } from "@/lib/schema";
 import { getStaticPageSEO } from "@/lib/data/seo";
-import { PageHero } from "@/components/ui/PageHero";
-import { BlogCard } from "@/components/ui/BlogCard";
+import { BlogIndexHero } from "@/components/blog/BlogIndexHero";
+import { BlogIndexGrid } from "@/components/blog/BlogIndexGrid";
 
 const seo = getStaticPageSEO("blog")!;
 
@@ -31,26 +31,12 @@ export default async function BlogPage() {
     <>
       <script type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdString(schema) }} />
-      <PageHero
+      <BlogIndexHero
         heading="Fiixup Blog"
         subtext="Expert tips, maintenance guides, and industry insights to help you keep your car and bike in perfect condition."
-        gradient="from-gray-50 to-gray-100"
       />
 
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post, i) => (
-              <BlogCard
-                key={post.id}
-                {...post}
-                readTime={String(post.readTime)}
-                priority={i === 0}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+      <BlogIndexGrid posts={posts} />
     </>
   );
 }

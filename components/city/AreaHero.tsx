@@ -57,7 +57,7 @@ export function AreaHero({ city, areaName }: AreaHeroProps) {
       </span>{" "}
       Mechanic at your doorstep in{" "}
       <span className="font-extrabold text-slate-950">
-        30 minutes.
+        20 minutes.
       </span>{" "}
       <span className="inline-flex items-center rounded-full border border-orange-200 bg-orange-100 px-2.5 py-0.5 font-extrabold text-orange-700">
         From ₹450

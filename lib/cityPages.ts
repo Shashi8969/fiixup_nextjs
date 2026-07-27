@@ -33,8 +33,9 @@ export interface CityHubPageData {
   cityEmail:     string;
 
   // Hero
-  heroTagline:   string;
-  heroHeading:   string;
+  heroTagline:    string;
+  heroHeading:    string;
+  heroSubheading: string | null;
   heroBullets:   string[];
   heroStats:     { value: string; label: string }[];
   heroImageUrl:  string | null;

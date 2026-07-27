@@ -5,7 +5,7 @@
 import type { CityServiceCategoryPageData } from '@/lib/cityPages';
 
 const DEFAULT_STEPS = [
-  { step: 1, title: 'Book in 60 Seconds',  desc: 'Call, WhatsApp, or fill the form.' },
+  { step: 1, title: 'Book in 30 Seconds',  desc: 'Call, WhatsApp, or fill the form.' },
   { step: 2, title: 'We Dispatch Fast',     desc: 'Nearest certified mechanic dispatched.' },
   { step: 3, title: 'Repair at Your Door', desc: 'Mechanic arrives with all tools & parts.' },
   { step: 4, title: 'Back on the Road',    desc: '30-day warranty on all repairs.' },

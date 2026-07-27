@@ -303,7 +303,7 @@ export default function NotFound() {
                 Still need help? We&apos;re one call away.
               </p>
               <p className="text-blue-200 text-sm mt-1">
-                Certified mechanics at your door in 30–60 minutes. Available 24/7, 365 days.
+                Certified mechanics at your door in 20 minutes. Available 24/7, 365 days.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 justify-center">

@@ -8,6 +8,10 @@ import { MapPin } from 'lucide-react';
 import type { CityHubPageData } from '@/lib/cityPages';
 import { filterValidItemsByPath, getPublicPathList } from '@/lib/public-links';
 
+// Matches the areaServed cap in cityHubSchema() (lib/schema.ts) — cities with
+// 50+ areas were rendering every single one as a card with no limit.
+const AREAS_DISPLAY_LIMIT = 20;
+
 export async function CityAreasDynamic({ data }: { data: CityHubPageData }) {
   const activePaths = await getPublicPathList();
   const areas = filterValidItemsByPath(
@@ -16,7 +20,7 @@ export async function CityAreasDynamic({ data }: { data: CityHubPageData }) {
     activePaths,
     `${data.citySlug} city area grid`,
     (area) => area.name
-  );
+  ).slice(0, AREAS_DISPLAY_LIMIT);
   if (areas.length === 0) return null;
 
   return (

@@ -84,7 +84,7 @@ export function QuickServiceModal({
             </div>
             <Dialog.Title className="text-2xl font-bold mb-2">Need Quick Service?</Dialog.Title>
             <Dialog.Description className="text-gray-600">
-              Book in 30 seconds. Mechanic at your doorstep in 30 minutes.
+              Book in 30 seconds. Mechanic at your doorstep in 20 minutes.
             </Dialog.Description>
           </div>
 

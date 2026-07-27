@@ -130,7 +130,7 @@ export function CityServiceDetail({
               <h2 className="text-2xl font-bold mb-4">{service.shortTitle} in {city.name}</h2>
               <p className="text-gray-700 leading-relaxed text-lg mb-4">{service.description}</p>
               <p className="text-gray-600 leading-relaxed mb-8">
-                Our certified technicians cover all areas of {city.name} including {city.areas.map((a: any) => typeof a === 'string' ? a : a.name).join(', ')} — reaching you within 30–60 minutes.
+                Our certified technicians cover all areas of {city.name} including {city.areas.map((a: any) => typeof a === 'string' ? a : a.name).join(', ')} — reaching you within 20 minutes.
               </p>
               <h3 className="font-bold text-gray-900 mb-3">{isCar ? 'Car Brands We Service' : 'Bike Brands We Service'}</h3>
               <div className="flex flex-wrap gap-2">
@@ -163,7 +163,7 @@ export function CityServiceDetail({
           </h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
             {[
-              { step: '1', title: 'Book Online or Call', desc: `Call ${city.phone} or fill the form. Takes under 60 seconds.` },
+              { step: '1', title: 'Book Online or Call', desc: `Call ${city.phone} or fill the form. Takes under 30 seconds.` },
               { step: '2', title: 'We Confirm & Dispatch', desc: `We dispatch the nearest ${city.name} technician to your location.` },
               { step: '3', title: 'Tech Arrives at Your Door', desc: 'Certified technician arrives with tools & parts within the hour.' },
               { step: '4', title: 'Drive Away Happy', desc: 'Service complete. 30-day warranty and digital receipt provided.' },
