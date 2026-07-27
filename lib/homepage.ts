@@ -80,6 +80,10 @@ export type HomeCityCoverageData = {
   cities: HomeCoverageCity[];
 };
 
+export type HomeTestimonialsData = {
+  selectedReviewIds: string[];
+};
+
 export type HomeBlogData = {
   heading: string;
   subtext: string;
@@ -110,6 +114,7 @@ export type HomePageData = {
   services: HomeServicesData;
   about: HomeAboutData;
   cityCoverage: HomeCityCoverageData;
+  testimonials: HomeTestimonialsData;
   blog: HomeBlogData;
   contact: HomeContactData;
 };
@@ -163,6 +168,9 @@ const FALLBACK_HOME_DATA: Omit<HomePageData, "services" | "cityCoverage"> & {
     highlights: fallbackHighlights,
     stats: fallbackStats.map(({ value, label }) => ({ value, label })),
     howItWorksHeading: aboutContent.sections.howItWorks,
+  },
+  testimonials: {
+    selectedReviewIds: [],
   },
   cityCoverage: {
     heading: "Doorstep Car & Bike Mechanic Services Across Major Indian Cities",
@@ -294,6 +302,14 @@ function mergeAbout(pd: Record<string, unknown>, vehiclesTotal: number): HomeAbo
     ),
     howItWorksHeading: clean(about.howItWorksHeading, FALLBACK_HOME_DATA.about.howItWorksHeading),
   };
+}
+
+function mergeTestimonials(pd: Record<string, unknown>): HomeTestimonialsData {
+  const testimonials = asObject(pd.testimonials);
+  const ids = asArray<unknown>(testimonials.selectedReviewIds)
+    .map((id) => clean(id))
+    .filter(Boolean);
+  return { selectedReviewIds: ids };
 }
 
 function mergeCityCoverage(pd: Record<string, unknown>, cities: HomeCoverageCity[]): HomeCityCoverageData {
@@ -439,6 +455,7 @@ export const getHomepageData = cache(async (): Promise<HomePageData> => {
     services: mergeServices(pd, categories),
     about: mergeAbout(pd, vehiclesTotal),
     cityCoverage: mergeCityCoverage(pd, coverageCities),
+    testimonials: mergeTestimonials(pd),
     blog: mergeBlog(pd),
     contact: mergeContact(pd, cityNames),
   };

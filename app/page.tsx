@@ -55,7 +55,7 @@ export default async function HomePage() {
       <About data={homeData.about} />
       <CityCoverage {...homeData.cityCoverage} />
      <Suspense fallback={<SectionSkeleton rows={4} />}>
-        <Testimonials />
+        <Testimonials reviewIds={homeData.testimonials.selectedReviewIds} />
       </Suspense>
       <Suspense fallback={<SectionSkeleton rows={3} />}>
         <Blog {...homeData.blog} />

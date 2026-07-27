@@ -81,3 +81,31 @@ export const getBrandReviews = unstable_cache(
   ["brand-reviews"],
   { revalidate: 3600, tags: ["reviews"] }
 );
+
+// Homepage-curated selection — admin picks specific review_sources rows
+// instead of whichever ones happen to come back first from getBrandReviews.
+// Falls back to getBrandReviews when nothing's been curated yet.
+export const getReviewsByIds = unstable_cache(
+  async (ids: string[]): Promise<PublicReview[]> => {
+    const cleanIds = ids.map((id) => String(id).trim()).filter(Boolean);
+    if (cleanIds.length === 0) return getBrandReviews(4);
+
+    const { data, error } = await supabase
+      .from("review_sources")
+      .select("*")
+      .in("id", cleanIds);
+
+    if (error || !data?.length) return getBrandReviews(4);
+
+    const byId = new Map((data as ReviewRow[]).map((row) => [String(row.id), row]));
+    const ordered = cleanIds
+      .map((id) => byId.get(id))
+      .filter((row): row is ReviewRow => Boolean(row))
+      .map(normalizeReview)
+      .filter((review): review is PublicReview => Boolean(review));
+
+    return dedupeReviews(ordered);
+  },
+  ["homepage-curated-reviews"],
+  { revalidate: 3600, tags: ["reviews", "homepage"] }
+);

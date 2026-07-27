@@ -1,12 +1,14 @@
 import { Star } from "lucide-react";
 import type { CityData } from "@/lib/models/city.model";
 import { globalStats } from "@/lib/data/testimonials";
-import { getBrandReviews } from "@/lib/reviews";
+import { getBrandReviews, getReviewsByIds } from "@/lib/reviews";
 import { TestimonialCard } from "@/components/ui/TestimonialCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
-export async function Testimonials() {
-  const testimonials = await getBrandReviews(4);
+export async function Testimonials({ reviewIds }: { reviewIds?: string[] } = {}) {
+  const testimonials = reviewIds?.length
+    ? await getReviewsByIds(reviewIds)
+    : await getBrandReviews(4);
 
   return (
     <section id="testimonials" className="py-12 bg-blue-50">
