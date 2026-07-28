@@ -47,7 +47,13 @@ function isValidTag(tag: string): tag is ValidTag {
 }
 
 function revalidateTagSafe(tag: ValidTag) {
-  revalidateTag(tag, "pages");
+  // Next.js 16 requires a second argument here; "max" is the documented
+  // drop-in replacement for the old single-argument revalidateTag(tag) call
+  // (see https://nextjs.org/docs/messages/revalidate-tag-single-arg). The
+  // previous "pages" value was never a registered cacheLife profile, so
+  // every call here threw and every admin save silently fell back to
+  // waiting out the 1-hour ISR window instead of revalidating instantly.
+  revalidateTag(tag, "max");
 }
 
 function isSafePath(path: string) {

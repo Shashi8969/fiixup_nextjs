@@ -124,6 +124,15 @@ function shouldSkipProxy(pathname: string) {
   );
 }
 
+// Next.js doesn't expose the current pathname to Server Components directly —
+// this is the standard way to make it available via headers().get("x-pathname"),
+// so app/not-found.tsx can know which URL actually 404'd.
+function passThroughWithPathname(request: NextRequest) {
+  const headers = new Headers(request.headers);
+  headers.set("x-pathname", request.nextUrl.pathname);
+  return NextResponse.next({ request: { headers } });
+}
+
 function buildDestinationUrl(
   row: RedirectRow,
   requestUrl: string,
@@ -265,7 +274,7 @@ export async function proxy(request: NextRequest) {
   const rawPathname = request.nextUrl.pathname;
 
   if (shouldSkipProxy(rawPathname)) {
-    return NextResponse.next();
+    return passThroughWithPathname(request);
   }
 
   await ensureRedirectCache();
@@ -298,7 +307,7 @@ export async function proxy(request: NextRequest) {
     });
   }
 
-  return NextResponse.next();
+  return passThroughWithPathname(request);
 }
 
 export const config = {

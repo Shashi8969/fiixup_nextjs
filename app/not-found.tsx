@@ -8,6 +8,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import Link from "next/link";
+import { after } from "next/server";
+import { headers } from "next/headers";
 import {
   Phone, MessageCircle, Wrench, Bike, Car, Battery, Truck,
   MapPin, ArrowRight, Home, Search, Zap, Shield, Clock, ChevronRight
@@ -17,8 +19,14 @@ import {
   MAIN_PHONE_DISPLAY,
   WHATSAPP_NUMBER,
 } from "@/lib/constants";
+import { NotFoundRedirect } from "@/components/ui/NotFoundRedirect";
+import { logBrokenLinkHit } from "@/lib/notFoundTracking";
 
-export const revalidate = 3600; // refreshes every 1 hour
+// Note: no `revalidate` export here — Next.js's not-found special file doesn't
+// support the plain numeric ISR revalidate segment config the way normal pages
+// do; setting it throws "Invalid profile provided... must be configured under
+// cacheLife" on every request. Content here is static, so no revalidation is
+// needed anyway.
 
 // ── Quick-access services shown on 404 page ───────────────────────────────────
 const TOP_SERVICES = [
@@ -51,9 +59,20 @@ const COLOR_MAP: Record<string, { bg: string; text: string; border: string; dot:
   purple: { bg: "bg-purple-50", text: "text-purple-600", border: "border-purple-200", dot: "bg-purple-500" },
 };
 
-export default function NotFound() {
+export default async function NotFound() {
+  const hdrs = await headers();
+  const pathname = hdrs.get("x-pathname");
+  const referrer = hdrs.get("referer");
+  const userAgent = hdrs.get("user-agent");
+  const forwardedFor = hdrs.get("x-forwarded-for");
+  const realIp = hdrs.get("x-real-ip");
+
+  after(() => logBrokenLinkHit({ pathname, referrer, userAgent, forwardedFor, realIp }));
+
   return (
     <main className="min-h-screen bg-gray-50">
+
+      <NotFoundRedirect />
 
       {/* ── Hero Section ──────────────────────────────────────────────────── */}
       <section className="relative bg-white border-b border-gray-100 overflow-hidden">
