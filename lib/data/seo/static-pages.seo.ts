@@ -73,6 +73,20 @@ export const staticPagesSEO: PageSEO[] = [
     canonical: `${SITE_URL}/faq`,
   },
   {
+    id: "gallery",
+    label: "Gallery",
+    route: "/gallery",
+    title: "Our Work Gallery | Real Car & Bike Repair Jobs | Fiixup",
+    description:
+      "See real doorstep car and bike repair jobs completed by Fiixup's certified technicians — before/after photos, service visits, and roadside assistance across India.",
+    keywords:
+      "fiixup gallery, car repair photos, bike service photos, doorstep mechanic work, real repair jobs India",
+    ogTitle: "Fiixup Gallery — Real Completed Repair Jobs",
+    ogDescription:
+      "A look at real doorstep car and bike repairs completed by our certified technicians.",
+    canonical: `${SITE_URL}/gallery`,
+  },
+  {
     id: "services",
     label: "Services Hub",
     route: "/services",

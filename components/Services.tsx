@@ -32,7 +32,7 @@ export async function Services({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
           {serviceCategories.slice(0, maxItems).map((cat) => (
             <ServiceCard
               key={cat.slug || cat.title}

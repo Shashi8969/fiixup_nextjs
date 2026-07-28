@@ -34,6 +34,9 @@ const VALID_TAGS = [
   "seo-pages",
   "homepage",
   "leads",
+  "brand-logos",
+  "gallery",
+  "team-members",
 ] as const;
 
 type ValidTag = (typeof VALID_TAGS)[number];
@@ -107,6 +110,15 @@ function revalidateRelatedPaths(tag: ValidTag) {
       // REDIRECT_CACHE_TTL_SECONDS if redirect changes must go live immediately.
       break;
     case "leads":
+      break;
+    case "brand-logos":
+      revalidatePath("/");
+      break;
+    case "gallery":
+      revalidatePath("/gallery");
+      break;
+    case "team-members":
+      revalidatePath("/about");
       break;
     default:
       break;

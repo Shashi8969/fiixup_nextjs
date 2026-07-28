@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { MapPin, Phone, Mail, Clock, ShieldAlert } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, ShieldAlert, MessageCircle } from "lucide-react";
 import { useLeadForm } from "@/lib/hooks/useLeadForm";
 
 import {
@@ -22,6 +22,7 @@ interface ContactInfoItem {
   title: string;
   content: string;
   href?: string;
+  external?: boolean;
 }
 
 type ContactSiteSettings = Pick<
@@ -34,6 +35,8 @@ type ContactSiteSettings = Pick<
   | "addressLocality"
   | "addressRegion"
   | "addressPostalCode"
+  | "whatsappNumber"
+  | "floatingWhatsAppMessage"
 >;
 
 function buildContactInfo(data: HomeContactData | undefined, siteSettings: ContactSiteSettings | undefined): ContactInfoItem[] {
@@ -73,6 +76,18 @@ Doorstep mechanic support expanding to more cities soon`
     content: mainPhoneDisplay,
     href: `tel:${mainPhone}`
   });
+
+  const whatsappNumber = siteSettings?.whatsappNumber;
+  if (whatsappNumber) {
+    const message = encodeURIComponent(siteSettings?.floatingWhatsAppMessage || "Hi Fiixup, I need help with my vehicle.");
+    items.push({
+      Icon: MessageCircle,
+      title: "Chat on WhatsApp",
+      content: "Message us for the fastest response",
+      href: `https://wa.me/${whatsappNumber}?text=${message}`,
+      external: true,
+    });
+  }
 
   if (emergencyPhone) {
     items.push({
@@ -152,11 +167,11 @@ export function Contact({ data, siteSettings }: ContactProps = {}) {
 
           <div className="space-y-6">
 
-            {contactInfo.map(({ Icon, title, content, href }) => (
+            {contactInfo.map(({ Icon, title, content, href, external }) => (
 
               <div
                 key={title}
-                className="flex items-start gap-4"
+                className="flex items-start gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
               >
 
                 <div className="bg-blue-100 p-3 rounded-lg flex-shrink-0">
@@ -175,6 +190,7 @@ export function Contact({ data, siteSettings }: ContactProps = {}) {
 
                     <a
                       href={href}
+                      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                       className="text-blue-600 font-semibold hover:underline"
                     >
                       {content}
@@ -215,7 +231,7 @@ export function Contact({ data, siteSettings }: ContactProps = {}) {
           {/* FORM */}
 
           <div
-            className="bg-gray-50 p-8 rounded-xl"
+            className="bg-gray-50 p-8 rounded-xl border border-gray-100 shadow-sm"
             id="contact-form"
           >
 

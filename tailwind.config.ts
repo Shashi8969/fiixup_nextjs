@@ -39,6 +39,25 @@ const config: Config = {
           ink: "#1C3F88", crimson: "#D3252A", paper: "#F8FAFC",
          },
       },
+      keyframes: {
+        "marquee-left": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+        "marquee-right": {
+          "0%": { transform: "translateX(-50%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        "fade-in-up": {
+          "0%": { opacity: "0", transform: "translateY(16px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        "marquee-left": "marquee-left var(--marquee-duration, 40s) linear infinite",
+        "marquee-right": "marquee-right var(--marquee-duration, 40s) linear infinite",
+        "fade-in-up": "fade-in-up 0.5s ease-out both",
+      },
     },
   },
   plugins: [],

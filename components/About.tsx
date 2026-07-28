@@ -60,14 +60,14 @@ export function About({ data }: AboutProps = {}) {
         </div>
 
         {/* Stats */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 gap-3 sm:gap-8 lg:grid-cols-4">
           {content.stats.map((stat, index) => {
             const Icon = fallbackStats[index]?.icon ?? CheckCircle;
             return (
-              <div key={stat.label} className="bg-white p-6 rounded-xl shadow-md text-center">
-                <Icon className="w-10 h-10 text-blue-600 mx-auto mb-3" />
-                <p className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</p>
-                <p className="text-gray-600">{stat.label}</p>
+              <div key={stat.label} className="rounded-xl bg-white p-4 text-center shadow-md sm:p-6">
+                <Icon className="mx-auto mb-2 h-7 w-7 text-blue-600 sm:mb-3 sm:h-10 sm:w-10" />
+                <p className="mb-0.5 text-xl font-bold text-gray-900 sm:mb-1 sm:text-3xl">{stat.value}</p>
+                <p className="text-xs text-gray-600 sm:text-base">{stat.label}</p>
               </div>
             );
           })}

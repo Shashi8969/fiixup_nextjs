@@ -73,6 +73,7 @@ const STATIC_FALLBACKS: SitemapPage[] = [
   { url_path: "/about", page_type: "static" },
   { url_path: "/contact", page_type: "static" },
   { url_path: "/faq", page_type: "static" },
+  { url_path: "/gallery", page_type: "static" },
 ];
 
 export function buildSitemapEntries(seoPages: SitemapPage[]): MetadataRoute.Sitemap {

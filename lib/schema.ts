@@ -1090,6 +1090,37 @@ export function contactPageSchema(opts?: {
   };
 }
 
+export function galleryPageSchema(images: { imageUrl: string; title?: string | null; altText?: string | null }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type":      "CollectionPage",
+        "@id":        `${SITE_URL}/gallery/#webpage`,
+        url:          `${SITE_URL}/gallery`,
+        name:         "Our Work — Fiixup Doorstep Repair Gallery",
+        description:  "Real completed car and bike repair jobs by Fiixup's certified doorstep technicians across Bangalore, Chennai, Hyderabad and Mumbai.",
+        isPartOf:     { "@id": SITE_ID },
+        about:        { "@id": ORG_ID },
+        ...(images.length > 0 && {
+          mainEntity: {
+            "@type": "ImageGallery",
+            image: images.slice(0, 30).map((img) => ({
+              "@type": "ImageObject",
+              contentUrl: img.imageUrl,
+              name: img.title || img.altText || "Fiixup completed job photo",
+            })),
+          },
+        }),
+      },
+      _breadcrumb([
+        { name: "Home",    url: "/" },
+        { name: "Gallery", url: "/gallery" },
+      ]),
+    ],
+  };
+}
+
 // ═════════════════════════════════════════════════════════════════════════════
 // BACKWARD COMPATIBILITY ALIASES
 // All existing page files continue to work without changes.

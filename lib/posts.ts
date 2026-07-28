@@ -74,7 +74,7 @@ export async function getAllPosts(): Promise<BlogPost[]> {
   const { data, error } = await supabase
     .from("posts")
     .select(POST_LIST_SELECT)
-    .order("date", { ascending: false });
+    .order("date_proper", { ascending: false });
 
   if (error) {
     console.error("getAllPosts error:", error.message);
@@ -103,7 +103,7 @@ export async function getPostsBySlugs(slugs: string[]): Promise<BlogPost[]> {
     .from("posts")
     .select(POST_LIST_SELECT)
     .in("slug", slugs)
-    .order("date", { ascending: false });
+    .order("date_proper", { ascending: false });
 
   if (error) {
     console.error("getPostsBySlugs error:", error.message);
@@ -119,7 +119,7 @@ export const getFeaturedPosts = unstable_cache(
       .from("posts")
       .select(POST_LIST_SELECT)
       .eq("featured", true)
-      .order("date", { ascending: false })
+      .order("date_proper", { ascending: false })
       .limit(limit);
 
     if (error) return [];
@@ -149,7 +149,8 @@ export async function getPostsByTag(tag: string): Promise<BlogPost[]> {
   return data
     .map((row: any) => row.posts)
     .filter(Boolean)
-    .map(rowToPost);
+    .map(rowToPost)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 // ── Get the tag's display name for a given slug (for page title/heading) ──────
@@ -175,7 +176,7 @@ export async function getPostsByCategory(category: string): Promise<BlogPost[]> 
     .from("posts")
     .select(POST_LIST_SELECT)
     .eq("category", category)
-    .order("date", { ascending: false });
+    .order("date_proper", { ascending: false });
 
   if (error) return [];
   return (data ?? []).map(rowToPost);

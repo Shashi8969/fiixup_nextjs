@@ -3,20 +3,20 @@ import { Award, Users, Clock, ThumbsUp } from "lucide-react";
 const mvvItems = [
   {
     Icon: Award,
-    title: "Why Vehicle Owners Choose Fiixup",
-    text: "Finding a reliable car or bike mechanic during a breakdown is difficult, especially in busy city traffic and apartment areas. Fiixup helps customers get doorstep repair support without wasting hours searching for a nearby garage."
+    title: "Our Mission",
+    text: "To make vehicle repair effortless by bringing certified, professional mechanics directly to your doorstep — no towing, no garage queues, no wasted afternoons."
   },
 
   {
     Icon: Users,
-    title: "Built for Everyday Vehicle Problems",
-    text: "From dead batteries and punctures to engine starting problems, oil changes, brake repair, and regular servicing, Fiixup is designed for common vehicle issues faced by daily commuters and riders."
+    title: "Our Vision",
+    text: "To become India's most trusted name in doorstep vehicle care, expanding our certified technician network to every major city in the country."
   },
 
   {
     Icon: ThumbsUp,
-    title: "Simple, Honest & Practical Service",
-    text: "We focus on quick response times, clear communication, and practical vehicle repair support at your home, office, apartment parking, or roadside location."
+    title: "Our Values",
+    text: "Transparency, honesty, and respect for your time — upfront pricing before work starts, genuine parts, and no unnecessary upselling, ever."
   },
 ];
 

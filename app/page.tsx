@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { Hero }         from "@/components/Hero";
 import { About }        from "@/components/About";
 import { Services }     from "@/components/Services";
+import { BrandsMarquee } from "@/components/ui/BrandsMarquee";
 import { CityCoverage } from "@/components/CityCoverage";
 import { Testimonials } from "@/components/Testimonials";
 import { Blog }         from "@/components/Blog";
@@ -52,6 +53,7 @@ export default async function HomePage() {
       />
       <Hero data={homeData.hero} mainPhone={siteSettings.mainPhone} />
       <Services {...homeData.services} />
+      <BrandsMarquee />
       <About data={homeData.about} />
       <CityCoverage {...homeData.cityCoverage} />
      <Suspense fallback={<SectionSkeleton rows={4} />}>
