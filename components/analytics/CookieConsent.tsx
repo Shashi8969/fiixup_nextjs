@@ -11,9 +11,11 @@ import {
   readConsentPreferences,
 } from "@/lib/analytics";
 
-// Show a minute after arrival instead of on load — visitors get a full
-// first look at the page before being asked anything.
-const BANNER_DELAY_MS = 60_000;
+// Short delay instead of showing on load — visitors get a beat to see the
+// page before being asked anything, but not so long that fast-bouncing
+// visitors (e.g. someone who just wants the phone number) leave before ever
+// seeing the banner.
+const BANNER_DELAY_MS = 3_000;
 
 function savePreferences(analytics: boolean, advertising: boolean) {
   const preferences: ConsentPreferences = {

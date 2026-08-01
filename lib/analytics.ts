@@ -48,11 +48,11 @@ export function trackEvent(
   eventName: string,
   parameters: Record<string, string | number | boolean | undefined> = {},
 ) {
-  if (
-    typeof window === "undefined" ||
-    !hasAnalyticsConsent() ||
-    typeof window.gtag !== "function"
-  ) {
+  // Not gated on hasAnalyticsConsent(): Google Consent Mode (set up in
+  // AnalyticsManager) decides whether this becomes a full hit or an
+  // anonymous cookieless ping based on the visitor's actual consent state,
+  // so gtag is always safe to call once it's loaded.
+  if (typeof window === "undefined" || typeof window.gtag !== "function") {
     return;
   }
 

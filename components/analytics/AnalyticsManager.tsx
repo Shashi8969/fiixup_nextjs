@@ -14,16 +14,20 @@ import {
 const ENGAGEMENT_THRESHOLDS = [30, 60, 120, 300];
 const SCROLL_THRESHOLDS = [25, 50, 75, 90];
 
-function ensureGoogleAnalytics(): boolean {
+// Google Consent Mode v2: gtag.js loads and starts sending hits on every
+// visit, not just after the cookie banner is accepted. Before any consent
+// decision exists, storage defaults to "denied" — gtag.js then sends
+// cookieless, non-identifying pings that Google uses to model traffic,
+// instead of the site sending nothing at all until someone clicks Accept.
+// Once real consent is known (stored choice, or the banner is answered),
+// "consent update" upgrades those pings to full, cookie-backed tracking.
+function initGoogleAnalytics(): boolean {
   if (typeof window === "undefined") return false;
 
-  if (!hasAnalyticsConsent()) {
-    if (process.env.NODE_ENV !== "production") {
-      console.info(
-        "[Fiixup Analytics] Skipped — no analytics consent yet. Accept cookies " +
-          "(or enable Analytics under Cookie settings) to test GA locally."
-      );
-    }
+  if (!GA_MEASUREMENT_ID) {
+    console.warn(
+      "Google Analytics disabled: NEXT_PUBLIC_GA_MEASUREMENT_ID is missing.",
+    );
     return false;
   }
 
@@ -35,29 +39,25 @@ function ensureGoogleAnalytics(): boolean {
     };
 
   const preferences = readConsentPreferences();
-  window.gtag("consent", "update", {
-    analytics_storage: "granted",
-    ad_storage: preferences?.advertising ? "granted" : "denied",
-    ad_user_data: preferences?.advertising ? "granted" : "denied",
-    ad_personalization: preferences?.advertising ? "granted" : "denied",
-  });
-  if (!GA_MEASUREMENT_ID) {
-  console.warn(
-    "Google Analytics disabled: NEXT_PUBLIC_GA_MEASUREMENT_ID is missing.",
-  );
-  return false;
-}
 
-if (!document.querySelector(`script[data-fiixup-ga="${GA_MEASUREMENT_ID}"]`)) {
-  const script = document.createElement("script");
-
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-  script.dataset.fiixupGa = GA_MEASUREMENT_ID;
-
-  document.head.appendChild(script);
-}
   if (!window.sessionStorage.getItem("fiixup_ga_configured")) {
+    window.gtag("consent", "default", {
+      analytics_storage: preferences?.analytics ? "granted" : "denied",
+      ad_storage: preferences?.advertising ? "granted" : "denied",
+      ad_user_data: preferences?.advertising ? "granted" : "denied",
+      ad_personalization: preferences?.advertising ? "granted" : "denied",
+    });
+
+    if (!document.querySelector(`script[data-fiixup-ga="${GA_MEASUREMENT_ID}"]`)) {
+      const script = document.createElement("script");
+
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+      script.dataset.fiixupGa = GA_MEASUREMENT_ID;
+
+      document.head.appendChild(script);
+    }
+
     window.gtag("js", new Date());
     window.gtag("config", GA_MEASUREMENT_ID, {
       send_page_view: false,
@@ -110,7 +110,7 @@ export function AnalyticsManager() {
   const lastPageView = useRef<string | null>(null);
 
   const sendCurrentPageView = () => {
-    if (!ensureGoogleAnalytics()) return;
+    if (!initGoogleAnalytics()) return;
 
     const currentPath = `${window.location.pathname}${window.location.search}`;
     if (lastPageView.current === currentPath) return;
