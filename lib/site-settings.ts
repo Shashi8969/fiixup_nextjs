@@ -26,7 +26,16 @@ export type PublicSiteSettings = {
   addressRegion: string;
   addressPostalCode: string;
   addressCountry: string;
+  /** Next/Image `quality` (1-100), admin-controlled via the "Image Quality" setting. */
+  imageQuality: number;
 };
+
+const IMAGE_QUALITY_BY_MODE: Record<string, number> = {
+  high: 90,
+  balanced: 75,
+  fast: 50,
+};
+const DEFAULT_IMAGE_QUALITY = 75;
 
 export const fallbackSiteSettings: PublicSiteSettings = {
   siteName: SITE_NAME,
@@ -46,9 +55,10 @@ export const fallbackSiteSettings: PublicSiteSettings = {
   addressRegion: "",
   addressPostalCode: "",
   addressCountry: "IN",
+  imageQuality: DEFAULT_IMAGE_QUALITY,
 };
 
-const SETTING_MAP: Record<string, keyof PublicSiteSettings> = {
+const SETTING_MAP: Record<string, Exclude<keyof PublicSiteSettings, "imageQuality">> = {
   site_name: "siteName",
   site_url: "siteUrl",
   main_phone: "mainPhone",
@@ -84,10 +94,17 @@ export const getPublicSiteSettings = unstable_cache(
       const settings: PublicSiteSettings = { ...fallbackSiteSettings };
 
       for (const row of data as Array<Record<string, unknown>>) {
-        const settingKey = SETTING_MAP[clean(row.key)];
+        const rawKey = clean(row.key);
         const value = clean(row.value);
+        if (!value) continue;
 
-        if (settingKey && value) {
+        if (rawKey === "image_quality_mode") {
+          settings.imageQuality = IMAGE_QUALITY_BY_MODE[value.toLowerCase()] ?? DEFAULT_IMAGE_QUALITY;
+          continue;
+        }
+
+        const settingKey = SETTING_MAP[rawKey];
+        if (settingKey) {
           settings[settingKey] = value;
         }
       }

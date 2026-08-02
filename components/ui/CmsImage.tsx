@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import { clsx } from "clsx";
+import { useImageQuality } from "@/lib/image-quality-context";
 
 type Ratio = "blogHero" | "blogCard" | "content" | "about" | "serviceHero" | "square" | "wide";
 type Fit = "contain" | "cover";
@@ -21,7 +24,7 @@ function normalizeSrc(src?: string | null) {
   }
 
 export function CmsImage({
-  src, alt, title, ratio = "content", fit = "contain", priority = false, sizes = "(max-width: 768px) 100vw, 50vw", className, imageClassName, focalX = 50, focalY = 50,
+  src, alt, title, ratio = "content", fit = "contain", priority = false, sizes = "(max-width: 768px) 100vw, 50vw", className, imageClassName, focalX = 50, focalY = 50, quality,
 }: {
   src?: string | null;
   alt?: string | null;
@@ -34,7 +37,10 @@ export function CmsImage({
   imageClassName?: string;
   focalX?: number | null;
   focalY?: number | null;
+  /** Overrides the admin-controlled site-wide default (Site Settings → Image Quality) for this one image. */
+  quality?: number;
 }) {
+  const siteQuality = useImageQuality();
   const safeAlt = alt?.trim() || title?.trim() || "Fiixup service image";
   return (
     <div className={clsx("relative overflow-hidden rounded-2xl bg-slate-100", ratioClass[ratio], className)}>
@@ -44,6 +50,7 @@ export function CmsImage({
         title={title || safeAlt}
         fill
         priority={priority}
+        quality={quality ?? siteQuality}
         sizes={sizes}
         className={clsx(fit === "cover" ? "object-cover" : "object-contain", imageClassName)}
         style={{ objectPosition: (focalX ?? 50) + "% " + (focalY ?? 50) + "%" }}

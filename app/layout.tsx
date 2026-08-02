@@ -14,6 +14,7 @@ import { AnalyticsManager } from "@/components/analytics/AnalyticsManager";
 import { CookieConsent } from "@/components/analytics/CookieConsent";
 import { Suspense } from "react";
 import { siteOrganizationSchema, jsonLdString } from "@/lib/schema";
+import { ImageQualityProvider } from "@/lib/image-quality-context";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -97,22 +98,24 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         >
           Skip to main content
         </a>
-        <Suspense fallback={null}>
-  <AnalyticsManager />
-</Suspense>
-        <Header navLinks={headerLinks} mainPhone={siteSettings.mainPhone} />
-        <main id="main-content">{children}</main>
-        <Footer siteSettings={siteSettings} />
-        <FloatingButtons
-          mainPhone={siteSettings.mainPhone}
-          whatsappNumber={siteSettings.whatsappNumber}
-          whatsappMessage={siteSettings.floatingWhatsAppMessage}
-        />
-        <QuickServiceModal
-          phonePlaceholder={siteSettings.mainPhoneDisplay}
-          availableText={siteSettings.quickModalAvailableText}
-        />
-        <CookieConsent />
+        <ImageQualityProvider quality={siteSettings.imageQuality}>
+          <Suspense fallback={null}>
+            <AnalyticsManager />
+          </Suspense>
+          <Header navLinks={headerLinks} mainPhone={siteSettings.mainPhone} />
+          <main id="main-content">{children}</main>
+          <Footer siteSettings={siteSettings} />
+          <FloatingButtons
+            mainPhone={siteSettings.mainPhone}
+            whatsappNumber={siteSettings.whatsappNumber}
+            whatsappMessage={siteSettings.floatingWhatsAppMessage}
+          />
+          <QuickServiceModal
+            phonePlaceholder={siteSettings.mainPhoneDisplay}
+            availableText={siteSettings.quickModalAvailableText}
+          />
+          <CookieConsent />
+        </ImageQualityProvider>
       </body>
     </html>
   );

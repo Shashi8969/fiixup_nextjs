@@ -2,6 +2,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { timingSafeEqual } from "crypto";
 import { rateLimitRequest, readJsonBody } from "@/lib/api-security";
+import { resetRedirectCache } from "@/proxy";
 
 export const runtime = "nodejs";
 
@@ -25,7 +26,7 @@ const VALID_TAGS = [
   "service-categories",
   "location-services",
   "posts",
-  "redirects",
+  "redirects", // also resets the proxy.ts in-memory redirect cache directly, see revalidateRelatedPaths()
   "site-settings",
   "navigation-links",
   "page-link-overrides",
@@ -112,8 +113,7 @@ function revalidateRelatedPaths(tag: ValidTag) {
       revalidatePath("/blog");
       break;
     case "redirects":
-      // Runtime proxy keeps its own memory cache. Use a redeploy or lower
-      // REDIRECT_CACHE_TTL_SECONDS if redirect changes must go live immediately.
+      resetRedirectCache();
       break;
     case "leads":
       break;

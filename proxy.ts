@@ -37,7 +37,15 @@ interface WildcardRedirectRow extends RedirectRow {
   prefix: string;
 }
 
-const DEFAULT_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+// 60s, not 24h: Next.js runs this proxy in a separate runtime from API
+// routes/route handlers, so the admin panel's "clear cache" action cannot
+// reach into this module's memory to force an instant refresh (verified —
+// resetRedirectCache() below only resets its own, disconnected module
+// instance when called from app/api/revalidate). A short TTL is the only
+// reliable way to make redirect-table edits show up quickly. Override via
+// REDIRECT_CACHE_TTL_SECONDS (60s floor enforced in getCacheTtlMs()) if a
+// longer window is ever preferred for Supabase-load reasons.
+const DEFAULT_CACHE_TTL_MS = 60 * 1000;
 const MAX_REDIRECT_ROWS = 5000;
 
 const STATIC_FILE_REGEX =
@@ -230,6 +238,17 @@ async function refreshRedirects() {
   } catch (error) {
     console.warn("[proxy] Redirect fetch error:", error);
   }
+}
+
+// Best-effort: proxy.ts runs in a separate runtime instance from
+// app/api/revalidate (verified empirically — a call from there resets a
+// disconnected copy of this module's state, not the one actually serving
+// requests), so this does NOT reliably force an instant refresh in
+// production. Kept as a harmless no-cost call in case a future Next.js/
+// deployment configuration ends up sharing the module registry; the real
+// fix is DEFAULT_CACHE_TTL_MS above.
+export function resetRedirectCache() {
+  cacheExpiry = 0;
 }
 
 async function ensureRedirectCache() {
