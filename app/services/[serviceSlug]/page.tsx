@@ -256,7 +256,7 @@ export default async function Page({
     ? Math.max(...pricingRows.map((r) => r.priceTo ?? r.priceFrom))
     : minPrice * 3;
 
-  // serviceDetailSchema = Service + AggregateRating + Review[] + HowTo + BreadcrumbList + FAQPage
+  // serviceDetailSchema = Service + AutoRepair/LocalBusiness + HowTo + BreadcrumbList + FAQPage
   const serviceSchemaData = serviceDetailSchema({
     name:         service.title,
     slug:         service.slug,
@@ -264,10 +264,6 @@ export default async function Page({
     minPrice,
     maxPrice,
     faqs:         service.faqs,
-    testimonials: service.testimonials?.map((t: any) => ({
-      name: t.name, rating: t.rating, review: t.review ?? t.text ?? "",
-      location: t.location, vehicle: t.vehicle, date: t.date,
-    })),
     features:     service.features,
     duration:     service.duration,
   });
@@ -276,7 +272,7 @@ export default async function Page({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonLdString(serviceSchemaData) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(service.schemaJson ?? serviceSchemaData) }}
       />
 
       <Hero service={service} Icon={Icon} isCar={isCar} bgAccent={bgAccent} accentBlue={accentBlue} bgLight={bgLight} />

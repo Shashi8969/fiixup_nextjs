@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation'
 import { getPageByPath } from '@/lib/seo-pages'
 import { getAllCities, getCityBySlug } from '@/lib/cities'
 import { getAllCityServiceSlugs, getAreaServices } from '@/lib/locationServices'
-import { areaPageSchema, CITY_DATA, jsonLdString, type CityKey } from '@/lib/schema'
+import { areaPageSchema, locationServiceSchema, CITY_DATA, jsonLdString, type CityKey } from '@/lib/schema'
 import { LocationServicePage } from '@/components/location-service/LocationServicePage'
 import { AreaHero } from '@/components/city/AreaHero'
 import { CityAbout } from '@/components/city/CityAbout'
@@ -86,9 +86,31 @@ export default async function CityAreaPage({ params }: { params: Params }) {
   const page = await getPageByPath(`/${citySlug}/${areaSlug}`)
   if (page) {
     const data = page.page_data
+    // Defense in depth: fn_build_ls_seo_page() always populates schema_json
+    // on save, but if a row somehow slips through with it null, fall back
+    // to a live-generated equivalent instead of shipping zero structured data.
+    const fallbackSchema = page.schema_json ?? locationServiceSchema({
+      serviceName:     data.serviceName,
+      serviceSlug:     data.serviceSlug,
+      serviceCategory: data.serviceCategory,
+      canonicalUrl:    page.canonical_url,
+      heroHeading:     data.heroHeading,
+      aboutPara1:      data.aboutPara1,
+      cityName:        data.cityName,
+      citySlug:        data.citySlug,
+      cityState:       data.city?.state,
+      pricingRows:     data.pricingRows ?? [],
+      faqs:            data.faqs ?? [],
+      nearbyAreas:     data.nearbyAreas ?? [],
+      cityLat:         data.city?.latitude,
+      cityLng:         data.city?.longitude,
+      cityPhone:       data.city?.phone,
+      cityEmail:       data.city?.email,
+      cityPostalCode:  data.city?.postalCode,
+    })
     return (
       <>
-        <JsonLd data={page.schema_json} />
+        <JsonLd data={fallbackSchema} />
         <LocationServicePage
           data={{
             id:                    0,

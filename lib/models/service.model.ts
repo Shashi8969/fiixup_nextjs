@@ -110,4 +110,7 @@ export interface ServiceData {
   carBrands?: BrandEntry[];
   bikeBrands?: BrandEntry[];
   relatedSlugs?: string[];
+
+  /** Admin-authored JSON-LD override from the CMS Schema tab, if set. */
+  schemaJson?: unknown;
 }

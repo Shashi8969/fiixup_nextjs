@@ -91,9 +91,11 @@ export interface LocalBusinessCity {
 // Internal helpers
 // ─────────────────────────────────────────────────────────────────────────────
 function _breadcrumb(crumbs: { name: string; url: string }[]) {
+  const lastUrl = crumbs[crumbs.length - 1].url;
+  const absoluteLastUrl = lastUrl.startsWith("http") ? lastUrl : `${SITE_URL}${lastUrl}`;
   return {
     "@type": "BreadcrumbList",
-    "@id": `${crumbs[crumbs.length - 1].url}/#breadcrumb`,
+    "@id": `${absoluteLastUrl}/#breadcrumb`,
     itemListElement: crumbs.map((c, i) => ({
       "@type":  "ListItem",
       position: i + 1,
@@ -111,23 +113,23 @@ function _faqItems(faqs: { q: string; a: string }[]) {
   }));
 }
 
-function _avgRating(testimonials: { rating: number }[]) {
-  if (testimonials.length === 0) return "4.9";
-  return (testimonials.reduce((s, t) => s + t.rating, 0) / testimonials.length).toFixed(1);
-}
-
 // ═════════════════════════════════════════════════════════════════════════════
-// 1. homeSchema() ─ app/page.tsx ONLY
+// 0. siteOrganizationSchema() ─ app/layout.tsx, rendered on EVERY page
 //
-//  Signals:  Organization + WebSite (Sitelinks search box)
-//  Why:      Establishes the national brand entity. Every city/service schema
-//            @id-links back to ORG_ID — Google traces E-E-A-T from one root.
+//  Signals:  Organization + WebSite
+//  Why:      Nearly every other function below references these nodes only
+//            by @id (provider/publisher/parentOrganization/isPartOf/about).
+//            Google's structured-data parser evaluates each page in
+//            isolation — it does not fetch another URL to resolve a
+//            dangling @id. Rendering the full definition on every page
+//            (via the root layout) is what makes those references actually
+//            resolve, instead of pointing at nothing everywhere except "/".
 //  Rich results unlocked:
 //    ✓ Sitelinks Search Box
 //    ✓ Knowledge Panel (Organization)
 //    ✓ Brand SERP features
 // ═════════════════════════════════════════════════════════════════════════════
-export function homeSchema() {
+export function siteOrganizationSchema() {
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -146,12 +148,12 @@ export function homeSchema() {
         sameAs: [
           "https://www.facebook.com/fiixup1/",
           "https://www.instagram.com/fiixup_in/",
+          "https://www.youtube.com/@fiixup",
         ],
-        aggregateRating: {
-          "@type": "AggregateRating",
-          ratingValue: "4.9", reviewCount: "10000",
-          bestRating: "5", worstRating: "1",
-        },
+        // No aggregateRating here: Google's review-snippet policy makes star
+        // rich results ineligible when the reviewed business controls the
+        // reviews (admin-curated testimonials are self-serving). Real
+        // reviews belong on Google Business Profile, not this markup.
         contactPoint: {
           "@type":           "ContactPoint",
           telephone:         MAIN_PHONE,
@@ -159,6 +161,11 @@ export function homeSchema() {
           availableLanguage: ["English","Hindi","Kannada","Tamil","Telugu"],
           hoursAvailable:    "Mo-Su 00:00-24:00",
         },
+        knowsAbout: [
+          "Car Repair","Bike Repair","Auto Maintenance","Roadside Assistance",
+          "Tyre Service","Battery Service","Car Towing","EV Service",
+        ],
+        numberOfEmployees: { "@type": "QuantitativeValue", minValue: 50, maxValue: 500 },
         hasOfferCatalog: {
           "@type": "OfferCatalog",
           name:    "Vehicle Repair Services",
@@ -180,82 +187,33 @@ export function homeSchema() {
         description: "24/7 Doorstep Car & Bike Repair in India",
         publisher:   { "@id": ORG_ID },
         inLanguage:  "en-IN",
-        potentialAction: {
-          "@type":       "SearchAction",
-          target: { "@type": "EntryPoint", urlTemplate: `${SITE_URL}/search?q={search_term_string}` },
-          "query-input": "required name=search_term_string",
-        },
       },
     ],
   };
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// 2. cityPageSchema() ─ app/[citySlug]/page.tsx
+// 1. homeSchema() ─ app/page.tsx ONLY
 //
-//  Signals:  AutoRepair + LocalBusiness + BreadcrumbList + FAQPage (if faqs)
-//  Why:      AutoRepair schema = Google Maps / Local Pack eligibility.
-//            areaServed neighbourhoods captures every "mechanic in [area]" query
-//            without needing individual area pages.
-//            FAQPage = expandable rich snippets in SERP.
-//  Rich results unlocked:
-//    ✓ Local Pack / Map Pack
-//    ✓ FAQ rich snippets
-//    ✓ Breadcrumbs in SERP
+//  Signals:  WebPage (Organization + WebSite now come from siteOrganizationSchema()
+//            in the root layout, present on every page including this one)
 // ═════════════════════════════════════════════════════════════════════════════
-export function cityPageSchema(
-  city: LocalBusinessCity,
-  faqs: { q: string; a: string }[]
-) {
-  const graph: object[] = [
-    {
-      "@type":      ["AutoRepair", "LocalBusiness"],
-      "@id":        `${SITE_URL}/${city.slug}/#business`,
-      name:         `Fiixup ${city.name}`,
-      url:          `${SITE_URL}/${city.slug}`,
-      image:        OG_IMAGE,
-      telephone:    city.phone,
-      email:        city.email,
-      openingHours: "Mo-Su 00:00-24:00",
-      priceRange:   "₹₹",
-      currenciesAccepted: "INR",
-      paymentAccepted:    "Cash, UPI, Credit Card, Debit Card",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: city.name,
-        addressRegion:   city.state,
-        postalCode:      city.postalCode,
-        addressCountry:  "IN",
+export function homeSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type":      "WebPage",
+        "@id":        `${SITE_URL}/#webpage`,
+        url:          SITE_URL,
+        name:         "Fiixup — 24/7 Doorstep Car & Bike Repair in India",
+        description:  "Certified mechanics at your home or office across India. Serving Bangalore, Chennai, Hyderabad & Mumbai.",
+        inLanguage:   "en-IN",
+        isPartOf:     { "@id": SITE_ID },
+        about:        { "@id": ORG_ID },
       },
-      geo: { "@type": "GeoCoordinates", latitude: city.lat, longitude: city.lng },
-      areaServed: [
-        { "@type": "City", name: city.name },
-        ...city.areas.map((a) => ({ "@type": "Place", name: String(a) })),
-      ],
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: "4.9",
-        reviewCount: String(city.reviewCount),
-        bestRating: "5", worstRating: "1",
-      },
-      parentOrganization: { "@id": ORG_ID },
-      hasMap: `https://www.google.com/maps/search/Fiixup+${encodeURIComponent(city.name)}`,
-    },
-    _breadcrumb([
-      { name: "Home",     url: "/" },
-      { name: city.name,  url: `/${city.slug}` },
-    ]),
-  ];
-
-  if (faqs.length > 0) {
-    graph.push({
-      "@type":    "FAQPage",
-      "@id":      `${SITE_URL}/${city.slug}/#faq`,
-      mainEntity: _faqItems(faqs),
-    });
-  }
-
-  return { "@context": "https://schema.org", "@graph": graph };
+    ],
+  };
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
@@ -298,12 +256,6 @@ export function areaPageSchema(opts: {
       },
       geo: { "@type": "GeoCoordinates", latitude: opts.cityLat, longitude: opts.cityLng },
       areaServed: { "@type": "Place", name: `${opts.areaName}, ${opts.cityName}` },
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: "4.9",
-        reviewCount: String(opts.reviewCount),
-        bestRating: "5", worstRating: "1",
-      },
       parentOrganization: { "@id": ORG_ID },
     },
     _breadcrumb([
@@ -370,8 +322,7 @@ export function locationServiceSchema(opts: {
     heroHeading, aboutPara1,
     cityName, citySlug, cityState = "India",
     areaName, areaSlug,
-    pricingRows = [], testimonials = [], faqs = [],
-    reviewCount, ratingValue,
+    pricingRows = [], faqs = [],
     cityLat = 0, cityLng = 0,
     cityPhone = MAIN_PHONE, cityEmail = MAIN_EMAIL,
     cityPostalCode = "000000",
@@ -387,23 +338,6 @@ export function locationServiceSchema(opts: {
   const minPrice = prices.length > 0 ? Math.min(...prices) : 499;
   const maxPrices = pricingRows.map((r) => r.priceTo ?? r.priceFrom);
   const maxPrice  = maxPrices.length > 0 ? Math.max(...maxPrices) : minPrice * 3;
-
-  // Rating derivation
-  const totalReviews = reviewCount ?? (testimonials.length > 0 ? testimonials.length * 30 : 200);
-  const avgRating    = ratingValue  ?? _avgRating(testimonials);
-
-  // Build Review[] — max 5 to stay within reasonable JSON-LD size
-  const reviews = testimonials.slice(0, 5).map((t) => ({
-    "@type":  "Review",
-    author:   { "@type": "Person", name: t.name },
-    reviewRating: {
-      "@type": "Rating",
-      ratingValue: String(t.rating), bestRating: "5", worstRating: "1",
-    },
-    reviewBody: t.text,
-    ...(t.date    && { datePublished: t.date }),
-    ...(t.vehicle && { description: `Vehicle: ${t.vehicle}` }),
-  }));
 
   // Breadcrumb path
   const crumbs = isArea
@@ -444,13 +378,8 @@ export function locationServiceSchema(opts: {
         { "@type": "Place", name: locLabel },
         ...nearbyAreas.slice(0, 5).map((a) => ({ "@type": "Place", name: a.name })),
       ],
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: String(avgRating),
-        reviewCount: String(totalReviews),
-        bestRating: "5", worstRating: "1",
-      },
-      ...(reviews.length > 0 && { review: reviews }),
+      // No aggregateRating/review: self-serving-reviews policy (see
+      // siteOrganizationSchema() for the full rationale).
       parentOrganization: { "@id": ORG_ID },
       hasMap: `https://www.google.com/maps/search/${encodeURIComponent(`${serviceName} ${locLabel}`)}`,
     },
@@ -623,12 +552,14 @@ export function serviceCategorySchema(opts: {
 // 7. serviceDetailSchema() ─ /services/[slug] individual service pages
 //    Also used for /[citySlug]/services/[serviceSlug]
 //
-//  Signals:  Service + AggregateRating + Review[] + HowTo + BreadcrumbList + FAQPage
-//  Why:      AggregateRating + Review[] = ⭐⭐⭐⭐⭐ stars in SERP (biggest CTR boost).
-//            HowTo = rich result for "how to book [service]" featured snippets.
+//  Signals:  Service + AutoRepair/LocalBusiness + HowTo + BreadcrumbList + FAQPage
+//  Why:      HowTo = rich result for "how to book [service]" featured snippets.
 //            FAQPage = expandable questions.
+//            No AggregateRating/Review: self-serving-reviews policy (see
+//            siteOrganizationSchema() for the full rationale) — Google
+//            won't show star rich results for this markup regardless of
+//            how it's structured, since Fiixup controls the reviews.
 //  Rich results unlocked:
-//    ✓ Star rating snippets in organic results
 //    ✓ HowTo rich result / featured snippet
 //    ✓ Price range snippet
 //    ✓ FAQ snippets
@@ -643,16 +574,12 @@ export function serviceDetailSchema(opts: {
   duration?:    string;
   features?:    string[];
   faqs?:        { q: string; a: string }[];
-  testimonials?: {
-    name: string; rating: number; review: string;
-    location?: string; vehicle?: string; date?: string;
-  }[];
   cityName?:    string;
   citySlug?:    string;
 }) {
   const {
     name, slug, description, minPrice, maxPrice,
-    duration, features = [], faqs = [], testimonials = [],
+    duration, features = [], faqs = [],
     cityName, citySlug,
   } = opts;
 
@@ -673,25 +600,6 @@ export function serviceDetailSchema(opts: {
         { name: "Services",  url: "/services" },
         { name: name,        url: `/services/${slug}` },
       ];
-
-  const totalRatings = testimonials.length > 0 ? testimonials.length * 25 : 500;
-  const avgRating    = _avgRating(testimonials) || "4.9";
-
-  const reviews = testimonials.slice(0, 10).map((t) => ({
-    "@type":  "Review",
-    author: {
-      "@type": "Person",
-      name: t.name,
-      ...(t.location && { address: { "@type": "PostalAddress", addressLocality: t.location } }),
-    },
-    reviewRating: {
-      "@type": "Rating",
-      ratingValue: String(t.rating), bestRating: "5", worstRating: "1",
-    },
-    reviewBody: t.review,
-    ...(t.date    && { datePublished: t.date }),
-    ...(t.vehicle && { description: `Vehicle: ${t.vehicle}` }),
-  }));
 
   const graph: object[] = [
     // Service — drives organic rich results (price, availability). Google does NOT
@@ -722,8 +630,9 @@ export function serviceDetailSchema(opts: {
         serviceOutput: features.map((f) => ({ "@type": "Thing", name: f })),
       }),
     },
-    // AutoRepair/LocalBusiness — a Google-supported parent type for review
-    // snippets. Carries the star rating shown in SERP.
+    // AutoRepair/LocalBusiness — Local Pack / Maps eligibility signal.
+    // No aggregateRating/review: self-serving-reviews policy (see
+    // siteOrganizationSchema() for the full rationale).
     {
       "@type":      ["AutoRepair", "LocalBusiness"],
       "@id":        `${baseUrl}/#business`,
@@ -732,13 +641,6 @@ export function serviceDetailSchema(opts: {
       url:          baseUrl,
       telephone:    MAIN_PHONE,
       priceRange:   "₹₹",
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: avgRating,
-        reviewCount: String(totalRatings),
-        bestRating: "5", worstRating: "1",
-      },
-      ...(reviews.length > 0 && { review: reviews }),
       parentOrganization: { "@id": ORG_ID },
     },
     _breadcrumb(crumbs),
@@ -1204,13 +1106,8 @@ export function cityHubSchema(opts: {
       ],
       openingHours: "Mo-Su 00:00-24:00",
       priceRange:   "₹₹",
-      aggregateRating: {
-        "@type":       "AggregateRating",
-        ratingValue:   String(opts.rating),
-        reviewCount:   String(opts.reviewCount),
-        bestRating:    "5",
-        worstRating:   "1",
-      },
+      // No aggregateRating: self-serving-reviews policy (see
+      // siteOrganizationSchema() for the full rationale).
       hasOfferCatalog: {
         "@type": "OfferCatalog",
         name:    `Vehicle Repair Services in ${opts.name}`,
@@ -1324,13 +1221,8 @@ export function cityServiceCategorySchema(opts: {
       sameAs:      cityPageUrl,
       openingHours: "Mo-Su 00:00-24:00",
       priceRange:  "₹₹",
-      aggregateRating: {
-        "@type":     "AggregateRating",
-        ratingValue:  String(opts.rating),
-        reviewCount:  String(opts.reviewCount),
-        bestRating:  "5",
-        worstRating: "1",
-      },
+      // No aggregateRating: self-serving-reviews policy (see
+      // siteOrganizationSchema() for the full rationale).
     },
 
     // ── BreadcrumbList ───────────────────────────────────────

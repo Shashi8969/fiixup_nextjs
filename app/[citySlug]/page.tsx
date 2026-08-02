@@ -10,7 +10,7 @@ import { SITE_URL }       from '@/lib/constants';
 
 // ── City hub imports (unchanged) ─────────────────────────────────────────────
 import { getCityHubPage, getAllCityHubParams } from '@/lib/cityPages';
-import { cityHubSchema, jsonLdString }         from '@/lib/schema';
+import { cityHubSchema }                       from '@/lib/schema';
 import { CityHeroDynamic }        from '@/components/city/CityHeroDynamic';
 import { CityServicesDynamic }    from '@/components/city/CityServicesDynamic';
 import { CityAreasDynamic }       from '@/components/city/CityAreasDynamic';
@@ -153,24 +153,10 @@ export default async function CityPage({
 
     return (
       <>
+        {/* Breadcrumb JSON-LD already lives inside this @graph (BreadcrumbList
+            node, referenced by WebPage.breadcrumb) — a second standalone
+            script from seo.breadcrumbs_json used to duplicate it verbatim. */}
         <JsonLd data={seo.schema_json ?? schema} />
-
-        {seo.breadcrumbs_json && (
-          <script type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: jsonLdString({
-                '@context':      'https://schema.org',
-                '@type':         'BreadcrumbList',
-                itemListElement: (seo.breadcrumbs_json as { name: string; url: string }[]).map((b, i) => ({
-                  '@type':  'ListItem',
-                  position: i + 1,
-                  name:     b.name,
-                  item:     b.url,
-                })),
-              }),
-            }}
-          />
-        )}
 
         <CityHeroDynamic        data={data} />
         <CityServicesDynamic    data={data} />

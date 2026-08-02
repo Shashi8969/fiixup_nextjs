@@ -61,6 +61,7 @@ function rowToService(row: any, faqs?: any[], testimonials?: any[], brands?: any
     metaTitle:       row.meta_title,
     metaDescription: row.meta_description,
     metaKeywords:    row.meta_keywords,
+    schemaJson:      row.schema_json ?? undefined,
   };
 }
 
@@ -94,7 +95,8 @@ export const getServiceBySlug = cache(async (slug: string): Promise<ServiceData 
       pricing, benefits, guide, related_slugs,
       meta_title, meta_description, meta_keywords,
       image_url, image_alt, og_image_url,
-      car_brands, bike_brands, faqs, testimonials
+      car_brands, bike_brands, faqs, testimonials,
+      schema_json
     `)
     .eq("slug", slug)
     .single();

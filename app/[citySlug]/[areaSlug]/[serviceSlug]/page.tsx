@@ -8,6 +8,7 @@ import { getPageByPath, getAllActiveUrlPaths } from '@/lib/seo-pages'
 import { LocationServicePage } from '@/components/location-service/LocationServicePage'
 import { SITE_URL } from '@/lib/constants'
 import { JsonLd } from '@/components/seo/JsonLd'
+import { locationServiceSchema } from '@/lib/schema'
 
 export const revalidate = 3600
 export const dynamicParams = true
@@ -67,10 +68,35 @@ export default async function AreaServicePage({ params }: { params: Params }) {
 
   const data = page.page_data
 
+  // Defense in depth: fn_build_ls_seo_page() always populates schema_json on
+  // save, but if a row somehow slips through with it null, fall back to a
+  // live-generated equivalent instead of shipping zero structured data.
+  const fallbackSchema = page.schema_json ?? locationServiceSchema({
+    serviceName:     data.serviceName,
+    serviceSlug:     data.serviceSlug,
+    serviceCategory: data.serviceCategory,
+    canonicalUrl:    page.canonical_url,
+    heroHeading:     data.heroHeading,
+    aboutPara1:      data.aboutPara1,
+    cityName:        data.cityName,
+    citySlug:        data.citySlug,
+    cityState:       data.city?.state,
+    areaName:        data.areaName,
+    areaSlug:        data.areaSlug,
+    pricingRows:     data.pricingRows ?? [],
+    faqs:            data.faqs ?? [],
+    nearbyAreas:     data.nearbyAreas ?? [],
+    cityLat:         data.city?.latitude,
+    cityLng:         data.city?.longitude,
+    cityPhone:       data.city?.phone,
+    cityEmail:       data.city?.email,
+    cityPostalCode:  data.city?.postalCode,
+  })
+
   return (
     <>
-      {/* Schema injected server-side — precomputed in PostgreSQL */}
-      <JsonLd data={page.schema_json} />
+      {/* Schema precomputed in PostgreSQL; live fallback only if that's ever null */}
+      <JsonLd data={fallbackSchema} />
       <LocationServicePage
         data={{
           id:                    0,

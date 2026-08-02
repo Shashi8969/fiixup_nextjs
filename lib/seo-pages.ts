@@ -26,7 +26,11 @@ export interface SeoPage {
 }
 
 export interface PageData {
-  city: { slug: string; name: string; phone: string; whatsapp: string }
+  city: {
+    slug: string; name: string; phone: string; whatsapp: string
+    email?: string; state?: string; postalCode?: string
+    latitude?: number; longitude?: number
+  }
   serviceCategory:       string
   serviceSlug:           string
   serviceName:           string
@@ -90,6 +94,11 @@ function normalizePageData(value: unknown): PageData {
       name: asString(city.name ?? pd.cityName),
       phone: asString(city.phone),
       whatsapp: asString(city.whatsapp),
+      email: city.email != null ? asString(city.email) : undefined,
+      state: city.state != null ? asString(city.state) : undefined,
+      postalCode: city.postalCode != null ? asString(city.postalCode) : undefined,
+      latitude: city.latitude != null ? asNumber(city.latitude) : undefined,
+      longitude: city.longitude != null ? asNumber(city.longitude) : undefined,
     },
     serviceCategory: asString(pd.serviceCategory),
     serviceSlug: asString(pd.serviceSlug),
