@@ -14,21 +14,35 @@ export function getClientIp(request: NextRequest) {
   return request.headers.get("x-real-ip") || "unknown";
 }
 
-export function rateLimitRequest(
+function cleanupBucketsIfDue(now: number) {
+  if (now - lastCleanup <= 60_000) return;
+  lastCleanup = now;
+  for (const [key, bucket] of buckets) {
+    if (bucket.resetAt <= now) buckets.delete(key);
+  }
+}
+
+/**
+ * Checks a rate-limit bucket without consuming it. Lets callers decide
+ * (e.g. skip counting a request that's about to be rejected as a bot).
+ */
+export function peekRateLimit(key: string) {
+  const now = Date.now();
+  const existing = buckets.get(key);
+  if (!existing || existing.resetAt <= now) return { count: 0, resetAt: now };
+  return existing;
+}
+
+export function rateLimitKey(
   request: NextRequest,
   namespace: string,
-  options: { limit: number; windowMs: number }
+  options: { limit: number; windowMs: number },
+  identity?: string
 ) {
   const now = Date.now();
+  cleanupBucketsIfDue(now);
 
-  if (now - lastCleanup > 60_000) {
-    lastCleanup = now;
-    for (const [key, bucket] of buckets) {
-      if (bucket.resetAt <= now) buckets.delete(key);
-    }
-  }
-
-  const key = `${namespace}:${getClientIp(request)}`;
+  const key = `${namespace}:${identity || getClientIp(request)}`;
   const existing = buckets.get(key);
 
   if (!existing || existing.resetAt <= now) {
@@ -40,19 +54,68 @@ export function rateLimitRequest(
 
   if (existing.count > options.limit) {
     const retryAfter = Math.ceil((existing.resetAt - now) / 1000);
-    return NextResponse.json(
-      { error: "Too many requests. Please try again later." },
-      {
-        status: 429,
-        headers: {
-          "Retry-After": String(Math.max(retryAfter, 1)),
-          "Cache-Control": "no-store",
-        },
-      }
-    );
+    return { retryAfter: Math.max(retryAfter, 1) };
   }
 
   return null;
+}
+
+export function rateLimitRequest(
+  request: NextRequest,
+  namespace: string,
+  options: { limit: number; windowMs: number }
+) {
+  const limited = rateLimitKey(request, namespace, options);
+  if (!limited) return null;
+
+  return NextResponse.json(
+    { error: "Too many requests. Please try again later." },
+    {
+      status: 429,
+      headers: {
+        "Retry-After": String(limited.retryAfter),
+        "Cache-Control": "no-store",
+      },
+    }
+  );
+}
+
+/** Normalizes an Indian mobile number (or any phone string) to bare digits for dedupe/rate-limit keys. */
+export function normalizePhoneKey(phone: string | undefined | null): string | null {
+  if (!phone) return null;
+  const digits = phone.replace(/\D/g, "").slice(-10);
+  return digits.length === 10 ? digits : null;
+}
+
+/**
+ * Same-origin guard for state-changing API routes. Browsers attach Origin
+ * (or at least Referer) on fetch/XHR POSTs; direct script/bot hits to the
+ * endpoint from outside the site generally omit or mismatch both.
+ */
+export function isSameOriginRequest(request: NextRequest, allowedHosts: string[]): boolean {
+  const origin = request.headers.get("origin");
+  if (origin) {
+    try {
+      return allowedHosts.includes(new URL(origin).host);
+    } catch {
+      return false;
+    }
+  }
+
+  const referer = request.headers.get("referer");
+  if (referer) {
+    try {
+      return allowedHosts.includes(new URL(referer).host);
+    } catch {
+      return false;
+    }
+  }
+
+  // Neither header present: browsers virtually always send at least one on
+  // a same-origin fetch POST, but some privacy tooling strips both. Fail
+  // open here rather than risk dropping a real customer's lead — the
+  // honeypot, timing trap, and rate limits carry the rest of the load.
+  return true;
 }
 
 // Logs the real error server-side but never forwards internal details

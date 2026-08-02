@@ -5,7 +5,7 @@
 
 import Link       from 'next/link';
 import Image      from 'next/image';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { CheckCircle, MapPin, Star, Shield, Clock, Zap } from 'lucide-react';
 import type { CityHubPageData } from '@/lib/cityPages';
 import { submitLead } from '@/lib/send-lead';
@@ -36,6 +36,7 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
   const [phone,   setPhone]   = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const honeypotRef = useRef<HTMLInputElement>(null);
 
   const areaNames = (data.areas ?? []).map((a) => a.name);
 
@@ -59,6 +60,7 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
         request_time: now,
         name: 'Not provided',
         service: 'Callback Request',
+        website: honeypotRef.current?.value || undefined,
       });
       setSuccess(true);
       setPhone('');
@@ -170,6 +172,17 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
                       Get Free Callback — {data.cityName}
                     </h2>
                     <form onSubmit={handleSubmit}>
+                      {/* Honeypot — hidden from real visitors, bots auto-fill it */}
+                      <input
+                        ref={honeypotRef}
+                        type="text"
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        aria-hidden="true"
+                        style={{ position: "absolute", left: "-9999px", top: 0, width: 1, height: 1, overflow: "hidden" }}
+                      />
+
                       <label className="block text-xs font-semibold text-gray-600 mb-1" htmlFor="hero-phone">
                         Mobile Number
                       </label>

@@ -126,6 +126,16 @@ export function CityContact({ city }: { city: CityData }) {
             <form ref={form} onSubmit={sendEmail} className="space-y-4">
               <input type="hidden" name="city_name" value={city.name} />
 
+              {/* Honeypot — hidden from real visitors, bots auto-fill it */}
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                style={{ position: "absolute", left: "-9999px", top: 0, width: 1, height: 1, overflow: "hidden" }}
+              />
+
               {[
                 { label: "Name", name: "name", type: "text", placeholder: "Your name" },
                 { label: "Phone", name: "phone", type: "tel", placeholder: city.phone },

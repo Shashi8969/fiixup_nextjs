@@ -2,6 +2,11 @@ import { trackEvent } from "@/lib/analytics";
 
 export type LeadPayload = Record<string, unknown>;
 
+// Captured once when this module first runs in the browser. Sent with every
+// submission so the API can reject submits that fire implausibly fast after
+// load (a strong bot signal) without adding any friction for real visitors.
+const PAGE_LOADED_AT = typeof window !== "undefined" ? Date.now() : 0;
+
 function normalizeLeadPayload(input: FormData | LeadPayload): LeadPayload {
   if (!(input instanceof FormData)) return input;
 
@@ -41,6 +46,8 @@ export async function submitLead(input: FormData | LeadPayload) {
       ...payload,
       page_url:
         typeof window !== "undefined" ? window.location.href : payload.page_url,
+      form_render_ms:
+        typeof window !== "undefined" ? Date.now() - PAGE_LOADED_AT : undefined,
     }),
   });
 

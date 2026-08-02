@@ -89,6 +89,16 @@ export function QuickServiceModal({
           </div>
 
           <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+            {/* Honeypot — hidden from real visitors, bots auto-fill it */}
+            <input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              style={{ position: "absolute", left: "-9999px", top: 0, width: 1, height: 1, overflow: "hidden" }}
+            />
+
             <div>
               <label htmlFor="modal-phone" className="block text-sm font-medium mb-2 text-gray-700">
                 Mobile Number

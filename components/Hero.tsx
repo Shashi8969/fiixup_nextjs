@@ -121,6 +121,16 @@ export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
                     </p>
 
                     <form onSubmit={handleSubmit} className="space-y-3">
+                      {/* Honeypot — hidden from real visitors, bots auto-fill it */}
+                      <input
+                        type="text"
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        aria-hidden="true"
+                        style={{ position: "absolute", left: "-9999px", top: 0, width: 1, height: 1, overflow: "hidden" }}
+                      />
+
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           Mobile Number

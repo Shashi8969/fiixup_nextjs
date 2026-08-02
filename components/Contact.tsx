@@ -269,6 +269,16 @@ export function Contact({ data, siteSettings }: ContactProps = {}) {
               className="space-y-4"
             >
 
+              {/* Honeypot — hidden from real visitors, bots auto-fill it */}
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                style={{ position: "absolute", left: "-9999px", top: 0, width: 1, height: 1, overflow: "hidden" }}
+              />
+
               {[
                 {
                   id: "contact-name",

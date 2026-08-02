@@ -1,13 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { createClient } from "@supabase/supabase-js";
-import { MAIN_EMAIL, SITE_NAME } from "@/lib/constants";
-import { rateLimitRequest, readJsonBody } from "@/lib/api-security";
+import { MAIN_EMAIL, SITE_NAME, SITE_URL } from "@/lib/constants";
+import {
+  isSameOriginRequest,
+  normalizePhoneKey,
+  rateLimitKey,
+  rateLimitRequest,
+  readJsonBody,
+} from "@/lib/api-security";
 
 export const runtime = "nodejs";
 
 const LEAD_RATE_LIMIT = { limit: 8, windowMs: 15 * 60 * 1000 };
 const MAX_LEAD_BODY_BYTES = 32 * 1024;
+
+// Same phone number can only trigger one DB insert + email within this
+// window. Stops the "one person/bot mashes submit" case from burning a
+// fresh SMTP send and DB row on every click — the actual cost driver.
+const PHONE_COOLDOWN = { limit: 1, windowMs: 3 * 60 * 1000 };
+
+// Real visitors take at least this long to read and fill the form after
+// page load; a scripted submit that fires faster is almost always a bot.
+const MIN_FORM_FILL_MS = 1200;
+
+const SITE_HOST = new URL(SITE_URL).host;
+const ALLOWED_ORIGIN_HOSTS =
+  process.env.NODE_ENV === "production"
+    ? [SITE_HOST]
+    : [SITE_HOST, "localhost:3000", "127.0.0.1:3000"];
 
 type LeadPayload = Record<string, unknown>;
 
@@ -208,16 +229,49 @@ export async function POST(request: NextRequest) {
     const limited = rateLimitRequest(request, "lead-submit", LEAD_RATE_LIMIT);
     if (limited) return limited;
 
+    if (!isSameOriginRequest(request, ALLOWED_ORIGIN_HOSTS)) {
+      return NextResponse.json(
+        { error: "Request origin not allowed" },
+        { status: 403, headers: { "Cache-Control": "no-store" } }
+      );
+    }
+
     const parsed = await readJsonBody<LeadPayload>(request, { maxBytes: MAX_LEAD_BODY_BYTES });
     if (!parsed.ok) return parsed.response;
 
     const rawPayload = parsed.data;
+
+    // Honeypot: "website" is a hidden field real visitors never see or
+    // fill; bots that auto-fill every input on the form trip it. Respond
+    // as if the lead was accepted (no error to react to) but skip DB/SMTP
+    // entirely so the submission costs nothing.
+    if (cleanValue(rawPayload.website)) {
+      return NextResponse.json(buildLeadResponseMeta(null));
+    }
+
+    // Timing trap: a submit that fires less than MIN_FORM_FILL_MS after
+    // the page loaded is almost never a human filling out this form.
+    const renderMs = Number(rawPayload.form_render_ms);
+    if (Number.isFinite(renderMs) && renderMs >= 0 && renderMs < MIN_FORM_FILL_MS) {
+      return NextResponse.json(buildLeadResponseMeta(null));
+    }
+
     const data = normalizePayload(rawPayload);
 
     if (!data.phone && !data.email) {
       return NextResponse.json(
         { error: "Phone number or email is required" },
         { status: 400 }
+      );
+    }
+
+    // Per-phone cooldown: the same mobile number can only trigger one
+    // DB insert + email per window. Catches one person/bot mashing submit
+    // without touching the database or mail server on the repeat hits.
+    const phoneKey = normalizePhoneKey(data.phone);
+    if (phoneKey && rateLimitKey(request, "lead-phone", PHONE_COOLDOWN, phoneKey)) {
+      return NextResponse.json(
+        buildLeadResponseMeta({ is_duplicate: true } as SavedLeadRow)
       );
     }
 
