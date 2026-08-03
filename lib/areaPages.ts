@@ -13,6 +13,7 @@
 
 import { cache } from 'react';
 import { supabase } from '@/lib/supabase';
+import { normalizeSeoSections } from '@/lib/cms-guards';
 
 export interface AreaHubPageData {
   citySlug: string;
@@ -47,6 +48,11 @@ export interface AreaHubPageData {
   faqs: { q: string; a: string }[];
   services: { name: string; slug: string }[];
   relatedPosts: { slug: string; title: string; category: string }[];
+
+  seoIntroHeading: string | null;
+  seoIntroBody: string | null;
+  seoSections: { heading: string; body: string }[];
+  seoConclusion: string | null;
 }
 
 export interface AreaHubSeo {
@@ -115,6 +121,11 @@ export const getAreaHubPage = cache(async (
       faqs: Array.isArray(pd.faqs) ? (pd.faqs as AreaHubPageData['faqs']) : [],
       services: Array.isArray(pd.services) ? (pd.services as AreaHubPageData['services']) : [],
       relatedPosts: Array.isArray(pd.relatedPosts) ? (pd.relatedPosts as AreaHubPageData['relatedPosts']) : [],
+
+      seoIntroHeading: (pd.seoIntroHeading as string) ?? null,
+      seoIntroBody: (pd.seoIntroBody as string) ?? null,
+      seoSections: normalizeSeoSections(pd.seoSections),
+      seoConclusion: (pd.seoConclusion as string) ?? null,
     },
   };
 });

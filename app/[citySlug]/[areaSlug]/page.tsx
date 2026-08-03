@@ -18,6 +18,7 @@ import { CityContact } from '@/components/city/CityContact'
 import { CityFAQ } from '@/components/city/CityFAQ'
 import { AreaServices } from '@/components/city/AreaServices'
 import { AreaAbout } from '@/components/city/AreaAbout'
+import { AreaSeoContent } from '@/components/city/AreaSeoContent'
 import { AreaFAQ } from '@/components/city/AreaFAQ'
 import { AreaTestimonials } from '@/components/city/AreaTestimonials'
 import { AreaRelatedPosts } from '@/components/city/AreaRelatedPosts'
@@ -224,6 +225,7 @@ export default async function CityAreaPage({ params }: { params: Params }) {
         />
         <AreaAbout data={data} />
         <AreaTestimonials data={data} />
+        <AreaSeoContent data={data} />
         <AreaFAQ data={data} />
         <AreaRelatedPosts data={data} />
         <AreaContact data={data} />

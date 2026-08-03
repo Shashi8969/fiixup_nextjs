@@ -9,6 +9,15 @@ type AreaServicesProps = {
   services: AreaServiceListItem[];
 };
 
+// Card titles shown side-by-side in a grid read as keyword stuffing when every
+// one of them repeats "Near Me" (Bike Garage Near Me, Bike Mechanic Near Me...).
+// The individual service page itself keeps "Near Me" in its own H1/title, where
+// it's a legitimate match for that page's actual target search — this only
+// trims the directory-listing label shown here.
+function directoryLabel(serviceName: string) {
+  return serviceName.replace(/\s+near me$/i, "").trim();
+}
+
 function ServiceIcon({ slug }: { slug: string }) {
   const className = "h-6 w-6";
   if (slug.includes("towing")) return <Truck className={className} aria-hidden="true" />;
@@ -47,7 +56,7 @@ export function AreaServices({ citySlug, areaSlug, areaName, services }: AreaSer
                   <ServiceIcon slug={service.serviceSlug} />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-lg font-bold leading-6 text-slate-950">{service.serviceName}</span>
+                  <span className="block text-lg font-bold leading-6 text-slate-950">{directoryLabel(service.serviceName)}</span>
                   {service.heroSubheading ? (
                     <span className="mt-2 line-clamp-2 block text-sm leading-6 text-slate-600">{service.heroSubheading}</span>
                   ) : null}
