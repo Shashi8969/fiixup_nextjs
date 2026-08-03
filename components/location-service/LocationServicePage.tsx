@@ -299,7 +299,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
               { icon: CheckCircle, label: "30-Day Warranty" },
               { icon: Clock, label: "24/7 Available" },
               { icon: IndianRupee, label: "Transparent Pricing" },
-              { icon: MapPin, label: `Doorstep in ${data.locationHeading}` },
+              { icon: MapPin, label: "Doorstep Service" },
             ].map(({ icon: I, label }) => (
               <div key={label} className="flex items-center gap-2">
                 <I className="w-5 h-5 text-green-600" />
@@ -376,7 +376,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
             {[
               { step: "1", title: "Book Online or Call", desc: `Call ${city.phone} or fill the form.` },
-              { step: "2", title: "We Confirm & Dispatch", desc: `Nearest ${data.locationHeading} technician dispatched.` },
+              { step: "2", title: "We Confirm & Dispatch", desc: "Nearest available technician dispatched." },
               { step: "3", title: "Tech Arrives at Door", desc: "Certified technician with tools and parts." },
               { step: "4", title: "Drive Away Happy", desc: "30-day warranty and digital receipt." },
             ].map(({ step, title, desc }) => (
@@ -432,7 +432,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                   href={`/${city.slug}#contact`}
                   className={`${bgAccent} ${btnHover} text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-block`}
                 >
-                  Get Free Quote for {data.locationHeading}
+                  Get Your Free Quote
                 </Link>
               </div>
             </div>
@@ -478,7 +478,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
               {data.serviceName} in {data.locationHeading} — FAQs
             </h2>
             <p className="text-gray-500 text-center mb-10">
-              Common questions from {data.locationHeading} customers.
+              Common questions from our customers here.
             </p>
             {/* Only this component is "use client" */}
             <FAQAccordion faqs={data.faqs} accentText={accentText} />
@@ -534,7 +534,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                   className="bg-white p-6 border border-gray-200 rounded-xl hover:shadow-lg transition-all group"
                 >
                   <h3 className={`font-bold text-gray-900 group-hover:${accentText} transition-colors mb-1`}>
-                    {s.name} in {data.locationHeading}
+                    {s.name}
                   </h3>
                   <p className={`text-sm font-bold ${accentText} flex items-center gap-1 mt-3`}>
                     View Details <ArrowRight className="w-3 h-3" />

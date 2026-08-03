@@ -81,7 +81,7 @@ export const getCityBySlug = cache(async (slug: string | undefined): Promise<Cit
 export async function getAreaBySlug(citySlug: string, areaSlug: string) {
   const { data, error } = await supabase
     .from("areas")
-    .select("slug, name, highlight, city_slug")
+    .select("slug, name, highlight, city_slug, latitude, longitude")
     .eq("city_slug", citySlug.toLowerCase())
     .eq("slug", areaSlug.toLowerCase())
     .maybeSingle();

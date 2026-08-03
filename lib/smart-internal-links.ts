@@ -30,7 +30,8 @@ export const getSmartNearbyAreasForService = unstable_cache(
       .eq("service_slug", service)
       .not("area_slug", "is", null)
       .eq("is_active", true)
-      .order("area_name", { ascending: true });
+      .order("area_name", { ascending: true })
+      .limit(12);
 
     if (error || !data) return [];
 

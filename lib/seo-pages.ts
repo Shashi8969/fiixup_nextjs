@@ -137,7 +137,8 @@ function normalizePageData(value: unknown): PageData {
       area: asString(item.area),
       date: asString(item.date ?? item.date_label),
     })),
-    faqs: normalizeArrayObject(pd.faqs, (item) => ({ q: asString(item.q ?? item.question), a: asString(item.a ?? item.answer) })),
+    faqs: normalizeArrayObject(pd.faqs, (item) => ({ q: asString(item.q ?? item.question), a: asString(item.a ?? item.answer) }))
+      .filter((faq) => faq.q && faq.a),
     nearbyAreas: normalizeArrayObject(pd.nearbyAreas, (item) => ({ name: asString(item.name), slug: asString(item.slug) })),
     relatedServices: normalizeArrayObject(pd.relatedServices, (item) => ({ name: asString(item.name), slug: asString(item.slug), category: asString(item.category) })),
     seoIntroHeading: asString(pd.seoIntroHeading) || null,

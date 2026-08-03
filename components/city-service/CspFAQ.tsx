@@ -28,15 +28,20 @@ export function CspFAQ({ data }: { data: CityServiceCategoryPageData }) {
                 onClick={() => setOpen(open === i ? null : i)}
                 className="w-full flex items-center justify-between px-6 py-4 text-left bg-white hover:bg-gray-50 transition-colors"
                 aria-expanded={open === i}
+                aria-controls={`csp-faq-answer-${i}`}
+                id={`csp-faq-question-${i}`}
               >
                 <span className="font-semibold text-gray-900 pr-4 text-sm">{faq.q}</span>
                 <ChevronDown className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform duration-200 ${open === i ? 'rotate-180' : ''}`} aria-hidden="true" />
               </button>
-              {open === i && (
-                <div className="px-6 pb-5 bg-gray-50 border-t border-gray-100">
-                  <p className="text-gray-600 leading-relaxed pt-3 text-sm">{faq.a}</p>
-                </div>
-              )}
+              <div
+                id={`csp-faq-answer-${i}`}
+                role="region"
+                aria-labelledby={`csp-faq-question-${i}`}
+                className={`px-6 pb-5 bg-gray-50 border-t border-gray-100 ${open === i ? 'block' : 'hidden'}`}
+              >
+                <p className="text-gray-600 leading-relaxed pt-3 text-sm">{faq.a}</p>
+              </div>
             </div>
           ))}
         </div>

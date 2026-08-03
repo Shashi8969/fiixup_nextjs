@@ -106,11 +106,13 @@ function _breadcrumb(crumbs: { name: string; url: string }[]) {
 }
 
 function _faqItems(faqs: { q: string; a: string }[]) {
-  return faqs.map((f) => ({
-    "@type": "Question",
-    name:    f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  }));
+  return faqs
+    .filter((f) => f.q?.trim() && f.a?.trim())
+    .map((f) => ({
+      "@type": "Question",
+      name:    f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    }));
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
@@ -233,7 +235,6 @@ export function areaPageSchema(opts: {
   cityPhone: string; cityEmail: string;
   cityLat: number;  cityLng: number;
   areaName: string; areaSlug: string;
-  reviewCount: number;
   faqs: { q: string; a: string }[];
 }) {
   const graph: object[] = [
@@ -1139,11 +1140,7 @@ export function cityHubSchema(opts: {
       "@type":      "FAQPage",
       "@id":        `${pageUrl}/#faq`,
       name:         `FAQs — Doorstep Vehicle Repair in ${opts.name}`,
-      mainEntity:   opts.faqs.slice(0, 10).map((f) => ({
-        "@type":         "Question",
-        name:            f.q,
-        acceptedAnswer:  { "@type": "Answer", text: f.a },
-      })),
+      mainEntity:   _faqItems(opts.faqs).slice(0, 10),
     });
   }
 
@@ -1242,11 +1239,7 @@ export function cityServiceCategorySchema(opts: {
     graph.push({
       "@type":    "FAQPage",
       "@id":      `${pageUrl}/#faq`,
-      mainEntity: opts.faqs.slice(0, 10).map((f) => ({
-        "@type":        "Question",
-        name:           f.q,
-        acceptedAnswer: { "@type": "Answer", text: f.a },
-      })),
+      mainEntity: _faqItems(opts.faqs).slice(0, 10),
     });
   }
 

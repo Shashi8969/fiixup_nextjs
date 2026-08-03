@@ -114,7 +114,7 @@ export async function generateMetadata({
     return metadataFromBasicSeo({
       title,
       description: desc,
-      keywords: `${cat.title.toLowerCase()} ${city.name}, doorstep ${cat.title.toLowerCase()} ${city.name}, ${city.name} ${cat.title.toLowerCase()} service`,
+      keywords: `${cat.title.toLowerCase()} ${city.name}, doorstep vehicle repair ${city.name}`,
       canonical,
       path: `/${city.slug}/services/${cat.slug}`,
       ogImageAlt: title,

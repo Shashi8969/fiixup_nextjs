@@ -71,7 +71,7 @@ function rowToLocationService(row: any): LocationServiceData {
     pricingRows:           row.pricing_rows ?? [],
     pricingDisclaimer:     row.pricing_disclaimer ?? "",
     testimonials:          row.testimonials ?? [],
-    faqs:                  row.faqs ?? [],
+    faqs:                  (row.faqs ?? []).filter((f: any) => f?.q && f?.a),
     nearbyAreas:           row.nearby_areas ?? [],
     relatedServices:       row.related_services ?? [],
     seoIntroHeading:       row.seo_intro_heading ?? null,

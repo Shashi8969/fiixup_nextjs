@@ -1,20 +1,26 @@
 // app/[citySlug]/[areaSlug]/page.tsx
 // Dual-purpose: city-service page OR area hub
-// City-service pages now read from seo_pages (1 query)
-// Area hub pages still read from cities table (unchanged)
+// Both now read from seo_pages (1 query): city/area-service pages via getPageByPath,
+// area hubs via getAreaHubPage (page_type='area_hub', built by fn_build_area_seo_page).
+// The cities-table branch at the bottom is a last-resort fallback only.
 
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getPageByPath } from '@/lib/seo-pages'
-import { getAllCities, getCityBySlug } from '@/lib/cities'
+import { getAllCities, getCityBySlug, getAreaBySlug } from '@/lib/cities'
 import { getAllCityServiceSlugs, getAreaServices } from '@/lib/locationServices'
-import { areaPageSchema, locationServiceSchema, CITY_DATA, jsonLdString, type CityKey } from '@/lib/schema'
+import { getAreaHubPage } from '@/lib/areaPages'
+import { areaPageSchema, locationServiceSchema, jsonLdString } from '@/lib/schema'
 import { LocationServicePage } from '@/components/location-service/LocationServicePage'
 import { AreaHero } from '@/components/city/AreaHero'
 import { CityAbout } from '@/components/city/CityAbout'
 import { CityContact } from '@/components/city/CityContact'
 import { CityFAQ } from '@/components/city/CityFAQ'
 import { AreaServices } from '@/components/city/AreaServices'
+import { AreaAbout } from '@/components/city/AreaAbout'
+import { AreaFAQ } from '@/components/city/AreaFAQ'
+import { AreaTestimonials } from '@/components/city/AreaTestimonials'
+import { AreaContact } from '@/components/city/AreaContact'
 import { SITE_URL } from '@/lib/constants'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { metadataFromSeoPage, metadataFromBasicSeo } from '@/lib/seo/metadata'
@@ -52,10 +58,27 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
   // Try seo_pages first (city-level service). This keeps metadata, canonical, OG,
   // Twitter and robots/noindex signals consistent with the CMS cache.
+  // page_type check matters: getPageByPath matches by url_path alone, and an
+  // area_hub row lives at this same url_path — it must fall through to the
+  // area-hub branch below, not be treated as a service page.
   const page = await getPageByPath(`/${citySlug}/${areaSlug}`)
-  if (page) return metadataFromSeoPage(page, `/${citySlug}/${areaSlug}`)
+  if (page && page.page_type !== 'area_hub') return metadataFromSeoPage(page, `/${citySlug}/${areaSlug}`)
 
-  // Fallback: area hub metadata
+  // Area hub (real per-area content, see fn_build_area_seo_page)
+  const areaHub = await getAreaHubPage(citySlug, areaSlug)
+  if (areaHub) {
+    return metadataFromBasicSeo({
+      title: areaHub.seo.meta_title,
+      description: areaHub.seo.meta_description,
+      canonical: areaHub.seo.canonical_url,
+      path: `/${citySlug}/${areaSlug}`,
+      ogImage: areaHub.seo.og_image_url,
+      ogImageAlt: areaHub.seo.meta_title,
+      index: areaHub.seo.is_indexed,
+    })
+  }
+
+  // Last-resort fallback: area hub metadata
   const city = await getCityBySlug(citySlug)
   if (!city) return {}
 
@@ -83,8 +106,10 @@ export default async function CityAreaPage({ params }: { params: Params }) {
   const { citySlug, areaSlug } = await params
 
   // Try seo_pages first — city-level service page (1 query)
+  // page_type check matters: an area_hub row lives at this same url_path and
+  // must fall through to the area-hub branch below, not be parsed as LS data.
   const page = await getPageByPath(`/${citySlug}/${areaSlug}`)
-  if (page) {
+  if (page && page.page_type !== 'area_hub') {
     const data = page.page_data
     // Defense in depth: fn_build_ls_seo_page() always populates schema_json
     // on save, but if a row somehow slips through with it null, fall back
@@ -162,7 +187,50 @@ export default async function CityAreaPage({ params }: { params: Params }) {
     )
   }
 
-  // Fallback: area hub page (unchanged behaviour)
+  // Area hub (real per-area content, rolled up from location_services/ls_faqs/
+  // ls_testimonials by fn_build_area_seo_page — see lib/areaPages.ts)
+  const areaHub = await getAreaHubPage(citySlug, areaSlug)
+  if (areaHub) {
+    const { data } = areaHub
+    const schemas = areaPageSchema({
+      cityName:  data.cityName,
+      citySlug:  data.citySlug,
+      cityState: data.cityState ?? 'India',
+      cityPhone: data.cityPhone,
+      cityEmail: data.cityEmail ?? '',
+      cityLat:   data.latitude ?? 0,
+      cityLng:   data.longitude ?? 0,
+      areaName:  data.areaName,
+      areaSlug:  data.areaSlug,
+      faqs:      data.faqs,
+    })
+
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLdString(schemas) }}
+        />
+        <AreaHero
+          city={{ name: data.cityName, phone: data.cityPhone, whatsapp: data.cityWhatsapp } as any}
+          areaName={data.areaName}
+        />
+        <AreaServices
+          citySlug={citySlug}
+          areaSlug={areaSlug}
+          areaName={data.areaName}
+          services={await getAreaServices(citySlug, areaSlug)}
+        />
+        <AreaAbout data={data} />
+        <AreaTestimonials data={data} />
+        <AreaFAQ data={data} />
+        <AreaContact data={data} />
+      </>
+    )
+  }
+
+  // Last-resort fallback (only reached if fn_build_area_seo_page hasn't run yet
+  // for this area — e.g. a brand-new area before its first save/trigger fires)
   const city = await getCityBySlug(citySlug)
   if (!city) return notFound()
 
@@ -176,7 +244,7 @@ export default async function CityAreaPage({ params }: { params: Params }) {
   const areaName     = typeof area === 'string' ? area : area.name
   const areaHighlight = typeof area === 'string' ? '' : (area as any).highlight ?? ''
   const allFaqs      = city.faqCategories?.flatMap((cat: any) => cat.faqs) ?? []
-  const cityGeo      = CITY_DATA[citySlug as CityKey]
+  const areaRow      = await getAreaBySlug(citySlug, areaSlug)
   const areaServices = await getAreaServices(citySlug, areaSlug)
 
   const areaCity = {
@@ -193,11 +261,10 @@ export default async function CityAreaPage({ params }: { params: Params }) {
     cityState:  (city as any).state ?? 'India',
     cityPhone:  city.phone ?? '',
     cityEmail:  city.email ?? '',
-    cityLat:    cityGeo?.lat ?? 0,
-    cityLng:    cityGeo?.lng ?? 0,
+    cityLat:    areaRow?.latitude ? Number(areaRow.latitude) : 0,
+    cityLng:    areaRow?.longitude ? Number(areaRow.longitude) : 0,
     areaName,
     areaSlug,
-    reviewCount: 300,
     faqs:        allFaqs,
   })
 
