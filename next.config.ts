@@ -10,6 +10,16 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: securityHeaders,
       },
+      {
+        // Static, version-controlled files (brand logos, hero images, site
+        // logo) — bytes only change via a new deploy, so it's safe to cache
+        // for a year. Was previously uncached, forcing a re-fetch on every
+        // visit.
+        source: "/assets/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
     ];
   },
 
@@ -20,6 +30,10 @@ const nextConfig: NextConfig = {
     // can pass (Fast/Balanced/High = 50/75/90) — Next.js 16 rejects any
     // `quality` prop not in this allowlist.
     qualities: [50, 75, 90],
+    // Local assets are already pre-optimized (see /public/assets/brands) and
+    // never change without a new deploy, so the optimizer's cached response
+    // can safely live for a year instead of the ~60s default.
+    minimumCacheTTL: 31536000,
     remotePatterns: [
       {
         protocol: "https",
