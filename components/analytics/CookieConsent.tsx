@@ -189,7 +189,7 @@ export function CookieConsent() {
             onClick={() =>
               confirm(customizing ? analytics : true, customizing ? advertising : true)
             }
-            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-orange-600 px-4 py-2.5 text-xs font-extrabold text-white shadow-lg shadow-orange-600/20 hover:bg-orange-700"
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-orange-700 px-4 py-2.5 text-xs font-extrabold text-white shadow-lg shadow-orange-600/20 hover:bg-orange-800"
           >
             <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
             {customizing ? "Save choices" : "Accept all"}

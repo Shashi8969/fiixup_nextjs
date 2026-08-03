@@ -48,7 +48,7 @@ export async function Footer({ siteSettings }: FooterProps = {}) {
                 className="h-10 w-auto mb-3 brightness-0 invert"
                 style={{ width: 'auto', height: 'auto' }}
               />
-              <p className="text-sm text-gray-400 max-w-xs leading-relaxed">
+              <p className="text-sm text-gray-300 max-w-xs leading-relaxed">
                 {footerDescription}
               </p>
             </div>
@@ -68,7 +68,7 @@ export async function Footer({ siteSettings }: FooterProps = {}) {
                     className="flex items-center gap-2 hover:text-blue-400 transition-colors"
                   >
                     <ShieldAlert className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                    {emergencyPhone} <span className="text-gray-500">(24/7 Emergency)</span>
+                    {emergencyPhone} <span className="text-gray-400">(24/7 Emergency)</span>
                   </a>
                 )}
                 <a

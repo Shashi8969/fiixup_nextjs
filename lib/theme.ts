@@ -22,7 +22,8 @@ export const serviceThemes = {
     hoverIconBg: "group-hover:bg-red-100",
   },
   amber: {
-    badge: "bg-amber-600 text-white",
+    // 700, not 600 — amber-600 with white text is 3.2:1, below WCAG AA's 4.5:1 for normal text.
+    badge: "bg-amber-700 text-white",
     highlight: "bg-amber-50 border-amber-300",
     iconBg: "bg-amber-100",
     iconText: "text-amber-700",
@@ -32,7 +33,8 @@ export const serviceThemes = {
     hoverIconBg: "group-hover:bg-amber-100",
   },
   green: {
-    badge: "bg-green-600 text-white",
+    // 700, not 600 — green-600 with white text is 3.3:1, below WCAG AA's 4.5:1 for normal text.
+    badge: "bg-green-700 text-white",
     highlight: "bg-green-50 border-green-300",
     iconBg: "bg-green-100",
     iconText: "text-green-700",
@@ -42,7 +44,8 @@ export const serviceThemes = {
     hoverIconBg: "group-hover:bg-green-100",
   },
   orange: {
-    badge: "bg-orange-600 text-white",
+    // 700, not 600 — orange-600 with white text is 3.6:1, below WCAG AA's 4.5:1 for normal text.
+    badge: "bg-orange-700 text-white",
     highlight: "bg-orange-50 border-orange-300",
     iconBg: "bg-orange-100",
     iconText: "text-orange-700",
@@ -62,7 +65,8 @@ export const serviceThemes = {
     hoverIconBg: "group-hover:bg-purple-100",
   },
   teal: {
-    badge: "bg-teal-600 text-white",
+    // 700, not 600 — teal-600 with white text is 3.7:1, below WCAG AA's 4.5:1 for normal text.
+    badge: "bg-teal-700 text-white",
     highlight: "bg-teal-50 border-teal-300",
     iconBg: "bg-teal-100",
     iconText: "text-teal-700",
