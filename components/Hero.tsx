@@ -103,6 +103,7 @@ export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
                 fill
                 className="object-cover"
                 priority
+                fetchPriority="high"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>

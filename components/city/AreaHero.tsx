@@ -22,6 +22,7 @@ export function AreaHero({ city, areaName }: AreaHeroProps) {
         alt={`Doorstep car and bike mechanic serving ${areaName}, ${city.name}`}
         fill
         priority
+        fetchPriority="high"
         sizes="100vw"
         className="object-cover object-[70%_center]"
       />

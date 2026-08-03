@@ -50,6 +50,7 @@ export function CmsImage({
         title={title || safeAlt}
         fill
         priority={priority}
+        fetchPriority={priority ? "high" : undefined}
         quality={quality ?? siteQuality}
         sizes={sizes}
         className={clsx(fit === "cover" ? "object-cover" : "object-contain", imageClassName)}

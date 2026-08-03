@@ -37,5 +37,13 @@
   },
   "overrides": {
     "sharp": "^0.35.3"
-  }
+  },
+  "browserslist": [
+    "chrome >= 94",
+    "edge >= 94",
+    "firefox >= 93",
+    "safari >= 15.4",
+    "not dead",
+    "not ie 11"
+  ]
 }
