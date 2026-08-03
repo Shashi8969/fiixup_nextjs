@@ -18,7 +18,12 @@ export function AreaAbout({ data }: { data: AreaHubPageData }) {
               <p className="text-lg text-gray-600 mb-5 leading-relaxed">{data.aboutPara1}</p>
             )}
             {data.aboutPara2 && (
-              <p className="text-lg text-gray-600 mb-8 leading-relaxed">{data.aboutPara2}</p>
+              <p className="text-lg text-gray-600 mb-5 leading-relaxed">{data.aboutPara2}</p>
+            )}
+            {data.localInsight && (
+              <p className="text-base text-gray-500 mb-8 leading-relaxed border-l-2 border-blue-200 pl-4">
+                {data.localInsight}
+              </p>
             )}
 
             {data.trustPoints.length > 0 && (

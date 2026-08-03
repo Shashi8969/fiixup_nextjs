@@ -33,6 +33,7 @@ export interface AreaHubPageData {
   aboutHeading: string;
   aboutPara1: string;
   aboutPara2: string;
+  localInsight: string | null;
 
   statsCustomers: string | null;
   statsSatisfaction: string | null;
@@ -45,6 +46,7 @@ export interface AreaHubPageData {
   }[];
   faqs: { q: string; a: string }[];
   services: { name: string; slug: string }[];
+  relatedPosts: { slug: string; title: string; category: string }[];
 }
 
 export interface AreaHubSeo {
@@ -102,6 +104,7 @@ export const getAreaHubPage = cache(async (
       aboutHeading: String(pd.aboutHeading ?? ''),
       aboutPara1: String(pd.aboutPara1 ?? ''),
       aboutPara2: String(pd.aboutPara2 ?? ''),
+      localInsight: (pd.localInsight as string) ?? null,
 
       statsCustomers: (pd.statsCustomers as string) ?? null,
       statsSatisfaction: (pd.statsSatisfaction as string) ?? null,
@@ -111,6 +114,7 @@ export const getAreaHubPage = cache(async (
       testimonials: Array.isArray(pd.testimonials) ? (pd.testimonials as AreaHubPageData['testimonials']) : [],
       faqs: Array.isArray(pd.faqs) ? (pd.faqs as AreaHubPageData['faqs']) : [],
       services: Array.isArray(pd.services) ? (pd.services as AreaHubPageData['services']) : [],
+      relatedPosts: Array.isArray(pd.relatedPosts) ? (pd.relatedPosts as AreaHubPageData['relatedPosts']) : [],
     },
   };
 });

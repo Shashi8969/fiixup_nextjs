@@ -20,6 +20,7 @@ import { AreaServices } from '@/components/city/AreaServices'
 import { AreaAbout } from '@/components/city/AreaAbout'
 import { AreaFAQ } from '@/components/city/AreaFAQ'
 import { AreaTestimonials } from '@/components/city/AreaTestimonials'
+import { AreaRelatedPosts } from '@/components/city/AreaRelatedPosts'
 import { AreaContact } from '@/components/city/AreaContact'
 import { SITE_URL } from '@/lib/constants'
 import { JsonLd } from '@/components/seo/JsonLd'
@@ -224,6 +225,7 @@ export default async function CityAreaPage({ params }: { params: Params }) {
         <AreaAbout data={data} />
         <AreaTestimonials data={data} />
         <AreaFAQ data={data} />
+        <AreaRelatedPosts data={data} />
         <AreaContact data={data} />
       </>
     )
