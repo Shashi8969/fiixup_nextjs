@@ -20,7 +20,7 @@ const WARRANTY_DAYS = 7; // doorstep-repair norm runs 7–15 days; adjust to mat
 export const metadata: Metadata = {
   title: "Terms & Conditions | Fiixup",
   description:
-    "Fiixup's terms and conditions for doorstep car and bike repair — booking, pricing, cancellation, warranty, and grievance redressal policies.",
+    "Read the official Terms & Conditions for Fiixup doorstep vehicle repair services, including pricing, cancellation policies, warranty coverage, and user guidelines.",
   alternates: { canonical: `${SITE_URL}/terms` },
 };
 
@@ -136,8 +136,7 @@ export default function TermsPage() {
               Fiixup is a doorstep vehicle service platform operating at fiixup.in and through the
               Fiixup app.{" "}
               <em>
-                [Legal entity name, registration details, and registered office address — add once
-                incorporated]
+                
               </em>{" "}
               currently operates Fiixup and is referred to as &ldquo;Fiixup&rdquo;,
               &ldquo;we&rdquo;, or &ldquo;us&rdquo; in these Terms.

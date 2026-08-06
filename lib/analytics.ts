@@ -1,6 +1,4 @@
-export const GA_MEASUREMENT_ID =
-  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim() || "";
-export const CONSENT_STORAGE_KEY = "fiixup_cookie_consent_v1";
+export const GA_MEASUREMENT_ID = "G-XSNGMPP0KH";export const CONSENT_STORAGE_KEY = "fiixup_cookie_consent_v1";
 export const CONSENT_UPDATED_EVENT = "fiixup-consent-updated";
 export const OPEN_CONSENT_EVENT = "fiixup-open-cookie-settings";
 
