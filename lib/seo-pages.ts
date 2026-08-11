@@ -62,6 +62,10 @@ export interface PageData {
   seoIntroBody:          string | null
   seoSections:           { heading: string; body: string }[]
   seoConclusion:         string | null
+  contentBlocks:         unknown[]
+  heroImageUrl:          string | null
+  heroImageAlt:          string | null
+  pageLayout:            { id: string; visible: boolean; heading: string | null }[]
   [key: string]: unknown
 }
 
@@ -145,6 +149,14 @@ function normalizePageData(value: unknown): PageData {
     seoIntroBody: asString(pd.seoIntroBody) || null,
     seoSections: normalizeSeoSections(pd.seoSections),
     seoConclusion: asString(pd.seoConclusion) || null,
+    contentBlocks: asArray(pd.contentBlocks),
+    heroImageUrl: asString(pd.heroImageUrl) || null,
+    heroImageAlt: asString(pd.heroImageAlt) || null,
+    pageLayout: normalizeArrayObject(pd.pageLayout, (item) => ({
+      id: asString(item.id),
+      visible: asBoolean(item.visible, true),
+      heading: asString(item.heading) || null,
+    })).filter((row) => row.id),
   }
 }
 

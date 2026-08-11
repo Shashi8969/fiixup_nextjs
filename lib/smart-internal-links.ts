@@ -18,12 +18,13 @@ function uniqueByHref<T extends { href: string }>(items: T[]) {
 }
 
 export const getSmartNearbyAreasForService = unstable_cache(
-  async (citySlug: string, serviceSlug: string): Promise<SmartAreaLink[]> => {
+  async (citySlug: string, serviceSlug: string, excludeAreaSlug?: string | null): Promise<SmartAreaLink[]> => {
     const city = clean(citySlug);
     const service = clean(serviceSlug);
+    const excludeArea = clean(excludeAreaSlug);
     if (!city || !service) return [];
 
-    const { data, error } = await supabase
+    let query = supabase
       .from("location_services")
       .select("area_slug, area_name, city_slug, service_slug")
       .eq("city_slug", city)
@@ -32,6 +33,12 @@ export const getSmartNearbyAreasForService = unstable_cache(
       .eq("is_active", true)
       .order("area_name", { ascending: true })
       .limit(12);
+
+    // A page's own area should never appear in its own "nearby areas" list —
+    // that self-link was showing up on every area-level service page.
+    if (excludeArea) query = query.neq("area_slug", excludeArea);
+
+    const { data, error } = await query;
 
     if (error || !data) return [];
 

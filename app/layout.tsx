@@ -90,7 +90,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body suppressHydrationWarning>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: jsonLdString(siteOrganizationSchema()) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdString(siteOrganizationSchema(siteSettings)) }}
         />
         <a
           href="#main-content"

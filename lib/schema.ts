@@ -27,6 +27,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { SITE_URL, MAIN_PHONE, MAIN_EMAIL } from "./constants";
+import type { PublicSiteSettings } from "./site-settings";
 
 // ── Safe JSON-LD serialization ──────────────────────────────────────────────
 // CMS-editable strings (testimonial quotes, FAQ answers, business copy) can
@@ -131,7 +132,23 @@ function _faqItems(faqs: { q: string; a: string }[]) {
 //    ✓ Knowledge Panel (Organization)
 //    ✓ Brand SERP features
 // ═════════════════════════════════════════════════════════════════════════════
-export function siteOrganizationSchema() {
+export function siteOrganizationSchema(settings?: PublicSiteSettings) {
+  const phone = settings?.mainPhone || MAIN_PHONE;
+  const email = settings?.mainEmail || MAIN_EMAIL;
+  // Admin-editable via Settings → site_settings (fiixup-admin/app/(admin)/settings) —
+  // only emitted when actually populated, so a fetch failure (fallbackSiteSettings,
+  // all address fields "") can't put an empty-string PostalAddress on every page.
+  const address = settings?.addressLocality
+    ? {
+        "@type":         "PostalAddress",
+        ...(settings.addressStreet && { streetAddress: settings.addressStreet }),
+        addressLocality: settings.addressLocality,
+        ...(settings.addressRegion && { addressRegion: settings.addressRegion }),
+        ...(settings.addressPostalCode && { postalCode: settings.addressPostalCode }),
+        addressCountry:  settings.addressCountry || "IN",
+      }
+    : undefined;
+
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -143,10 +160,11 @@ export function siteOrganizationSchema() {
         logo:         { "@type": "ImageObject", url: LOGO, width: 200, height: 60 },
         image:        OG_IMAGE,
         description:  "India's 24/7 doorstep car and bike repair service. Certified mechanics at your home or office in Bangalore, Chennai, Hyderabad and Mumbai.",
-        telephone:    MAIN_PHONE,
-        email:        MAIN_EMAIL,
+        telephone:    phone,
+        email:        email,
         foundingDate: "2020",
         areaServed:   { "@type": "Country", name: "India" },
+        ...(address && { address }),
         sameAs: [
           "https://www.facebook.com/fiixup1/",
           "https://www.instagram.com/fiixup_in/",
@@ -158,7 +176,7 @@ export function siteOrganizationSchema() {
         // reviews belong on Google Business Profile, not this markup.
         contactPoint: {
           "@type":           "ContactPoint",
-          telephone:         MAIN_PHONE,
+          telephone:         phone,
           contactType:       "customer service",
           availableLanguage: ["English","Hindi","Kannada","Tamil","Telugu"],
           hoursAvailable:    "Mo-Su 00:00-24:00",
@@ -307,10 +325,7 @@ export function locationServiceSchema(opts: {
   areaName?:       string | null;
   areaSlug?:       string | null;
   pricingRows?:    { label: string; priceFrom: number; priceTo?: number }[];
-  testimonials?:   { name: string; rating: number; text: string; date?: string; vehicle?: string }[];
   faqs?:           { q: string; a: string }[];
-  reviewCount?:    number | string | null;
-  ratingValue?:    number | string | null;
   nearbyAreas?:    { name: string; slug: string }[];
   cityLat?:        number;
   cityLng?:        number;
@@ -324,9 +339,9 @@ export function locationServiceSchema(opts: {
     cityName, citySlug, cityState = "India",
     areaName, areaSlug,
     pricingRows = [], faqs = [],
-    cityLat = 0, cityLng = 0,
+    cityLat, cityLng,
     cityPhone = MAIN_PHONE, cityEmail = MAIN_EMAIL,
-    cityPostalCode = "000000",
+    cityPostalCode,
     nearbyAreas = [],
   } = opts;
 
@@ -371,10 +386,17 @@ export function locationServiceSchema(opts: {
         ...(isArea && { streetAddress: areaName! }),
         addressLocality: cityName,
         addressRegion:   cityState,
-        postalCode:      cityPostalCode,
+        ...(cityPostalCode && { postalCode: cityPostalCode }),
         addressCountry:  "IN",
       },
-      geo: { "@type": "GeoCoordinates", latitude: cityLat, longitude: cityLng },
+      // Omitted entirely (rather than a fake 0,0) when the caller doesn't
+      // have real coordinates — a wrong-but-present GeoCoordinates is worse
+      // than none, and this schema is a fallback path only (the primary
+      // source is the Postgres-precomputed seo_pages.schema_json, which
+      // always has real lat/lng from the city/area row).
+      ...(cityLat != null && cityLng != null && {
+        geo: { "@type": "GeoCoordinates", latitude: cityLat, longitude: cityLng },
+      }),
       areaServed: [
         { "@type": "Place", name: locLabel },
         ...nearbyAreas.slice(0, 5).map((a) => ({ "@type": "Place", name: a.name })),
@@ -788,12 +810,11 @@ export function blogPostSchema(opts: {
               worksFor: { "@id": ORG_ID },
             }
           : { "@id": ORG_ID },
-        publisher: {
-          "@type": "Organization",
-          "@id":   ORG_ID,
-          name:    "Fiixup",
-          logo:    { "@type": "ImageObject", url: LOGO },
-        },
+        // Bare @id reference, not a redefinition — siteOrganizationSchema()
+        // already renders the full Organization node on every page via the
+        // root layout; a second, differently-shaped node with the same @id
+        // here would give Google two conflicting definitions of one entity.
+        publisher: { "@id": ORG_ID },
         mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl },
         inLanguage:       "en-IN",
         isPartOf:         { "@id": `${SITE_URL}/blog/#blog` },
@@ -1033,11 +1054,11 @@ export function cityHubSchema(opts: {
   name:        string;
   slug:        string;
   state:       string;
-  postalCode:  string;
-  lat:         number;
-  lng:         number;
-  phone:       string;
-  email:       string;
+  postalCode?: string;
+  lat?:        number;
+  lng?:        number;
+  phone?:      string;
+  email?:      string;
   reviewCount: number;
   rating:      number;
   areas:       { name: string; slug: string }[];
@@ -1081,22 +1102,22 @@ export function cityHubSchema(opts: {
       name:        `Fiixup — Doorstep Auto Repair in ${opts.name}`,
       url:         pageUrl,
       image,
-      telephone:   opts.phone,
-      email:       opts.email ?? MAIN_EMAIL,
+      telephone:   opts.phone || MAIN_PHONE,
+      email:       opts.email || MAIN_EMAIL,
       description: `24/7 doorstep car and bike repair service in ${opts.name}, ${opts.state}. Certified mechanics come to you.`,
       parentOrganization: { "@id": ORG_ID },
       address: {
         "@type":           "PostalAddress",
         addressLocality:   opts.name,
         addressRegion:     opts.state,
-        postalCode:        opts.postalCode || "000000",
+        ...(opts.postalCode && { postalCode: opts.postalCode }),
         addressCountry:    "IN",
       },
-      geo: {
-        "@type":     "GeoCoordinates",
-        latitude:    opts.lat,
-        longitude:   opts.lng,
-      },
+      // Omitted (rather than a fake 0,0) when real coordinates aren't
+      // available — see the matching fix in locationServiceSchema() above.
+      ...(opts.lat != null && opts.lng != null && {
+        geo: { "@type": "GeoCoordinates", latitude: opts.lat, longitude: opts.lng },
+      }),
       areaServed: [
         { "@type": "City",  name: opts.name, containedInPlace: { "@type": "State", name: opts.state } },
         ...opts.areas.slice(0, 20).map((a) => ({

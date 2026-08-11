@@ -6,9 +6,9 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getPageByPath, getAllActiveUrlPaths } from '@/lib/seo-pages'
 import { LocationServicePage } from '@/components/location-service/LocationServicePage'
-import { SITE_URL } from '@/lib/constants'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { locationServiceSchema } from '@/lib/schema'
+import { metadataFromSeoPage } from '@/lib/seo/metadata'
 
 export const revalidate = 3600
 export const dynamicParams = true
@@ -35,29 +35,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const page = await getPageByPath(`/${citySlug}/${areaSlug}/${serviceSlug}`)
   if (!page) return {}
 
-  return {
-    title:       page.meta_title,
-    description: page.meta_description,
-    keywords:    page.meta_keywords ?? undefined,
-    alternates:  { canonical: page.canonical_url },
-    openGraph: {
-      title:       page.meta_title,
-      description: page.meta_description,
-      url:         page.canonical_url,
-      type:        'website',
-      images: page.og_image_url ? [{
-        url:    page.og_image_url,
-        width:  page.og_image_width  ?? 1200,
-        height: page.og_image_height ?? 630,
-        alt:    page.meta_title,
-      }] : [{ url: `${SITE_URL}/assets/og-image.webp`, width: 1200, height: 630 }],
-    },
-    twitter: {
-      card:        'summary_large_image',
-      title:       page.meta_title,
-      description: page.meta_description,
-    },
-  }
+  return metadataFromSeoPage(page, `/${citySlug}/${areaSlug}/${serviceSlug}`)
 }
 
 // Page — same cached result, zero extra DB query
@@ -127,6 +105,10 @@ export default async function AreaServicePage({ params }: { params: Params }) {
           seoIntroBody:          data.seoIntroBody,
           seoSections:           data.seoSections ?? [],
           seoConclusion:         data.seoConclusion,
+          contentBlocks:         data.contentBlocks ?? [],
+          heroImageUrl:          data.heroImageUrl,
+          heroImageAlt:          data.heroImageAlt,
+          pageLayout:            data.pageLayout ?? [],
           testimonials:          data.testimonials ?? [],
           faqs:                  data.faqs ?? [],
           nearbyAreas:           data.nearbyAreas ?? [],

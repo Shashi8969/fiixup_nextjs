@@ -1,5 +1,6 @@
 import type { LocationServiceData } from '@/lib/locationServices'
 import { asString, normalizeSeoSections, paragraphs } from '@/lib/cms-guards'
+import { BlockRenderer } from '@/components/ui/BlockRenderer'
 
 type SeoParagraphProps = {
   body: unknown
@@ -20,8 +21,9 @@ export function LocationServiceSeoContent({ data }: { data: LocationServiceData 
   const introHeading = asString(data.seoIntroHeading)
   const introBody = asString(data.seoIntroBody)
   const conclusion = asString(data.seoConclusion)
+  const contentBlocks = Array.isArray(data.contentBlocks) ? data.contentBlocks : []
 
-  const hasContent = Boolean(introHeading || introBody || sections.length || conclusion)
+  const hasContent = Boolean(introHeading || introBody || sections.length || conclusion || contentBlocks.length)
   if (!hasContent) return null
 
   return (
@@ -57,6 +59,12 @@ export function LocationServiceSeoContent({ data }: { data: LocationServiceData 
                 />
               </div>
             ))}
+          </div>
+        )}
+
+        {contentBlocks.length > 0 && (
+          <div className="mt-10">
+            <BlockRenderer blocks={contentBlocks} />
           </div>
         )}
 

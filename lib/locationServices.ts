@@ -33,6 +33,10 @@ export interface LocationServiceData {
   seoIntroBody: string | null;
   seoSections: { heading: string; body: string }[];
   seoConclusion: string | null;
+  contentBlocks: unknown[];
+  heroImageUrl: string | null;
+  heroImageAlt: string | null;
+  pageLayout: { id: string; visible: boolean; heading: string | null }[];
   schemaAggregateRating: number;
   schemaReviewCount: number;
   displayLocation: string;
@@ -78,6 +82,10 @@ function rowToLocationService(row: any): LocationServiceData {
     seoIntroBody:          row.seo_intro_body ?? null,
     seoSections:           row.seo_sections ?? [],
     seoConclusion:         row.seo_conclusion ?? null,
+    contentBlocks:         row.content_blocks ?? [],
+    heroImageUrl:          row.hero_image_url ?? null,
+    heroImageAlt:          row.hero_image_alt ?? null,
+    pageLayout:            row.page_layout ?? [],
     schemaAggregateRating: parseFloat(row.schema_aggregate_rating) || 4.9,
     schemaReviewCount:     row.schema_review_count ?? 150,
     displayLocation:       isCity ? row.city_name : `${row.area_name}, ${row.city_name}`,
