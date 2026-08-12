@@ -1,81 +1,72 @@
-import Image from "next/image";
-import { BadgeCheck, Clock3, IndianRupee, MapPin, MessageCircle, Phone, ShieldCheck, Wrench } from "lucide-react";
+import { Clock3, IndianRupee, MapPin, MessageCircle, Phone, ShieldCheck, Wrench } from "lucide-react";
 import type { CityData } from "@/lib/models/city.model";
+import { AreaDispatchPanel } from "./AreaDispatchPanel";
+import { computeRatingSummary } from "@/lib/areaPages";
+import { Reveal } from "@/components/ui/Reveal";
 
 type AreaHeroProps = {
   city: CityData;
   areaName: string;
+  /** areas.hero_heading / hero_subheading — admin-editable, falls back to a generated line when empty */
+  heroHeading?: string | null;
+  heroSubheading?: string | null;
+  testimonials?: { rating: number }[];
 };
 
 function digitsOnly(value?: string) {
   return (value ?? "").replace(/\D/g, "");
 }
 
-export function AreaHero({ city, areaName }: AreaHeroProps) {
+export function AreaHero({ city, areaName, heroHeading, heroSubheading, testimonials = [] }: AreaHeroProps) {
   const phone = city.phone ?? "+91 8197459732";
   const whatsapp = digitsOnly((city as any).whatsapp || phone);
+  const rating = computeRatingSummary(testimonials);
 
   return (
-    <section className="relative isolate overflow-hidden bg-[#fff8f4]">
-      <Image
-        src="/assets/Car_mechanic_700x1049.webp"
-        alt={`Doorstep car and bike mechanic serving ${areaName}, ${city.name}`}
-        fill
-        priority
-        fetchPriority="high"
-        sizes="100vw"
-        className="object-cover object-[70%_center]"
+    <section className="relative isolate overflow-hidden border-b border-gray-100 bg-gradient-to-br from-blue-50 via-white to-white">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.035]"
+        style={{ backgroundImage: "radial-gradient(circle, #2563eb 1px, transparent 1px)", backgroundSize: "32px 32px" }}
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/30 md:via-white/85" />
 
-      <div className="container relative mx-auto px-4 py-10 md:py-16 lg:py-20">
+      <div className="container relative mx-auto grid gap-10 px-4 py-10 md:py-16 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:gap-14 lg:py-20">
         <div className="max-w-2xl">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-orange-600 px-4 py-2 text-xs font-bold uppercase tracking-wide text-white shadow-sm">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-xs font-bold uppercase tracking-wide text-white shadow-sm shadow-red-200">
             <MapPin className="h-4 w-4" aria-hidden="true" />
             {areaName}, {city.name}
           </div>
 
-          <h1 className="max-w-xl text-4xl font-black leading-[1.08] text-slate-950 sm:text-5xl lg:text-6xl">
-            Car &amp; Bike Services at Your Doorstep in <span className="text-orange-600">{areaName}</span>
+          <h1 className="max-w-xl text-4xl font-black leading-[1.08] text-slate-950 sm:text-5xl lg:text-[3.25rem]">
+            {heroHeading?.trim() || (
+              <>
+                Car &amp; bike repair, right at your door in <span className="text-blue-600">{areaName}</span>
+              </>
+            )}
           </h1>
 
-          <p className="mt-5 max-w-xl text-base leading-7 text-slate-700 sm:text-lg">
-            Book doorstep vehicle repair, breakdown support, towing and puncture assistance in {areaName}. Choose a service below and connect directly with Fiixup.
+          <p className="mt-5 max-w-xl text-base leading-7 text-slate-600 sm:text-lg">
+            {heroSubheading?.trim() ||
+              `Book in 30 seconds. A certified technician arrives at your home or office in ${areaName} — no towing, no workshop queue, upfront pricing before any work starts.`}
           </p>
-          <br />
-{/* QUICK BOOKING HIGHLIGHT */}
-<div className="relative overflow-hidden rounded-2xl border border-orange-300 bg-gradient-to-r from-orange-50 via-white to-amber-50 p-[1px] shadow-[0_10px_30px_rgba(249,115,22,0.16)]">
-  <div className="relative rounded-[15px] bg-white/85 px-4 py-4 backdrop-blur-sm sm:px-5">
-    {/* Decorative glow */}
-    <div
-      aria-hidden="true"
-      className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-orange-200/40 blur-2xl"
-    />
 
-    <p className="relative text-center text-[15px] font-semibold leading-6 text-slate-800 sm:text-left sm:text-base">
-      <span className="font-extrabold text-orange-600">
-        Book in 30 seconds.
-      </span>{" "}
-      Mechanic at your doorstep in{" "}
-      <span className="font-extrabold text-slate-950">
-        20 minutes.
-      </span>{" "}
-      <span className="inline-flex items-center rounded-full border border-orange-200 bg-orange-100 px-2.5 py-0.5 font-extrabold text-orange-700">
-        From ₹450
-      </span>{" "}
-      <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 font-bold text-emerald-700">
-        30-day warranty
-      </span>
-    </p>
-  </div>
-</div>
+          <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-blue-200 bg-blue-50/70 px-4 py-3.5">
+            <ShieldCheck className="h-5 w-5 shrink-0 text-green-600" aria-hidden="true" />
+            <p className="text-[15px] text-slate-800">
+              <span className="font-extrabold text-blue-700">Mechanic at your door in ~20 minutes.</span>{" "}
+              <span className="ml-1 inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 font-mono text-xs font-extrabold text-amber-800">
+                From ₹450
+              </span>{" "}
+              <span className="ml-1 inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 font-mono text-xs font-extrabold text-green-700">
+                30-day warranty
+              </span>
+            </p>
+          </div>
 
-
-
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <div className="mt-6 flex flex-wrap gap-3">
             <a
               href={`tel:${phone}`}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-orange-600 px-6 py-3 font-bold text-white shadow-lg transition hover:bg-orange-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-600 focus-visible:ring-offset-2"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-red-600 px-6 py-3 font-bold text-white shadow-lg shadow-red-200 transition hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
             >
               <Phone className="h-5 w-5" aria-hidden="true" />
               Call {phone}
@@ -90,24 +81,31 @@ export function AreaHero({ city, areaName }: AreaHeroProps) {
               WhatsApp Us
             </a>
           </div>
-             <div className="mt-7 grid grid-cols-2 gap-3 rounded-2xl border border-white/80 bg-white/90 p-4 shadow-xl backdrop-blur md:grid-cols-4">
+
+          <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-4 border-t border-gray-200 pt-6 sm:grid-cols-4">
             {[
               { icon: Clock3, title: "Fast response", text: "Area-based dispatch" },
-              { icon: ShieldCheck, title: "30-Day", text: "Repair warranty" },
+              { icon: ShieldCheck, title: "30-day", text: "Repair warranty" },
               { icon: Wrench, title: "Skilled", text: "Technicians" },
               { icon: IndianRupee, title: "Upfront", text: "Pricing" },
             ].map(({ icon: Icon, title, text }) => (
-              <div key={title} className="flex min-w-0 items-start gap-2 border-slate-200 md:border-r md:last:border-r-0">
-                <Icon className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" aria-hidden="true" />
+              <div
+                key={title}
+                className="flex min-w-0 items-start gap-2 border-gray-200 sm:border-r sm:pr-3 sm:last:border-r-0"
+              >
+                <Icon className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" aria-hidden="true" />
                 <div>
                   <p className="text-sm font-bold text-slate-950">{title}</p>
-                  <p className="text-xs leading-5 text-slate-600">{text}</p>
+                  <p className="text-xs leading-5 text-slate-500">{text}</p>
                 </div>
               </div>
             ))}
           </div>
-       
         </div>
+
+        <Reveal>
+          <AreaDispatchPanel areaName={areaName} rating={rating} />
+        </Reveal>
       </div>
     </section>
   );

@@ -1,36 +1,52 @@
-import Image from 'next/image';
-import { Users, Clock, ThumbsUp, MapPin } from 'lucide-react';
+import { Clock, MapPin, ThumbsUp, Users } from 'lucide-react';
 import type { AreaHubPageData } from '@/lib/areaPages';
+import { CountUp } from '@/components/ui/CountUp';
+import { Reveal } from '@/components/ui/Reveal';
+
+// Stat fields are free-text (admin-editable, e.g. "2,300+" or "10,000+ Bangalore
+// customers") — only animate with CountUp when the string is a clean number +
+// optional suffix; anything else renders as static text rather than mangling it.
+function parseStatNumber(raw: string): { value: number; suffix: string } | null {
+  const match = raw.trim().match(/^([\d,]+)(.*)$/);
+  if (!match) return null;
+  const value = Number(match[1].replace(/,/g, ''));
+  if (!Number.isFinite(value) || value <= 0) return null;
+  return { value, suffix: match[2] };
+}
 
 export function AreaAbout({ data }: { data: AreaHubPageData }) {
+  const customers = data.statsCustomers ? parseStatNumber(data.statsCustomers) : null;
+  const satisfaction = data.statsSatisfaction ? parseStatNumber(data.statsSatisfaction) : null;
+
   return (
-    <section id="about" className="py-20 bg-white">
+    <section id="about" className="bg-white py-16 md:py-20">
       <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-16 items-center mb-16">
-          <div className="order-2 lg:order-1">
-            <span className="inline-block text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">
-              About Fiixup in {data.areaName}
+        <div className="grid items-start gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
+          <div>
+            <span className="mb-3 inline-block text-sm font-semibold uppercase tracking-widest text-blue-600">
+              About this area
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6 leading-tight">
+            <h2 className="mb-5 text-3xl font-extrabold leading-tight text-gray-900 md:text-4xl">
               {data.aboutHeading}
             </h2>
             {data.aboutPara1 && (
-              <p className="text-lg text-gray-600 mb-5 leading-relaxed">{data.aboutPara1}</p>
+              <p className="mb-4 text-lg leading-relaxed text-gray-600">{data.aboutPara1}</p>
             )}
             {data.aboutPara2 && (
-              <p className="text-lg text-gray-600 mb-5 leading-relaxed">{data.aboutPara2}</p>
+              <p className="mb-4 text-lg leading-relaxed text-gray-600">{data.aboutPara2}</p>
             )}
             {data.localInsight && (
-              <p className="text-base text-gray-500 mb-8 leading-relaxed border-l-2 border-blue-200 pl-4">
+              <Reveal className="mt-2 rounded-xl border-l-[3px] border-blue-600 bg-blue-50 px-4 py-3.5 text-[15px] leading-relaxed text-blue-900">
+                <span className="font-bold">Local note: </span>
                 {data.localInsight}
-              </p>
+              </Reveal>
             )}
 
             {data.trustPoints.length > 0 && (
-              <ul className="space-y-3">
+              <ul className="mt-6 space-y-3">
                 {data.trustPoints.map((point, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2.5 flex-shrink-0" aria-hidden="true" />
+                    <div className="mt-2.5 h-2 w-2 flex-shrink-0 rounded-full bg-blue-600" aria-hidden="true" />
                     <p className="text-gray-700">{point}</p>
                   </li>
                 ))}
@@ -38,32 +54,40 @@ export function AreaAbout({ data }: { data: AreaHubPageData }) {
             )}
           </div>
 
-          <div className="order-1 lg:order-2">
-            <div className="rounded-2xl overflow-hidden shadow-xl h-[400px] relative">
-              <Image
-                src="/assets/carservice.webp"
-                alt={`Doorstep auto repair in ${data.areaName}, ${data.cityName}`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
+          <Reveal>
+            <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="rounded-xl bg-blue-50 p-5 text-left">
+                  <Users className="mb-2 h-6 w-6 text-blue-600" aria-hidden="true" />
+                  <p className="font-mono text-[28px] font-extrabold leading-none text-blue-700">
+                    {customers ? <CountUp value={customers.value} suffix={customers.suffix} /> : (data.statsCustomers ?? `${data.cityName} customers`)}
+                  </p>
+                  <p className="mt-1.5 text-xs font-semibold text-gray-500">Customers served</p>
+                </div>
+                <div className="rounded-xl bg-gray-50 p-5 text-left">
+                  <ThumbsUp className="mb-2 h-6 w-6 text-gray-700" aria-hidden="true" />
+                  <p className="font-mono text-[28px] font-extrabold leading-none text-gray-900">
+                    {satisfaction ? <CountUp value={satisfaction.value} suffix={satisfaction.suffix} /> : (data.statsSatisfaction ?? '—')}
+                  </p>
+                  <p className="mt-1.5 text-xs font-semibold text-gray-500">Satisfaction rate</p>
+                </div>
+                <div className="rounded-xl bg-gray-50 p-5 text-left">
+                  <Clock className="mb-2 h-6 w-6 text-gray-700" aria-hidden="true" />
+                  <p className="font-mono text-[28px] font-extrabold leading-none text-gray-900">
+                    24<span className="text-base">/7</span>
+                  </p>
+                  <p className="mt-1.5 text-xs font-semibold text-gray-500">Service available</p>
+                </div>
+                <div className="rounded-xl bg-gray-50 p-5 text-left">
+                  <MapPin className="mb-2 h-6 w-6 text-gray-700" aria-hidden="true" />
+                  <p className="truncate text-lg font-extrabold leading-none text-gray-900">
+                    {data.statsCoverage ?? data.areaName}
+                  </p>
+                  <p className="mt-1.5 text-xs font-semibold text-gray-500">Full coverage</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-          {[
-            { icon: Users, value: data.statsCustomers ?? `${data.cityName} customers`, label: 'Happy Customers' },
-            { icon: Clock, value: '24/7', label: 'Service Available' },
-            { icon: ThumbsUp, value: data.statsSatisfaction ?? '—', label: 'Customer Satisfaction' },
-            { icon: MapPin, value: data.statsCoverage ?? data.cityName, label: `${data.cityName} Coverage` },
-          ].map((stat, i) => (
-            <div key={i} className="bg-gray-50 border border-gray-100 rounded-2xl p-6 text-center hover:shadow-md transition-shadow">
-              <stat.icon className="w-9 h-9 text-blue-600 mx-auto mb-3" aria-hidden="true" />
-              <p className="text-3xl font-extrabold text-gray-900 mb-1">{stat.value}</p>
-              <p className="text-sm text-gray-500 font-medium">{stat.label}</p>
-            </div>
-          ))}
+          </Reveal>
         </div>
       </div>
     </section>

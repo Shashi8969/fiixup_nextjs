@@ -14,6 +14,7 @@
 import { cache } from 'react';
 import { supabase } from '@/lib/supabase';
 import { normalizeSeoSections } from '@/lib/cms-guards';
+import type { PageLayoutRow } from '@/lib/areaPageSections';
 
 export interface AreaHubPageData {
   citySlug: string;
@@ -54,6 +55,7 @@ export interface AreaHubPageData {
   seoSections: { heading: string; body: string }[];
   seoConclusion: string | null;
   contentBlocks: unknown[];
+  pageLayout: PageLayoutRow[];
 }
 
 export interface AreaHubSeo {
@@ -128,9 +130,26 @@ export const getAreaHubPage = cache(async (
       seoSections: normalizeSeoSections(pd.seoSections),
       seoConclusion: (pd.seoConclusion as string) ?? null,
       contentBlocks: Array.isArray(pd.contentBlocks) ? (pd.contentBlocks as unknown[]) : [],
+      pageLayout: Array.isArray(pd.pageLayout) ? (pd.pageLayout as PageLayoutRow[]) : [],
     },
   };
 });
+
+/**
+ * computeRatingSummary — average rating + count from an area's own testimonials.
+ * Pure derived UI copy (hero badge / trust marquee), NOT emitted as schema:
+ * aggregateRating/review was deliberately stripped from every LocalBusiness/
+ * AutoRepair JSON-LD node site-wide (self-serving-reviews policy, see
+ * lib/schema.ts). Returns null when there's nothing to show rather than a
+ * fabricated 0/5.
+ */
+export function computeRatingSummary(
+  testimonials: { rating: number }[]
+): { average: number; count: number } | null {
+  if (!testimonials.length) return null;
+  const total = testimonials.reduce((sum, t) => sum + (t.rating || 0), 0);
+  return { average: Math.round((total / testimonials.length) * 10) / 10, count: testimonials.length };
+}
 
 /**
  * getAllAreaHubUrlPaths — for generateStaticParams on area hub pages

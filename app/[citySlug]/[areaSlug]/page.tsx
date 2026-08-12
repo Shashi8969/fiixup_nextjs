@@ -5,14 +5,17 @@
 // The cities-table branch at the bottom is a last-resort fallback only.
 
 import type { Metadata } from 'next'
+import { Fragment } from 'react'
 import { notFound } from 'next/navigation'
 import { getPageByPath } from '@/lib/seo-pages'
 import { getAllCities, getCityBySlug, getAreaBySlug } from '@/lib/cities'
 import { getAllCityServiceSlugs, getAreaServices } from '@/lib/locationServices'
 import { getAreaHubPage } from '@/lib/areaPages'
+import { resolveSectionOrder, type AreaSectionId } from '@/lib/areaPageSections'
 import { areaPageSchema, locationServiceSchema, jsonLdString } from '@/lib/schema'
 import { LocationServicePage } from '@/components/location-service/LocationServicePage'
 import { AreaHero } from '@/components/city/AreaHero'
+import { AreaTrustMarquee } from '@/components/city/AreaTrustMarquee'
 import { CityAbout } from '@/components/city/CityAbout'
 import { CityContact } from '@/components/city/CityContact'
 import { CityFAQ } from '@/components/city/CityFAQ'
@@ -23,8 +26,10 @@ import { AreaFAQ } from '@/components/city/AreaFAQ'
 import { AreaTestimonials } from '@/components/city/AreaTestimonials'
 import { AreaRelatedPosts } from '@/components/city/AreaRelatedPosts'
 import { AreaContact } from '@/components/city/AreaContact'
+import { AreaStickyCallBar } from '@/components/city/AreaStickyCallBar'
 import { SITE_URL } from '@/lib/constants'
 import { JsonLd } from '@/components/seo/JsonLd'
+import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { metadataFromSeoPage, metadataFromBasicSeo } from '@/lib/seo/metadata'
 
 export const revalidate = 3600
@@ -211,28 +216,64 @@ export default async function CityAreaPage({ params }: { params: Params }) {
       faqs:      data.faqs,
     })
 
+    const areaHubServices = await getAreaServices(citySlug, areaSlug)
+
+    // Reorderable/hideable/heading-overridable sections between Hero and the
+    // closing Contact CTA — controlled from the admin's Page Layout tab
+    // (`areas.page_layout`). See lib/areaPageSections.ts for the rationale;
+    // mirrors components/location-service/LocationServicePage.tsx exactly.
+    const layoutRows = resolveSectionOrder(data.pageLayout ?? [])
+    const layoutById = new Map(layoutRows.map((row) => [row.id, row]))
+    const sectionVisible = (id: AreaSectionId) => layoutById.get(id)?.visible !== false
+    const sectionHeading = (id: AreaSectionId) => layoutById.get(id)?.heading ?? undefined
+
+    const sectionRenderers: Record<AreaSectionId, () => React.ReactNode> = {
+      trust_marquee: () => (
+        <AreaTrustMarquee
+          areaName={data.areaName}
+          statsCustomers={data.statsCustomers}
+          testimonials={data.testimonials}
+          servicesCount={areaHubServices.length}
+        />
+      ),
+      services: () => (
+        <AreaServices
+          citySlug={citySlug}
+          areaSlug={areaSlug}
+          areaName={data.areaName}
+          services={areaHubServices}
+          heading={sectionHeading('services')}
+        />
+      ),
+      about: () => <AreaAbout data={data} />,
+      testimonials: () => <AreaTestimonials data={data} heading={sectionHeading('testimonials')} />,
+      seo_content: () => <AreaSeoContent data={data} />,
+      faqs: () => <AreaFAQ data={data} heading={sectionHeading('faqs')} />,
+      related_posts: () => <AreaRelatedPosts data={data} heading={sectionHeading('related_posts')} />,
+    }
+
     return (
       <>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLdString(schemas) }}
         />
+        <Breadcrumb
+          items={[{ label: data.cityName, href: `/${citySlug}` }, { label: data.areaName }]}
+          withSchema={false}
+        />
         <AreaHero
           city={{ name: data.cityName, phone: data.cityPhone, whatsapp: data.cityWhatsapp } as any}
           areaName={data.areaName}
+          heroHeading={data.heroHeading}
+          heroSubheading={data.heroSubheading}
+          testimonials={data.testimonials}
         />
-        <AreaServices
-          citySlug={citySlug}
-          areaSlug={areaSlug}
-          areaName={data.areaName}
-          services={await getAreaServices(citySlug, areaSlug)}
-        />
-        <AreaAbout data={data} />
-        <AreaTestimonials data={data} />
-        <AreaSeoContent data={data} />
-        <AreaFAQ data={data} />
-        <AreaRelatedPosts data={data} />
+        {layoutRows.map((row) => (
+          <Fragment key={row.id}>{sectionVisible(row.id) ? sectionRenderers[row.id]() : null}</Fragment>
+        ))}
         <AreaContact data={data} />
+        <AreaStickyCallBar phone={data.cityPhone} whatsapp={data.cityWhatsapp} areaName={data.areaName} />
       </>
     )
   }
@@ -282,7 +323,17 @@ export default async function CityAreaPage({ params }: { params: Params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdString(schemas) }}
       />
+      <Breadcrumb
+        items={[{ label: city.name, href: `/${citySlug}` }, { label: areaName }]}
+        withSchema={false}
+      />
       <AreaHero city={city} areaName={areaName} />
+      <AreaTrustMarquee
+        areaName={areaName}
+        statsCustomers={null}
+        testimonials={[]}
+        servicesCount={areaServices.length}
+      />
       <AreaServices
         citySlug={citySlug}
         areaSlug={areaSlug}

@@ -52,11 +52,15 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateY(16px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        "dash-flow": {
+          "to": { strokeDashoffset: "-32" },
+        },
       },
       animation: {
         "marquee-left": "marquee-left var(--marquee-duration, 40s) linear infinite",
         "marquee-right": "marquee-right var(--marquee-duration, 40s) linear infinite",
         "fade-in-up": "fade-in-up 0.5s ease-out both",
+        "dash-flow": "dash-flow 1.4s linear infinite",
       },
     },
   },
