@@ -1,6 +1,7 @@
 import type { LocationServiceData } from '@/lib/locationServices'
 import { asString, normalizeSeoSections, paragraphs } from '@/lib/cms-guards'
 import { BlockRenderer } from '@/components/ui/BlockRenderer'
+import { Reveal } from '@/components/ui/Reveal'
 
 type SeoParagraphProps = {
   body: unknown
@@ -30,24 +31,26 @@ export function LocationServiceSeoContent({ data }: { data: LocationServiceData 
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4 max-w-4xl">
         {introHeading && (
-          <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-5">
-            {introHeading}
-          </h2>
+          <Reveal>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-5">
+              {introHeading}
+            </h2>
+          </Reveal>
         )}
 
         {introBody && (
-          <div className="mb-10">
+          <Reveal className="mb-10">
             <SeoParagraphs
               body={introBody}
               className="text-gray-600 leading-relaxed mb-5 text-base last:mb-0"
             />
-          </div>
+          </Reveal>
         )}
 
         {sections.length > 0 && (
           <div className="space-y-8">
             {sections.map((section, index) => (
-              <div key={section.heading + '-' + index}>
+              <Reveal key={section.heading + '-' + index} delay={Math.min(index, 6) * 0.05}>
                 {section.heading && (
                   <h3 className="text-xl font-bold text-gray-900 mb-3">
                     {section.heading}
@@ -57,7 +60,7 @@ export function LocationServiceSeoContent({ data }: { data: LocationServiceData 
                   body={section.body}
                   className="text-gray-600 leading-relaxed mb-5 text-base last:mb-0"
                 />
-              </div>
+              </Reveal>
             ))}
           </div>
         )}
@@ -69,12 +72,12 @@ export function LocationServiceSeoContent({ data }: { data: LocationServiceData 
         )}
 
         {conclusion && (
-          <div className="mt-10 p-6 bg-blue-50 rounded-2xl border border-blue-100">
+          <Reveal className="mt-10 p-6 bg-blue-50 rounded-2xl border border-blue-100">
             <SeoParagraphs
               body={conclusion}
               className="text-blue-900 leading-relaxed font-medium mb-5 last:mb-0"
             />
-          </div>
+          </Reveal>
         )}
       </div>
     </section>

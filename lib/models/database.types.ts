@@ -77,8 +77,20 @@ export interface Area {
   sort_order: number;
   latitude: number;
   longitude: number;
+  vehicles_serviced?: number;
+  local_insight?: string;
   created_at: string;
   updated_at: string;
+
+  // SEO editorial content — authored in the admin's /areas/[id] editor,
+  // read directly by fn_build_area_seo_page() (not rolled up from LS rows)
+  seo_intro_heading?: string;
+  seo_intro_body?: string;
+  seo_sections?: unknown;
+  seo_conclusion?: string;
+  content_blocks?: unknown[];
+  schema_types?: string[];
+  schema_overrides?: Record<string, unknown>;
 }
 
 // ─── SERVICE CATEGORIES ──────────────────────────────────────────────────────
@@ -224,6 +236,8 @@ export interface LocationService {
   seo_intro_body?: string;
   seo_sections?: unknown;
   seo_conclusion?: string;
+  content_blocks?: unknown[];
+  page_layout?: unknown[];
   created_at: string;
   updated_at: string;
 
