@@ -139,6 +139,7 @@ export interface CityServiceCategoryPageData {
   seoIntroBody:    string | null;
   seoSections:     { heading: string; body: string }[] | null;
   seoConclusion:   string | null;
+  contentBlocks:   unknown[] | null;
 
   // Schema
   schemaAggregateRating: number;

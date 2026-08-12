@@ -53,6 +53,7 @@ export interface AreaHubPageData {
   seoIntroBody: string | null;
   seoSections: { heading: string; body: string }[];
   seoConclusion: string | null;
+  contentBlocks: unknown[];
 }
 
 export interface AreaHubSeo {
@@ -126,6 +127,7 @@ export const getAreaHubPage = cache(async (
       seoIntroBody: (pd.seoIntroBody as string) ?? null,
       seoSections: normalizeSeoSections(pd.seoSections),
       seoConclusion: (pd.seoConclusion as string) ?? null,
+      contentBlocks: Array.isArray(pd.contentBlocks) ? (pd.contentBlocks as unknown[]) : [],
     },
   };
 });

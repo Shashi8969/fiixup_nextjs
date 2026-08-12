@@ -9,6 +9,7 @@ import {
   Info, AlertTriangle, ChevronDown, CheckCircle2, XCircle, Copy, Check,
 } from "lucide-react";
 import { CmsImage } from "@/components/ui/CmsImage";
+import { Reveal } from "@/components/ui/Reveal";
 // ─── Type Definitions ─────────────────────────────────────────────────────────
 export type Block =
 | { type: "rich_content"; html: string }
@@ -134,7 +135,7 @@ function TableBlock({ headers, rows, caption }: { headers: string[]; rows: strin
         <thead className="bg-red-50 border-b border-red-100">
           <tr>
             {headers.map((h, i) => (
-              <th key={i} className="text-left px-4 py-3 text-red-800 font-semibold text-xs uppercase tracking-wide whitespace-nowrap">
+              <th className="text-left px-4 py-3 text-red-800 font-semibold text-xs uppercase tracking-wide whitespace-nowrap">
                 {h}
               </th>
             ))}
@@ -278,7 +279,7 @@ function FaqBlock({ items }: { items: { question: string; answer: string }[] }) 
       <h3 className="text-lg font-bold text-gray-900 mb-4">Frequently Asked Questions</h3>
       <div className="space-y-2">
         {items.map((item, i) => (
-          <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
+          <div className="border border-gray-200 rounded-xl overflow-hidden">
             <button
               className="w-full text-left px-5 py-4 flex justify-between items-center gap-3 hover:bg-gray-50 transition-colors"
               onClick={() => setOpen(open === i ? null : i)}
@@ -307,7 +308,7 @@ function StepsBlock({ items }: { items: { title: string; description: string }[]
   return (
     <ol className="mb-6 space-y-5">
       {items.map((item, i) => (
-        <li key={i} className="flex gap-4">
+        <li className="flex gap-4">
           <div className="shrink-0 w-9 h-9 bg-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-sm mt-0.5">
             {i + 1}
           </div>
@@ -376,7 +377,7 @@ function ProsConsBlock({ pros, cons }: { pros: string[]; cons: string[] }) {
         </p>
         <ul className="space-y-2">
           {pros.map((p, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm text-green-900">
+            <li className="flex items-start gap-2 text-sm text-green-900">
               <span className="text-green-500 mt-0.5 shrink-0">✓</span>
               <span>{p}</span>
             </li>
@@ -389,7 +390,7 @@ function ProsConsBlock({ pros, cons }: { pros: string[]; cons: string[] }) {
         </p>
         <ul className="space-y-2">
           {cons.map((c, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm text-red-900">
+            <li className="flex items-start gap-2 text-sm text-red-900">
               <span className="text-red-500 mt-0.5 shrink-0">✗</span>
               <span>{c}</span>
             </li>
@@ -412,7 +413,7 @@ function ComparisonBlock({
           <tr>
             <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wide">Feature</th>
             {headers.map((h, i) => (
-              <th key={i} className={`text-center px-4 py-3 font-semibold text-xs uppercase tracking-wide ${i === 0 ? "text-red-400" : "text-gray-300"}`}>
+              <th className={`text-center px-4 py-3 font-semibold text-xs uppercase tracking-wide ${i === 0 ? "text-red-400" : "text-gray-300"}`}>
                 {h}
               </th>
             ))}
@@ -450,34 +451,23 @@ function RichContentBlock({ html }: { html: string }) {
 
 // ─── Main Renderer ────────────────────────────────────────────────────────────
 
-export function BlockRenderer({ blocks }: { blocks: unknown[] }) {
-  if (!Array.isArray(blocks) || blocks.length === 0) {
-    return <p className="text-gray-400 italic text-sm">No content yet.</p>;
-  }
-
-  return (
-    <div className="blog-content">
-      {blocks.map((block, i) => {
-        if (!block || typeof block !== "object") return null;
-        const b = block as Record<string, unknown>;
-
+function renderBlock(b: Record<string, unknown>): React.ReactNode {
         switch (b.type) {
           case "heading":
-            return <HeadingBlock key={i} level={Number(b.level) || 2} content={String(b.content ?? "")} />;
+            return <HeadingBlock level={Number(b.level) || 2} content={String(b.content ?? "")} />;
 
             case "rich_content":
-  return <RichContentBlock key={i} html={String(b.html ?? "")} />;
+  return <RichContentBlock html={String(b.html ?? "")} />;
 
           case "paragraph":
-            return <ParagraphBlock key={i} content={String(b.content ?? "")} />;
+            return <ParagraphBlock content={String(b.content ?? "")} />;
 
           case "list":
-            return <ListBlock key={i} style={String(b.style ?? "bullet")} items={Array.isArray(b.items) ? b.items.map(String) : []} />;
+            return <ListBlock style={String(b.style ?? "bullet")} items={Array.isArray(b.items) ? b.items.map(String) : []} />;
 
           case "table":
             return (
               <TableBlock
-                key={i}
                 headers={Array.isArray(b.headers) ? b.headers.map(String) : []}
                 rows={Array.isArray(b.rows) ? b.rows.map((r) => (Array.isArray(r) ? r.map(String) : [])) : []}
                 caption={b.caption ? String(b.caption) : undefined}
@@ -485,28 +475,27 @@ export function BlockRenderer({ blocks }: { blocks: unknown[] }) {
             );
 
           case "tip":
-            return <TipBlock key={i} content={String(b.content ?? "")} label={b.label ? String(b.label) : undefined} />;
+            return <TipBlock content={String(b.content ?? "")} label={b.label ? String(b.label) : undefined} />;
 
           case "warning":
           case "callout":
-            return <WarningBlock key={i} content={String(b.content ?? "")} label={b.label ? String(b.label) : undefined} />;
+            return <WarningBlock content={String(b.content ?? "")} label={b.label ? String(b.label) : undefined} />;
 
           case "image":
-            return <ImageBlock key={i} url={String(b.url ?? b.src ?? "")} alt={String(b.alt ?? "")} caption={b.caption ? String(b.caption) : undefined} />;
+            return <ImageBlock url={String(b.url ?? b.src ?? "")} alt={String(b.alt ?? "")} caption={b.caption ? String(b.caption) : undefined} />;
 
           case "quote":
-            return <QuoteBlock key={i} content={String(b.content ?? "")} author={b.author ? String(b.author) : undefined} />;
+            return <QuoteBlock content={String(b.content ?? "")} author={b.author ? String(b.author) : undefined} />;
 
           case "code":
-            return <CodeBlock key={i} language={String(b.language ?? "")} content={String(b.content ?? "")} />;
+            return <CodeBlock language={String(b.language ?? "")} content={String(b.content ?? "")} />;
 
           case "divider":
-            return <DividerBlock key={i} />;
+            return <DividerBlock />;
 
           case "cta":
             return (
               <CtaBlock
-                key={i}
                 heading={String(b.heading ?? "Book a Service")}
                 subtext={b.subtext ? String(b.subtext) : undefined}
                 buttonText={String(b.buttonText ?? "Book Now")}
@@ -517,7 +506,6 @@ export function BlockRenderer({ blocks }: { blocks: unknown[] }) {
           case "faq":
             return (
               <FaqBlock
-                key={i}
                 items={Array.isArray(b.items) ? b.items.map((item: any) => ({
                   question: String(item.question ?? ""),
                   answer: String(item.answer ?? ""),
@@ -528,7 +516,6 @@ export function BlockRenderer({ blocks }: { blocks: unknown[] }) {
           case "steps":
             return (
               <StepsBlock
-                key={i}
                 items={Array.isArray(b.items) ? b.items.map((item: any) => ({
                   title: String(item.title ?? ""),
                   description: String(item.description ?? ""),
@@ -537,12 +524,11 @@ export function BlockRenderer({ blocks }: { blocks: unknown[] }) {
             );
 
           case "link":
-            return <LinkBlock key={i} text={String(b.text ?? "")} href={String(b.href ?? "#")} external={Boolean(b.external)} />;
+            return <LinkBlock text={String(b.text ?? "")} href={String(b.href ?? "#")} external={Boolean(b.external)} />;
 
           case "service_card":
             return (
               <ServiceCardBlock
-                key={i}
                 title={String(b.title ?? "")}
                 description={String(b.description ?? "")}
                 price={b.price ? String(b.price) : undefined}
@@ -553,7 +539,6 @@ export function BlockRenderer({ blocks }: { blocks: unknown[] }) {
           case "pros_cons":
             return (
               <ProsConsBlock
-                key={i}
                 pros={Array.isArray(b.pros) ? b.pros.map(String) : []}
                 cons={Array.isArray(b.cons) ? b.cons.map(String) : []}
               />
@@ -562,7 +547,6 @@ export function BlockRenderer({ blocks }: { blocks: unknown[] }) {
           case "comparison":
             return (
               <ComparisonBlock
-                key={i}
                 headers={Array.isArray(b.headers) ? b.headers.map(String) : []}
                 rows={Array.isArray(b.rows) ? b.rows.map((r: any) => ({
                   label: String(r.label ?? ""),
@@ -578,13 +562,32 @@ export function BlockRenderer({ blocks }: { blocks: unknown[] }) {
             // Unknown block — skip silently in prod, show warning in dev
             if (process.env.NODE_ENV === "development") {
               return (
-                <div key={i} className="mb-3 p-3 bg-yellow-50 border border-yellow-300 rounded-lg text-xs text-yellow-800 font-mono">
+                <div className="mb-3 p-3 bg-yellow-50 border border-yellow-300 rounded-lg text-xs text-yellow-800 font-mono">
                   Unknown block type: <strong>{String(b.type)}</strong>
                 </div>
               );
             }
             return null;
         }
+}
+
+export function BlockRenderer({ blocks }: { blocks: unknown[] }) {
+  if (!Array.isArray(blocks) || blocks.length === 0) {
+    return <p className="text-gray-400 italic text-sm">No content yet.</p>;
+  }
+
+  return (
+    <div className="blog-content">
+      {blocks.map((block, i) => {
+        if (!block || typeof block !== "object") return null;
+        const b = block as Record<string, unknown>;
+        const rendered = renderBlock(b);
+        if (rendered === null) return null;
+        return (
+          <Reveal key={i} delay={Math.min(i, 6) * 0.04}>
+            {rendered}
+          </Reveal>
+        );
       })}
     </div>
   );

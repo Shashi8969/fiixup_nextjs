@@ -38,6 +38,7 @@ import PricingTable                      from "@/components/service/PricingTable
 import BrandsGrid                        from "@/components/service/BrandsGrid";
 import CompleteGuideSection              from "@/components/service/CompleteGuide";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { CspSeoContent } from "@/components/city-service/CspSeoContent";
 import { CityServiceCard } from "@/components/ui/CityServiceCard";
 import { getSmartAreasForCityCategory } from "@/lib/smart-internal-links";
 
@@ -398,6 +399,9 @@ export default async function CityServicePage({
             </div>
           </section>
         ) : null}
+
+        {/* ── SEO CONTENT — from city_service_pages.content_blocks / seo_* ─── */}
+        {dbPage && <CspSeoContent data={dbPage.data} />}
 
         {/* ── BOTTOM CTA ─────────────────────────────────────────────── */}
         <section className="py-16 bg-blue-600 text-white text-center">
