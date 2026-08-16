@@ -103,6 +103,40 @@ export const getSmartRelatedServicesForLocation = unstable_cache(
   { revalidate: 3600, tags: ["seo-pages", "location-services", "services"] }
 );
 
+export const getSmartNearbyAreaHubs = unstable_cache(
+  async (citySlug: string, excludeAreaSlug?: string | null, limit = 6): Promise<SmartAreaLink[]> => {
+    const city = clean(citySlug);
+    const excludeArea = clean(excludeAreaSlug);
+    if (!city) return [];
+
+    let query = supabase
+      .from("areas")
+      .select("slug, name, city_slug, sort_order")
+      .eq("city_slug", city)
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true })
+      .order("name", { ascending: true })
+      .limit(limit + 1);
+
+    if (excludeArea) query = query.neq("slug", excludeArea);
+
+    const { data, error } = await query;
+    if (error || !data) return [];
+
+    return uniqueByHref(
+      data
+        .map((row: any) => ({
+          name: String(row.name ?? row.slug ?? "").trim(),
+          slug: String(row.slug ?? "").trim(),
+          href: `/${row.city_slug}/${row.slug}`,
+        }))
+        .filter((row) => row.name && row.slug)
+    ).slice(0, limit);
+  },
+  ["smart-nearby-area-hubs"],
+  { revalidate: 3600, tags: ["areas"] }
+);
+
 export const getSmartAreasForCityCategory = unstable_cache(
   async (citySlug: string, serviceCategory: string): Promise<SmartAreaLink[]> => {
     const city = clean(citySlug);

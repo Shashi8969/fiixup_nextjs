@@ -254,6 +254,8 @@ export function areaPageSchema(opts: {
   cityLat: number;  cityLng: number;
   areaName: string; areaSlug: string;
   faqs: { q: string; a: string }[];
+  description?: string;
+  image?: string | null;
 }) {
   const graph: object[] = [
     {
@@ -261,7 +263,8 @@ export function areaPageSchema(opts: {
       "@id":        `${SITE_URL}/${opts.citySlug}/${opts.areaSlug}/#business`,
       name:         `Fiixup ${opts.areaName}, ${opts.cityName}`,
       url:          `${SITE_URL}/${opts.citySlug}/${opts.areaSlug}`,
-      image:        OG_IMAGE,
+      image:        opts.image || OG_IMAGE,
+      ...(opts.description && { description: opts.description }),
       telephone:    opts.cityPhone,
       email:        opts.cityEmail,
       openingHours: "Mo-Su 00:00-24:00",

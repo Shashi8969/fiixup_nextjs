@@ -21,6 +21,7 @@ export const AREA_SECTION_IDS = [
   "seo_content",
   "faqs",
   "related_posts",
+  "nearby_areas",
 ] as const;
 
 export type AreaSectionId = typeof AREA_SECTION_IDS[number];

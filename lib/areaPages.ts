@@ -32,6 +32,8 @@ export interface AreaHubPageData {
 
   heroHeading: string;
   heroSubheading: string;
+  heroImageUrl: string | null;
+  heroImageAlt: string | null;
   aboutHeading: string;
   aboutPara1: string;
   aboutPara2: string;
@@ -61,6 +63,7 @@ export interface AreaHubPageData {
 export interface AreaHubSeo {
   meta_title: string;
   meta_description: string;
+  meta_keywords: string | null;
   canonical_url: string;
   og_image_url: string | null;
   is_active: boolean;
@@ -75,7 +78,7 @@ export const getAreaHubPage = cache(async (
 
   const { data, error } = await supabase
     .from('seo_pages')
-    .select('meta_title, meta_description, canonical_url, og_image_url, is_active, is_indexed, page_data')
+    .select('meta_title, meta_description, meta_keywords, canonical_url, og_image_url, is_active, is_indexed, page_data')
     .eq('url_path', urlPath)
     .eq('page_type', 'area_hub')
     .eq('is_active', true)
@@ -89,6 +92,7 @@ export const getAreaHubPage = cache(async (
     seo: {
       meta_title: data.meta_title,
       meta_description: data.meta_description,
+      meta_keywords: data.meta_keywords ?? null,
       canonical_url: data.canonical_url,
       og_image_url: data.og_image_url,
       is_active: data.is_active,
@@ -110,6 +114,8 @@ export const getAreaHubPage = cache(async (
 
       heroHeading: String(pd.heroHeading ?? ''),
       heroSubheading: String(pd.heroSubheading ?? ''),
+      heroImageUrl: (pd.heroImageUrl as string) ?? null,
+      heroImageAlt: (pd.heroImageAlt as string) ?? null,
       aboutHeading: String(pd.aboutHeading ?? ''),
       aboutPara1: String(pd.aboutPara1 ?? ''),
       aboutPara2: String(pd.aboutPara2 ?? ''),

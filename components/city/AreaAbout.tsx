@@ -2,6 +2,7 @@ import { Clock, MapPin, ThumbsUp, Users } from 'lucide-react';
 import type { AreaHubPageData } from '@/lib/areaPages';
 import { CountUp } from '@/components/ui/CountUp';
 import { Reveal } from '@/components/ui/Reveal';
+import { CmsImage } from '@/components/ui/CmsImage';
 
 // Stat fields are free-text (admin-editable, e.g. "2,300+" or "10,000+ Bangalore
 // customers") — only animate with CountUp when the string is a clean number +
@@ -54,7 +55,16 @@ export function AreaAbout({ data }: { data: AreaHubPageData }) {
             )}
           </div>
 
-          <Reveal>
+          <Reveal className="space-y-5">
+            {data.heroImageUrl && (
+              <CmsImage
+                src={data.heroImageUrl}
+                alt={data.heroImageAlt ?? `Fiixup doorstep car and bike repair mechanic in ${data.areaName}, ${data.cityName}`}
+                ratio="about"
+                fit="cover"
+                sizes="(max-width: 1024px) 100vw, 45vw"
+              />
+            )}
             <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
               <div className="grid grid-cols-2 gap-4">
                 <div className="rounded-xl bg-blue-50 p-5 text-left">

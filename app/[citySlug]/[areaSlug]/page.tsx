@@ -25,6 +25,8 @@ import { AreaSeoContent } from '@/components/city/AreaSeoContent'
 import { AreaFAQ } from '@/components/city/AreaFAQ'
 import { AreaTestimonials } from '@/components/city/AreaTestimonials'
 import { AreaRelatedPosts } from '@/components/city/AreaRelatedPosts'
+import { AreaNearbyLinks } from '@/components/city/AreaNearbyLinks'
+import { getSmartNearbyAreaHubs } from '@/lib/smart-internal-links'
 import { AreaContact } from '@/components/city/AreaContact'
 import { AreaStickyCallBar } from '@/components/city/AreaStickyCallBar'
 import { SITE_URL } from '@/lib/constants'
@@ -77,6 +79,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     return metadataFromBasicSeo({
       title: areaHub.seo.meta_title,
       description: areaHub.seo.meta_description,
+      keywords: areaHub.seo.meta_keywords,
       canonical: areaHub.seo.canonical_url,
       path: `/${citySlug}/${areaSlug}`,
       ogImage: areaHub.seo.og_image_url,
@@ -214,9 +217,12 @@ export default async function CityAreaPage({ params }: { params: Params }) {
       areaName:  data.areaName,
       areaSlug:  data.areaSlug,
       faqs:      data.faqs,
+      description: data.aboutPara1,
+      image:     data.heroImageUrl,
     })
 
     const areaHubServices = await getAreaServices(citySlug, areaSlug)
+    const nearbyAreaHubs = await getSmartNearbyAreaHubs(citySlug, areaSlug)
 
     // Reorderable/hideable/heading-overridable sections between Hero and the
     // closing Contact CTA — controlled from the admin's Page Layout tab
@@ -250,6 +256,9 @@ export default async function CityAreaPage({ params }: { params: Params }) {
       seo_content: () => <AreaSeoContent data={data} />,
       faqs: () => <AreaFAQ data={data} heading={sectionHeading('faqs')} />,
       related_posts: () => <AreaRelatedPosts data={data} heading={sectionHeading('related_posts')} />,
+      nearby_areas: () => (
+        <AreaNearbyLinks areaName={data.areaName} cityName={data.cityName} nearbyAreas={nearbyAreaHubs} />
+      ),
     }
 
     return (
