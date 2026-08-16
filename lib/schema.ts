@@ -713,6 +713,120 @@ export function serviceDetailSchema(opts: {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
+// 7b. brandsListingSchema() ─ app/brands/page.tsx
+//
+//  Signals:  WebPage + ItemList + BreadcrumbList
+//  Why:      Same shape as servicesListingSchema — ItemList gives the brand
+//            grid a shot at sitelinks; WebPage ties to org for E-E-A-T.
+// ═════════════════════════════════════════════════════════════════════════════
+export function brandsListingSchema(
+  brands: { name: string; slug: string; vehicleType: "car" | "bike" }[]
+) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type":     "WebPage",
+        "@id":       `${SITE_URL}/brands/#webpage`,
+        url:         `${SITE_URL}/brands`,
+        name:        "Car & Bike Brands We Service — Fiixup",
+        description: "Doorstep repair and service for every major car and bike brand sold in India. Certified mechanics, upfront pricing, 30-day warranty.",
+        isPartOf:    { "@id": SITE_ID },
+        about:       { "@id": ORG_ID },
+        breadcrumb:  { "@id": `${SITE_URL}/brands/#breadcrumb` },
+      },
+      {
+        "@type":         "ItemList",
+        "@id":           `${SITE_URL}/brands/#itemlist`,
+        name:            "Vehicle Brands Serviced by Fiixup",
+        numberOfItems:   brands.length,
+        itemListElement: brands.map((b, i) => ({
+          "@type":  "ListItem",
+          position: i + 1,
+          name:     `${b.name} ${b.vehicleType === "car" ? "Car" : "Bike"} Service`,
+          url:      `${SITE_URL}/brands/${b.slug}`,
+        })),
+      },
+      _breadcrumb([
+        { name: "Home",   url: "/" },
+        { name: "Brands", url: "/brands" },
+      ]),
+    ],
+  };
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// 7c. brandPageSchema() ─ app/brands/[brandSlug]/page.tsx
+//
+//  Signals:  Service + OfferCatalog + BreadcrumbList + FAQPage
+//  Why:      Same shape as serviceCategorySchema — a brand page is "our
+//            service catalog, filtered and framed for one brand," not a
+//            distinct business location, so no separate AutoRepair node.
+//  Rich results unlocked:
+//    ✓ Service rich result with offer list
+//    ✓ FAQ snippets
+//    ✓ Breadcrumbs
+// ═════════════════════════════════════════════════════════════════════════════
+export function brandPageSchema(opts: {
+  brandName:   string;
+  vehicleType: "car" | "bike";
+  slug:        string;
+  description: string;
+  services:    { name: string; slug: string; description: string; minPrice?: number }[];
+  faqs?:       { q: string; a: string }[];
+  image?:      string | null;
+}) {
+  const { brandName, vehicleType, slug, description, services, faqs = [], image } = opts;
+  const baseUrl = `${SITE_URL}/brands/${slug}`;
+  const label   = `${brandName} ${vehicleType === "car" ? "Car" : "Bike"} Repair at Home`;
+
+  const graph: object[] = [
+    {
+      "@type":      "Service",
+      "@id":        `${baseUrl}/#service`,
+      name:         label,
+      description,
+      url:          baseUrl,
+      image:        image || OG_IMAGE,
+      provider:     { "@id": ORG_ID },
+      areaServed:   ["Bangalore","Chennai","Hyderabad","Mumbai"].map((n) => ({ "@type": "City", name: n })),
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name:    `${brandName} Service Options`,
+        itemListElement: services.map((s) => ({
+          "@type":     "Offer",
+          name:        s.name,
+          url:         `${SITE_URL}/services/${s.slug}`,
+          description: s.description,
+          ...(s.minPrice && {
+            priceSpecification: {
+              "@type": "PriceSpecification",
+              minPrice: s.minPrice,
+              priceCurrency: "INR",
+            },
+          }),
+        })),
+      },
+    },
+    _breadcrumb([
+      { name: "Home",   url: "/" },
+      { name: "Brands", url: "/brands" },
+      { name: label,    url: baseUrl },
+    ]),
+  ];
+
+  if (faqs.length > 0) {
+    graph.push({
+      "@type":    "FAQPage",
+      "@id":      `${baseUrl}/#faq`,
+      mainEntity: _faqItems(faqs),
+    });
+  }
+
+  return { "@context": "https://schema.org", "@graph": graph };
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
 // 8. blogListingSchema() ─ app/blog/page.tsx
 //
 //  Signals:  Blog + ItemList + BreadcrumbList

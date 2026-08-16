@@ -100,6 +100,20 @@ export const staticPagesSEO: PageSEO[] = [
       "Car repair, bike service, battery, puncture, towing & more. 24/7 across Bengaluru, Chennai, Hyderabad & Mumbai.",
     canonical: `${SITE_URL}/services`,
   },
+  {
+    id: "brands",
+    label: "Brands Hub",
+    route: "/brands",
+    title: "Car & Bike Brands We Service | Doorstep Repair | Fiixup",
+    description:
+      "Doorstep repair and service for every major car and bike brand sold in India — Maruti Suzuki, Hyundai, Tata, Honda, Royal Enfield, Bajaj & more. Certified mechanics, upfront pricing, 30-day warranty.",
+    keywords:
+      "car brand service center at home, bike brand doorstep repair, maruti suzuki service at home, honda car service, royal enfield doorstep mechanic, all brand car repair India",
+    ogTitle: "Fiixup — Every Major Car & Bike Brand Serviced at Your Doorstep",
+    ogDescription:
+      "Certified mechanics trained on every major brand. Book doorstep service in Bengaluru, Chennai, Hyderabad & Mumbai.",
+    canonical: `${SITE_URL}/brands`,
+  },
 ];
 
 /** Convenience lookup by page id */
