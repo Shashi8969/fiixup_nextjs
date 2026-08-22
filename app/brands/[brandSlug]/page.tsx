@@ -17,6 +17,7 @@ import {
 } from "@/lib/data/brandPages";
 import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
 import { brandPageSchema, jsonLdString } from "@/lib/schema";
+import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 import { TrustStrip } from "@/components/ui/TrustStrip";
 import HowItWorks from "@/components/ui/HowItWorks";
 import WhyChooseDoorstep from "@/components/ui/WhyChooseDoorstep";
@@ -41,20 +42,14 @@ export async function generateMetadata({
   if (!brand) return {};
 
   const canonical = `${SITE_URL}/brands/${brand.slug}`;
-  return {
+  return metadataFromBasicSeo({
     title: brand.metaTitle,
     description: brand.metaDescription,
     keywords: brand.metaKeywords ?? undefined,
-    alternates: { canonical },
-    openGraph: {
-      title: brand.metaTitle,
-      description: brand.metaDescription,
-      url: canonical,
-      type: "website",
-      locale: "en_IN",
-      siteName: "Fiixup",
-    },
-  };
+    canonical,
+    path: `/brands/${brand.slug}`,
+    ogImageAlt: brand.metaTitle,
+  });
 }
 
 export default async function BrandPage({

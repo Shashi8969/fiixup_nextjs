@@ -7,20 +7,19 @@ import { blogListingSchema, jsonLdString } from "@/lib/schema";
 import { getStaticPageSEO } from "@/lib/data/seo";
 import { BlogIndexHero } from "@/components/blog/BlogIndexHero";
 import { BlogIndexGrid } from "@/components/blog/BlogIndexGrid";
+import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 
 const seo = getStaticPageSEO("blog")!;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = metadataFromBasicSeo({
   title: seo.title,
   description: seo.description,
   keywords: seo.keywords,
-  alternates: { canonical: seo.canonical },
-  openGraph: {
-    title: seo.ogTitle ?? seo.title,
-    description: seo.ogDescription ?? seo.description,
-    url: seo.canonical,
-  },
-};
+  canonical: seo.canonical,
+  path: "/blog",
+  ogImageAlt: seo.ogTitle ?? seo.title,
+  type: "website",
+});
 
 export default async function BlogPage() {
   const posts = await getAllPosts();

@@ -881,6 +881,51 @@ export function blogListingSchema(
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
+// 8b. blogTagPageSchema() ─ app/blog/tag/[tag]/page.tsx
+//
+//  Signals:  CollectionPage + ItemList + BreadcrumbList
+//  Why:      Had no structured data at all — every other listing page
+//            (blog index, gallery, brands index) has at least this much.
+// ═════════════════════════════════════════════════════════════════════════════
+export function blogTagPageSchema(opts: {
+  tagName: string;
+  tagSlug: string;
+  posts: { title: string; slug: string }[];
+}) {
+  const pageUrl = `${SITE_URL}/blog/tag/${opts.tagSlug}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type":       "CollectionPage",
+        "@id":         `${pageUrl}/#webpage`,
+        url:           pageUrl,
+        name:          `${opts.tagName} — Fiixup Blog`,
+        description:   `Fiixup blog posts tagged "${opts.tagName}" — car and bike maintenance tips, guides, and doorstep service advice.`,
+        isPartOf:      { "@id": `${SITE_URL}/blog/#blog` },
+      },
+      {
+        "@type":         "ItemList",
+        "@id":           `${pageUrl}/#itemlist`,
+        name:            `Posts tagged ${opts.tagName}`,
+        numberOfItems:   opts.posts.length,
+        itemListElement: opts.posts.map((p, i) => ({
+          "@type":  "ListItem",
+          position: i + 1,
+          name:     p.title,
+          url:      `${SITE_URL}/blog/${p.slug}`,
+        })),
+      },
+      _breadcrumb([
+        { name: "Home",           url: "/" },
+        { name: "Blog",           url: "/blog" },
+        { name: opts.tagName,     url: `/blog/tag/${opts.tagSlug}` },
+      ]),
+    ],
+  };
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
 // 9. blogPostSchema() ─ app/blog/[id]/page.tsx
 //
 //  Signals:  Article + BreadcrumbList

@@ -28,6 +28,7 @@ import { getAllServices, getServiceBySlug, getServicesByCategory } from "@/lib/s
 import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
 import { serviceDetailSchema, serviceCategorySchema, jsonLdString } from "@/lib/schema";
 import { getAllServiceCategories, getServiceCategoryBySlug } from "@/lib/data/serviceCategory";
+import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 
 export const revalidate = 3600;
 
@@ -66,35 +67,26 @@ export async function generateMetadata({
     const description = cat.metaDescription || cat.description;
     const canonical = `${SITE_URL}/services/${cat.slug}`;
 
-    return {
+    return metadataFromBasicSeo({
       title,
       description,
       keywords: cat.keywords || undefined,
-      alternates: { canonical },
-      openGraph: {
-        title,
-        description,
-        url: canonical,
-        type: "website",
-        locale: "en_IN",
-        siteName: "Fiixup",
-      },
-    };
+      canonical,
+      path: `/services/${cat.slug}`,
+      ogImageAlt: title,
+    });
   }
 
   const service = await getServiceBySlug(serviceSlug);
   if (service) {
-    return {
+    return metadataFromBasicSeo({
       title:       service.metaTitle,
       description: service.metaDescription,
       keywords:    service.metaKeywords,
-      alternates:  { canonical: `${SITE_URL}/services/${service.slug}` },
-      openGraph: {
-        title:       service.metaTitle,
-        description: service.metaDescription,
-        url:         `${SITE_URL}/services/${service.slug}`,
-      },
-    };
+      canonical:   `${SITE_URL}/services/${service.slug}`,
+      path:        `/services/${service.slug}`,
+      ogImageAlt:  service.metaTitle,
+    });
   }
 
   return {};

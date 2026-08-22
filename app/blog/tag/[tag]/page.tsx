@@ -12,6 +12,8 @@ import { getPostsByTag, getTagBySlug, getAllTagSlugs } from "@/lib/posts";
 import { PageHero } from "@/components/ui/PageHero";
 import { BlogCard } from "@/components/ui/BlogCard";
 import { SITE_URL } from "@/lib/constants";
+import { blogTagPageSchema, jsonLdString } from "@/lib/schema";
+import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 
 type Params = Promise<{ tag: string }>;
 
@@ -28,12 +30,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const title = `${tagRow.name} — Fiixup Blog`;
   const description = `Fiixup blog posts tagged "${tagRow.name}" — car and bike maintenance tips, guides, and doorstep service advice.`;
 
-  return {
+  return metadataFromBasicSeo({
     title,
     description,
-    alternates: { canonical: `${SITE_URL}/blog/tag/${tagRow.slug}` },
-    openGraph: { title, description, url: `${SITE_URL}/blog/tag/${tagRow.slug}` },
-  };
+    canonical: `${SITE_URL}/blog/tag/${tagRow.slug}`,
+    path: `/blog/tag/${tagRow.slug}`,
+    ogImageAlt: title,
+  });
 }
 
 export default async function BlogTagPage({ params }: { params: Params }) {
@@ -44,8 +47,18 @@ export default async function BlogTagPage({ params }: { params: Params }) {
   const posts = await getPostsByTag(tag);
   if (posts.length === 0) return notFound();
 
+  const schema = blogTagPageSchema({
+    tagName: tagRow.name,
+    tagSlug: tagRow.slug,
+    posts: posts.map((p) => ({ title: p.title, slug: p.slug })),
+  });
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdString(schema) }}
+      />
       <PageHero
         heading={`Tagged: ${tagRow.name}`}
         subtext={`${posts.length} post${posts.length === 1 ? "" : "s"} on ${tagRow.name}`}

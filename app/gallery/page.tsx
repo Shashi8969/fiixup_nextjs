@@ -4,22 +4,20 @@ import { galleryPageSchema, jsonLdString } from "@/lib/schema";
 import { PageHero } from "@/components/ui/PageHero";
 import { GalleryGrid } from "@/components/gallery/GalleryGrid";
 import { getGalleryImages } from "@/lib/gallery";
+import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 
 export const revalidate = 3600; // refreshes every 1 hour
 
 const seo = getStaticPageSEO("gallery")!;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = metadataFromBasicSeo({
   title: seo.title,
   description: seo.description,
   keywords: seo.keywords,
-  alternates: { canonical: seo.canonical },
-  openGraph: {
-    title: seo.ogTitle ?? seo.title,
-    description: seo.ogDescription ?? seo.description,
-    url: seo.canonical,
-  },
-};
+  canonical: seo.canonical,
+  path: "/gallery",
+  ogImageAlt: seo.ogTitle ?? seo.title,
+});
 
 export default async function GalleryPage() {
   const images = await getGalleryImages();

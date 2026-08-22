@@ -7,22 +7,20 @@ import { getFaqPageCategories } from "@/lib/faqs";
 import { getStaticPageSEO } from "@/lib/data/seo";
 import { PageHero } from "@/components/ui/PageHero";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
+import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 
 const seo = getStaticPageSEO("faq")!;
 export const revalidate = 3600; // refreshes every 1 hour
 
 
-export const metadata: Metadata = {
+export const metadata: Metadata = metadataFromBasicSeo({
   title: seo.title,
   description: seo.description,
   keywords: seo.keywords,
-  alternates: { canonical: seo.canonical },
-  openGraph: {
-    title: seo.ogTitle ?? seo.title,
-    description: seo.ogDescription ?? seo.description,
-    url: seo.canonical,
-  },
-};
+  canonical: seo.canonical,
+  path: "/faq",
+  ogImageAlt: seo.ogTitle ?? seo.title,
+});
 
 export default async function FAQPage() {
   const faqCategories = await getFaqPageCategories();

@@ -12,20 +12,18 @@ import WhyChooseDoorstep from "@/components/ui/WhyChooseDoorstep";
 import { getStaticPageSEO } from "@/lib/data/seo";
 import { brandsListingSchema, jsonLdString } from "@/lib/schema";
 import { MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
+import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 
 const seo = getStaticPageSEO("brands")!;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = metadataFromBasicSeo({
   title: seo.title,
   description: seo.description,
   keywords: seo.keywords,
-  alternates: { canonical: seo.canonical },
-  openGraph: {
-    title: seo.ogTitle ?? seo.title,
-    description: seo.ogDescription ?? seo.description,
-    url: seo.canonical,
-  },
-};
+  canonical: seo.canonical,
+  path: "/brands",
+  ogImageAlt: seo.ogTitle ?? seo.title,
+});
 
 function BrandTile({ slug, brandName, logoUrl, logoAlt }: { slug: string; brandName: string; logoUrl: string | null; logoAlt: string | null }) {
   return (
