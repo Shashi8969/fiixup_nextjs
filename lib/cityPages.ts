@@ -71,6 +71,7 @@ export interface CityHubPageData {
   testimonials:      {
     name: string; area: string; vehicle: string;
     rating: number; body: string; date_label: string;
+    verified?: boolean;
   }[];
   faqs:              { q: string; a: string }[];
 

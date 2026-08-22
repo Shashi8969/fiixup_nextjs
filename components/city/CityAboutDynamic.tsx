@@ -17,13 +17,14 @@ export function CityAboutDynamic({ data }: { data: CityHubPageData }) {
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-16 items-center mb-16">
 
-          {/* Text */}
-          <div className="order-2 lg:order-1">
+          {/* Text — no order utility so mobile reads the heading before
+              the image, matching the hero's mobile-first ordering. */}
+          <div>
             <span className="inline-block text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">
               About Fiixup in {data.cityName}
             </span>
             <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6 leading-tight">
-              {data.aboutHeading ?? `Why {data.cityName} Trusts Fiixup`}
+              {data.aboutHeading ?? `Why ${data.cityName} Trusts Fiixup`}
             </h2>
             {data.aboutPara1 && (
               <p className="text-lg text-gray-600 mb-5 leading-relaxed">{data.aboutPara1}</p>
@@ -49,8 +50,8 @@ export function CityAboutDynamic({ data }: { data: CityHubPageData }) {
           </div>
 
           {/* Image */}
-          <div className="order-1 lg:order-2">
-            <div className="rounded-2xl overflow-hidden shadow-xl h-[400px] relative">
+          <div>
+            <div className="rounded-2xl overflow-hidden shadow-xl h-[260px] sm:h-[320px] md:h-[400px] relative">
               <Image
                 src={data.aboutImageUrl ?? '/assets/carservice.webp'}
                 alt={data.aboutImageAlt ?? `Auto repair service in ${data.cityName}`}

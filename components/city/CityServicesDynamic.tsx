@@ -50,27 +50,33 @@ export async function CityServicesDynamic({ data }: { data: CityHubPageData }) {
           </p>
         </div>
 
-        {/* Category cards — each links to /{city}/services/{cat} */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        {/* Category cards — each links to /{city}/services/{cat}.
+            Horizontal scroll-snap strip instead of a grid: with 6-7
+            categories a grid runs to 2-3 rows and makes the page feel
+            long before the visitor even reaches services/areas/reviews.
+            A swipeable row keeps this section compact on every screen
+            size while staying fully tappable (unlike an auto-scrolling
+            marquee, which fights with clicks). */}
+        <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:thin]">
           {categories.map((cat) => {
             const theme = THEME[cat.color] ?? THEME.blue;
             return (
               <Link
                 key={cat.slug}
                 href={`/${data.citySlug}/services/${cat.slug}`}
-                className={`group p-7 rounded-2xl bg-white border border-gray-100 flex flex-col transition-all duration-200 hover:shadow-xl hover:-translate-y-1 ${theme.border}`}
+                className={`group snap-start shrink-0 w-[240px] sm:w-[260px] p-6 rounded-2xl bg-white border border-gray-100 flex flex-col transition-all duration-200 hover:shadow-xl hover:-translate-y-1 ${theme.border}`}
               >
                 {/* Icon */}
-                <div className={`mb-5 inline-flex w-fit p-3 rounded-xl ${theme.iconBg} group-hover:scale-110 transition-transform duration-200`}>
-                  <cat.icon className={`w-8 h-8 ${theme.iconText}`} aria-hidden="true" />
+                <div className={`mb-4 inline-flex w-fit p-3 rounded-xl ${theme.iconBg} group-hover:scale-110 transition-transform duration-200`}>
+                  <cat.icon className={`w-7 h-7 ${theme.iconText}`} aria-hidden="true" />
                 </div>
 
                 {/* SEO H3 — city-specific */}
-                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                <h3 className="text-base font-bold text-gray-900 mb-2">
                   {cat.title} in {data.cityName}
                 </h3>
 
-                <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-5">
+                <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-4 line-clamp-3">
                   {cat.description}
                 </p>
 

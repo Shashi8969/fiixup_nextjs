@@ -18,6 +18,7 @@ import { CityAboutDynamic }       from '@/components/city/CityAboutDynamic';
 import { CityTestimonialsDynamic} from '@/components/city/CityTestimonialsDynamic';
 import { CityFAQDynamic }         from '@/components/city/CityFAQDynamic';
 import { CityContactDynamic }     from '@/components/city/CityContactDynamic';
+import { CityMapDynamic }         from '@/components/city/CityMapDynamic';
 import { CityBlogPosts }          from '@/components/city/CityBlogPosts';
 
 // ── Global service page imports ───────────────────────────────────────────────
@@ -167,6 +168,7 @@ export default async function CityPage({
           <CityBlogPosts slugs={data.relatedPostSlugs} cityName={data.cityName} />
         )}
         <CityFAQDynamic    data={data} />
+        <CityMapDynamic    data={data} />
         <CityContactDynamic data={data} />
       </>
     );

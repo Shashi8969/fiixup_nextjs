@@ -2,15 +2,16 @@
 // FILE: components/city/CityTestimonialsDynamic.tsx
 // =====================================================================
 
-import { Star } from 'lucide-react';
 import type { CityHubPageData } from '@/lib/cityPages';
+import { Marquee } from '@/components/ui/Marquee';
+import { TestimonialCard } from '@/components/ui/TestimonialCard';
 
 export function CityTestimonialsDynamic({ data }: { data: CityHubPageData }) {
   const testimonials = data.testimonials ?? [];
   if (testimonials.length === 0) return null;
 
   return (
-    <section id="testimonials" className="py-16 bg-gray-50">
+    <section id="testimonials" className="py-16 bg-gray-50 overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <span className="inline-block text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">
@@ -23,47 +24,27 @@ export function CityTestimonialsDynamic({ data }: { data: CityHubPageData }) {
             <p className="text-gray-500 max-w-xl mx-auto">{data.testimonialsSubtext}</p>
           )}
         </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((t, i) => (
-            <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex flex-col">
-              {/* Stars */}
-              <div className="flex gap-1 mb-4" aria-label={`${t.rating} out of 5 stars`}>
-                {Array.from({ length: 5 }, (_, si) => (
-                  <Star
-                    key={si}
-                    className={`w-4 h-4 ${si < t.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200 fill-gray-200'}`}
-                    aria-hidden="true"
-                  />
-                ))}
-              </div>
-
-              {/* Body */}
-              <p className="text-gray-700 leading-relaxed flex-1 mb-5 text-sm">
-                &ldquo;{t.body}&rdquo;
-              </p>
-
-              {/* Reviewer info */}
-              <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                  <span className="text-blue-700 font-bold text-sm" aria-hidden="true">
-                    {t.name.charAt(0).toUpperCase()}
-                  </span>
-                </div>
-                <div className="min-w-0">
-                  <p className="font-bold text-gray-900 text-sm truncate">{t.name}</p>
-                  <p className="text-xs text-gray-500 truncate">
-                    {[t.area, t.vehicle].filter(Boolean).join(' · ') || data.cityName}
-                  </p>
-                </div>
-                {t.date_label && (
-                  <span className="ml-auto text-xs text-gray-400 flex-shrink-0">{t.date_label}</span>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
+
+      {/* Same auto-scrolling marquee pattern as the homepage — a row this
+          long (6-10 reviews per city) reads better as a continuous strip
+          you can watch or hover-pause than as a static grid stacking many
+          rows deep down the page. */}
+      <Marquee durationSeconds={Math.max(30, testimonials.length * 7)}>
+        {testimonials.map((t, i) => (
+          <div key={`${t.name}-${i}`} className="w-[320px] shrink-0 sm:w-[360px]">
+            <TestimonialCard
+              name={t.name}
+              rating={t.rating}
+              text={t.body}
+              date={t.date_label}
+              vehicle={t.vehicle}
+              area={t.area || data.cityName}
+              sourceLabel={t.verified ? 'Verified Customer Review' : undefined}
+            />
+          </div>
+        ))}
+      </Marquee>
     </section>
   );
 }

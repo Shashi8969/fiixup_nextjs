@@ -19,7 +19,11 @@ export function TestimonialCard({ name, rating, text, date, vehicle, area, sourc
           <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
         ))}
       </div>
-      <p className="mb-6 flex-1 text-[15px] leading-relaxed text-gray-700">&ldquo;{text}&rdquo;</p>
+      {/* line-clamp keeps card heights even in a horizontal row and stops a
+          400-character review from dwarfing its neighbours — full text
+          stays in the DOM (not display:none), so nothing is lost for SEO
+          or for anyone who wants to read the whole thing. */}
+      <p className="mb-6 flex-1 text-[15px] leading-relaxed text-gray-700 line-clamp-6">&ldquo;{text}&rdquo;</p>
       <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-blue-400 text-sm font-bold text-white">
           {initials(name)}

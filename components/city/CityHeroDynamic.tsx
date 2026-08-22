@@ -83,8 +83,13 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
       <div className="container mx-auto px-4 relative">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
 
-          {/* ── LEFT COLUMN ── */}
-          <div className="space-y-6 order-2 lg:order-1">
+          {/* ── LEFT COLUMN ──
+              No order utility here — natural source order already puts
+              the headline first, which is what we want on mobile (a
+              visitor should see the value proposition before a stock
+              photo + lead form). Desktop's lg:grid-cols-2 places this in
+              the left column automatically. */}
+          <div className="space-y-6">
             {/* City badge */}
             <div className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-sm">
               <MapPin className="w-4 h-4 flex-shrink-0" />
@@ -145,8 +150,10 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
           </div>
 
           {/* ── RIGHT COLUMN — Image + Callback Form ── */}
-          <div className="relative order-1 lg:order-2">
-            <div className="rounded-2xl overflow-hidden shadow-2xl h-[480px] md:h-[540px] w-full relative">
+          <div className="relative">
+            {/* Shorter on narrow phones — a 480px-tall image before any
+                content pushed the H1 below the fold on mobile. */}
+            <div className="rounded-2xl overflow-hidden shadow-2xl h-[300px] sm:h-[380px] md:h-[480px] lg:h-[540px] w-full relative">
               <Image
                 src={data.heroImageUrl ?? '/assets/Car_mechanic_700x1049.webp'}
                 alt={data.heroImageAlt ?? `Professional mechanic performing doorstep car repair in ${data.cityName}`}
@@ -160,8 +167,11 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" aria-hidden="true" />
             </div>
 
-            {/* Floating callback card */}
-            <div className="absolute bottom-6 left-4 right-4 md:left-auto md:right-6 md:w-[300px]">
+            {/* Callback card — sits in normal flow below the (now shorter)
+                image on mobile so it never has to squeeze into a tight
+                overlay; becomes a floating overlay from sm: up where
+                there's enough image height to host it cleanly. */}
+            <div className="mt-4 sm:mt-0 sm:absolute sm:bottom-6 sm:left-4 sm:right-4 md:left-auto md:right-6 md:w-[300px]">
               <div className="bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-2xl border border-white/60">
                 {!success ? (
                   <>
@@ -221,11 +231,6 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
               </div>
             </div>
 
-            {/* Experience badge */}
-            <div className="absolute -top-4 -left-4 bg-yellow-400 text-gray-900 p-4 rounded-xl shadow-lg hidden md:block">
-              <p className="text-2xl font-black">20+</p>
-              <p className="text-xs font-bold leading-tight">Years<br/>Experience</p>
-            </div>
           </div>
         </div>
 
