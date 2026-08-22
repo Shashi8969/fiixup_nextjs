@@ -38,6 +38,7 @@ const VALID_TAGS = [
   "brand-logos",
   "gallery",
   "team-members",
+  "cta-settings",
 ] as const;
 
 type ValidTag = (typeof VALID_TAGS)[number];
@@ -125,6 +126,9 @@ function revalidateRelatedPaths(tag: ValidTag) {
       break;
     case "team-members":
       revalidatePath("/about");
+      break;
+    case "cta-settings":
+      revalidatePath("/", "layout");
       break;
     default:
       break;

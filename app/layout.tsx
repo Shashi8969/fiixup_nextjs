@@ -10,6 +10,7 @@ import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE, DEFAULT_KEYWORDS } from "@/lib/c
 import { QuickServiceModal } from "@/components/QuickServiceModal";
 import { getHeaderNavigationLinks } from "@/lib/navigation";
 import { getPublicSiteSettings } from "@/lib/site-settings";
+import { getCtaVisibilitySettings } from "@/lib/cta-settings";
 import { AnalyticsManager } from "@/components/analytics/AnalyticsManager";
 import { CookieConsent } from "@/components/analytics/CookieConsent";
 import { Suspense } from "react";
@@ -79,9 +80,10 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [headerLinks, siteSettings] = await Promise.all([
+  const [headerLinks, siteSettings, ctaSettings] = await Promise.all([
     getHeaderNavigationLinks(),
     getPublicSiteSettings(),
+    getCtaVisibilitySettings(),
   ]);
 
   return (
@@ -109,6 +111,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             mainPhone={siteSettings.mainPhone}
             whatsappNumber={siteSettings.whatsappNumber}
             whatsappMessage={siteSettings.floatingWhatsAppMessage}
+            ctaSettings={ctaSettings}
           />
           <QuickServiceModal
             phonePlaceholder={siteSettings.mainPhoneDisplay}
