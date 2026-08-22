@@ -5,6 +5,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { X, Phone } from "lucide-react";
 import { MAIN_PHONE } from "@/lib/constants";
 import { submitLead } from "@/lib/send-lead";
+import { QUICK_SERVICE_MODAL_STATE_EVENT } from "@/lib/analytics";
 
 const MODAL_SESSION_KEY = "hasSeenQuickServiceModal";
 const MODAL_DELAY_MS = 2000;
@@ -29,6 +30,14 @@ export function QuickServiceModal({
     }, MODAL_DELAY_MS);
     return () => clearTimeout(timer);
   }, []);
+
+  // Let other fixed-position overlays (the cookie banner) know when this
+  // modal is up, so they can hold off instead of rendering on top of it.
+  useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent(QUICK_SERVICE_MODAL_STATE_EVENT, { detail: { open: isOpen } })
+    );
+  }, [isOpen]);
 
   const dismiss = () => {
     sessionStorage.setItem(MODAL_SESSION_KEY, "true");

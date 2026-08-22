@@ -1,6 +1,10 @@
 export const GA_MEASUREMENT_ID = "G-XSNGMPP0KH";export const CONSENT_STORAGE_KEY = "fiixup_cookie_consent_v1";
 export const CONSENT_UPDATED_EVENT = "fiixup-consent-updated";
 export const OPEN_CONSENT_EVENT = "fiixup-open-cookie-settings";
+// Fired by QuickServiceModal whenever it opens/closes so other fixed-position
+// overlays (the cookie banner) can avoid rendering on top of it — both sit at
+// the same z-index and occupy the same bottom-of-screen region on mobile.
+export const QUICK_SERVICE_MODAL_STATE_EVENT = "fiixup-quick-service-modal-state";
 
 export type ConsentPreferences = {
   necessary: true;

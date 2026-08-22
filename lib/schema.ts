@@ -904,9 +904,13 @@ export function blogPostSchema(opts: {
   author?:     string;
   authorRole?: string;
   category?:   string;
+  faqs?:       { question: string; answer: string }[];
 }) {
-  const { title, slug, description, coverImage, publishedAt, updatedAt, tags, author, authorRole, category } = opts;
+  const { title, slug, description, coverImage, publishedAt, updatedAt, tags, author, authorRole, category, faqs } = opts;
   const pageUrl = `${SITE_URL}/blog/${slug}`;
+  const faqItems = faqs?.length
+    ? _faqItems(faqs.map((f) => ({ q: f.question, a: f.answer })))
+    : [];
 
   return {
     "@context": "https://schema.org",
@@ -943,6 +947,13 @@ export function blogPostSchema(opts: {
         { name: "Blog", url: "/blog" },
         { name: title,  url: `/blog/${slug}` },
       ]),
+      ...(faqItems.length > 0
+        ? [{
+            "@type":    "FAQPage",
+            "@id":      `${pageUrl}/#faq`,
+            mainEntity: faqItems,
+          }]
+        : []),
     ],
   };
 }

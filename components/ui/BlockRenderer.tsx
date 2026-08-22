@@ -273,30 +273,44 @@ function CtaBlock({
 // ─── FAQ ──────────────────────────────────────────────────────────────────────
 
 function FaqBlock({ items }: { items: { question: string; answer: string }[] }) {
-  const [open, setOpen] = useState<number | null>(null);
+  // Open the first question by default and keep every answer mounted in the
+  // DOM at all times (collapsed via CSS grid-rows, not conditional render) —
+  // search crawlers only see what's actually in the markup, not what a click
+  // would reveal, so an answer that only mounts on open reads as thin/missing
+  // FAQ content even though a user would eventually see it.
+  const [open, setOpen] = useState<number | null>(0);
   return (
     <div className="mb-6">
       <h3 className="text-lg font-bold text-gray-900 mb-4">Frequently Asked Questions</h3>
       <div className="space-y-2">
-        {items.map((item, i) => (
-          <div className="border border-gray-200 rounded-xl overflow-hidden">
-            <button
-              className="w-full text-left px-5 py-4 flex justify-between items-center gap-3 hover:bg-gray-50 transition-colors"
-              onClick={() => setOpen(open === i ? null : i)}
-              aria-expanded={open === i}
-            >
-              <span className="font-semibold text-gray-800 text-sm leading-snug">{item.question}</span>
-              <ChevronDown
-                className={`w-4 h-4 text-red-500 shrink-0 transition-transform duration-200 ${open === i ? "rotate-180" : ""}`}
-              />
-            </button>
-            {open === i && (
-              <div className="px-5 pb-4 pt-3 text-gray-600 text-sm leading-relaxed border-t border-gray-100"
-                dangerouslySetInnerHTML={{ __html: cleanHtml(item.answer) }}
-              />
-            )}
-          </div>
-        ))}
+        {items.map((item, i) => {
+          const isOpen = open === i;
+          return (
+            <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
+              <button
+                className="w-full text-left px-5 py-4 flex justify-between items-center gap-3 hover:bg-gray-50 transition-colors"
+                onClick={() => setOpen(isOpen ? null : i)}
+                aria-expanded={isOpen}
+              >
+                <span className="font-semibold text-gray-800 text-sm leading-snug">{item.question}</span>
+                <ChevronDown
+                  className={`w-4 h-4 text-red-500 shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+              <div
+                className={`grid transition-all duration-200 ease-in-out ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="overflow-hidden">
+                  <div
+                    className="px-5 pb-4 pt-3 text-gray-600 text-sm leading-relaxed border-t border-gray-100"
+                    dangerouslySetInnerHTML={{ __html: cleanHtml(item.answer) }}
+                  />
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

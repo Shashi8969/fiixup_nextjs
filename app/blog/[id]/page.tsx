@@ -65,6 +65,18 @@ export default async function BlogPostPage({
     .filter((p) => p.slug !== id && p.category === post.category)
     .slice(0, 3);
 
+  // FAQ blocks in content are the source of truth for the page's visible FAQ
+  // copy — pull them into the schema too so structured data matches what's
+  // actually rendered (a FAQPage with no matching on-page content gets ignored
+  // or penalized by Google).
+  const faqs = blocks
+    .filter((b): b is { type: "faq"; items: { question: string; answer: string }[] } =>
+      !!b && typeof b === "object" && (b as any).type === "faq" && Array.isArray((b as any).items))
+    .flatMap((b) => b.items.map((item) => ({
+      question: String(item.question ?? ""),
+      answer:   String(item.answer ?? ""),
+    })));
+
   const postSchema = blogPostSchema({
     title:       post.title,
     slug:        post.slug,
@@ -76,6 +88,7 @@ export default async function BlogPostPage({
     author:      post.author,
     authorRole:  post.authorRole,
     category:    post.category,
+    faqs,
   });
 
   return (
@@ -104,7 +117,7 @@ export default async function BlogPostPage({
             <div className="mb-6">
   <CmsImage
     src={post.image}
-    alt={post.imageAlt ?? post.title}
+    alt={post.imageAlt || post.title}
     title={post.title}
     ratio="blogHero"
     fit="contain"

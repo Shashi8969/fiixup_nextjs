@@ -7,6 +7,7 @@ import {
   CONSENT_STORAGE_KEY,
   CONSENT_UPDATED_EVENT,
   OPEN_CONSENT_EVENT,
+  QUICK_SERVICE_MODAL_STATE_EVENT,
   type ConsentPreferences,
   readConsentPreferences,
 } from "@/lib/analytics";
@@ -37,6 +38,7 @@ function savePreferences(analytics: boolean, advertising: boolean) {
 
 export function CookieConsent() {
   const [visible, setVisible] = useState(false);
+  const [quickServiceModalOpen, setQuickServiceModalOpen] = useState(false);
   const [customizing, setCustomizing] = useState(false);
   const [analytics, setAnalytics] = useState(
     () => readConsentPreferences()?.analytics ?? true,
@@ -51,6 +53,16 @@ export function CookieConsent() {
 
     const timer = window.setTimeout(() => setVisible(true), BANNER_DELAY_MS);
     return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const onQuickServiceModalState = (event: Event) => {
+      setQuickServiceModalOpen(Boolean((event as CustomEvent).detail?.open));
+    };
+    window.addEventListener(QUICK_SERVICE_MODAL_STATE_EVENT, onQuickServiceModalState);
+    return () => {
+      window.removeEventListener(QUICK_SERVICE_MODAL_STATE_EVENT, onQuickServiceModalState);
+    };
   }, []);
 
   useEffect(() => {
@@ -76,7 +88,7 @@ export function CookieConsent() {
     setCustomizing(false);
   };
 
-  if (!visible) return null;
+  if (!visible || quickServiceModalOpen) return null;
 
   return (
     <div

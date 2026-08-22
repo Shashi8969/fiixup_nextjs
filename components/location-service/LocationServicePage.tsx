@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import type { LocationServiceData } from "@/lib/locationServices";
 import type { CityData } from "@/lib/models/city.model";
-import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
 import { LocationServiceSeoContent } from "./LocationServiceSeoContent";
 import { filterValidItemsByPath, getPublicPathList } from "@/lib/public-links";
@@ -357,7 +356,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                 className={`flex items-center gap-2 border-2 ${borderClr} ${accentText} font-semibold px-5 py-2 rounded-full text-sm hover:bg-blue-50 transition-colors`}
               >
                 <Navigation className="w-4 h-4" />
-                {withLocation(data.serviceName, area.name)}
+                {area.name}
               </Link>
             ))}
             {!data.isCityLevel && (
@@ -486,14 +485,6 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                   className="bg-white border-2 border-gray-200 text-gray-800 px-6 py-3 rounded-lg font-bold hover:border-blue-400 transition-colors flex items-center gap-2"
                 >
                   <Phone className="w-4 h-4" /> {city.phone}
-                </a>
-                <a
-                  href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hi, I need ${data.serviceName} in ${data.displayLocation}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-lg font-bold transition-colors"
-                >
-                  💬 WhatsApp
                 </a>
               </div>
             </div>
