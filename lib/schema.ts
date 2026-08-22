@@ -978,28 +978,25 @@ export function faqPageSchema(faqs: { q: string; a: string }[]) {
 // ═════════════════════════════════════════════════════════════════════════════
 // 11. aboutPageSchema() ─ app/about/page.tsx
 //
-//  Signals:  AboutPage + Organization + BreadcrumbList
+//  Signals:  AboutPage + BreadcrumbList
 //  Why:      AboutPage = E-E-A-T signal for Google's quality raters.
-//            Full Organization block with knowsAbout = expertise signal.
+//            about/mainEntity are bare @id references to the single
+//            Organization node siteOrganizationSchema() already renders on
+//            every page via the root layout — this function used to also
+//            emit a second, differently-shaped "Organization" node with that
+//            same @id (missing contactPoint/hasOfferCatalog/image, stale
+//            sameAs list), which gives Google two conflicting definitions of
+//            one entity on the same page. Same pitfall called out in
+//            blogPostSchema() above; fixed the same way here.
 //  Rich results unlocked:
 //    ✓ Knowledge Panel additions
 //    ✓ E-E-A-T trust signal
 //    ✓ Breadcrumbs
 // ═════════════════════════════════════════════════════════════════════════════
-export function aboutPageSchema(opts?: {
-  phone?: string;
-  email?: string;
-  address?: {
-    street?: string;
-    locality?: string;
-    region?: string;
-    postalCode?: string;
-    country?: string;
-  };
-}) {
-  const phone = opts?.phone || MAIN_PHONE;
-  const email = opts?.email || MAIN_EMAIL;
-  const address = opts?.address;
+export function aboutPageSchema(opts?: { faqs?: { question: string; answer: string }[] }) {
+  const faqItems = opts?.faqs?.length
+    ? _faqItems(opts.faqs.map((f) => ({ q: f.question, a: f.answer })))
+    : [];
 
   return {
     "@context": "https://schema.org",
@@ -1014,41 +1011,17 @@ export function aboutPageSchema(opts?: {
         about:        { "@id": ORG_ID },
         mainEntity:   { "@id": ORG_ID },
       },
-      {
-        "@type":       "Organization",
-        "@id":         ORG_ID,
-        name:          "Fiixup",
-        url:           SITE_URL,
-        logo:          { "@type": "ImageObject", url: LOGO, width: 200, height: 60 },
-        foundingDate:  "2020",
-        description:   "India's leading 24/7 doorstep car and bike repair service in Bangalore, Chennai, Hyderabad and Mumbai.",
-        telephone:     phone,
-        email:         email,
-        ...(address?.street && {
-          address: {
-            "@type":         "PostalAddress",
-            streetAddress:   address.street,
-            addressLocality: address.locality,
-            addressRegion:   address.region,
-            postalCode:      address.postalCode,
-            addressCountry:  address.country || "IN",
-          },
-        }),
-        areaServed:    { "@type": "Country", name: "India" },
-        numberOfEmployees: { "@type": "QuantitativeValue", minValue: 50, maxValue: 500 },
-        knowsAbout:    [
-          "Car Repair","Bike Repair","Auto Maintenance","Roadside Assistance",
-          "Tyre Service","Battery Service","Car Towing","EV Service",
-        ],
-        sameAs: [
-          "https://www.facebook.com/fiixup1/",
-          "https://www.instagram.com/fiixup_in/",
-        ],
-      },
       _breadcrumb([
         { name: "Home",  url: "/" },
         { name: "About", url: "/about" },
       ]),
+      ...(faqItems.length > 0
+        ? [{
+            "@type":    "FAQPage",
+            "@id":      `${SITE_URL}/about/#faq`,
+            mainEntity: faqItems,
+          }]
+        : []),
     ],
   };
 }

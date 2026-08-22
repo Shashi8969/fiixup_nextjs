@@ -111,8 +111,11 @@ export async function Footer({ siteSettings }: FooterProps = {}) {
       </div>
 
       {/* Bottom Bar */}
+      {/* Extra bottom padding (beyond the plain py-5) reserves clearance for
+          the fixed WhatsApp/Call buttons (bottom-6, 48px tall) so they don't
+          sit on top of this last row when the page is scrolled to the end. */}
       <div className="border-t border-gray-800">
-        <div className="container mx-auto px-4 py-5 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-gray-400">
+        <div className="container mx-auto px-4 pt-5 pb-24 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-gray-400">
           <p>&copy; {year} Fiixup. All rights reserved. | Doorstep Auto Repair Across India</p>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <p>{serviceAreaText}</p>

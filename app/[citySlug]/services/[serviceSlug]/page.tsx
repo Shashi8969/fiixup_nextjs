@@ -96,6 +96,7 @@ export async function generateMetadata({
   if (!city) return {};
 
   if (cat) {
+    const geo = { region: city.state, placename: city.name };
     const dbPage = await getCityServiceCategoryPage(citySlug, serviceSlug);
     if (dbPage) {
       return metadataFromBasicSeo({
@@ -106,6 +107,7 @@ export async function generateMetadata({
         path: `/${citySlug}/services/${serviceSlug}`,
         ogImage: dbPage.seo.og_image_url,
         ogImageAlt: dbPage.seo.meta_title,
+        geo,
       });
     }
 
@@ -119,6 +121,7 @@ export async function generateMetadata({
       canonical,
       path: `/${city.slug}/services/${cat.slug}`,
       ogImageAlt: title,
+      geo,
     });
   }
 

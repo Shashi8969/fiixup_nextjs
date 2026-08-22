@@ -1,4 +1,8 @@
-import { Award, Users, Clock, ThumbsUp } from "lucide-react";
+import {
+  Award, Users, Clock, ThumbsUp,
+  MapPin, Siren, Wrench, Zap, Home, CalendarCheck,
+  Rocket, Building2, ShieldCheck, Sparkles,
+} from "lucide-react";
 
 const mvvItems = [
   {
@@ -22,33 +26,99 @@ const mvvItems = [
 
 const differentiators = [
   {
+    Icon: MapPin,
     title: "Doorstep Mechanics Near Your Location",
     text: "Instead of asking customers to visit a crowded garage, nearby mechanics travel directly to homes, offices, apartment parking areas, and roadside breakdown locations."
   },
 
   {
+    Icon: Siren,
     title: "Support for Emergency Breakdowns",
     text: "Available for non-start vehicles, dead batteries, punctures, overheating, chain issues, brake problems, and other urgent roadside repair situations."
   },
 
   {
+    Icon: Wrench,
     title: "Car & Bike Repair Services",
     text: "Support available for motorcycles, scooters, hatchbacks, sedans, SUVs, and commercial vehicles across multiple service categories."
   },
 
   {
+    Icon: Zap,
     title: "Fast Response in Major City Areas",
     text: "Doorstep mechanic services available across Bengaluru, Chennai, Hyderabad, Mumbai, and nearby local areas with quick booking support."
   },
 
   {
+    Icon: Home,
     title: "Repair & Servicing at Home or Office",
     text: "Customers can book mechanics for regular servicing, inspections, oil changes, battery replacement, and repair work directly at their location."
   },
 
   {
+    Icon: CalendarCheck,
     title: "Easy Online Booking Process",
     text: "Book a mechanic online or by phone without complicated forms, unnecessary delays, or long waiting times at local garages."
+  },
+];
+
+export const timeline = [
+  {
+    year: "2020",
+    Icon: Rocket,
+    heading: "Founded in Bengaluru",
+    text: "Fiixup started with a small team of mechanics and one idea: bring professional vehicle repair to the customer's doorstep instead of the other way around.",
+  },
+  {
+    year: "2021",
+    Icon: ShieldCheck,
+    heading: "Certified technician network built out",
+    text: "Crossed our first major service milestones and formalized technician certification, upfront pricing, and a warranty on every repair.",
+  },
+  {
+    year: "2022",
+    Icon: Building2,
+    heading: "Expanded to Chennai and Hyderabad",
+    text: "Grew from a single-city operation into a multi-city doorstep repair network, adding 24/7 emergency roadside assistance along the way.",
+  },
+  {
+    year: "2023",
+    Icon: MapPin,
+    heading: "Launched in Mumbai",
+    text: "Brought doorstep car and bike repair to a fourth major metro, rounding out coverage across Bengaluru, Chennai, Hyderabad, and Mumbai.",
+  },
+  {
+    year: "Today",
+    Icon: Sparkles,
+    heading: "50+ technicians, 10,000+ vehicles serviced",
+    text: "Certified mechanics, transparent pricing, and 24/7 availability across four cities — with more on the way.",
+  },
+];
+
+export const aboutFaqs = [
+  {
+    question: "Is Fiixup available in my city?",
+    answer: "Fiixup currently operates in Bengaluru, Chennai, Hyderabad, and Mumbai, with doorstep mechanics covering all major areas in each city. We're actively expanding to more cities.",
+  },
+  {
+    question: "Are Fiixup's mechanics certified and verified?",
+    answer: "Yes. Every technician is certified and background-verified before joining the network, and each repair carries a 30-day warranty on parts and labour.",
+  },
+  {
+    question: "How quickly can a mechanic reach me?",
+    answer: "Most doorstep visits are dispatched within 20 minutes of booking, and emergency roadside support is available 24/7 across all four cities we serve.",
+  },
+  {
+    question: "Do you service both cars and bikes?",
+    answer: "Yes — hatchbacks, sedans, SUVs, motorcycles, and scooters are all covered, from routine servicing to emergency breakdown repair.",
+  },
+  {
+    question: "Is pricing shared before the mechanic starts work?",
+    answer: "Always. Fiixup uses upfront, transparent pricing — you see the cost before any work begins, with no hidden charges or on-the-spot upselling.",
+  },
+  {
+    question: "How do I book a doorstep mechanic?",
+    answer: "Book online through our contact form or call us directly — no complicated forms, and a technician is dispatched right away.",
   },
 ];
 

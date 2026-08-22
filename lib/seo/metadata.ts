@@ -48,6 +48,15 @@ type BasicSeoInput = {
   index?: boolean;
   publishedTime?: string | null;
   modifiedTime?: string | null;
+  // City/area-specific geo meta tags — a legacy signal Google doesn't use for
+  // ranking, but cheap to get right and some local directories/aggregators
+  // still read it. Omit to leave the generic India-wide default from the
+  // root layout in place.
+  geo?: {
+    region?: string | null;    // e.g. "IN-MH" or state name
+    placename?: string | null; // e.g. "Mumbai"
+    position?: string | null;  // "lat;long"
+  } | null;
 };
 
 export function metadataFromBasicSeo(input: BasicSeoInput): Metadata {
@@ -79,6 +88,14 @@ export function metadataFromBasicSeo(input: BasicSeoInput): Metadata {
         images: [{ url: ogImage, width: 1200, height: 630, alt: imageAlt }],
       };
 
+  const geoOther = input.geo
+    ? {
+        ...(input.geo.region ? { "geo.region": input.geo.region } : {}),
+        ...(input.geo.placename ? { "geo.placename": input.geo.placename } : {}),
+        ...(input.geo.position ? { "geo.position": input.geo.position, ICBM: input.geo.position.replace(";", ", ") } : {}),
+      }
+    : undefined;
+
   return {
     title,
     description,
@@ -92,6 +109,9 @@ export function metadataFromBasicSeo(input: BasicSeoInput): Metadata {
       images: [ogImage],
     },
     robots: buildRobots(input.index ?? true),
+    // `other` replaces (not merges with) the root layout's generic
+    // geo.region/geo.placename — only takes effect when geoOther is set.
+    ...(geoOther ? { other: geoOther } : {}),
   };
 }
 

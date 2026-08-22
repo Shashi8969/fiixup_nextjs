@@ -55,12 +55,21 @@ const config: Config = {
         "dash-flow": {
           "to": { strokeDashoffset: "-32" },
         },
+        // Slow decorative drift for blurred gradient blobs behind hero
+        // sections — purely cosmetic, translate/scale only (no layout
+        // properties touched, so it never affects CLS).
+        "blob": {
+          "0%, 100%": { transform: "translate(0, 0) scale(1)" },
+          "33%": { transform: "translate(2.5%, -4%) scale(1.08)" },
+          "66%": { transform: "translate(-3%, 3%) scale(0.95)" },
+        },
       },
       animation: {
         "marquee-left": "marquee-left var(--marquee-duration, 40s) linear infinite",
         "marquee-right": "marquee-right var(--marquee-duration, 40s) linear infinite",
         "fade-in-up": "fade-in-up 0.5s ease-out both",
         "dash-flow": "dash-flow 1.4s linear infinite",
+        "blob": "blob 16s ease-in-out infinite",
       },
     },
   },
