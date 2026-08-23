@@ -108,6 +108,7 @@ export function AnalyticsManager() {
   const engagementSent = useRef(new Set<number>());
   const scrollSent = useRef(new Set<number>());
   const lastPageView = useRef<string | null>(null);
+  const isFirstRender = useRef(true);
 
   const sendCurrentPageView = () => {
     if (!initGoogleAnalytics()) return;
@@ -140,15 +141,36 @@ export function AnalyticsManager() {
 
     window.addEventListener(CONSENT_UPDATED_EVENT, handleConsentUpdate);
     window.addEventListener("storage", handleStorage);
-    sendCurrentPageView();
+
+    // Defer the first load off the critical rendering path — gtag.js itself
+    // is ~190KB and was showing up as a top contributor to blocking time on
+    // initial page load. Consent Mode v2 pings still fire automatically,
+    // just after the browser is idle (or after a short delay) rather than
+    // competing with hydration.
+    let idleId: number | undefined;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    if (typeof window.requestIdleCallback === "function") {
+      idleId = window.requestIdleCallback(() => sendCurrentPageView(), { timeout: 2000 });
+    } else {
+      timeoutId = setTimeout(sendCurrentPageView, 1000);
+    }
 
     return () => {
       window.removeEventListener(CONSENT_UPDATED_EVENT, handleConsentUpdate);
       window.removeEventListener("storage", handleStorage);
+      if (idleId !== undefined) window.cancelIdleCallback?.(idleId);
+      if (timeoutId !== undefined) clearTimeout(timeoutId);
     };
   }, []);
 
   useEffect(() => {
+    // The initial page view is sent by the deferred idle/timeout callback in
+    // the mount effect above — this effect only needs to fire on real SPA
+    // navigations (pathname actually changing after mount).
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     sendCurrentPageView();
   }, [pathname]);
 
@@ -171,21 +193,30 @@ export function AnalyticsManager() {
       }
     }, 1000);
 
+    // scrollHeight forces a synchronous layout read, so it's throttled to at
+    // most once per animation frame instead of once per scroll event (which
+    // can fire dozens of times a second during a fast swipe).
+    let scrollTickScheduled = false;
     const handleScroll = () => {
-      if (!hasAnalyticsConsent()) return;
-      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-      if (scrollable <= 0) return;
+      if (scrollTickScheduled || !hasAnalyticsConsent()) return;
+      scrollTickScheduled = true;
 
-      const percent = Math.round((window.scrollY / scrollable) * 100);
-      for (const threshold of SCROLL_THRESHOLDS) {
-        if (percent >= threshold && !scrollSent.current.has(threshold)) {
-          scrollSent.current.add(threshold);
-          trackEvent("scroll_depth", {
-            percent_scrolled: threshold,
-            page_path: window.location.pathname,
-          });
+      requestAnimationFrame(() => {
+        scrollTickScheduled = false;
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        if (scrollable <= 0) return;
+
+        const percent = Math.round((window.scrollY / scrollable) * 100);
+        for (const threshold of SCROLL_THRESHOLDS) {
+          if (percent >= threshold && !scrollSent.current.has(threshold)) {
+            scrollSent.current.add(threshold);
+            trackEvent("scroll_depth", {
+              percent_scrolled: threshold,
+              page_path: window.location.pathname,
+            });
+          }
         }
-      }
+      });
     };
 
     const handleClick = (event: MouseEvent) => {

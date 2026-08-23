@@ -8,13 +8,17 @@
 // same spirit as the pulsing dots already used elsewhere on the site
 // (e.g. CityHeroDynamic's "We call back in 2 mins" badge).
 //
-// Animates only transform/opacity (route dash-offset + a dot moved via
-// getPointAtLength), so it never touches layout — no CLS/INP risk. Respects
-// prefers-reduced-motion by freezing on a static frame.
+// Animates only transform/opacity (route dash-offset + a dot moved via a
+// precomputed point table), so it never touches layout — no CLS/INP risk.
+// Respects prefers-reduced-motion by freezing on a static frame, and pauses
+// the animation loop when scrolled out of view.
 
 import { useEffect, useRef } from "react";
 import { Star } from "lucide-react";
 import { useReducedMotion } from "motion/react";
+
+const PATH_SAMPLES = 120;
+const CYCLE_MS = 5500;
 
 export function AreaDispatchPanel({
   areaName,
@@ -25,33 +29,72 @@ export function AreaDispatchPanel({
 }) {
   const moverRef = useRef<SVGCircleElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (reduceMotion) return;
     const path = pathRef.current;
     const mover = moverRef.current;
-    if (!path || !mover) return;
+    const container = containerRef.current;
+    if (!path || !mover || !container) return;
 
+    // getPointAtLength() forces a synchronous layout read, so it's sampled
+    // once into a lookup table here instead of on every animation frame —
+    // calling it per-frame in a loop that runs for as long as the page is
+    // open was pinning the main thread (confirmed via a live Lighthouse
+    // audit: 87s of main-thread work / a 23.5s Speed Index on an area page).
     const len = path.getTotalLength();
+    const points = Array.from({ length: PATH_SAMPLES + 1 }, (_, i) =>
+      path.getPointAtLength((i / PATH_SAMPLES) * len)
+    );
+
     let raf = 0;
     let start: number | null = null;
-    const cycleMs = 5500;
+    let visible = false;
 
     const tick = (ts: number) => {
       if (start === null) start = ts;
-      const progress = ((ts - start) % cycleMs) / cycleMs;
-      const pt = path.getPointAtLength(progress * len);
-      mover.setAttribute("cx", String(pt.x));
-      mover.setAttribute("cy", String(pt.y));
+      const progress = ((ts - start) % CYCLE_MS) / CYCLE_MS;
+      const idx = progress * PATH_SAMPLES;
+      const i0 = Math.floor(idx);
+      const i1 = Math.min(i0 + 1, PATH_SAMPLES);
+      const t = idx - i0;
+      const x = points[i0].x + (points[i1].x - points[i0].x) * t;
+      const y = points[i0].y + (points[i1].y - points[i0].y) * t;
+      mover.setAttribute("cx", String(x));
+      mover.setAttribute("cy", String(y));
       raf = requestAnimationFrame(tick);
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+
+    // Only animate while actually on screen — no point burning main-thread
+    // time on a route animation the visitor has already scrolled past.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible && !raf) {
+          start = null;
+          raf = requestAnimationFrame(tick);
+        } else if (!visible && raf) {
+          cancelAnimationFrame(raf);
+          raf = 0;
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(container);
+
+    return () => {
+      observer.disconnect();
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, [reduceMotion]);
 
   return (
-    <div className="relative overflow-hidden rounded-[26px] bg-gradient-to-br from-[#0E1B3B] via-[#0A1330] to-[#0A0F22] p-6 shadow-2xl shadow-blue-950/40">
+    <div
+      ref={containerRef}
+      className="relative overflow-hidden rounded-[26px] bg-gradient-to-br from-[#0E1B3B] via-[#0A1330] to-[#0A0F22] p-6 shadow-2xl shadow-blue-950/40"
+    >
       <div
         aria-hidden="true"
         className="absolute inset-0 opacity-[0.06]"
