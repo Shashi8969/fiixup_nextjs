@@ -287,6 +287,34 @@ export interface CityServiceCard {
   canonicalUrl:    string;
 }
  
+// Lightweight existence check used by generateMetadata() so we don't have to
+// pull full rows just to decide whether a city+category page has any real
+// content yet — see SEO_AUDIT.md F2. Kept as a separate `head: true` count
+// query rather than reusing getCityServicesByCategory() to avoid doubling
+// the heavier select on every request (generateMetadata and the page body
+// both run per-request and aren't deduped like fetch() is).
+export async function hasAnyCityServiceInCategory(
+  citySlug: string,
+  categorySlug: string
+): Promise<boolean> {
+  const { count, error } = await supabase
+    .from("location_services")
+    .select("id", { count: "exact", head: true })
+    .eq("city_slug",        citySlug.toLowerCase())
+    .eq("service_category", categorySlug.toLowerCase())
+    .is("area_slug",        null)
+    .eq("is_active",        true);
+
+  if (error) {
+    console.error("hasAnyCityServiceInCategory error:", error.message);
+    // Fail open (treat as "has content") so a transient DB error can't
+    // accidentally noindex a real, working page.
+    return true;
+  }
+
+  return (count ?? 0) > 0;
+}
+
 export async function getCityServicesByCategory(
   citySlug: string,
   categorySlug: string

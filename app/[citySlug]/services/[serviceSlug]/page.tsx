@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 
 import { getAllServiceCategories, getServiceCategoryBySlug } from "@/lib/data/serviceCategory";
-import { getCityServicesByCategory }                         from "@/lib/locationServices";
+import { getCityServicesByCategory, hasAnyCityServiceInCategory } from "@/lib/locationServices";
 import { getCityBySlug, getAllCities }                       from "@/lib/cities";
 import { getCityServiceCategoryPage } from "@/lib/cityPages";
 import { getServiceBySlug } from "@/lib/services";
@@ -97,6 +97,12 @@ export async function generateMetadata({
 
   if (cat) {
     const geo = { region: city.state, placename: city.name };
+    // No location_services rows yet for this city+category → the page body
+    // renders nothing but a "being set up, call us" placeholder (see the
+    // empty-state branch below). Don't ask Google to index a page with no
+    // real content — see SEO_AUDIT.md F2. Self-healing: flips back to
+    // indexable the moment an admin adds a location_services row here.
+    const hasContent = await hasAnyCityServiceInCategory(citySlug, cat.categorySlug);
     const dbPage = await getCityServiceCategoryPage(citySlug, serviceSlug);
     if (dbPage) {
       return metadataFromBasicSeo({
@@ -108,6 +114,7 @@ export async function generateMetadata({
         ogImage: dbPage.seo.og_image_url,
         ogImageAlt: dbPage.seo.meta_title,
         geo,
+        index: hasContent,
       });
     }
 
@@ -122,6 +129,7 @@ export async function generateMetadata({
       path: `/${city.slug}/services/${cat.slug}`,
       ogImageAlt: title,
       geo,
+      index: hasContent,
     });
   }
 

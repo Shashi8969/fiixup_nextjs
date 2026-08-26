@@ -5,7 +5,11 @@ import type { SeoPage } from "@/lib/seo-pages";
 export function absoluteUrl(value?: string | null, fallbackPath = "/") {
   const raw = (value || fallbackPath || "/").trim();
   if (!raw) return SITE_URL;
-  if (/^https?:\/\//i.test(raw)) return raw;
+  // Collapse any run of repeated slashes (outside the "https://" scheme)
+  // regardless of whether `raw` arrived as an already-absolute URL — a stale
+  // DB value like "https://fiixup.in/blog//my-post" must not survive into a
+  // canonical <link> tag as-is. See SEO_AUDIT.md F1.
+  if (/^https?:\/\//i.test(raw)) return raw.replace(/^(https?:\/\/[^/]+)(\/.*)?$/i, (_m, host, path) => `${host}${(path || "").replace(/\/{2,}/g, "/")}`);
   const path = raw.startsWith("/") ? raw : `/${raw}`;
   return `${SITE_URL}${path}`.replace(/([^:]\/)\/+/, "$1");
 }

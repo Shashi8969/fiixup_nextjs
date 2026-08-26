@@ -76,15 +76,26 @@ const STATIC_FALLBACKS: SitemapPage[] = [
   { url_path: "/gallery", page_type: "static" },
 ];
 
+// Collapses any run of repeated slashes down to one. Defends against stale/
+// malformed `url_path` or `canonical_url` values in seo_pages (e.g. a row
+// built with an extra "/" in the concatenation, like "/blog//my-post") that
+// would otherwise sail straight into the public sitemap as a duplicate URL —
+// see SEO_AUDIT.md F1.
+function collapseSlashes(value: string) {
+  return value.replace(/([^:])\/{2,}/g, "$1/");
+}
+
 export function buildSitemapEntries(seoPages: SitemapPage[]): MetadataRoute.Sitemap {
   const now = new Date();
   const byUrl = new Map<string, MetadataRoute.Sitemap[number]>();
 
   for (const page of [...STATIC_FALLBACKS, ...seoPages]) {
-    const path = page.url_path === "/" ? "/" : page.url_path.replace(/\/$/, "");
+    const cleanedPath = collapseSlashes(page.url_path);
+    const path = cleanedPath === "/" ? "/" : cleanedPath.replace(/\/$/, "");
     if (!isPublicIndexablePath(path)) continue;
 
-    const url = absoluteUrl(page.canonical_url || path, path);
+    const canonical = page.canonical_url ? collapseSlashes(page.canonical_url) : null;
+    const url = absoluteUrl(canonical || path, path);
     if (!url.startsWith(SITE_URL)) continue;
 
     byUrl.set(url, {

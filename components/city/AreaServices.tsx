@@ -53,7 +53,7 @@ export function AreaServices({ citySlug, areaSlug, areaName, services, heading }
             {heading?.trim() || `Services available in ${areaName}`}
           </h2>
           <p className="mt-3 text-base leading-7 text-slate-600">
-            Pulled live from the service catalog for this area — add a service anywhere in the admin and it appears here automatically.
+            Every service below is available for doorstep booking in {areaName} right now.
           </p>
         </div>
 
