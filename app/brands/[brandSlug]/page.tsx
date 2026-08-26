@@ -98,6 +98,7 @@ export default async function BrandPage({
                 <Image
                   src={brand.logoUrl}
                   alt={brand.logoAlt || `${brand.brandName} logo`}
+                  title={brand.logoTitle || undefined}
                   width={160}
                   height={64}
                   className="max-h-14 w-auto object-contain"

@@ -24,11 +24,13 @@ function normalizeSrc(src?: string | null) {
   }
 
 export function CmsImage({
-  src, alt, title, ratio = "content", fit = "contain", priority = false, sizes = "(max-width: 768px) 100vw, 50vw", className, imageClassName, focalX = 50, focalY = 50, quality,
+  src, alt, title, caption, ratio = "content", fit = "contain", priority = false, sizes = "(max-width: 768px) 100vw, 50vw", className, imageClassName, focalX = 50, focalY = 50, quality,
 }: {
   src?: string | null;
   alt?: string | null;
   title?: string | null;
+  /** Renders a <figcaption> below the image (media_library.caption / <slot>_image_meta.caption). Omit to render a plain <div> as before. */
+  caption?: string | null;
   ratio?: Ratio;
   fit?: Fit;
   priority?: boolean;
@@ -42,8 +44,9 @@ export function CmsImage({
 }) {
   const siteQuality = useImageQuality();
   const safeAlt = alt?.trim() || title?.trim() || "Fiixup service image";
+  const Wrapper = caption?.trim() ? "figure" : "div";
   return (
-    <div className={clsx("relative overflow-hidden rounded-2xl bg-slate-100", ratioClass[ratio], className)}>
+    <Wrapper className={clsx("relative overflow-hidden rounded-2xl bg-slate-100", ratioClass[ratio], className)}>
       <Image
         src={normalizeSrc(src)}
         alt={safeAlt}
@@ -56,6 +59,11 @@ export function CmsImage({
         className={clsx(fit === "cover" ? "object-cover" : "object-contain", imageClassName)}
         style={{ objectPosition: (focalX ?? 50) + "% " + (focalY ?? 50) + "%" }}
       />
-    </div>
+      {caption?.trim() ? (
+        <figcaption className="absolute inset-x-0 bottom-0 bg-black/50 px-3 py-1.5 text-center text-xs text-white">
+          {caption}
+        </figcaption>
+      ) : null}
+    </Wrapper>
   );
 }

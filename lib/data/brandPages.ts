@@ -14,6 +14,7 @@ function rowToBrand(row: any): BrandData {
     vehicleType: row.vehicle_type,
     logoUrl: row.logo_url ?? null,
     logoAlt: row.logo_alt ?? null,
+    logoTitle: row.logo_meta?.title ?? null,
     tagline: row.tagline ?? null,
     heroHeading: row.hero_heading?.trim() || `${row.brand_name} ${row.vehicle_type === "car" ? "Car" : "Bike"} Repair at Your Doorstep`,
     heroSubheading: row.hero_subheading?.trim() ||

@@ -235,10 +235,12 @@ export function GlobalServicePage({ data }: Props) {
           <Image
             src={data.hero_image_url || heroImage}
             alt={data.hero_image_alt || data.service_name}
+            title={data.hero_image_meta?.title || undefined}
             width={900}
             height={700}
             priority
             className="w-full h-[520px] object-cover"
+            style={{ objectPosition: `${data.hero_image_meta?.focalX ?? 50}% ${data.hero_image_meta?.focalY ?? 50}%` }}
           />
 
         </div>

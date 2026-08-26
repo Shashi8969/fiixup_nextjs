@@ -8,6 +8,8 @@ interface HomeBlogCardProps {
   readonly excerpt: string;
   readonly image?: string;
   readonly imageAlt?: string;
+  readonly imageFocalX?: number | null;
+  readonly imageFocalY?: number | null;
   readonly date: string;
   readonly category: string;
   readonly readTime?: string | number;
@@ -15,7 +17,7 @@ interface HomeBlogCardProps {
 }
 
 export function HomeBlogCard({
-  id, title, excerpt, image, imageAlt, date, category, readTime, priority = false,
+  id, title, excerpt, image, imageAlt, imageFocalX, imageFocalY, date, category, readTime, priority = false,
 }: HomeBlogCardProps) {
   const readTimeLabel = readTime == null || readTime === ""
     ? null
@@ -44,6 +46,8 @@ export function HomeBlogCard({
           src={src}
           alt={imageAlt || title}
           title={title}
+          focalX={imageFocalX}
+          focalY={imageFocalY}
           ratio="blogCard"
           fit="cover"
           priority={priority}

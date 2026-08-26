@@ -65,11 +65,48 @@ export interface PageData {
   contentBlocks:         unknown[]
   heroImageUrl:          string | null
   heroImageAlt:          string | null
+  heroImageMeta:         ImageMeta | null
+  aboutImageUrl:         string | null
+  aboutImageAlt:         string | null
+  aboutImageMeta:        ImageMeta | null
   pageLayout:            { id: string; visible: boolean; heading: string | null }[]
   [key: string]: unknown
 }
 
 export interface Breadcrumb { name: string; url: string }
+
+// Snapshot of a media_library image's SEO/display fields, copied in by the
+// admin's ImagePickerField at pick time and stored on the page's
+// `<slot>_image_meta` jsonb column — see fiixup-admin's ImageMeta type for
+// the write side. Every field is optional/nullable because older rows
+// (picked before this feature existed) have `{}` here.
+export interface ImageMeta {
+  mediaId:   string | null
+  title:     string | null
+  caption:   string | null
+  focalX:    number
+  focalY:    number
+  cropMode:  string
+  cropRatio: string
+  width:     number | null
+  height:    number | null
+}
+
+export function normalizeImageMeta(value: unknown): ImageMeta | null {
+  const m = asObject(value)
+  if (Object.keys(m).length === 0) return null
+  return {
+    mediaId:   asString(m.media_id) || null,
+    title:     asString(m.title) || null,
+    caption:   asString(m.caption) || null,
+    focalX:    asNumber(m.focal_x, 50),
+    focalY:    asNumber(m.focal_y, 50),
+    cropMode:  asString(m.crop_mode) || "contain",
+    cropRatio: asString(m.crop_ratio) || "auto",
+    width:     m.width != null ? asNumber(m.width) : null,
+    height:    m.height != null ? asNumber(m.height) : null,
+  }
+}
 
 type SeoPageRow = Record<string, unknown>
 
@@ -117,6 +154,12 @@ function normalizePageData(value: unknown): PageData {
     heroHeading: asString(pd.heroHeading),
     heroSubheading: asString(pd.heroSubheading),
     heroBadgeText: asString(pd.heroBadgeText),
+    heroImageUrl: asString(pd.heroImageUrl) || null,
+    heroImageAlt: asString(pd.heroImageAlt) || null,
+    heroImageMeta: normalizeImageMeta(pd.heroImageMeta),
+    aboutImageUrl: asString(pd.aboutImageUrl) || null,
+    aboutImageAlt: asString(pd.aboutImageAlt) || null,
+    aboutImageMeta: normalizeImageMeta(pd.aboutImageMeta),
     aboutHeading: asString(pd.aboutHeading),
     aboutPara1: asString(pd.aboutPara1),
     aboutPara2: asString(pd.aboutPara2),
@@ -150,8 +193,6 @@ function normalizePageData(value: unknown): PageData {
     seoSections: normalizeSeoSections(pd.seoSections),
     seoConclusion: asString(pd.seoConclusion) || null,
     contentBlocks: asArray(pd.contentBlocks),
-    heroImageUrl: asString(pd.heroImageUrl) || null,
-    heroImageAlt: asString(pd.heroImageAlt) || null,
     pageLayout: normalizeArrayObject(pd.pageLayout, (item) => ({
       id: asString(item.id),
       visible: asBoolean(item.visible, true),

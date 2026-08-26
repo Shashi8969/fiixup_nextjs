@@ -84,6 +84,8 @@ export default async function BlogTagPage({ params }: { params: Params }) {
               <BlogCard
                 key={post.id}
                 {...post}
+                imageFocalX={post.imageMeta?.focalX}
+                imageFocalY={post.imageMeta?.focalY}
                 readTime={String(post.readTime)}
                 priority={i === 0}
               />

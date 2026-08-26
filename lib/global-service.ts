@@ -1,6 +1,7 @@
 // lib/global-service.ts
 import { cache } from 'react'
 import { supabase } from '@/lib/supabase'
+import { normalizeImageMeta, type ImageMeta } from '@/lib/seo-pages'
 
 // lib/global-service.ts
 export interface GlobalServicePage {
@@ -17,6 +18,8 @@ export interface GlobalServicePage {
   hero_subheading: string;
   hero_badge_text: string;
   hero_image_url: string | null;
+  hero_image_alt: string | null;
+  hero_image_meta: ImageMeta | null;
   about_heading: string;
   about_para1: string;
   about_para2: string;
@@ -86,6 +89,7 @@ export const getGlobalServicePage = cache(async (serviceSlug: string): Promise<G
 
   return {
     ...(page as GlobalServicePage),
+    hero_image_meta: normalizeImageMeta(page.hero_image_meta),
     schema_aggregate_rating: Number(page.schema_aggregate_rating) || 4.9,
     schema_review_count: page.schema_review_count ?? 0,
     pricing_rows: (pricingRows.data ?? page.pricing_rows ?? []) as GlobalServicePricingRow[],

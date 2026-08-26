@@ -11,6 +11,8 @@ export interface BlogIndexCardProps {
   readonly excerpt: string;
   readonly image?: string;
   readonly imageAlt?: string;
+  readonly imageFocalX?: number | null;
+  readonly imageFocalY?: number | null;
   readonly date: string;
   readonly category: string;
   readonly readTime?: string | number;
@@ -19,7 +21,7 @@ export interface BlogIndexCardProps {
 }
 
 export function BlogIndexCard({
-  id, title, excerpt, image, imageAlt, date, category, readTime, author, priority = false,
+  id, title, excerpt, image, imageAlt, imageFocalX, imageFocalY, date, category, readTime, author, priority = false,
 }: BlogIndexCardProps) {
   const parsedDate = new Date(date);
   const dateLabel = Number.isNaN(parsedDate.getTime())
@@ -48,6 +50,8 @@ export function BlogIndexCard({
           src={image}
           alt={imageAlt || title}
           title={title}
+          focalX={imageFocalX}
+          focalY={imageFocalY}
           ratio="blogCard"
           fit="cover"
           priority={priority}

@@ -118,7 +118,10 @@ export default async function BlogPostPage({
   <CmsImage
     src={post.image}
     alt={post.imageAlt || post.title}
-    title={post.title}
+    title={post.imageMeta?.title || post.title}
+    caption={post.imageMeta?.caption}
+    focalX={post.imageMeta?.focalX}
+    focalY={post.imageMeta?.focalY}
     ratio="blogHero"
     fit="contain"
     priority

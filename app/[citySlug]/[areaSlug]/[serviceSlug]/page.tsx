@@ -108,6 +108,7 @@ export default async function AreaServicePage({ params }: { params: Params }) {
           contentBlocks:         data.contentBlocks ?? [],
           heroImageUrl:          data.heroImageUrl,
           heroImageAlt:          data.heroImageAlt,
+          heroImageMeta:         data.heroImageMeta,
           pageLayout:            data.pageLayout ?? [],
           testimonials:          data.testimonials ?? [],
           faqs:                  data.faqs ?? [],

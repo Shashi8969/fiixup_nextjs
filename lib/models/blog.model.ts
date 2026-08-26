@@ -1,5 +1,7 @@
 // lib/models/blog.model.ts
 
+import type { ImageMeta } from "@/lib/seo-pages";
+
 export interface BlogLinkAttachment {
   label?: string;
   title?: string;
@@ -29,6 +31,7 @@ export interface BlogPost {
   tagLinks?: { name: string; slug: string }[]; // tag name + real DB slug, for clickable tag links
   image: string;          // Path to hero/thumbnail image
   imageAlt: string;
+  imageMeta?: ImageMeta | null; // title/caption/focal point/crop from the Media Library pick
   metaTitle?: string;     // Overrides title for <head>
   metaDescription?: string; // Overrides excerpt for <head>
   featured?: boolean;     // Show on homepage Blog section

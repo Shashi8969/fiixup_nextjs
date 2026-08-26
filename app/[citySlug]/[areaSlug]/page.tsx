@@ -183,6 +183,7 @@ export default async function CityAreaPage({ params }: { params: Params }) {
             contentBlocks:         data.contentBlocks ?? [],
             heroImageUrl:          data.heroImageUrl,
             heroImageAlt:          data.heroImageAlt,
+            heroImageMeta:         data.heroImageMeta,
             pageLayout:            data.pageLayout ?? [],
             schemaAggregateRating: data.schemaAggregateRating,
             schemaReviewCount:     data.schemaReviewCount,

@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { normalizeImageMeta, type ImageMeta } from "./seo-pages";
 
 export interface LocationServiceData {
   id: number;
@@ -36,6 +37,7 @@ export interface LocationServiceData {
   contentBlocks: unknown[];
   heroImageUrl: string | null;
   heroImageAlt: string | null;
+  heroImageMeta: ImageMeta | null;
   pageLayout: { id: string; visible: boolean; heading: string | null }[];
   schemaAggregateRating: number;
   schemaReviewCount: number;
@@ -85,6 +87,7 @@ function rowToLocationService(row: any): LocationServiceData {
     contentBlocks:         row.content_blocks ?? [],
     heroImageUrl:          row.hero_image_url ?? null,
     heroImageAlt:          row.hero_image_alt ?? null,
+    heroImageMeta:         normalizeImageMeta(row.hero_image_meta),
     pageLayout:            row.page_layout ?? [],
     schemaAggregateRating: parseFloat(row.schema_aggregate_rating) || 4.9,
     schemaReviewCount:     row.schema_review_count ?? 150,

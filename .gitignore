@@ -38,3 +38,6 @@ Thumbs.db
 # Local agent and generated graph artifacts
 .codex/
 graphify-out/
+
+# Claude Code local (personal, machine-specific) settings
+.claude/settings.local.json

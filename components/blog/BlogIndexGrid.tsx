@@ -71,6 +71,8 @@ export function BlogIndexGrid({ posts }: { readonly posts: BlogPost[] }) {
                 excerpt={post.excerpt}
                 image={post.image}
                 imageAlt={post.imageAlt}
+                imageFocalX={post.imageMeta?.focalX}
+                imageFocalY={post.imageMeta?.focalY}
                 date={post.date}
                 category={post.category}
                 readTime={String(post.readTime)}

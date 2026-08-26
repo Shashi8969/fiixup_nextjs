@@ -15,6 +15,7 @@ import { cache } from 'react';
 import { supabase } from '@/lib/supabase';
 import { normalizeSeoSections } from '@/lib/cms-guards';
 import type { PageLayoutRow } from '@/lib/areaPageSections';
+import { normalizeImageMeta, type ImageMeta } from '@/lib/seo-pages';
 
 export interface AreaHubPageData {
   citySlug: string;
@@ -34,6 +35,7 @@ export interface AreaHubPageData {
   heroSubheading: string;
   heroImageUrl: string | null;
   heroImageAlt: string | null;
+  heroImageMeta: ImageMeta | null;
   aboutHeading: string;
   aboutPara1: string;
   aboutPara2: string;
@@ -116,6 +118,7 @@ export const getAreaHubPage = cache(async (
       heroSubheading: String(pd.heroSubheading ?? ''),
       heroImageUrl: (pd.heroImageUrl as string) ?? null,
       heroImageAlt: (pd.heroImageAlt as string) ?? null,
+      heroImageMeta: normalizeImageMeta(pd.heroImageMeta),
       aboutHeading: String(pd.aboutHeading ?? ''),
       aboutPara1: String(pd.aboutPara1 ?? ''),
       aboutPara2: String(pd.aboutPara2 ?? ''),

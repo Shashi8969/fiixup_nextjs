@@ -103,6 +103,8 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
   // folder, so anything else falls back to the category stock photo.
   const heroImageSrc = data.heroImageUrl?.trim().startsWith('https://') ? data.heroImageUrl.trim() : heroImage;
   const heroImageAltText = data.heroImageAlt?.trim() || `${data.serviceName} in ${data.displayLocation}`;
+  const heroImageTitle = data.heroImageMeta?.title?.trim() || heroImageAltText;
+  const heroImageFocal = { x: data.heroImageMeta?.focalX ?? 50, y: data.heroImageMeta?.focalY ?? 50 };
   const sourcePath = data.isCityLevel
     ? `/${data.citySlug}/${data.serviceSlug}`
     : `/${data.citySlug}/${data.areaSlug}/${data.serviceSlug}`;
@@ -495,8 +497,10 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                 <Image
                   src={heroImageSrc}
                   alt={heroImageAltText}
+                  title={heroImageTitle}
                   fill
                   className="object-cover"
+                  style={{ objectPosition: `${heroImageFocal.x}% ${heroImageFocal.y}%` }}
                   priority
                   sizes="50vw"
                 />

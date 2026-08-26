@@ -18,7 +18,7 @@
 import { cache } from 'react';
 import { supabase } from '@/lib/supabase';
 import { cleanPath, splitPath } from '@/lib/cms-guards';
-import type { SeoPage } from '@/lib/seo-pages';
+import { normalizeImageMeta, type ImageMeta, type SeoPage } from '@/lib/seo-pages';
 
 // ─── City Hub Page Data ──────────────────────────────────────────────────────
 
@@ -40,6 +40,7 @@ export interface CityHubPageData {
   heroStats:     { value: string; label: string }[];
   heroImageUrl:  string | null;
   heroImageAlt:  string | null;
+  heroImageMeta: ImageMeta | null;
   ogImageUrl:    string | null;
 
   // About
@@ -49,6 +50,7 @@ export interface CityHubPageData {
   aboutBullets:  { heading: string; text: string }[];
   aboutImageUrl: string | null;
   aboutImageAlt: string | null;
+  aboutImageMeta: ImageMeta | null;
 
   // Stats bar
   statsLabel:        string;
@@ -196,7 +198,11 @@ export const getCityHubPage = cache(async (citySlug: string): Promise<{
       breadcrumbs_json: data.breadcrumbs_json,
       is_active:        data.is_active,
     },
-    data: pd as unknown as CityHubPageData,
+    data: {
+      ...(pd as unknown as CityHubPageData),
+      heroImageMeta: normalizeImageMeta(pd.heroImageMeta),
+      aboutImageMeta: normalizeImageMeta(pd.aboutImageMeta),
+    },
   };
 });
 

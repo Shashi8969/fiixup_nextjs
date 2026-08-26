@@ -6,6 +6,7 @@ import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { supabase } from "./supabase";
 import type { BlogPost } from "./models/blog.model";
+import { normalizeImageMeta } from "./seo-pages";
 
 // ── Raw row → BlogPost ────────────────────────────────────────────────────────
 function rowToPost(row: any): BlogPost {
@@ -39,6 +40,7 @@ function rowToPost(row: any): BlogPost {
     tagLinks,
     image:           row.image ?? "",
     imageAlt:        row.image_alt ?? "",
+    imageMeta:       normalizeImageMeta(row.image_meta),
     featured:        row.featured ?? false,
     metaTitle:       row.meta_title ?? undefined,
     metaDescription: row.meta_description ?? undefined,
@@ -53,7 +55,7 @@ function rowToPost(row: any): BlogPost {
 const POST_SELECT = `
   id, slug, title, excerpt, content,
   author, author_role, date, read_time,
-  category, featured, image, image_alt,
+  category, featured, image, image_alt, image_meta,
   related_service, meta_title, meta_description, meta_keywords,
   created_at, updated_at, schema_json,
   nearby_areas_json, related_services_json, internal_links_json,
@@ -63,7 +65,7 @@ const POST_SELECT = `
 const POST_LIST_SELECT = `
   slug, title, excerpt,
   author, author_role, date, read_time,
-  category, featured, image, image_alt,
+  category, featured, image, image_alt, image_meta,
   meta_title, meta_description,
   nearby_areas_json, related_services_json, internal_links_json,
   post_tags ( tags ( id, slug, name ) )

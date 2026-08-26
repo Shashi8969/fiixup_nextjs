@@ -26,6 +26,7 @@ export interface BrandData {
   vehicleType: BrandVehicleType;
   logoUrl: string | null;
   logoAlt: string | null;
+  logoTitle: string | null;
   tagline: string | null;
   heroHeading: string;
   heroSubheading: string;

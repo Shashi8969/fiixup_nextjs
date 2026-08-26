@@ -8,6 +8,8 @@ interface BlogCardProps {
   readonly excerpt: string;
   readonly image?: string;
   readonly imageAlt?: string;   // SEO alt text from DB — falls back to title
+  readonly imageFocalX?: number | null;
+  readonly imageFocalY?: number | null;
   readonly date: string;
   readonly category: string;
   readonly readTime?: string | number;
@@ -17,7 +19,7 @@ interface BlogCardProps {
 }
 
 export function BlogCard({
-  id, title, excerpt, image, imageAlt, date, category,
+  id, title, excerpt, image, imageAlt, imageFocalX, imageFocalY, date, category,
   readTime, author, priority = false, tagLinks,
 }: BlogCardProps) {
 
@@ -55,6 +57,8 @@ export function BlogCard({
     src={src}
     alt={imageAlt || title}
     title={title}
+    focalX={imageFocalX}
+    focalY={imageFocalY}
     ratio="blogCard"
     fit="contain"
     priority={priority}

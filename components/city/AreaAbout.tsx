@@ -60,6 +60,10 @@ export function AreaAbout({ data }: { data: AreaHubPageData }) {
               <CmsImage
                 src={data.heroImageUrl}
                 alt={data.heroImageAlt ?? `Fiixup doorstep car and bike repair mechanic in ${data.areaName}, ${data.cityName}`}
+                title={data.heroImageMeta?.title}
+                caption={data.heroImageMeta?.caption}
+                focalX={data.heroImageMeta?.focalX}
+                focalY={data.heroImageMeta?.focalY}
                 ratio="about"
                 fit="cover"
                 sizes="(max-width: 1024px) 100vw, 45vw"

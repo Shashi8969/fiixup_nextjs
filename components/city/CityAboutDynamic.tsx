@@ -55,8 +55,10 @@ export function CityAboutDynamic({ data }: { data: CityHubPageData }) {
               <Image
                 src={data.aboutImageUrl ?? '/assets/carservice.webp'}
                 alt={data.aboutImageAlt ?? `Auto repair service in ${data.cityName}`}
+                title={data.aboutImageMeta?.title || undefined}
                 fill
                 className="object-cover"
+                style={{ objectPosition: `${data.aboutImageMeta?.focalX ?? 50}% ${data.aboutImageMeta?.focalY ?? 50}%` }}
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>

@@ -28,6 +28,8 @@ export async function Blog({
             <HomeBlogCard
               key={post.id}
               {...post}
+              imageFocalX={post.imageMeta?.focalX}
+              imageFocalY={post.imageMeta?.focalY}
               readTime={String(post.readTime)}
               priority={index === 0}
             />
