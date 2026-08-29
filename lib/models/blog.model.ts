@@ -24,7 +24,8 @@ export interface BlogPost {
   content: any[];       // Full HTML or markdown content
   author: string;
   authorRole?: string;    // e.g. "Head Technician at Fiixup"
-  date: string;           // ISO date string or display string
+  date: string;           // ISO date string or display string — first publish
+  updatedAt?: string;     // posts.updated_at — real last-edit timestamp, feeds Article.dateModified
   readTime: string;       // e.g. "5 min read"
   category: BlogCategory;
   tags: string[];

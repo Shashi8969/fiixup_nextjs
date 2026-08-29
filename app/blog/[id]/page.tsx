@@ -10,6 +10,7 @@ import { CmsImage } from "@/components/ui/CmsImage";
 
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { SITE_URL, MAIN_PHONE } from "@/lib/constants";
+import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 import { blogPostSchema } from "@/lib/schema";
 import { JsonLd } from "@/components/seo/JsonLd";
 import BookingCTA from "@/components/ui/BookingCTA";
@@ -21,6 +22,18 @@ export async function generateStaticParams() {
   return posts.map((p) => ({ id: p.slug }));
 }
 
+/**
+ * `posts.date` is stored in mixed formats (some ISO, some "August 7, 2026").
+ * OG's `article:*_time` and JSON-LD `datePublished`/`dateModified` must be
+ * ISO 8601 — coerce here so machine consumers get a valid value, falling back
+ * to the raw string only if it can't be parsed at all.
+ */
+function toIsoDate(value?: string | null): string | undefined {
+  if (!value) return undefined;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? value : parsed.toISOString();
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -29,18 +42,23 @@ export async function generateMetadata({
   const { id } = await params;
   const post = await getPostBySlug(id);
   if (!post) return {};
-  return {
-    title:       post.metaTitle ?? post.title,
-    description: post.metaDescription ?? post.excerpt,
-    alternates:  { canonical: `${SITE_URL}/blog/${post.slug}` },
-    openGraph: {
-      title:         post.metaTitle ?? post.title,
-      description:   post.metaDescription ?? post.excerpt,
-      url:           `${SITE_URL}/blog/${post.slug}`,
-      type:          "article",
-      publishedTime: post.date,
-    },
-  };
+
+  // Route through the shared generator so blog posts get the same og:image,
+  // twitter:card, article:published_time/modified_time, robots directives and
+  // absolute-canonical normalization every other page type already has — the
+  // previous hand-rolled object emitted no image or Twitter tags at all.
+  return metadataFromBasicSeo({
+    title:         post.metaTitle ?? post.title,
+    description:   post.metaDescription ?? post.excerpt,
+    keywords:      post.tags?.length ? post.tags : null,
+    canonical:     `/blog/${post.slug}`,
+    path:          `/blog/${post.slug}`,
+    ogImage:       post.image || null,
+    ogImageAlt:    post.imageAlt || post.metaTitle || post.title,
+    type:          "article",
+    publishedTime: toIsoDate(post.date),
+    modifiedTime:  toIsoDate(post.updatedAt ?? post.date),
+  });
 }
 
 export default async function BlogPostPage({
@@ -82,8 +100,8 @@ export default async function BlogPostPage({
     slug:        post.slug,
     description: post.metaDescription ?? post.excerpt ?? "",
     coverImage:  post.image || `${SITE_URL}/assets/og-image.webp`,
-    publishedAt: post.date,
-    updatedAt:   (post as any).updatedAt ?? post.date,
+    publishedAt: toIsoDate(post.date) ?? post.date,
+    updatedAt:   toIsoDate(post.updatedAt ?? post.date) ?? post.date,
     tags:        post.tags,
     author:      post.author,
     authorRole:  post.authorRole,

@@ -34,6 +34,7 @@ function rowToPost(row: any): BlogPost {
     author:          row.author,
     authorRole:      row.author_role ?? undefined,
     date:            row.date,
+    updatedAt:       row.updated_at ?? undefined,
     readTime:        row.read_time,
     category:        row.category,
     tags,
