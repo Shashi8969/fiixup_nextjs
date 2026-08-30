@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import { FloatingButtons } from "@/components/FloatingButtons";
 import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE, DEFAULT_KEYWORDS } from "@/lib/constants";
 import { QuickServiceModal } from "@/components/QuickServiceModal";
+import { ChatWidget } from "@/components/chat/ChatWidget";
 import { getHeaderNavigationLinks } from "@/lib/navigation";
 import { getPublicSiteSettings } from "@/lib/site-settings";
 import { getCtaVisibilitySettings } from "@/lib/cta-settings";
@@ -116,6 +117,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <QuickServiceModal
             phonePlaceholder={siteSettings.mainPhoneDisplay}
             availableText={siteSettings.quickModalAvailableText}
+          />
+          <ChatWidget
+            mainPhone={siteSettings.mainPhone}
+            mainPhoneDisplay={siteSettings.mainPhoneDisplay}
+            whatsappNumber={siteSettings.whatsappNumber}
           />
           <CookieConsent />
         </ImageQualityProvider>
