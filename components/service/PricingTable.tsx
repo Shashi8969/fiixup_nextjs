@@ -5,6 +5,7 @@
 import type { PricingData } from "@/lib/models/service.model";
 import { Check, X, Phone } from "lucide-react";
 import { serviceThemes, type ThemeColor } from "@/lib/theme";
+import { formatPriceRange } from "@/lib/utils";
 import Link from "next/link";
 
 interface Props {
@@ -60,8 +61,7 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
                   </div>
                   <div className="text-right flex-shrink-0">
                     <span className={`font-bold text-base ${row.highlight ? a.price : "text-gray-900"}`}>
-                      ₹{row.priceFrom.toLocaleString("en-IN")}
-                      {row.priceTo ? `–₹${row.priceTo.toLocaleString("en-IN")}` : "+"}
+                      {formatPriceRange(row.priceFrom, row.priceTo)}
                     </span>
                   </div>
                 </div>

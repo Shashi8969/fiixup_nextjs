@@ -5,6 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { CityServiceCategoryPageData } from '@/lib/cityPages';
+import { formatPriceRange } from '@/lib/utils';
 
 export function CspPricing({ data }: { data: CityServiceCategoryPageData }) {
   const rows = data.pricingRows ?? [];
@@ -40,8 +41,7 @@ export function CspPricing({ data }: { data: CityServiceCategoryPageData }) {
                   </td>
                   <td className="px-6 py-4 text-right">
                     <span className={`font-bold ${row.highlight ? 'text-blue-700 text-base' : 'text-gray-900 text-sm'}`}>
-                      ₹{row.priceFrom.toLocaleString('en-IN')}
-                      {row.priceTo ? ` – ₹${row.priceTo.toLocaleString('en-IN')}` : '+'}
+                      {formatPriceRange(row.priceFrom, row.priceTo)}
                     </span>
                   </td>
                 </tr>

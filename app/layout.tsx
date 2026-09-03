@@ -7,7 +7,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { FloatingButtons } from "@/components/FloatingButtons";
 import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE, DEFAULT_KEYWORDS } from "@/lib/constants";
-import { QuickServiceModal } from "@/components/QuickServiceModal";
+import { QuickServiceModalLazy } from "@/components/QuickServiceModalLazy";
 import { ChatWidget } from "@/components/chat/ChatWidget";
 import { getHeaderNavigationLinks } from "@/lib/navigation";
 import { getPublicSiteSettings } from "@/lib/site-settings";
@@ -16,9 +16,14 @@ import { AnalyticsManager } from "@/components/analytics/AnalyticsManager";
 import { CookieConsent } from "@/components/analytics/CookieConsent";
 import { Suspense } from "react";
 import { siteOrganizationSchema, jsonLdString } from "@/lib/schema";
+import { getSupabaseHost } from "@/lib/security-headers";
 import { ImageQualityProvider } from "@/lib/image-quality-context";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+
+// LCP hero images are served from Supabase Storage — open the connection
+// during HTML parse instead of waiting for the <img> to be discovered.
+const SUPABASE_ORIGIN = `https://${getSupabaseHost()}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -89,7 +94,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en-IN" className={inter.variable} suppressHydrationWarning>
-      <head />
+      <head>
+        <link rel="preconnect" href={SUPABASE_ORIGIN} crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href={SUPABASE_ORIGIN} />
+      </head>
       <body suppressHydrationWarning>
         <script
           type="application/ld+json"
@@ -114,7 +122,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             whatsappMessage={siteSettings.floatingWhatsAppMessage}
             ctaSettings={ctaSettings}
           />
-          <QuickServiceModal
+          <QuickServiceModalLazy
             phonePlaceholder={siteSettings.mainPhoneDisplay}
             availableText={siteSettings.quickModalAvailableText}
           />

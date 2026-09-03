@@ -17,6 +17,7 @@ import { filterValidItemsByPath, getPublicPathList } from "@/lib/public-links";
 import { getSmartNearbyAreasForService, getSmartRelatedServicesForLocation } from "@/lib/smart-internal-links";
 import { getPageLinkOverrides } from "@/lib/page-link-overrides";
 import { resolveSectionOrder, type LocationServiceSectionId } from "@/lib/locationServicePageSections";
+import { formatPriceRange } from "@/lib/utils";
 
 // ─── Theme config ────────────────────────────────────────────────────────────
 const CATEGORY_THEME: Record<string, {
@@ -280,8 +281,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                 >
                   <span className="font-medium text-gray-900">{row.label}</span>
                   <span className="text-center font-semibold text-gray-800">
-                    ₹{row.priceFrom.toLocaleString("en-IN")}
-                    {row.priceTo ? `–₹${row.priceTo.toLocaleString("en-IN")}` : "+"}
+                    {formatPriceRange(row.priceFrom, row.priceTo)}
                   </span>
                   <span className="text-right text-gray-500">{row.note ?? "—"}</span>
                 </div>

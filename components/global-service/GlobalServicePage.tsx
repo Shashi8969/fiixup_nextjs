@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
 import { MAIN_PHONE_DISPLAY, WHATSAPP_NUMBER } from "@/lib/constants";
+import { formatPriceRange } from "@/lib/utils";
 import type { GlobalServicePage as GlobalServicePageType } from "@/lib/global-service";
 
 type ExtendedGlobalServicePage = GlobalServicePageType & {
@@ -373,7 +374,7 @@ export function GlobalServicePage({ data }: Props) {
                 <div key={row.label} className={`grid grid-cols-3 px-6 py-5 text-sm ${i % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
                   <span className="font-bold text-gray-950">{row.label}</span>
                   <span className="text-center font-extrabold text-gray-900">
-                    ₹{row.price_from.toLocaleString("en-IN")}{row.price_to ? `–₹${row.price_to.toLocaleString("en-IN")}` : "+"}
+                    {formatPriceRange(row.price_from, row.price_to)}
                   </span>
                   <span className="text-right text-gray-500">{row.note ?? "—"}</span>
                 </div>

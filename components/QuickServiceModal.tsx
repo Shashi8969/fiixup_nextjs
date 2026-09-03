@@ -8,7 +8,6 @@ import { submitLead } from "@/lib/send-lead";
 import { QUICK_SERVICE_MODAL_STATE_EVENT } from "@/lib/analytics";
 
 const MODAL_SESSION_KEY = "hasSeenQuickServiceModal";
-const MODAL_DELAY_MS = 2000;
 
 type QuickServiceModalProps = {
   phonePlaceholder?: string;
@@ -19,17 +18,13 @@ export function QuickServiceModal({
   phonePlaceholder = MAIN_PHONE,
   availableText = "Available 24/7 across Bengaluru, Chennai, Hyderabad & Mumbai",
 }: QuickServiceModalProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  // Opens on mount. The 2s delay + "already seen this session" check live in
+  // QuickServiceModalLazy, which is what defers this component (and Radix
+  // Dialog) out of the initial page bundle.
+  const [isOpen, setIsOpen] = useState(true);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!sessionStorage.getItem(MODAL_SESSION_KEY)) setIsOpen(true);
-    }, MODAL_DELAY_MS);
-    return () => clearTimeout(timer);
-  }, []);
 
   // Let other fixed-position overlays (the cookie banner) know when this
   // modal is up, so they can hold off instead of rendering on top of it.

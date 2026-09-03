@@ -5,7 +5,8 @@
 // it never affects Core Web Vitals (CLS/INP) and respects prefers-reduced-motion.
 
 import { useEffect, useRef, useState } from "react";
-import { useInView, useReducedMotion } from "motion/react";
+import { useInView } from "@/lib/hooks/useInView";
+import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 
 export function CountUp({
   value,
@@ -19,7 +20,7 @@ export function CountUp({
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
+  const inView = useInView(ref, { once: true, rootMargin: "0px 0px -10% 0px" });
   const reduceMotion = useReducedMotion();
   const [display, setDisplay] = useState(reduceMotion ? value : 0);
 

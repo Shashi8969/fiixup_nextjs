@@ -15,7 +15,7 @@
 
 import { useEffect, useRef } from "react";
 import { Star } from "lucide-react";
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 
 const PATH_SAMPLES = 120;
 const CYCLE_MS = 5500;

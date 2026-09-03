@@ -5,13 +5,14 @@
 // view once, animating only transform/opacity (no layout properties, so it
 // never affects Core Web Vitals CLS/INP), and renders unanimated for users
 // who prefer reduced motion.
+//
+// Pure CSS transition + IntersectionObserver — no animation library. Content
+// renders fully visible before hydration and when JS is disabled (the hidden
+// state is only applied after mount), so it's crawl-safe.
 
-import { motion, useReducedMotion, type Variants } from "motion/react";
-
-const VARIANTS: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0 },
-};
+import { useEffect, useRef, useState } from "react";
+import { useInView } from "@/lib/hooks/useInView";
+import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 
 export function Reveal({
   children,
@@ -22,22 +23,30 @@ export function Reveal({
   delay?: number;
   className?: string;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
+  const inView = useInView(ref, { once: true, rootMargin: "0px 0px -10% 0px" });
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   if (reduceMotion) {
     return <div className={className}>{children}</div>;
   }
 
+  const hidden = mounted && !inView;
+
   return (
-    <motion.div
+    <div
+      ref={ref}
       className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-      variants={VARIANTS}
-      transition={{ duration: 0.5, ease: "easeOut", delay }}
+      style={{
+        opacity: hidden ? 0 : 1,
+        transform: hidden ? "translateY(16px)" : "translateY(0)",
+        transition: `opacity 0.5s ease-out ${delay}s, transform 0.5s ease-out ${delay}s`,
+      }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

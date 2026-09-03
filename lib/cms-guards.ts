@@ -1,3 +1,5 @@
+import { stripEditorialScaffold } from '@/lib/seo/editorial-scaffold'
+
 export type JsonObject = Record<string, unknown>
 
 export function isObject(value: unknown): value is JsonObject {
@@ -59,7 +61,7 @@ export function paragraphs(value: unknown): string[] {
 }
 
 export function normalizeSeoSections(value: unknown): { heading: string; body: string }[] {
-  return asArray<Record<string, unknown>>(value)
+  return stripEditorialScaffold(asArray<Record<string, unknown>>(value))
     .map((section) => ({
       heading: asString(section?.heading),
       body: asString(section?.body ?? section?.content ?? section?.text),
