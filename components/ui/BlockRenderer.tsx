@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { CmsImage } from "@/components/ui/CmsImage";
 import { Reveal } from "@/components/ui/Reveal";
+import { stripEditorialScaffold } from "@/lib/seo/editorial-scaffold";
 // ─── Type Definitions ─────────────────────────────────────────────────────────
 export type Block =
 | { type: "rich_content"; html: string }
@@ -89,8 +90,13 @@ const HEADING_CLS: Record<number, string> = {
   6: "text-sm font-semibold text-gray-500 mt-3 mb-1 uppercase tracking-wider",
 };
 
-function HeadingBlock({ level, content }: { level: number; content: string }) {
-  const safeLevel = Math.min(Math.max(level, 1), 6);
+function HeadingBlock({ level, content, minLevel = 1 }: { level: number; content: string; minLevel?: number }) {
+  // `minLevel` stops a block heading from out-ranking the surrounding page
+  // structure. On blog posts it's 1 (author markup wins). Inside the SEO
+  // editorial section it's 3, because that wrapper already owns the <h2> —
+  // an author "## " there must render as <h3>, not a sibling of the page's
+  // structural <h2>s. It only ever demotes: a deeper level is left alone.
+  const safeLevel = Math.min(Math.max(level, 1, minLevel), 6);
   const Tag = HEADING_TAGS[safeLevel] ?? "h2";
   return <Tag className={HEADING_CLS[safeLevel] ?? HEADING_CLS[2]}>{content}</Tag>;
 }
@@ -465,10 +471,10 @@ function RichContentBlock({ html }: { html: string }) {
 
 // ─── Main Renderer ────────────────────────────────────────────────────────────
 
-function renderBlock(b: Record<string, unknown>): React.ReactNode {
+function renderBlock(b: Record<string, unknown>, minHeadingLevel: number): React.ReactNode {
         switch (b.type) {
           case "heading":
-            return <HeadingBlock level={Number(b.level) || 2} content={String(b.content ?? "")} />;
+            return <HeadingBlock level={Number(b.level) || 2} content={String(b.content ?? "")} minLevel={minHeadingLevel} />;
 
             case "rich_content":
   return <RichContentBlock html={String(b.html ?? "")} />;
@@ -585,17 +591,18 @@ function renderBlock(b: Record<string, unknown>): React.ReactNode {
         }
 }
 
-export function BlockRenderer({ blocks }: { blocks: unknown[] }) {
-  if (!Array.isArray(blocks) || blocks.length === 0) {
+export function BlockRenderer({ blocks, minHeadingLevel = 1 }: { blocks: unknown[]; minHeadingLevel?: number }) {
+  const safeBlocks = stripEditorialScaffold(Array.isArray(blocks) ? blocks : []);
+  if (safeBlocks.length === 0) {
     return <p className="text-gray-400 italic text-sm">No content yet.</p>;
   }
 
   return (
     <div className="blog-content">
-      {blocks.map((block, i) => {
+      {safeBlocks.map((block, i) => {
         if (!block || typeof block !== "object") return null;
         const b = block as Record<string, unknown>;
-        const rendered = renderBlock(b);
+        const rendered = renderBlock(b, minHeadingLevel);
         if (rendered === null) return null;
         return (
           <Reveal key={i} delay={Math.min(i, 6) * 0.04}>

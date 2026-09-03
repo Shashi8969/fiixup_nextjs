@@ -352,6 +352,17 @@ export function locationServiceSchema(opts: {
   const locLabel = isArea ? `${areaName}, ${cityName}` : cityName;
   const pageUrl  = canonicalUrl.startsWith("http") ? canonicalUrl : `${SITE_URL}${canonicalUrl}`;
 
+  // `serviceName` is meant to be a generic label ("Bike Battery Jump Start"),
+  // but some CMS rows have the city baked in ("Bike Battery Jump Start in
+  // Bangalore"). Don't append the location again when it's already there —
+  // otherwise the schema name reads "...in Bangalore in Bangalore".
+  const serviceLabel = serviceName.toLowerCase().includes(cityName.toLowerCase())
+    ? serviceName
+    : `${serviceName} in ${locLabel}`;
+  // serviceType should be a short service-type token, not the marketing hero
+  // headline (which usually carries a "| 24/7 Roadside Assistance" tail).
+  const serviceTypeLabel = heroHeading.split("|")[0].trim() || serviceName;
+
   // Price derivation
   const prices   = pricingRows.map((r) => r.priceFrom).filter(Boolean);
   const minPrice = prices.length > 0 ? Math.min(...prices) : 499;
@@ -377,7 +388,7 @@ export function locationServiceSchema(opts: {
     {
       "@type":      ["AutoRepair", "LocalBusiness"],
       "@id":        `${pageUrl}/#business`,
-      name:         `${serviceName} in ${locLabel} — Fiixup`,
+      name:         `${serviceLabel} — Fiixup`,
       url:          pageUrl,
       image:        OG_IMAGE,
       telephone:    cityPhone,
@@ -413,10 +424,10 @@ export function locationServiceSchema(opts: {
     {
       "@type":      "Service",
       "@id":        `${pageUrl}/#service`,
-      name:         `${serviceName} in ${locLabel}`,
+      name:         serviceLabel,
       description:  aboutPara1,
       url:          pageUrl,
-      serviceType:  heroHeading,
+      serviceType:  serviceTypeLabel,
       category:     serviceCategory,
       provider:     { "@id": ORG_ID },
       areaServed:   { "@type": "Place", name: locLabel },

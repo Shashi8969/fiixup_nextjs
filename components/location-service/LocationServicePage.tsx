@@ -75,12 +75,13 @@ const iconMap: Record<string, React.ElementType> = {
   Clock, Shield, IndianRupee, Star, Phone, MapPin, CheckCircle,
 };
 
-// Several headings on this page combine `serviceName` with a location name
-// (e.g. "{serviceName} in {locationHeading}"). `serviceName` is meant to be a
-// generic label ("Car Mechanic"), but a past content mistake let a location
-// get baked into it ("Car Mechanic in HSR Layout"), which then doubled up
-// everywhere that appended a location — "...in HSR Layout in HSR Layout".
-// This guards every such heading against that recurring, whatever the data.
+// Several headings — and the hero image alt/title — on this page combine
+// `serviceName` with a location name (e.g. "{serviceName} in {locationHeading}").
+// `serviceName` is meant to be a generic label ("Car Mechanic"), but a past
+// content mistake let a location get baked into it ("Car Mechanic in HSR
+// Layout"), which then doubled up everywhere that appended a location —
+// "...in HSR Layout in HSR Layout". This guards every such string against
+// that recurring, whatever the data.
 function withLocation(serviceName: string, location: string): string {
   if (!location || serviceName.toLowerCase().includes(location.toLowerCase())) return serviceName;
   return `${serviceName} in ${location}`;
@@ -102,7 +103,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
   // Library existed that don't correspond to any file in this repo's public/
   // folder, so anything else falls back to the category stock photo.
   const heroImageSrc = data.heroImageUrl?.trim().startsWith('https://') ? data.heroImageUrl.trim() : heroImage;
-  const heroImageAltText = data.heroImageAlt?.trim() || `${data.serviceName} in ${data.displayLocation}`;
+  const heroImageAltText = data.heroImageAlt?.trim() || withLocation(data.serviceName, data.displayLocation);
   const heroImageTitle = data.heroImageMeta?.title?.trim() || heroImageAltText;
   const heroImageFocal = { x: data.heroImageMeta?.focalX ?? 50, y: data.heroImageMeta?.focalY ?? 50 };
   const sourcePath = data.isCityLevel

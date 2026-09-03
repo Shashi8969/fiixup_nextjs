@@ -86,7 +86,11 @@ export function SeoEditorialContent({ introHeading, introBody, sections, conclus
 
         {blocks.length > 0 && (
           <div className="mt-10">
-            <BlockRenderer blocks={blocks} />
+            {/* This section already owns the <h2> (introHeading) and <h3>
+                (seoSections). Clamp block headings to <h3>+ so AI content
+                blocks can't emit page-level <h2>s that compete with the
+                template's real section structure. */}
+            <BlockRenderer blocks={blocks} minHeadingLevel={3} />
           </div>
         )}
 
