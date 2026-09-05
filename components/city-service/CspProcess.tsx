@@ -5,10 +5,10 @@
 import type { CityServiceCategoryPageData } from '@/lib/cityPages';
 
 const DEFAULT_STEPS = [
-  { step: 1, title: 'Book in 30 Seconds',  desc: 'Call, WhatsApp, or fill the form.' },
-  { step: 2, title: 'We Dispatch Fast',     desc: 'Nearest certified mechanic dispatched.' },
-  { step: 3, title: 'Repair at Your Door', desc: 'Mechanic arrives with all tools & parts.' },
-  { step: 4, title: 'Back on the Road',    desc: '30-day warranty on all repairs.' },
+  { step: 1, title: 'Book & Confirm', desc: 'Call, WhatsApp, or fill the form and share your vehicle, issue, and location.' },
+  { step: 2, title: '20-Min Quick Arrival', desc: 'After confirmation, the quick-arrival promise applies to eligible doorstep and roadside visits.' },
+  { step: 3, title: 'Diagnose & Choose the Right Fix', desc: 'Suitable work is handled at the vehicle; workshop-only car jobs can be coordinated through a partner garage.' },
+  { step: 4, title: 'Approve & Complete', desc: 'Starting prices cover the standard scope. Extra paid work is explained before approval, and eligible repairs carry a 30-day warranty.' },
 ];
 
 export function CspProcess({ data }: { data: CityServiceCategoryPageData }) {
