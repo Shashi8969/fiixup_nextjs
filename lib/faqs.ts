@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { supabase } from "@/lib/supabase";
-import { globalFAQs } from "@/lib/data/faqs";
+import { verifiedGlobalFAQs } from "@/lib/data/verified-global-faqs";
 import type { FAQ, FAQCategory } from "@/lib/models/faq.model";
 
 type SeoPageFaq = {
@@ -185,14 +185,18 @@ async function getSeoPageFaqCategories(): Promise<FAQCategory[]> {
 
 export const getFaqPageCategories = unstable_cache(
   async (): Promise<FAQCategory[]> => {
+    // The CMS FAQ library is the primary source of truth. Only fall back to
+    // per-page FAQs, then the small verified code fallback when the CMS is
+    // unavailable/empty. This prevents old static marketing claims from
+    // overriding curated business facts in the public FAQ and chat corpus.
     const libraryCategories = await getFaqLibraryCategories();
     if (libraryCategories.length) return libraryCategories;
 
     const seoPageCategories = await getSeoPageFaqCategories();
     if (seoPageCategories.length) return seoPageCategories;
 
-    return globalFAQs;
+    return verifiedGlobalFAQs;
   },
-  ["faq-page-categories"],
+  ["faq-page-categories-v2"],
   { revalidate: 3600, tags: ["faq-library", "seo-pages"] }
 );
