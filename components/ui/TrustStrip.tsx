@@ -2,10 +2,10 @@ import { Clock, Award, Shield, CheckCircle } from "lucide-react";
 import { TRUST_BADGES } from "@/lib/constants";
 
 const iconItems = [
-  { icon: Clock,        label: "24/7 Service",        sub: "Emergency & regular"   },
-  { icon: Award,        label: "Certified Techs",      sub: "Trained professionals" },
-  { icon: Shield,       label: "30-Day Warranty",      sub: "On all repairs"        },
-  { icon: CheckCircle,  label: "Transparent Pricing",  sub: "No hidden charges"     },
+  { icon: Clock,       label: "20-Min Quick Arrival", sub: "After booking confirmation*" },
+  { icon: Award,       label: "Flexible Service",     sub: "Doorstep, roadside or partner garage" },
+  { icon: Shield,      label: "30-Day Warranty",      sub: "On eligible repairs" },
+  { icon: CheckCircle, label: "Clear Pricing",         sub: "Starting price; extra work approved first" },
 ];
 
 interface TrustStripProps {
@@ -25,6 +25,9 @@ export function TrustStrip({ variant = "icons" }: TrustStripProps) {
               </span>
             ))}
           </div>
+          <p className="mt-3 text-center text-[11px] leading-4 text-gray-400">
+            *Eligible doorstep/roadside bookings. Exceptional traffic, weather, distance, access, or technician availability can affect arrival.
+          </p>
         </div>
       </section>
     );
@@ -42,6 +45,9 @@ export function TrustStrip({ variant = "icons" }: TrustStripProps) {
             </div>
           ))}
         </div>
+        <p className="mt-3 text-center text-[11px] leading-4 text-gray-400">
+          *Eligible doorstep/roadside bookings. Exceptional traffic, weather, distance, access, or technician availability can affect arrival.
+        </p>
       </div>
     </section>
   );
