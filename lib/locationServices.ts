@@ -43,10 +43,21 @@ export interface LocationServiceData {
   schemaReviewCount: number;
   displayLocation: string;
   locationHeading: string;
-   // Stats Fields
   availability?: string;
   arrival_time?: string;
   warranty?: string;
+}
+
+function verifiedRating(value: unknown): number {
+  if (value == null || value === "") return 0;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 && parsed <= 5 ? parsed : 0;
+}
+
+function verifiedReviewCount(value: unknown): number {
+  if (value == null || value === "") return 0;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : 0;
 }
 
 function rowToLocationService(row: any): LocationServiceData {
@@ -89,8 +100,10 @@ function rowToLocationService(row: any): LocationServiceData {
     heroImageAlt:          row.hero_image_alt ?? null,
     heroImageMeta:         normalizeImageMeta(row.hero_image_meta),
     pageLayout:            row.page_layout ?? [],
-    schemaAggregateRating: parseFloat(row.schema_aggregate_rating) || 4.9,
-    schemaReviewCount:     row.schema_review_count ?? 150,
+    // Never manufacture trust metrics. Missing/unusable values stay at zero;
+    // UI/schema callers can then omit rating output until a verified source is wired in.
+    schemaAggregateRating: verifiedRating(row.schema_aggregate_rating),
+    schemaReviewCount:     verifiedReviewCount(row.schema_review_count),
     displayLocation:       isCity ? row.city_name : `${row.area_name}, ${row.city_name}`,
     locationHeading:       isCity ? row.city_name : (row.area_name ?? row.city_name),
   };
@@ -141,7 +154,6 @@ export async function getAllCityServiceSlugs(citySlug: string): Promise<string[]
     .map((r) => typeof r.service_slug === "string" ? r.service_slug.trim() : "")
     .filter((slug): slug is string => Boolean(slug));
 }
-
 
 export interface AreaServiceListItem {
   id: number;
@@ -196,9 +208,9 @@ export async function getAllAreaServiceParams(
     .eq("is_active", true);
   if (error || !data) return [];
   return (data ?? []).flatMap((r) => {
-    const areaSlug = typeof r.area_slug === 'string' ? r.area_slug.trim() : ''
-    const serviceSlug = typeof r.service_slug === 'string' ? r.service_slug.trim() : ''
-    return areaSlug && serviceSlug ? [{ areaSlug, serviceSlug }] : []
+    const areaSlug = typeof r.area_slug === 'string' ? r.area_slug.trim() : '';
+    const serviceSlug = typeof r.service_slug === 'string' ? r.service_slug.trim() : '';
+    return areaSlug && serviceSlug ? [{ areaSlug, serviceSlug }] : [];
   });
 }
 
@@ -235,13 +247,13 @@ export interface CityServiceListItem {
   serviceSlug:     string;
   serviceName:     string;
   serviceCategory: string;
-  heroSubheading:  string;   // used as the card tagline
+  heroSubheading:  string;
   pricingRows:     { label: string; priceFrom: number; priceTo?: number; highlight?: boolean }[];
   schemaAggregateRating: number;
   schemaReviewCount:     number;
   canonicalUrl:    string;
 }
- 
+
 export async function getCityServices(
   citySlug: string
 ): Promise<CityServiceListItem[]> {
@@ -258,12 +270,12 @@ export async function getCityServices(
     .eq("is_active", true)
     .order("service_category")
     .order("service_name");
- 
+
   if (error) {
     console.error("getCityServices error:", error.message);
     return [];
   }
- 
+
   return (data ?? []).map((row) => ({
     id:              row.id,
     serviceSlug:     row.service_slug,
@@ -271,31 +283,28 @@ export async function getCityServices(
     serviceCategory: row.service_category,
     heroSubheading:  row.hero_subheading ?? "",
     pricingRows:     row.pricing_rows ?? [],
-    schemaAggregateRating: parseFloat(row.schema_aggregate_rating) || 4.9,
-    schemaReviewCount:     row.schema_review_count ?? 150,
+    schemaAggregateRating: verifiedRating(row.schema_aggregate_rating),
+    schemaReviewCount:     verifiedReviewCount(row.schema_review_count),
     canonicalUrl:    row.canonical_url,
   }));
 }
- 
+
 export interface CityServiceCard {
   id:              number;
   serviceSlug:     string;
   serviceName:     string;
   serviceCategory: string;
-  heroSubheading:  string;   // tagline shown on card
+  heroSubheading:  string;
   pricingRows:     { label: string; priceFrom: number; priceTo?: number; note?: string }[];
   duration:        string | null;
   schemaAggregateRating: number;
   schemaReviewCount:     number;
   canonicalUrl:    string;
 }
- 
-// Lightweight existence check used by generateMetadata() so we don't have to
-// pull full rows just to decide whether a city+category page has any real
-// content yet — see SEO_AUDIT.md F2. Kept as a separate `head: true` count
-// query rather than reusing getCityServicesByCategory() to avoid doubling
-// the heavier select on every request (generateMetadata and the page body
-// both run per-request and aren't deduped like fetch() is).
+
+// Lightweight existence check for the actual city-specific child-service list.
+// Editorial city-category content is evaluated separately by the page route;
+// a zero child count must not automatically mean the page is thin/noindex.
 export async function hasAnyCityServiceInCategory(
   citySlug: string,
   categorySlug: string
@@ -310,8 +319,7 @@ export async function hasAnyCityServiceInCategory(
 
   if (error) {
     console.error("hasAnyCityServiceInCategory error:", error.message);
-    // Fail open (treat as "has content") so a transient DB error can't
-    // accidentally noindex a real, working page.
+    // Fail open so a transient DB error cannot accidentally noindex a working page.
     return true;
   }
 
@@ -331,26 +339,26 @@ export async function getCityServicesByCategory(
        canonical_url`
     )
     .eq("city_slug",         citySlug.toLowerCase())
-    .eq("service_category",  categorySlug.toLowerCase())   // matches the category_slug column
-    .is("area_slug",         null)                         // city-level only
+    .eq("service_category",  categorySlug.toLowerCase())
+    .is("area_slug",         null)
     .eq("is_active",         true)
     .order("service_name");
- 
+
   if (error) {
     console.error("getCityServicesByCategory error:", error.message);
     return [];
   }
- 
+
   return (data ?? []).map((row) => ({
     id:              row.id,
     serviceSlug:     row.service_slug,
     serviceName:     row.service_name,
     serviceCategory: row.service_category,
     heroSubheading:  row.hero_subheading ?? "",
-    pricingRows:     row.pricing_rows    ?? [],
-    duration:        null,   // location_services has no duration column — shown as "20 min"
-    schemaAggregateRating: parseFloat(row.schema_aggregate_rating) || 4.9,
-    schemaReviewCount:     row.schema_review_count ?? 150,
+    pricingRows:     row.pricing_rows ?? [],
+    duration:        null,
+    schemaAggregateRating: verifiedRating(row.schema_aggregate_rating),
+    schemaReviewCount:     verifiedReviewCount(row.schema_review_count),
     canonicalUrl:    row.canonical_url,
   }));
 }
