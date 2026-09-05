@@ -62,14 +62,14 @@ export const staticPagesSEO: PageSEO[] = [
     id: "faq",
     label: "FAQ",
     route: "/faq",
-    title: "FAQs | Doorstep Car & Bike Repair Questions Answered | Fiixup",
+    title: "Fiixup Help & FAQs | Booking, Pricing, Repairs & Roadside Safety",
     description:
-      "Answers to your top questions about Fiixup's doorstep auto repair — pricing, booking process, service warranty, coverage areas, mechanic qualifications and more.",
+      "Practical answers about booking Fiixup, diagnosis, doorstep repair limits, pricing, breakdown safety, batteries, punctures, towing and service-area coverage.",
     keywords:
-      "fiixup faq, doorstep car repair questions, mobile mechanic cost India, car service warranty, doorstep repair booking process",
-    ogTitle: "Frequently Asked Questions | Fiixup",
+      "fiixup faq, doorstep mechanic booking, roadside breakdown questions, car repair pricing, battery jump start questions, towing service questions, puncture repair help",
+    ogTitle: "Fiixup Help & Frequently Asked Questions",
     ogDescription:
-      "Everything you need to know about booking, pricing, warranty, and service areas.",
+      "Clear answers about booking, diagnosis, pricing, roadside safety, batteries, punctures, towing and Fiixup service areas.",
     canonical: `${SITE_URL}/faq`,
   },
   {
