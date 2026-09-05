@@ -40,28 +40,31 @@ export function AreaHero({ city, areaName, heroHeading, heroSubheading, testimon
           <h1 className="max-w-xl text-4xl font-black leading-[1.08] text-slate-950 sm:text-5xl lg:text-[3.25rem]">
             {heroHeading?.trim() || (
               <>
-                Car &amp; bike repair, right at your door in <span className="text-blue-600">{areaName}</span>
+                Car &amp; bike service support in <span className="text-blue-600">{areaName}</span>
               </>
             )}
           </h1>
 
           <p className="mt-5 max-w-xl text-base leading-7 text-slate-600 sm:text-lg">
             {heroSubheading?.trim() ||
-              `Book in 30 seconds. A certified technician arrives at your home or office in ${areaName} — no towing, no workshop queue, upfront pricing before any work starts.`}
+              `Book doorstep or roadside help in ${areaName}. After booking confirmation, Fiixup's 20-Min Quick Arrival promise applies to eligible visits. If a car job needs workshop equipment, pickup and service through a partner garage can be arranged.`}
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-blue-200 bg-blue-50/70 px-4 py-3.5">
             <ShieldCheck className="h-5 w-5 shrink-0 text-green-600" aria-hidden="true" />
             <p className="text-[15px] text-slate-800">
-              <span className="font-extrabold text-blue-700">Mechanic at your door in ~20 minutes.</span>{" "}
+              <span className="font-extrabold text-blue-700">20-Min Quick Arrival after booking confirmation*</span>{" "}
               <span className="ml-1 inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 font-mono text-xs font-extrabold text-amber-800">
-                From ₹450
+                Starting prices
               </span>{" "}
               <span className="ml-1 inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 font-mono text-xs font-extrabold text-green-700">
-                30-day warranty
+                30-day warranty on eligible repairs
               </span>
             </p>
           </div>
+          <p className="mt-2 text-xs leading-5 text-slate-500">
+            *Eligible doorstep/roadside bookings. Arrival can be affected by exceptional traffic, weather, distance, access, or technician availability. Displayed prices are starting/indicative prices; extra labour, parts, multiple punctures, towing/pickup distance, or additional repairs can change the final charge after approval.
+          </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
             <a
@@ -84,10 +87,10 @@ export function AreaHero({ city, areaName, heroHeading, heroSubheading, testimon
 
           <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-4 border-t border-gray-200 pt-6 sm:grid-cols-4">
             {[
-              { icon: Clock3, title: "Fast response", text: "Area-based dispatch" },
-              { icon: ShieldCheck, title: "30-day", text: "Repair warranty" },
-              { icon: Wrench, title: "Skilled", text: "Technicians" },
-              { icon: IndianRupee, title: "Upfront", text: "Pricing" },
+              { icon: Clock3, title: "20-Min", text: "Quick arrival after confirmation*" },
+              { icon: ShieldCheck, title: "30-day", text: "Eligible repair warranty" },
+              { icon: Wrench, title: "Flexible", text: "Doorstep, roadside or garage" },
+              { icon: IndianRupee, title: "Starting", text: "Price; extras approved first" },
             ].map(({ icon: Icon, title, text }) => (
               <div
                 key={title}
