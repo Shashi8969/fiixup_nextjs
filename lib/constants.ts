@@ -6,21 +6,38 @@ export const MAIN_EMAIL           = "support@fiixup.in";
 export const WHATSAPP_NUMBER      = "918197459732";
 export const DEFAULT_OG_IMAGE     = `${SITE_URL}/assets/og-image.webp`;
 export const DEFAULT_KEYWORDS     =
-  "doorstep car repair India, bike repair at home, mobile mechanic, 24/7 auto repair, car service Bengaluru, bike repair Chennai, mechanic Hyderabad, car repair Mumbai, emergency car service, doorstep bike service, auto repair at home, mobile car mechanic, on-demand car repair, home bike service, certified technicians, quick car repair, reliable auto service, affordable car repair, professional bike repair, emergency roadside assistance, car maintenance at home, bike maintenance at home, car repair near me, bike repair near me, auto repair near me, mobile car service, mobile bike service, car repair on demand, bike repair on demand, car breakdown service, bike breakdown service, car repair at your doorstep, bike repair at your doorstep,  car repair in your area, bike repair in your area, car service at home, bike service at home, car repair without towing, bike repair without towing, car repair with warranty, bike repair with warranty, car repair with certified technicians, bike repair with certified technicians, car repair with upfront pricing, bike repair with upfront pricing, car repair with transparent pricing, bike repair with transparent pricing, car repair with fast response time, bike repair with fast response time, car repair with convenient scheduling, bike repair with convenient scheduling, car repair with quality parts, bike repair with quality parts, car repair with professional service, bike repair with professional service, car repair with customer satisfaction, bike repair with customer satisfaction, car repair with emergency support, bike repair with emergency support, car repair with reliable service, bike repair with reliable service, car repair with trusted technicians, bike repair with trusted technicians, car repair with experienced mechanics, bike repair with experienced mechanics, car repair with on-site service, bike repair with on-site service, car repair with mobile service, bike repair with mobile service, car repair with home service, bike repair with home service, car repair with doorstep service, bike repair with doorstep service, car repair with 24/7 availability, bike repair with 24/7 availability, car repair with quick turnaround time, bike repair with quick turnaround time, car repair with affordable pricing, bike repair with affordable pricing, car repair with convenient payment options, bike repair with convenient payment options, car repair with flexible scheduling, bike repair with flexible scheduling, car repair with reliable support, bike repair with reliable support, car repair with trusted service providers, bike repair with trusted service providers";
+  "doorstep car repair India, bike repair at home, mobile mechanic, 24/7 auto repair, car service Bengaluru, bike repair Chennai, mechanic Hyderabad, car repair Mumbai, emergency car service, doorstep bike service, auto repair at home, mobile car mechanic, on-demand car repair, home bike service, emergency roadside assistance, car maintenance at home, bike maintenance at home, car repair near me, bike repair near me, mobile car service, mobile bike service, car breakdown service, bike breakdown service, car service at home, bike service at home, roadside car help, roadside bike help, car pickup and drop service, partner garage car service";
 
 export const CITIES_LIST = ["Bengaluru", "Chennai", "Hyderabad", "Mumbai"] as const;
 export type CityName = (typeof CITIES_LIST)[number];
 
+/**
+ * Verified Fiixup service-language rules.
+ * Keep these centralized so pages do not drift into conflicting promises.
+ */
+export const ARRIVAL_PROMISE = "20-Min Quick Arrival after booking confirmation";
+export const ARRIVAL_PROMISE_NOTE =
+  "Applies to eligible doorstep and roadside bookings. Exceptional traffic, weather, distance, building/parking access, or technician availability can affect arrival.";
+
+export const PRICE_DISCLAIMER_SHORT =
+  "Prices shown are starting/indicative prices. Final charges may vary if the job needs extra labour, parts, fluids, additional repairs, multiple punctures, towing/pickup distance, or other work approved after inspection.";
+
+export const PRICE_DISCLAIMER_LONG =
+  "Prices shown on Fiixup are starting/indicative prices for the standard service scope, not a fixed final quotation. Final charges may vary by vehicle, location, labour required, parts or fluids used, access conditions, towing or pickup/drop distance, multiple punctures, and additional faults or repairs found during inspection. Extra paid work should be explained and approved before it proceeds.";
+
+export const PICKUP_DROP_PROMISE =
+  "For car-service jobs that need workshop equipment, Fiixup can coordinate inspection/collection and service through partner garages. Free pickup and drop is available on eligible services and should be confirmed at booking.";
+
 export const TRUST_BADGES = [
-  "✅ Technician arrives in 20 minutes",
-  "✅ Upfront pricing — no hidden charges",
-  "✅ 30-day warranty on all repairs",
-  "✅ Certified & background-verified technicians",
+  "✅ 20-Min Quick Arrival after booking confirmation*",
+  "✅ Starting price shown — extra work approved first",
+  "✅ 30-day warranty on eligible repairs",
+  "✅ Doorstep, roadside & partner-garage support",
 ] as const;
 
 export const HOW_IT_WORKS_STEPS = [
-  { n: "1", title: "Book in 30 Seconds",  desc: "Call, WhatsApp, or fill the form. Pick your time and location." },
-  { n: "2", title: "We Dispatch Fast",     desc: "We confirm and dispatch the nearest certified technician to you." },
-  { n: "3", title: "Repair at Your Door",  desc: "Technician arrives with all tools & parts. Full transparency." },
-  { n: "4", title: "Back on the Road",     desc: "Service done with a 30-day warranty. Digital receipt provided." },
+  { n: "1", title: "Book & Confirm", desc: "Call, WhatsApp, or use the booking form. Share your vehicle, issue, location, and preferred time." },
+  { n: "2", title: "20-Min Quick Arrival", desc: "After booking confirmation, the quick-arrival promise applies to eligible doorstep and roadside visits." },
+  { n: "3", title: "Repair or Pickup", desc: "Suitable jobs are handled at your location. Workshop-only car jobs can be moved to a partner garage, with free pickup and drop on eligible services." },
+  { n: "4", title: "Approve & Complete", desc: "Starting prices cover the standard scope. Any extra labour, parts, or additional repair should be explained before paid work proceeds. Warranty applies to eligible repairs." },
 ] as const;
