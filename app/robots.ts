@@ -3,19 +3,23 @@ import { SITE_URL } from "@/lib/constants";
 
 const DISALLOW = ["/api/", "/admin-preview/", "/debug/", "/_next/"];
 
-// AI crawlers used for chatbot answers / assistant browsing (ChatGPT, Claude,
-// Perplexity, Google's AI features, Common Crawl feeding various LLMs). Listed
-// explicitly — rather than relying only on the "*" rule below — so it's clear
-// Fiixup deliberately welcomes AI/LLM discovery of its real pricing and
-// service-area content, not just traditional search engines.
-const AI_USER_AGENTS = [
-  "GPTBot",
-  "ChatGPT-User",
+// Search / assistant retrieval crawlers that can surface Fiixup pages in
+// answer experiences. Keep these separate from model-training controls so it
+// is clear which rules affect discoverability versus model development.
+const AI_SEARCH_USER_AGENTS = [
   "OAI-SearchBot",
-  "ClaudeBot",
-  "Claude-Web",
-  "anthropic-ai",
+  "ChatGPT-User",
+  "Claude-SearchBot",
+  "Claude-User",
   "PerplexityBot",
+  "Perplexity-User",
+];
+
+// Model / product crawlers. These are not substitutes for the search crawlers
+// above, but are listed explicitly so their access policy is intentional.
+const AI_MODEL_CRAWLERS = [
+  "GPTBot",
+  "ClaudeBot",
   "Google-Extended",
   "CCBot",
 ];
@@ -29,7 +33,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: DISALLOW,
       },
       {
-        userAgent: AI_USER_AGENTS,
+        userAgent: [...AI_SEARCH_USER_AGENTS, ...AI_MODEL_CRAWLERS],
         allow: "/",
         disallow: DISALLOW,
       },
