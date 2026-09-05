@@ -167,8 +167,11 @@ function normalizePageData(value: unknown): PageData {
     serviceHighlights: normalizeArrayObject(pd.serviceHighlights, (item) => ({ title: asString(item.title), description: asString(item.description ?? item.text) })),
     whyChoosePoints: normalizeArrayObject(pd.whyChoosePoints, (item) => ({ icon: asString(item.icon), title: asString(item.title), desc: asString(item.desc ?? item.text ?? item.description) })),
     pricingDisclaimer: asString(pd.pricingDisclaimer),
-    schemaAggregateRating: asNumber(pd.schemaAggregateRating, 4.9),
-    schemaReviewCount: asNumber(pd.schemaReviewCount, 150),
+    // Missing ratings/review counts must stay missing. A synthetic 4.9/150
+    // makes low-content pages look more authoritative than the source data can
+    // prove and can leak into visible trust badges.
+    schemaAggregateRating: pd.schemaAggregateRating == null ? 0 : asNumber(pd.schemaAggregateRating, 0),
+    schemaReviewCount: pd.schemaReviewCount == null ? 0 : asNumber(pd.schemaReviewCount, 0),
     pricingRows: normalizeArrayObject(pd.pricingRows, (item) => ({
       label: asString(item.label),
       priceFrom: asNumber(item.priceFrom ?? item.price_from, 0),
