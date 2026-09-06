@@ -10,9 +10,9 @@ type AreaTrustMarqueeProps = {
 };
 
 /**
- * Trust band between Hero and Services. Every item is backed by a real field
- * or a real count — no fabricated per-area stats (see plan: the artifact's
- * mock "18 min average arrival" has no backing field and isn't reproduced).
+ * Trust band between Hero and Services.
+ * Only show claims backed by an explicit area field, verified testimonial rollup,
+ * a real service count, or the site's centrally scoped service terms.
  */
 export function AreaTrustMarquee({ areaName, statsCustomers, testimonials = [], servicesCount }: AreaTrustMarqueeProps) {
   const rating = computeRatingSummary(testimonials);
@@ -23,12 +23,16 @@ export function AreaTrustMarquee({ areaName, statsCustomers, testimonials = [], 
     items.push({ icon: Users, label: <><b className="text-white">{statsCustomers}</b>&nbsp;{areaName} customers served</> });
   }
   if (rating) {
-    items.push({ icon: Star, label: <><b className="text-white">{rating.average}★</b>&nbsp;average rating</> });
+    items.push({ icon: Star, label: <><b className="text-white">{rating.average}★</b>&nbsp;average from verified area reviews</> });
   }
-  items.push({ icon: ShieldCheck, label: <><b className="text-white">30-day</b>&nbsp;warranty on every repair</> });
-  items.push({ icon: CheckCircle2, label: "Verified & background-checked mechanics" });
+
+  items.push({ icon: ShieldCheck, label: <><b className="text-white">30-day</b>&nbsp;warranty on eligible repairs</> });
+  items.push({ icon: CheckCircle2, label: "Starting price shown — extra work approved first" });
+
   if (servicesCount > 0) {
-    items.push({ icon: Wrench, label: <><b className="text-white">{servicesCount}</b>&nbsp;services available in this area</> });
+    items.push({ icon: Wrench, label: <><b className="text-white">{servicesCount}</b>&nbsp;services currently listed in this area</> });
+  } else {
+    items.push({ icon: Wrench, label: "Doorstep, roadside or partner-garage support where available" });
   }
 
   return (
