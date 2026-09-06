@@ -302,28 +302,50 @@ export interface CityServiceCard {
   canonicalUrl:    string;
 }
 
-// Lightweight existence check for the actual city-specific child-service list.
-// Editorial city-category content is evaluated separately by the page route;
-// a zero child count must not automatically mean the page is thin/noindex.
+// A city-category page is indexable when it has active city-level child services OR
+// an explicitly approved editorial SEO page. This prevents a zero child-card count
+// from accidentally noindexing a useful page that already has search demand.
 export async function hasAnyCityServiceInCategory(
   citySlug: string,
   categorySlug: string
 ): Promise<boolean> {
+  const normalizedCity = citySlug.toLowerCase();
+  const normalizedCategory = categorySlug.toLowerCase();
+
   const { count, error } = await supabase
     .from("location_services")
     .select("id", { count: "exact", head: true })
-    .eq("city_slug",        citySlug.toLowerCase())
-    .eq("service_category", categorySlug.toLowerCase())
-    .is("area_slug",        null)
-    .eq("is_active",        true);
+    .eq("city_slug", normalizedCity)
+    .eq("service_category", normalizedCategory)
+    .is("area_slug", null)
+    .eq("is_active", true);
 
   if (error) {
-    console.error("hasAnyCityServiceInCategory error:", error.message);
+    console.error("hasAnyCityServiceInCategory child-service error:", error.message);
     // Fail open so a transient DB error cannot accidentally noindex a working page.
     return true;
   }
 
-  return (count ?? 0) > 0;
+  if ((count ?? 0) > 0) return true;
+
+  const urlPath = `/${normalizedCity}/services/${normalizedCategory}`;
+  const { data: editorialPage, error: editorialError } = await supabase
+    .from("seo_pages")
+    .select("url_path")
+    .eq("url_path", urlPath)
+    .eq("page_type", "city_service_category")
+    .eq("is_active", true)
+    .eq("is_indexed", true)
+    .contains("page_data", { editorialIndexable: true })
+    .maybeSingle();
+
+  if (editorialError) {
+    console.error("hasAnyCityServiceInCategory editorial-page error:", editorialError.message);
+    // Again fail open: a temporary lookup error must not inject noindex on an established page.
+    return true;
+  }
+
+  return Boolean(editorialPage);
 }
 
 export async function getCityServicesByCategory(
