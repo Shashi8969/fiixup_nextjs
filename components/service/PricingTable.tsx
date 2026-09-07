@@ -1,6 +1,7 @@
 // components/service/PricingTable.tsx
 // Transparent pricing + competitor comparison table.
-// Renders only when service.pricing is defined — no crash if absent.
+// Tolerates partial CMS data: renders nothing without pricing rows, and drops
+// the comparison panel when no competitor rows are authored.
 
 import type { PricingData } from "@/lib/models/service.model";
 import { Check, X, Phone } from "lucide-react";
@@ -19,6 +20,13 @@ interface Props {
 export default function PricingTable({ pricing, serviceTitle, accentColor = "red" }: Props) {
   const a = serviceThemes[accentColor];
 
+  // `pricing` comes from admin-authored JSONB — any field may be missing.
+  const rows = Array.isArray(pricing?.rows) ? pricing.rows : [];
+  const competitors = Array.isArray(pricing?.competitors) ? pricing.competitors : [];
+
+  // Nothing priced yet — render nothing rather than an empty shell.
+  if (!rows.length) return null;
+
   return (
     <section className="py-16 bg-white" id="pricing">
       <div className="container mx-auto px-4">
@@ -35,13 +43,13 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-10">
+        <div className={`grid gap-10 ${competitors.length ? "lg:grid-cols-2" : "max-w-2xl mx-auto"}`}>
 
           {/* Pricing rows */}
           <div>
             <h3 className="font-bold text-gray-900 mb-4 text-lg">Service Pricing</h3>
             <div className="rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-              {pricing.rows.map((row, i) => (
+              {rows.map((row, i) => (
                 <div
                   key={i}
                   className={`flex items-center justify-between gap-4 px-5 py-4 border-b last:border-b-0 flex-wrap
@@ -67,10 +75,13 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
                 </div>
               ))}
             </div>
-            <p className="text-xs text-gray-400 mt-3 leading-relaxed">{pricing.disclaimer}</p>
+            {pricing?.disclaimer && (
+              <p className="text-xs text-gray-400 mt-3 leading-relaxed">{pricing.disclaimer}</p>
+            )}
           </div>
 
-          {/* Competitor comparison */}
+          {/* Competitor comparison — only when the CMS has competitor rows */}
+          {competitors.length > 0 && (
           <div>
             <h3 className="font-bold text-gray-900 mb-4 text-lg">How We Compare</h3>
             <div className="rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
@@ -80,7 +91,7 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
                 <span className="text-center">Arrival</span>
                 <span className="text-center">Doorstep</span>
               </div>
-              {pricing.competitors.map((c, i) => {
+              {competitors.map((c, i) => {
                 const isUs = c.name === "Fiixup";
                 return (
                   <div
@@ -109,15 +120,17 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
                 );
               })}
             </div>
-
-            <div className="mt-5 flex flex-wrap gap-2">
-              {["Upfront pricing", "30-day warranty", "Certified mechanics", "No hidden fees"].map((b) => (
-                <span key={b} className="flex items-center gap-1.5 text-xs bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full font-medium">
-                  <Check className="w-3 h-3 text-green-600" /> {b}
-                </span>
-              ))}
-            </div>
           </div>
+          )}
+        </div>
+
+        {/* Trust badges — shown whether or not a comparison table rendered */}
+        <div className="mt-8 flex flex-wrap justify-center gap-2">
+          {["Upfront pricing", "30-day warranty", "Certified mechanics", "No hidden fees"].map((b) => (
+            <span key={b} className="flex items-center gap-1.5 text-xs bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full font-medium">
+              <Check className="w-3 h-3 text-green-600" /> {b}
+            </span>
+          ))}
         </div>
 
         <div className="mt-10 text-center">

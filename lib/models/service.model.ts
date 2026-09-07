@@ -33,10 +33,14 @@ export interface CompetitorRow {
   doorstep: boolean;
 }
 
+// Sourced from the `service_categories.pricing_summary` / `services.pricing`
+// JSONB columns, which are admin-authored and not schema-validated — every
+// field can legitimately be absent. Keep these optional so consumers are
+// forced to guard rather than trusting the shape at build time.
 export interface PricingData {
-  rows: PricingRow[];
-  competitors: CompetitorRow[];
-  disclaimer: string;
+  rows?: PricingRow[];
+  competitors?: CompetitorRow[];
+  disclaimer?: string;
 }
 
 // ── Guide ─────────────────────────────────────────────────────────────────────
