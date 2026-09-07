@@ -1,14 +1,21 @@
 // components/service/CompleteGuide.tsx
-import type { CompleteGuide } from "@/lib/models/service.model";
+import type { CompleteGuide, GuideSection } from "@/lib/models/service.model";
 import { Lightbulb } from "lucide-react";
 import Link from "next/link";
-import { paragraphs } from "@/lib/cms-guards";
+import { paragraphs, asArray } from "@/lib/cms-guards";
 
 interface Props {
   guide: CompleteGuide;
 }
 
 export default function CompleteGuideSection({ guide }: Props) {
+  // `guide` is admin-authored JSONB — the call sites only check that the object
+  // exists, so `sections` can still be missing or a non-array.
+  const sections = asArray<GuideSection>(guide?.sections);
+
+  // A guide with no sections has nothing to render but chrome.
+  if (!sections.length) return null;
+
   return (
     <section className="py-16 bg-white" id="complete-guide">
       <div className="container mx-auto px-4">
@@ -30,7 +37,7 @@ export default function CompleteGuideSection({ guide }: Props) {
           <nav className="bg-gray-50 rounded-2xl border border-gray-200 p-6 mb-10">
             <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">In This Guide</p>
             <ol className="space-y-2">
-              {guide.sections.map((s, i) => (
+              {sections.map((s, i) => (
                 <li key={i}>
                   <a
                     href={`#guide-section-${i}`}
@@ -48,7 +55,7 @@ export default function CompleteGuideSection({ guide }: Props) {
 
           {/* Guide sections */}
           <div className="space-y-12">
-            {guide.sections.map((section, i) => (
+            {sections.map((section, i) => (
               <div key={i} id={`guide-section-${i}`} className="scroll-mt-20">
                 <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
                   <span className="flex-shrink-0 w-8 h-8 rounded-full bg-red-600 text-white text-sm font-bold flex items-center justify-center">

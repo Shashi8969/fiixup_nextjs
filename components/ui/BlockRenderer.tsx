@@ -35,8 +35,41 @@ export type Block =
   | { type: string; [key: string]: unknown }; // unknown future blocks
 
 
+// HTML allows "/" as an attribute separator, not just whitespace, so
+// `<img/onerror=alert(1) src=x>` slips past attribute rules anchored on \s.
+// Rewrite those separators to spaces first — quote-aware, so a "/" inside an
+// attribute value (`href="/online=1"`) is left alone — then the \s-anchored
+// rules below see a normalized tag. The tag matcher consumes quoted strings
+// whole so a ">" inside a value can't truncate a tag and hide its tail.
+function normalizeAttrSeparators(html: string) {
+  return html.replace(/<[a-z][a-z0-9:-]*(?:"[^"]*"|'[^']*'|[^>"'])*>/gi, (tag) => {
+    let out = "";
+    let quote: string | null = null;
+    for (let i = 0; i < tag.length; i++) {
+      const ch = tag[i];
+      if (quote) {
+        out += ch;
+        if (ch === quote) quote = null;
+        continue;
+      }
+      if (ch === '"' || ch === "'") {
+        quote = ch;
+        out += ch;
+        continue;
+      }
+      // Keep the self-closing slash in `<br />`; rewrite separator slashes.
+      if (ch === "/" && !/^\s*>/.test(tag.slice(i + 1))) {
+        out += " ";
+        continue;
+      }
+      out += ch;
+    }
+    return out;
+  });
+}
+
 function cleanHtml(html: string) {
-  return String(html ?? "")
+  return normalizeAttrSeparators(String(html ?? ""))
     .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, "")
     .replace(/<\/?(?:iframe|object|embed|form|input|button|textarea|select|option|meta|link|base)[\s\S]*?>/gi, "")
@@ -141,7 +174,7 @@ function TableBlock({ headers, rows, caption }: { headers: string[]; rows: strin
         <thead className="bg-red-50 border-b border-red-100">
           <tr>
             {headers.map((h, i) => (
-              <th className="text-left px-4 py-3 text-red-800 font-semibold text-xs uppercase tracking-wide whitespace-nowrap">
+              <th key={i} className="text-left px-4 py-3 text-red-800 font-semibold text-xs uppercase tracking-wide whitespace-nowrap">
                 {h}
               </th>
             ))}
@@ -328,7 +361,7 @@ function StepsBlock({ items }: { items: { title: string; description: string }[]
   return (
     <ol className="mb-6 space-y-5">
       {items.map((item, i) => (
-        <li className="flex gap-4">
+        <li key={i} className="flex gap-4">
           <div className="shrink-0 w-9 h-9 bg-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-sm mt-0.5">
             {i + 1}
           </div>
@@ -397,7 +430,7 @@ function ProsConsBlock({ pros, cons }: { pros: string[]; cons: string[] }) {
         </p>
         <ul className="space-y-2">
           {pros.map((p, i) => (
-            <li className="flex items-start gap-2 text-sm text-green-900">
+            <li key={i} className="flex items-start gap-2 text-sm text-green-900">
               <span className="text-green-500 mt-0.5 shrink-0">✓</span>
               <span>{p}</span>
             </li>
@@ -410,7 +443,7 @@ function ProsConsBlock({ pros, cons }: { pros: string[]; cons: string[] }) {
         </p>
         <ul className="space-y-2">
           {cons.map((c, i) => (
-            <li className="flex items-start gap-2 text-sm text-red-900">
+            <li key={i} className="flex items-start gap-2 text-sm text-red-900">
               <span className="text-red-500 mt-0.5 shrink-0">✗</span>
               <span>{c}</span>
             </li>
@@ -433,7 +466,7 @@ function ComparisonBlock({
           <tr>
             <th className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wide">Feature</th>
             {headers.map((h, i) => (
-              <th className={`text-center px-4 py-3 font-semibold text-xs uppercase tracking-wide ${i === 0 ? "text-red-400" : "text-gray-300"}`}>
+              <th key={i} className={`text-center px-4 py-3 font-semibold text-xs uppercase tracking-wide ${i === 0 ? "text-red-400" : "text-gray-300"}`}>
                 {h}
               </th>
             ))}

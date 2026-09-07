@@ -2,6 +2,7 @@
 import { cache } from 'react'
 import { supabase } from '@/lib/supabase'
 import { normalizeImageMeta, type ImageMeta } from '@/lib/seo-pages'
+import { asArray } from '@/lib/cms-guards'
 
 // lib/global-service.ts
 export interface GlobalServicePage {
@@ -40,6 +41,10 @@ export interface GlobalServicePage {
 service_availability: string | '24/7';
 }
 
+type GlobalServiceAboutBullet = GlobalServicePage['about_bullets'][number]
+type GlobalServiceHighlight = GlobalServicePage['service_highlights'][number]
+type GlobalServiceWhyChoosePoint = GlobalServicePage['why_choose_points'][number]
+type GlobalServiceHeroStat = GlobalServicePage['hero_stats'][number]
 type GlobalServicePricingRow = GlobalServicePage['pricing_rows'][number]
 type GlobalServiceTestimonial = GlobalServicePage['testimonials'][number]
 type GlobalServiceFaq = GlobalServicePage['faqs'][number]
@@ -92,6 +97,13 @@ export const getGlobalServicePage = cache(async (serviceSlug: string): Promise<G
     hero_image_meta: normalizeImageMeta(page.hero_image_meta),
     schema_aggregate_rating: Number(page.schema_aggregate_rating) || 4.9,
     schema_review_count: page.schema_review_count ?? 0,
+    // These four are nullable JSONB columns spread in raw above, but the page
+    // template maps them unguarded — normalize so a cleared field can't crash
+    // the route (same contract the child tables below already get).
+    about_bullets: asArray<GlobalServiceAboutBullet>(page.about_bullets),
+    service_highlights: asArray<GlobalServiceHighlight>(page.service_highlights),
+    why_choose_points: asArray<GlobalServiceWhyChoosePoint>(page.why_choose_points),
+    hero_stats: asArray<GlobalServiceHeroStat>(page.hero_stats),
     pricing_rows: (pricingRows.data ?? page.pricing_rows ?? []) as GlobalServicePricingRow[],
     testimonials: (testimonials.data ?? []).map((row): GlobalServiceTestimonial => ({
       name: row.name,

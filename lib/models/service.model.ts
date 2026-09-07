@@ -51,11 +51,13 @@ export interface GuideSection {
   tips?: string[];
 }
 
+// Also admin-authored JSONB (`service_categories.guide` / `services.guide`),
+// so it carries the same no-guarantees caveat as PricingData above.
 export interface CompleteGuide {
-  title: string;
-  intro: string;
-  sections: GuideSection[];
-  conclusion: string;
+  title?: string;
+  intro?: string;
+  sections?: GuideSection[];
+  conclusion?: string;
 }
 
 // ── Testimonial ───────────────────────────────────────────────────────────────
