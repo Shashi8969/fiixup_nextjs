@@ -3,6 +3,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { isLive, type PublishState } from "@/lib/posts";
 import { rateLimitRequest, safeErrorResponse } from "@/lib/api-security";
 
 export const revalidate = 3600;
@@ -23,7 +24,9 @@ export async function GET(
       .eq("slug", slug)
       .single();
 
-    if (error || !data) {
+    // This route selects "*", so an ungated draft would hand back its full
+    // unpublished body. Same answer as a slug that does not exist.
+    if (error || !data || !isLive(data as PublishState)) {
       return NextResponse.json(
         { success: false, error: "Post not found" },
         { status: 404 }

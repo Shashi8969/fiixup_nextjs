@@ -52,6 +52,37 @@ function rowToPost(row: any): BlogPost {
   };
 }
 
+// ── Publish state ─────────────────────────────────────────────────────────────
+// Encodes the same rule as the `public_read_published_posts` RLS policy and
+// `fn_content_is_live()` in Postgres: a post is visible once it is published,
+// or once a scheduled post's publish_at has passed. Scheduled posts are
+// promoted to `published` within a minute by the `publish-scheduled-content`
+// pg_cron job, but matching the RLS rule here means a stalled cron delays the
+// status flip without ever hiding a post that is already due.
+//
+// RLS alone would keep drafts off the site — this is the second lock, so a
+// future switch to a service-role key can't silently publish unfinished work.
+export type PublishState = { status?: string | null; publish_at?: string | null };
+
+// Statuses that can be publicly visible. `draft` and `archived` are excluded in
+// the query itself, so unfinished work never leaves Postgres. The exact
+// due-time comparison happens in isLive() rather than in a PostgREST
+// `or=(...,and(...))` filter, which would put a raw ISO timestamp inside a
+// nested filter expression for no benefit.
+export const PUBLIC_STATUSES = ["published", "scheduled"] as const;
+
+export function isLive(row: PublishState): boolean {
+  const status = row.status ?? "published";
+  if (status === "published") return true;
+  if (status !== "scheduled" || !row.publish_at) return false;
+  const publishAt = new Date(row.publish_at).getTime();
+  return Number.isFinite(publishAt) && publishAt <= Date.now();
+}
+
+export function liveOnly<T extends PublishState>(rows: T[] | null | undefined): T[] {
+  return (rows ?? []).filter(isLive);
+}
+
 // ── Select string with normalized tags join ───────────────────────────────────
 const POST_SELECT = `
   id, slug, title, excerpt, content,
@@ -59,6 +90,7 @@ const POST_SELECT = `
   category, featured, image, image_alt, image_meta,
   related_service, meta_title, meta_description, meta_keywords,
   created_at, updated_at, schema_json,
+  status, publish_at,
   nearby_areas_json, related_services_json, internal_links_json,
   post_tags ( tags ( id, slug, name ) )
 `;
@@ -68,6 +100,7 @@ const POST_LIST_SELECT = `
   author, author_role, date, read_time,
   category, featured, image, image_alt, image_meta,
   meta_title, meta_description,
+  status, publish_at,
   nearby_areas_json, related_services_json, internal_links_json,
   post_tags ( tags ( id, slug, name ) )
 `;
@@ -77,13 +110,14 @@ export async function getAllPosts(): Promise<BlogPost[]> {
   const { data, error } = await supabase
     .from("posts")
     .select(POST_LIST_SELECT)
+    .in("status", PUBLIC_STATUSES)
     .order("date_proper", { ascending: false });
 
   if (error) {
     console.error("getAllPosts error:", error.message);
     return [];
   }
-  return (data ?? []).map(rowToPost);
+  return liveOnly(data).map(rowToPost);
 }
 
 // ── Get post by slug ──────────────────────────────────────────────────────────
@@ -95,6 +129,10 @@ export const getPostBySlug = cache(async (slug: string): Promise<BlogPost | unde
     .single();
 
   if (error || !data) return undefined;
+  // A draft or not-yet-due post is a 404 for the public site, the same as a
+  // slug that doesn't exist. Editors preview unpublished work through
+  // /preview/<token> (lib/preview-drafts.ts), which never comes through here.
+  if (!isLive(data as PublishState)) return undefined;
   return rowToPost(data);
 });
 
@@ -106,13 +144,14 @@ export async function getPostsBySlugs(slugs: string[]): Promise<BlogPost[]> {
     .from("posts")
     .select(POST_LIST_SELECT)
     .in("slug", slugs)
+    .in("status", PUBLIC_STATUSES)
     .order("date_proper", { ascending: false });
 
   if (error) {
     console.error("getPostsBySlugs error:", error.message);
     return [];
   }
-  return (data ?? []).map(rowToPost);
+  return liveOnly(data).map(rowToPost);
 }
 
 // ── Get featured posts ────────────────────────────────────────────────────────
@@ -122,11 +161,15 @@ export const getFeaturedPosts = unstable_cache(
       .from("posts")
       .select(POST_LIST_SELECT)
       .eq("featured", true)
+      .in("status", PUBLIC_STATUSES)
       .order("date_proper", { ascending: false })
-      .limit(limit);
+      // Over-fetch: a featured post scheduled for next week is dropped by
+      // liveOnly() below, and a bare .limit(limit) would silently return a
+      // short row of featured cards instead of the next eligible post.
+      .limit(limit * 2 + 2);
 
     if (error) return [];
-    return (data ?? []).map(rowToPost);
+    return liveOnly(data).slice(0, limit).map(rowToPost);
   },
   ["featured-posts"],
   { revalidate: 3600, tags: ["posts"] }
@@ -152,6 +195,7 @@ export async function getPostsByTag(tag: string): Promise<BlogPost[]> {
   return data
     .map((row: any) => row.posts)
     .filter(Boolean)
+    .filter(isLive)
     .map(rowToPost)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
@@ -179,8 +223,9 @@ export async function getPostsByCategory(category: string): Promise<BlogPost[]> 
     .from("posts")
     .select(POST_LIST_SELECT)
     .eq("category", category)
+    .in("status", PUBLIC_STATUSES)
     .order("date_proper", { ascending: false });
 
   if (error) return [];
-  return (data ?? []).map(rowToPost);
+  return liveOnly(data).map(rowToPost);
 }

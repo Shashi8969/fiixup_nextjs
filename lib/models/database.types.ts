@@ -274,6 +274,8 @@ export interface LsTestimonialRaw {
 }
 
 // ─── POSTS ───────────────────────────────────────────────────────────────────
+export type PostStatus = "draft" | "scheduled" | "published" | "archived";
+
 export interface Post {
   id: string;
   slug: string;
@@ -296,6 +298,12 @@ export interface Post {
   service_category_id?: string;
   created_at?: string;
   updated_at?: string;
+
+  // Publishing state. `scheduled` rows are promoted to `published` by the
+  // publish-scheduled-content pg_cron job once publish_at passes; see
+  // lib/posts.ts for the matching read-side gate.
+  status?: PostStatus;
+  publish_at?: string | null;
 
   // Legacy JSONB — still on DB rows
   tags?: string[];
