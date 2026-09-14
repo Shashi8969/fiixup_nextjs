@@ -231,8 +231,7 @@ export function normalizeSeoPage(row: SeoPageRow): SeoPage | null {
   }
 }
 
-export const getPageByPath = unstable_cache(
-  async (urlPath: string): Promise<SeoPage | null> => {
+async function fetchPageByPath(urlPath: string): Promise<SeoPage | null> {
   const safePath = cleanPath(urlPath)
   if (!safePath) return null
 
@@ -243,12 +242,26 @@ export const getPageByPath = unstable_cache(
     .eq('is_active', true)
     .maybeSingle()
 
-    if (error || !data) return null
-    return normalizeSeoPage(data as SeoPageRow)
-  },
+  if (error || !data) return null
+  return normalizeSeoPage(data as SeoPageRow)
+}
+
+const getCachedPageByPath = unstable_cache(
+  fetchPageByPath,
   ['seo-page-by-path'],
   { revalidate: 3600, tags: ['seo-pages'] }
 )
+
+export async function getPageByPath(urlPath: string): Promise<SeoPage | null> {
+  const cached = await getCachedPageByPath(urlPath)
+  if (cached) return cached
+
+  // Do not let a cached miss become a one-hour false 404. This matters when a
+  // CMS/DB write creates a new route but cache revalidation is delayed or a
+  // direct database maintenance operation bypasses the revalidation endpoint.
+  // Existing pages keep the normal 1-hour cache; only misses pay one fresh DB lookup.
+  return fetchPageByPath(urlPath)
+}
 
 export const getSitemapUrls = unstable_cache(
   async (pageType?: string) => {
