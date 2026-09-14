@@ -303,8 +303,8 @@ export interface CityServiceCard {
 }
 
 // A city-category page is indexable when it has active city-level child services OR
-// an explicitly approved editorial SEO page. This prevents a zero child-card count
-// from accidentally noindexing a useful page that already has search demand.
+// an explicitly approved editorial page in city_service_pages. Read the authoritative
+// source directly so stale generated seo_pages JSON can never silently noindex it.
 export async function hasAnyCityServiceInCategory(
   citySlug: string,
   categorySlug: string
@@ -328,24 +328,21 @@ export async function hasAnyCityServiceInCategory(
 
   if ((count ?? 0) > 0) return true;
 
-  const urlPath = `/${normalizedCity}/services/${normalizedCategory}`;
   const { data: editorialPage, error: editorialError } = await supabase
-    .from("seo_pages")
-    .select("url_path")
-    .eq("url_path", urlPath)
-    .eq("page_type", "city_service_category")
+    .from("city_service_pages")
+    .select("editorial_indexable")
+    .eq("city_slug", normalizedCity)
+    .eq("category_slug", normalizedCategory)
     .eq("is_active", true)
-    .eq("is_indexed", true)
-    .contains("page_data", { editorialIndexable: true })
     .maybeSingle();
 
   if (editorialError) {
     console.error("hasAnyCityServiceInCategory editorial-page error:", editorialError.message);
-    // Again fail open: a temporary lookup error must not inject noindex on an established page.
+    // A temporary source-table lookup failure must not inject noindex.
     return true;
   }
 
-  return Boolean(editorialPage);
+  return editorialPage?.editorial_indexable === true;
 }
 
 export async function getCityServicesByCategory(
