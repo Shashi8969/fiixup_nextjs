@@ -322,7 +322,10 @@ export default async function NotFound() {
                 Still need help? We&apos;re one call away.
               </p>
               <p className="text-blue-200 text-sm mt-1">
-                Certified mechanics at your door in 20 minutes. Available 24/7, 365 days.
+                20-Min Quick Arrival* after mechanic dispatch for eligible bookings. Available 24/7, 365 days.
+              </p>
+              <p className="mt-1 text-[11px] leading-4 text-blue-300">
+                *Actual ETA may vary by traffic, location and mechanic availability.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 justify-center">

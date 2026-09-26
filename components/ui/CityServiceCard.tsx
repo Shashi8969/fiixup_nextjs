@@ -84,7 +84,7 @@ export function CityServiceCard({
   const border = theme?.border ?? "hover:border-blue-200";
   const linkText = theme?.linkText ?? "text-blue-600";
   const displayPrice = formatPrice(pricingRows, priceLabel);
-  const displayDuration = duration || "20 min";
+  const displayDuration = duration || "Varies by job";
   const displayRating = typeof rating === "number" && Number.isFinite(rating) ? rating : 4.9;
   const displayReviews = typeof reviewCount === "number" && Number.isFinite(reviewCount) ? reviewCount : 150;
 
@@ -127,7 +127,7 @@ export function CityServiceCard({
             <span className="text-gray-300" aria-hidden="true">·</span>
             <span className="text-xs text-gray-400 inline-flex items-center gap-0.5">
               <Clock className="w-3 h-3" aria-hidden="true" />
-              {displayDuration}
+              Service time: {displayDuration}
             </span>
           </div>
 
@@ -172,7 +172,7 @@ export function CityServiceCard({
             <div className="flex items-center justify-between">
               <span className="text-blue-600 font-bold text-sm">From {displayPrice}</span>
               {displayDuration && (
-                <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">{displayDuration}</span>
+                <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">Service time: {displayDuration}</span>
               )}
             </div>
           </div>
@@ -227,7 +227,7 @@ export function CityServiceCard({
         </div>
         <div className="flex items-center gap-1.5 text-gray-400 text-xs font-medium">
           <Clock className="w-3.5 h-3.5" aria-hidden="true" />
-          {displayDuration}
+          Service time: {displayDuration}
         </div>
       </div>
 

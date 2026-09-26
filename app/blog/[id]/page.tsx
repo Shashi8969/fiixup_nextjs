@@ -233,8 +233,11 @@ export default async function BlogPostPage({
           <div className="mt-10 bg-red-600 rounded-2xl p-8 text-white text-center">
             <h3 className="text-xl font-bold mb-2">Need a Mechanic Right Now?</h3>
             <p className="text-red-100 mb-6 text-sm">
-              Fiixup sends certified mechanics to your doorstep in 20 minutes
+              20-Min Quick Arrival* for eligible bookings after mechanic dispatch
               across Bengaluru, Chennai, Hyderabad & Mumbai. Available 24/7.
+            </p>
+            <p className="-mt-4 mb-6 text-[11px] leading-4 text-red-100">
+              *Actual ETA may vary by traffic, location and mechanic availability.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
               <a

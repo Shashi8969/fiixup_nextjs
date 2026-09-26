@@ -22,21 +22,25 @@ export type CityName = (typeof CITIES_LIST)[number];
  * Verified Fiixup service-language rules.
  * Keep these centralized so pages do not drift into conflicting promises.
  */
-export const ARRIVAL_PROMISE = "20-Min Quick Arrival after booking confirmation";
+export const ARRIVAL_PROMISE = "20-Min Quick Arrival*";
+export const ARRIVAL_SUPPORTING_TEXT =
+  "Fiixup aims to get a mechanic to your location in around 20 minutes after dispatch for eligible doorstep and roadside bookings.";
 export const ARRIVAL_PROMISE_NOTE =
-  "Applies to eligible doorstep and roadside bookings. Exceptional traffic, weather, distance, building/parking access, or technician availability can affect arrival.";
+  "*20 minutes is our target arrival time. Actual arrival may vary depending on traffic, distance, weather, service demand, vehicle accessibility and mechanic availability.";
+export const ARRIVAL_PROMISE_NOTE_SHORT =
+  "*Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability.";
 
 export const PRICE_DISCLAIMER_SHORT =
-  "Prices shown are starting/indicative prices. Final charges may vary if the job needs extra labour, parts, fluids, additional repairs, multiple punctures, towing/pickup distance, or other work approved after inspection.";
+  "Prices shown are starting/indicative prices. Final charges may vary by location, night or after-hours timing, extra labour, parts, fluids, additional repairs, multiple punctures, towing/pickup distance, or other work approved after inspection.";
 
 export const PRICE_DISCLAIMER_LONG =
-  "Prices shown on Fiixup are starting/indicative prices for the standard service scope, not a fixed final quotation. Final charges may vary by vehicle, location, labour required, parts or fluids used, access conditions, towing or pickup/drop distance, multiple punctures, and additional faults or repairs found during inspection. Extra paid work should be explained and approved before it proceeds.";
+  "Prices shown on Fiixup are starting/indicative prices for the standard service scope, not a fixed final quotation. Final charges may vary by vehicle, location, night or after-hours timing, labour required, parts or fluids used, access conditions, towing or pickup/drop distance, multiple punctures, and additional faults or repairs found during inspection. Any night/after-hours charge and extra paid work should be explained before confirmation or approval.";
 
 export const PICKUP_DROP_PROMISE =
   "For car-service jobs that need workshop equipment, Fiixup can coordinate inspection/collection and service through partner garages. Free pickup and drop is available on eligible services and should be confirmed at booking.";
 
 export const TRUST_BADGES = [
-  "✅ 20-Min Quick Arrival after booking confirmation*",
+  "✅ 20-Min Quick Arrival*",
   "✅ Starting price shown — extra work approved first",
   "✅ 30-day warranty on eligible repairs",
   "✅ Doorstep, roadside & partner-garage support",
@@ -44,7 +48,7 @@ export const TRUST_BADGES = [
 
 export const HOW_IT_WORKS_STEPS = [
   { n: "1", title: "Book & Confirm", desc: "Call, WhatsApp, or use the booking form. Share your vehicle, issue, location, and preferred time." },
-  { n: "2", title: "20-Min Quick Arrival", desc: "After booking confirmation, the quick-arrival promise applies to eligible doorstep and roadside visits." },
+  { n: "2", title: "20-Min Quick Arrival*", desc: "Target arrival is around 20 minutes after mechanic dispatch for eligible doorstep and roadside bookings." },
   { n: "3", title: "Repair or Pickup", desc: "Suitable jobs are handled at your location. Workshop-only car jobs can be moved to a partner garage, with free pickup and drop on eligible services." },
   { n: "4", title: "Approve & Complete", desc: "Starting prices cover the standard scope. Any extra labour, parts, or additional repair should be explained before paid work proceeds. Warranty applies to eligible repairs." },
 ] as const;

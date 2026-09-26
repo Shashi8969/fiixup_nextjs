@@ -13,7 +13,7 @@ export const verifiedGlobalFAQs: FAQCategory[] = [
     faqs: [
       {
         q: "How quickly can Fiixup reach me after I book?",
-        a: "Fiixup uses a 20-Min Quick Arrival promise after booking confirmation for eligible doorstep and roadside requests. Exceptional traffic, weather, distance, building or parking access, and technician availability can affect arrival. The promise refers to reaching the vehicle, not completing every repair in 20 minutes.",
+        a: "Fiixup aims to get a mechanic to your location in around 20 minutes after dispatch for eligible doorstep and roadside bookings. Actual arrival may vary depending on traffic, distance, weather, service demand, vehicle accessibility and mechanic availability. This target refers to arrival, not diagnosis, repair, fitting or replacement time.",
       },
       {
         q: "Can Fiixup work at my home, office or apartment parking area?",
@@ -34,11 +34,11 @@ export const verifiedGlobalFAQs: FAQCategory[] = [
     faqs: [
       {
         q: "Are the prices shown on Fiixup the final price?",
-        a: "Prices shown on Fiixup are starting or indicative prices for the standard service scope. Final charges can vary with the vehicle, location, labour, parts or fluids, access, towing or pickup distance, multiple punctures, and additional faults or repairs found during inspection. Extra paid work should be explained before approval.",
+        a: "Prices shown on Fiixup are starting or indicative prices for the standard service scope. Final charges can vary with the vehicle, location, night or after-hours timing, labour, parts or fluids, access, towing or pickup distance, multiple punctures, and additional faults or repairs found during inspection. Any night/after-hours charge and extra paid work should be explained before confirmation or approval.",
       },
       {
         q: "Why can the actual repair price be different from the website price?",
-        a: "The website price represents a starting or standard scope. One puncture and two punctures are different jobs; a battery no-start may also involve a charging fault; and routine service may reveal worn parts. Additional labour, parts, fluids, distance or approved repairs can change the final amount.",
+        a: "The website price represents a starting or standard scope. One puncture and two punctures are different jobs; a battery no-start may also involve a charging fault; and routine service may reveal worn parts. Location, night or after-hours timing, additional labour, parts, fluids, distance or approved repairs can change the final amount.",
       },
       {
         q: "Will Fiixup do extra work without telling me the price?",

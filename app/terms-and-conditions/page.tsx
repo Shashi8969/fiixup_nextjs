@@ -304,6 +304,22 @@ export default function TermsPage() {
           <Section id="dispatch" num={8} title="Mechanic Dispatch & On-Site Service">
             <ul className="list-disc space-y-2 pl-5">
               <li>Once confirmed, a Mechanic is dispatched within the estimated window shown in the app.</li>
+              <li>
+                <strong>20-Min Quick Arrival</strong> means Fiixup aims to get a Mechanic to your
+                location in around 20 minutes <strong>after Mechanic dispatch</strong> for
+                eligible doorstep and roadside Bookings. It is a target, not an unconditional
+                guarantee. Actual arrival may vary due to traffic, distance, weather, service
+                demand, vehicle accessibility, Mechanic availability, or other circumstances
+                outside Fiixup&apos;s reasonable control.
+              </li>
+              <li>
+                Arrival time is separate from inspection, diagnosis, repair, fitting,
+                replacement, towing, pickup/drop, or workshop time. A service-duration estimate
+                starts only after the Mechanic arrives, the vehicle is accessible, the required
+                work is identified, and you approve it. Parts sourcing, multiple punctures,
+                additional faults, complex repairs, approvals, and workshop requirements may
+                extend completion time.
+              </li>
               <li>Please have someone authorised available to grant the Mechanic access and verify the work.</li>
               <li>You may verify a Mechanic&apos;s identity through the app or support line before granting access.</li>
               <li>Any additional issues found during inspection are flagged to you before extra work or charges apply.</li>

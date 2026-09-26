@@ -76,7 +76,7 @@ export function CityServiceDetail({
                 <div className="w-px bg-gray-200" />
                 <div>
                   <p className="text-2xl font-bold text-gray-900">{service.duration}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">Estimated time</p>
+                  <p className="max-w-32 text-xs text-gray-500 mt-0.5">Estimated service time after work starts</p>
                 </div>
                 <div className="w-px bg-gray-200" />
                 <div>
@@ -130,7 +130,10 @@ export function CityServiceDetail({
               <h2 className="text-2xl font-bold mb-4">{service.shortTitle} in {city.name}</h2>
               <p className="text-gray-700 leading-relaxed text-lg mb-4">{service.description}</p>
               <p className="text-gray-600 leading-relaxed mb-8">
-                Our certified technicians cover all areas of {city.name} including {city.areas.map((a: any) => typeof a === 'string' ? a : a.name).join(', ')} — reaching you within 20 minutes.
+                Our certified technicians cover all areas of {city.name} including {city.areas.map((a: any) => typeof a === 'string' ? a : a.name).join(', ')}. Fiixup aims to get a mechanic to your location in around 20 minutes after dispatch for eligible doorstep and roadside bookings.*
+              </p>
+              <p className="mb-8 text-xs leading-5 text-gray-500">
+                *20 minutes is our target arrival time. Actual arrival may vary depending on traffic, distance, weather, service demand, vehicle accessibility and mechanic availability.
               </p>
               <h3 className="font-bold text-gray-900 mb-3">{isCar ? 'Car Brands We Service' : 'Bike Brands We Service'}</h3>
               <div className="flex flex-wrap gap-2">

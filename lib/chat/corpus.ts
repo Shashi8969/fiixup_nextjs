@@ -82,7 +82,7 @@ async function buildCorpus(): Promise<KbEntry[]> {
   );
   add(
     "How quickly can a Fiixup mechanic arrive?",
-    "Fiixup uses a 20-Min Quick Arrival promise after booking confirmation for eligible doorstep and roadside requests. Exceptional traffic, weather, distance, building or parking access, and technician availability can affect arrival. Arrival time is separate from diagnosis and repair duration.",
+    "Fiixup aims to get a mechanic to your location in around 20 minutes after dispatch for eligible doorstep and roadside bookings. Actual arrival may vary depending on traffic, distance, weather, service demand, vehicle accessibility and mechanic availability. Arrival time is separate from diagnosis, repair, fitting and replacement duration.",
     `${SITE_URL}/contact`,
     ["20 minute", "arrival", "eta", "quick", "mechanic arrival"],
   );
@@ -98,7 +98,7 @@ async function buildCorpus(): Promise<KbEntry[]> {
     add(
       `How much does ${title} cost? What is the price of ${title}?`,
       from
-        ? `${title} has a starting/indicative price from around ₹${from.toLocaleString("en-IN")} for the standard scope. Final charges can vary with the vehicle, location, labour, parts or fluids, access, distance, multiple punctures, and additional work approved after inspection. Check the current service page or confirm the quote when booking.`
+        ? `${title} has a starting/indicative price from around ₹${from.toLocaleString("en-IN")} for the standard scope. Final charges can vary with the vehicle, location, night or after-hours timing, labour, parts or fluids, access, distance, multiple punctures, and additional work approved after inspection. Check the current service page or confirm the quote when booking.`
         : `Pricing for ${title} depends on the vehicle and actual work required. Website prices are starting/indicative where shown, and additional labour, parts, fluids, distance or repairs can change the final amount after approval.`,
       url,
       ["price", "cost", "charges", title],
@@ -143,7 +143,7 @@ async function buildCorpus(): Promise<KbEntry[]> {
 
   add(
     "How do I book a mechanic / service?",
-    `Use the booking form or call ${phone}. Share your vehicle, issue and exact location. After the booking is confirmed, the 20-Min Quick Arrival promise applies to eligible doorstep and roadside requests.`,
+    `Use the booking form or call ${phone}. Share your vehicle, issue and exact location. Fiixup aims to get a mechanic to you in around 20 minutes after dispatch for eligible doorstep and roadside bookings; the actual ETA can vary.`,
     `${SITE_URL}/contact`,
     ["book", "booking", "appointment", "send", "mechanic", "schedule"],
   );

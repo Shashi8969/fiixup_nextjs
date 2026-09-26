@@ -140,13 +140,16 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
               </span>
               <span className="flex items-center gap-1.5">
                 <Clock className="w-4 h-4 text-blue-500" aria-hidden="true" />
-                20 min response
+                20-Min Quick Arrival*
               </span>
               <span className="flex items-center gap-1.5">
                 <Zap className="w-4 h-4 text-blue-500" aria-hidden="true" />
                 No hidden charges
               </span>
             </div>
+            <p className="mt-2 max-w-xl text-[11px] leading-4 text-gray-500">
+              *Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability.
+            </p>
           </div>
 
           {/* ── RIGHT COLUMN — Image + Callback Form ── */}

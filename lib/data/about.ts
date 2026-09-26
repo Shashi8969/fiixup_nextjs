@@ -106,7 +106,7 @@ export const aboutFaqs = [
   },
   {
     question: "How quickly can a mechanic reach me?",
-    answer: "Most doorstep visits are dispatched within 20 minutes of booking, and emergency roadside support is available 24/7 across all four cities we serve.",
+    answer: "Fiixup aims to get a mechanic to your location in around 20 minutes after dispatch for eligible doorstep and roadside bookings. Actual ETA varies with traffic, location and mechanic availability, and is separate from repair time.",
   },
   {
     question: "Do you service both cars and bikes?",

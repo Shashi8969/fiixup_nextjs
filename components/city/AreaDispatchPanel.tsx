@@ -2,8 +2,8 @@
 // components/city/AreaDispatchPanel.tsx
 // Illustrative service-coverage panel. The route animation is decorative and
 // must never imply that a real technician has already been dispatched for the
-// current visitor. Fiixup's verified customer-facing promise is the 20-Min
-// Quick Arrival after booking confirmation for eligible doorstep/roadside jobs.
+// current visitor. Fiixup's verified customer-facing promise is a target arrival
+// of around 20 minutes after mechanic dispatch for eligible bookings.
 
 import { useEffect, useRef } from "react";
 import { Star } from "lucide-react";
@@ -139,7 +139,7 @@ export function AreaDispatchPanel({
         </div>
       </div>
       <p className="relative mt-4 text-[11px] leading-4 text-blue-300/80">
-        *After booking confirmation for eligible doorstep/roadside requests. Exceptional traffic, weather, distance, access, or technician availability can affect arrival.
+        *Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability.
       </p>
     </div>
   );

@@ -15,7 +15,7 @@ export function CspCTA({ data }: { data: CityServiceCategoryPageData }) {
           Ready to Book {data.categoryTitle} in {data.cityName}?
         </h2>
         <p className="text-blue-200 text-lg mb-8">
-          20-Min Quick Arrival after booking confirmation for eligible doorstep and roadside visits. Prices shown are starting/indicative; extra paid work is explained before approval.
+          Fiixup aims to get a mechanic to your location in around 20 minutes after dispatch for eligible doorstep and roadside bookings.* Prices shown are starting/indicative; extra paid work is explained before approval.
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
           <Link

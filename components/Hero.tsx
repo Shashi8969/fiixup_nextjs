@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { CheckCircle, MapPin, Star } from "lucide-react";
-import { MAIN_PHONE } from "@/lib/constants";
+import { ARRIVAL_PROMISE_NOTE_SHORT, MAIN_PHONE } from "@/lib/constants";
 import { useLeadForm } from "@/lib/hooks/useLeadForm";
 import type { HomeHeroData } from "@/lib/homepage";
 import { SERVICE_OPTIONS } from "@/lib/data/serviceOptions";
@@ -119,6 +119,10 @@ export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
 
                     <p className="text-xs sm:text-sm text-gray-600 mb-4 leading-relaxed">
                       {data.formSubtitle}
+                    </p>
+
+                    <p className="-mt-2 mb-4 text-[11px] leading-4 text-gray-500">
+                      {ARRIVAL_PROMISE_NOTE_SHORT}
                     </p>
 
                     <form onSubmit={handleSubmit} className="space-y-3">

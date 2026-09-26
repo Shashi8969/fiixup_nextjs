@@ -83,7 +83,7 @@ export function CspHero({ data, cityPhone }: { data: CityServiceCategoryPageData
           <div className="flex flex-wrap justify-center gap-5 text-sm text-gray-500">
             {[
               { icon: Shield, text: '30-day warranty' },
-              { icon: Clock,  text: '20 min response' },
+              { icon: Clock,  text: '20-Min Quick Arrival*' },
               { icon: Zap,    text: 'No hidden charges' },
             ].map(({ icon: Icon, text }) => (
               <span key={text} className="flex items-center gap-1.5">
@@ -92,6 +92,9 @@ export function CspHero({ data, cityPhone }: { data: CityServiceCategoryPageData
               </span>
             ))}
           </div>
+          <p className="mx-auto mt-3 max-w-2xl text-center text-[11px] leading-4 text-gray-500">
+            *Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability.
+          </p>
         </div>
       </div>
     </section>

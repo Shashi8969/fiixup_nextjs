@@ -16,7 +16,13 @@ import {
   Sparkles,
 } from "lucide-react";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
-import { MAIN_PHONE_DISPLAY, WHATSAPP_NUMBER } from "@/lib/constants";
+import {
+  ARRIVAL_PROMISE,
+  ARRIVAL_PROMISE_NOTE,
+  ARRIVAL_SUPPORTING_TEXT,
+  MAIN_PHONE_DISPLAY,
+  WHATSAPP_NUMBER,
+} from "@/lib/constants";
 import { formatPriceRange } from "@/lib/utils";
 import type { GlobalServicePage as GlobalServicePageType } from "@/lib/global-service";
 
@@ -149,6 +155,12 @@ export function GlobalServicePage({ data }: Props) {
           </div>
         )}
 
+        <div className={`mb-7 max-w-2xl rounded-xl border ${borderClr} bg-white/80 px-4 py-3`}>
+          <p className={`font-extrabold ${accentText}`}>{ARRIVAL_PROMISE}</p>
+          <p className="mt-1 text-sm leading-6 text-gray-700">{ARRIVAL_SUPPORTING_TEXT}</p>
+          <p className="mt-1 text-[11px] leading-4 text-gray-500">{ARRIVAL_PROMISE_NOTE}</p>
+        </div>
+
         {/* STATS */}
 <div className="flex flex-wrap gap-6 mb-8">
 
@@ -169,11 +181,11 @@ export function GlobalServicePage({ data }: Props) {
   {/* DURATION */}
   <div>
     <p className="text-2xl font-bold text-gray-900">
-      {data.service_duration || "20 Min"}
+      {data.service_duration || "Varies by job"}
     </p>
 
     <p className="text-xs text-gray-500">
-      Estimated time
+      Estimated service time after work starts
     </p>
   </div>
 

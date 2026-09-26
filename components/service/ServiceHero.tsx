@@ -55,7 +55,7 @@ export default function Hero({
                 <p className="text-2xl font-bold text-gray-900">
                   {service.duration}
                 </p>
-                <p className="text-xs text-gray-500">Estimated time</p>
+                <p className="max-w-32 text-xs text-gray-500">Estimated service time after work starts</p>
               </div>
               <div className="w-px bg-gray-200" />
               <div>

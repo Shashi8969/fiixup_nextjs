@@ -52,7 +52,8 @@ export async function GET() {
   lines.push("## Service Facts");
   lines.push("");
   lines.push("- Service requests and emergency booking are available 24/7 in the cities listed below.");
-  lines.push("- The 20-Min Quick Arrival promise applies after booking confirmation to eligible doorstep or roadside requests; traffic, weather, distance, access and technician availability can affect actual arrival.");
+  lines.push("- 20-Min Quick Arrival is Fiixup's target arrival time after mechanic dispatch for eligible doorstep and roadside bookings, not an unconditional guarantee. Actual ETA may vary with traffic, distance, weather, demand, vehicle access and mechanic availability.");
+  lines.push("- Arrival time is separate from diagnosis, repair, fitting or replacement duration. A service-duration estimate starts when the mechanic begins the approved work.");
   lines.push("- Prices shown on Fiixup pages are starting or indicative prices unless the page states otherwise. Extra labour, parts, towing distance or additional repairs should be quoted before approval.");
   lines.push("- The 30-day warranty applies to eligible repairs, not automatically to every service, consumable or unrelated future fault.");
   lines.push("- A no-start is not always a failed battery. Battery, terminal, charging-system and starter symptoms should be considered before replacement is assumed.");

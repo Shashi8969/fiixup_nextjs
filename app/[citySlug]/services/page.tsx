@@ -204,13 +204,14 @@ export default async function CityServicesPage({
 
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-7 leading-relaxed">
               {totalServices} doorstep services available across {city.name} — certified
-              mechanics come to your home, office, or roadside location in 20 minutes, 24/7.
+              Fiixup aims to get a mechanic to your home, office, or roadside location in around
+              20 minutes after dispatch for eligible bookings, 24/7.*
             </p>
 
             {/* Trust row */}
             <div className="flex flex-wrap justify-center gap-x-7 gap-y-2.5 text-sm text-gray-600 mb-8">
               {[
-                { icon: Clock,       text: "20 min mechanic arrival"      },
+                { icon: Clock,       text: "20-Min Quick Arrival*"        },
                 { icon: Shield,      text: "30-day warranty on all repairs"  },
                 { icon: Zap,         text: "Transparent pricing — always"    },
                 { icon: CheckCircle, text: "All car & bike brands covered"   },
@@ -221,6 +222,9 @@ export default async function CityServicesPage({
                 </span>
               ))}
             </div>
+            <p className="-mt-5 mb-8 text-xs leading-5 text-gray-500">
+              *Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability.
+            </p>
 
             {/* CTAs */}
             <div className="flex flex-wrap gap-4 justify-center">

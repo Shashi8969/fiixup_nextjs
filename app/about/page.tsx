@@ -84,7 +84,7 @@ export default async function AboutPage() {
               </span>
               <span className="flex items-center gap-1.5">
                 <Clock3 className="h-4 w-4 text-blue-600" aria-hidden="true" />
-                20-min doorstep arrival
+                20-Min Quick Arrival*
               </span>
             </div>
           </Reveal>

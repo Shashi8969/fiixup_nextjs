@@ -265,7 +265,7 @@ export default async function CityServicePage({
             {/* Trust micro-row */}
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-500 mb-8">
               {[
-                { icon: Clock,       text: "20 min arrival" },
+                { icon: Clock,       text: "20-Min Quick Arrival*" },
                 { icon: Shield,      text: "30-day warranty"   },
                 { icon: Zap,         text: "Upfront pricing"   },
                 { icon: CheckCircle, text: "All brands covered" },
@@ -276,6 +276,9 @@ export default async function CityServicePage({
                 </span>
               ))}
             </div>
+            <p className="-mt-5 mb-8 text-xs leading-5 text-gray-500">
+              *Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability.
+            </p>
 
             <div className="flex flex-wrap gap-4 justify-center">
               <Link

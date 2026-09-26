@@ -30,7 +30,7 @@ export const globalFAQs: FAQCategory[] = [
       },
       {
         q: "How quickly can a technician arrive?",
-        a: "Our technicians typically arrive within 20 minutes. For emergency breakdowns we prioritise immediate dispatch — often faster during off-peak hours.",
+        a: "Fiixup aims to get a mechanic to your location in around 20 minutes after dispatch for eligible doorstep and roadside bookings. Actual arrival may vary depending on traffic, distance, weather, service demand, vehicle accessibility and mechanic availability.",
       },
       {
         q: "Do I need to take my vehicle to a garage?",
@@ -117,7 +117,7 @@ export const globalFAQs: FAQCategory[] = [
       },
       {
         q: "Can you fix a bike chain at my location?",
-        a: "Yes. We clean, lubricate, adjust, or replace the chain and sprocket at your doorstep. A chain replacement typically takes under 30 minutes on-site.",
+        a: "Yes. We clean, lubricate, adjust, or replace the chain and sprocket at your doorstep. The chain-replacement work itself typically takes around 30 minutes after the mechanic arrives, inspects the bike, and you approve the job. This is service time, not arrival time.",
       },
       {
         q: "Do you do bike brake pad replacement at home?",
@@ -125,7 +125,7 @@ export const globalFAQs: FAQCategory[] = [
       },
       {
         q: "Can you do a bike oil change at my doorstep?",
-        a: "Yes. Engine oil change with or without filter replacement is available at your location in under 20 minutes. We use manufacturer-recommended oil grades for every bike model.",
+        a: "Yes. Engine oil change with or without filter replacement is available at your location. The approved oil-change work itself commonly takes around 20 minutes after the mechanic arrives; this is service time, not arrival time. We use manufacturer-recommended oil grades for every bike model.",
       },
       {
         q: "Do you service delivery bikes for Zomato, Swiggy, and Blinkit riders?",
@@ -152,7 +152,7 @@ export const globalFAQs: FAQCategory[] = [
       },
       {
         q: "My car is not starting — what do I do?",
-        a: "Call Fiixup immediately. The most common causes are a dead battery, a faulty starter motor, or an immobiliser issue. Our technician arrives within 20 minutes for on-the-spot diagnosis and repair.",
+        a: "Call Fiixup immediately. The most common causes are a dead battery, a faulty starter motor, or an immobiliser issue. Fiixup targets arrival around 20 minutes after mechanic dispatch for eligible bookings; the actual ETA may vary. Diagnosis and repair time starts after inspection and depends on the fault.",
       },
       {
         q: "My car's check engine light is on — is it serious?",
@@ -219,7 +219,7 @@ export const globalFAQs: FAQCategory[] = [
       },
       {
         q: "How long does it take for a tow truck to arrive?",
-        a: "We aim to reach you within 20 minutes, both within city limits and for highway breakdowns.",
+        a: "Fiixup aims to reach you in around 20 minutes after mechanic dispatch for eligible roadside bookings. Actual arrival may vary depending on traffic, distance, weather, service demand, vehicle accessibility and mechanic or recovery-vehicle availability.",
       },
       {
         q: "Do you tow bikes and scooters too?",
@@ -246,11 +246,11 @@ export const globalFAQs: FAQCategory[] = [
       },
       {
         q: "How much does puncture repair cost for a car?",
-        a: "Car tyre puncture repair starts from ₹199–₹399 depending on tyre type. Most tubeless car tyre punctures are repaired on the spot within 20 minutes.",
+        a: "Car tyre puncture repair starts from ₹199–₹399 depending on tyre type. The repair work for one straightforward tubeless puncture often takes around 15–20 minutes after inspection and approval. Multiple punctures, puncture position, tyre condition or wheel access can take longer; this is repair time, not arrival ETA.",
       },
       {
         q: "Can you repair tubeless tyre punctures?",
-        a: "Yes. We repair tubeless tyres (both bike and car) using the plug method or internal patch method depending on puncture size and location. Most repairs are done in 15–20 minutes on-site.",
+        a: "Yes. We repair tubeless tyres (both bike and car) using the plug method or internal patch method depending on puncture size and location. The repair work itself often takes around 15–20 minutes after inspection and approval. Multiple punctures, tyre condition and accessibility can take longer; this is repair time, not arrival ETA.",
       },
       {
         q: "My tyre burst on the highway — what should I do?",
@@ -266,7 +266,7 @@ export const globalFAQs: FAQCategory[] = [
       },
       {
         q: "Can you repair a bike puncture at night?",
-        a: "Yes. Fiixup is available 24/7 for bike and car puncture repair — including late nights, early mornings, and weekends. No extra charge for night call-outs.",
+        a: "Yes. Fiixup is available 24/7 for bike and car puncture repair, including late nights, early mornings, and weekends. Night or after-hours charges may apply in addition to the standard starting price and should be shared before confirmation or dispatch.",
       },
       {
         q: "What causes repeated tyre punctures?",
@@ -281,7 +281,7 @@ export const globalFAQs: FAQCategory[] = [
     faqs: [
       {
         q: "Can you jump start my car near me?",
-        a: "Yes. Fiixup provides 24/7 battery jump start service for cars and bikes at your location — home, office, parking lot, or roadside. Our technician arrives with professional jump start equipment within 20 minutes.",
+        a: "Yes. Fiixup provides 24/7 battery jump start service for cars and bikes at your location — home, office, parking lot, or roadside. Fiixup targets arrival around 20 minutes after mechanic dispatch for eligible bookings; the actual ETA may vary by traffic, location and mechanic availability.",
       },
       {
         q: "How much does a jump start service cost?",
@@ -413,7 +413,7 @@ export const cityFAQs: Record<string, FAQCategory[]> = {
         },
         {
           q: "My bike won't start in Bengaluru — can you help immediately?",
-          a: "Yes. Call Fiixup and a technician reaches you within 20 minutes anywhere in Bengaluru, 24 hours a day. We diagnose and fix most starting issues on the spot.",
+          a: "Yes. Fiixup targets arrival around 20 minutes after mechanic dispatch for eligible Bengaluru bookings, 24 hours a day. Actual ETA may vary by traffic, location and mechanic availability. Diagnosis and repair time depends on the fault found.",
         },
         {
           q: "Do Bengaluru's roads damage bike tyres and suspension?",
@@ -471,7 +471,7 @@ export const cityFAQs: Record<string, FAQCategory[]> = {
         },
         {
           q: "Can you tow from Bengaluru's ORR or highway at night?",
-          a: "Yes. We operate 24/7 with no extra charge for night towing. Our dispatchers are always on call and tow trucks are on standby across the city.",
+          a: "Yes. Towing can be requested 24/7. Night or after-hours charges may apply in addition to the standard starting price and should be shared before confirmation or dispatch.",
         },
       ],
     },
@@ -484,11 +484,11 @@ export const cityFAQs: Record<string, FAQCategory[]> = {
         },
         {
           q: "My bike tyre is flat in Bengaluru — how fast can you reach me?",
-          a: "Typically within 20 minutes anywhere in Bengaluru. We repair tube and tubeless tyres on-site for both bikes and cars.",
+          a: "Fiixup targets arrival around 20 minutes after mechanic dispatch for eligible Bengaluru bookings. Actual ETA may vary by traffic, location and mechanic availability. Tube or tubeless tyre repair time starts after inspection and depends on puncture count, position, tyre condition and access.",
         },
         {
           q: "Can you jump start my car in Bengaluru at night?",
-          a: "Yes. Battery jump start is available 24/7 throughout Bengaluru with no extra charge for night or weekend call-outs.",
+          a: "Yes. Battery jump start is available 24/7 throughout Bengaluru. Night or after-hours charges may apply in addition to the standard starting price and should be shared before confirmation or dispatch.",
         },
         {
           q: "Is Bengaluru's heat bad for car and bike batteries?",

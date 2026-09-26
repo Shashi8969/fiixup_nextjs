@@ -456,10 +456,10 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
 
                 <div>
                   <p className="text-2xl font-bold text-gray-900">
-                    {data.arrival_time || "20 min"}
+                    {data.arrival_time || "20-Min Quick Arrival*"}
                   </p>
                   <p className="text-xs text-gray-500 mt-0.5">
-                    Quick Arrival
+                    Target after mechanic dispatch
                   </p>
                 </div>
 
@@ -474,6 +474,9 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                   </p>
                 </div>
               </div>
+              <p className="-mt-5 mb-8 max-w-xl text-xs leading-5 text-gray-500">
+                *Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability.
+              </p>
 
               {/* CTAs */}
               <div className="flex flex-wrap gap-3">

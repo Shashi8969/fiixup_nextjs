@@ -689,7 +689,7 @@ export function serviceDetailSchema(opts: {
       "@type":       "HowTo",
       "@id":         `${baseUrl}/#howto`,
       name:          `How to Book ${name} at Your Doorstep — Fiixup`,
-      description:   `Book ${name} at your home in 3 easy steps. Certified mechanic arrives in 20 min.`,
+      description:   `Book ${name} at your home in 3 easy steps. Fiixup targets arrival around 20 minutes after mechanic dispatch for eligible bookings.`,
       totalTime:     "PT60M",
       estimatedCost: { "@type": "MonetaryAmount", currency: "INR", minValue: minPrice, maxValue: maxPrice },
       step: [
@@ -701,7 +701,7 @@ export function serviceDetailSchema(opts: {
         {
           "@type": "HowToStep", position: 2,
           name: "Certified Mechanic Dispatched",
-          text: "A certified mechanic is dispatched to your exact location within 20 minutes.",
+          text: "After a mechanic is dispatched, Fiixup targets arrival at your location in around 20 minutes for eligible bookings. Actual ETA may vary.",
         },
         {
           "@type": "HowToStep", position: 3,

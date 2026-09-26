@@ -6,7 +6,7 @@ import type { CityServiceCategoryPageData } from '@/lib/cityPages';
 
 const DEFAULT_STEPS = [
   { step: 1, title: 'Book & Confirm', desc: 'Call, WhatsApp, or fill the form and share your vehicle, issue, and location.' },
-  { step: 2, title: '20-Min Quick Arrival', desc: 'After confirmation, the quick-arrival promise applies to eligible doorstep and roadside visits.' },
+  { step: 2, title: '20-Min Quick Arrival*', desc: 'Target arrival is around 20 minutes after mechanic dispatch for eligible doorstep and roadside bookings.' },
   { step: 3, title: 'Diagnose & Choose the Right Fix', desc: 'Suitable work is handled at the vehicle; workshop-only car jobs can be coordinated through a partner garage.' },
   { step: 4, title: 'Approve & Complete', desc: 'Starting prices cover the standard scope. Extra paid work is explained before approval, and eligible repairs carry a 30-day warranty.' },
 ];
