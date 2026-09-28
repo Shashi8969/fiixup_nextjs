@@ -255,9 +255,12 @@ export default async function CityServicePage({
               <CategoryIcon className={`w-8 h-8 ${theme.iconText}`} aria-hidden="true" />
             </div>
 
-            {/* H1 — city-specific */}
+            {/* H1 — keep global category behavior unchanged; Mumbai has curated
+                city-specific editorial headings in city_service_pages. */}
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              {cat.title} in {city.name}
+              {city.slug === "mumbai" && dbPage?.data.heroHeading
+                ? dbPage.data.heroHeading
+                : `${cat.title} in ${city.name}`}
             </h1>
 
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6 leading-relaxed">
