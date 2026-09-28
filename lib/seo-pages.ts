@@ -70,6 +70,9 @@ export interface PageData {
   aboutImageAlt:         string | null
   aboutImageMeta:        ImageMeta | null
   pageLayout:            { id: string; visible: boolean; heading: string | null }[]
+  availability?:          string
+  arrivalTime?:           string
+  warranty?:              string
   [key: string]: unknown
 }
 
@@ -196,6 +199,9 @@ function normalizePageData(value: unknown): PageData {
     seoSections: normalizeSeoSections(pd.seoSections),
     seoConclusion: asString(pd.seoConclusion) || null,
     contentBlocks: asArray(pd.contentBlocks),
+    availability: asString(pd.availability) || undefined,
+    arrivalTime: asString(pd.arrivalTime ?? pd.arrival_time) || undefined,
+    warranty: asString(pd.warranty) || undefined,
     pageLayout: normalizeArrayObject(pd.pageLayout, (item) => ({
       id: asString(item.id),
       visible: asBoolean(item.visible, true),
