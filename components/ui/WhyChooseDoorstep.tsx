@@ -8,13 +8,27 @@ const whyDoorstep = [
   { title: "Safe & Secure", desc: "Your vehicle stays with you. No need to leave it at an unfamiliar garage." },
 ];
 
-export default function WhyChooseDoorstep() {
+const whyTowing = [
+  { title: "Vehicle-Specific Recovery", desc: "The recovery method is selected around the vehicle type, condition, wheel movement, and access." },
+  { title: "ETA Before Dispatch", desc: "You receive the expected arrival time before a recovery vehicle is dispatched." },
+  { title: "Price Before Dispatch", desc: "The towing charge is confirmed after the pickup, destination, vehicle, and access details are checked." },
+  { title: "Destination Choice", desc: "Choose transport to a garage, dealership, home, or another suitable destination." },
+  { title: "Access Assessed", desc: "Share basement, roadside, accident, steering, or wheel constraints so the operator can plan the recovery." },
+  { title: "24/7 Coordination", desc: "Fiixup coordinates towing support at any hour across supported service areas." },
+];
+
+export default function WhyChooseDoorstep({ variant = "doorstep" }: { variant?: "doorstep" | "towing" }) {
+  const isTowing = variant === "towing";
+  const reasons = isTowing ? whyTowing : whyDoorstep;
+
   return (
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4 max-w-4xl">
-        <h2 className="text-3xl font-bold text-center mb-12">Why Choose Doorstep Service?</h2>
+        <h2 className="text-3xl font-bold text-center mb-12">
+          {isTowing ? "Why Choose Fiixup Towing?" : "Why Choose Doorstep Service?"}
+        </h2>
         <div className="grid md:grid-cols-2 gap-8">
-          {whyDoorstep.map(({ title, desc }) => (
+          {reasons.map(({ title, desc }) => (
             <div key={title} className="flex gap-4">
               <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
               <div>

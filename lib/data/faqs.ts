@@ -191,27 +191,27 @@ export const globalFAQs: FAQCategory[] = [
     faqs: [
       {
         q: "Does Fiixup provide towing service near me?",
-        a: "Yes. We provide 24/7 flatbed and crane towing for bikes and cars across Bengaluru, Chennai, Hyderabad, and Mumbai. Call us and a tow truck is dispatched immediately.",
+        a: "Yes. Fiixup coordinates 24/7 car and bike towing across Bengaluru, Chennai, Hyderabad, and Mumbai. Share the vehicle, pickup, access, and destination details so a suitable recovery method, expected ETA, and towing charge can be confirmed before dispatch.",
       },
       {
         q: "How much does car towing cost?",
-        a: "Car towing starts from ₹499 for local towing within city limits. Highway and long-distance towing is charged per kilometre. You receive a transparent quote before the tow truck moves.",
+        a: "Local car towing starts from an indicative ₹1,299 for up to 10 km. The final charge depends on the vehicle, route, access, loading difficulty, recovery method, and destination, and is confirmed before dispatch.",
       },
       {
         q: "How much does bike towing cost?",
-        a: "Bike towing starts from ₹299 within city limits. Long-distance towing is quoted per kilometre — all pricing is shared upfront with no hidden fees.",
+        a: "Local bike towing starts from an indicative ₹799 for up to 5 km. Extra distance, access, loading difficulty, and the destination can change the final charge, which is confirmed before dispatch.",
       },
       {
         q: "What types of tow trucks does Fiixup use?",
-        a: "We use flatbed tow trucks for cars and SUVs (safest for AWD and low-clearance vehicles), crane/wheel-lift trucks for standard cars, and dedicated two-wheeler carriers for bikes and scooters.",
+        a: "The suitable recovery method depends on the vehicle, drivetrain, wheel movement, damage, clearance, and pickup access. Share those details before dispatch so Fiixup can coordinate an appropriate flatbed, wheel-lift, or two-wheeler carrier where available.",
       },
       {
         q: "Is flatbed towing safe for my car?",
-        a: "Yes. Flatbed towing is the safest method as all four wheels are off the ground, preventing any drivetrain or undercarriage damage. We recommend flatbed for automatic, AWD, 4WD, and luxury cars.",
+        a: "Flatbed towing keeps all four wheels off the road and is commonly preferred for automatic, AWD, 4WD, EV, low-clearance, and luxury vehicles. The correct method still depends on the vehicle condition, manufacturer guidance, and pickup access.",
       },
       {
         q: "Can you tow my vehicle after an accident?",
-        a: "Yes. We provide accident recovery and emergency towing 24/7. Our team handles the vehicle with care and can coordinate with your insurance provider for cashless towing where applicable.",
+        a: "Yes. Fiixup can coordinate accident recovery and emergency towing 24/7. Tell us about wheel movement, steering, visible damage, access, and police or insurer instructions so the recovery requirements can be assessed before dispatch.",
       },
       {
         q: "Can you tow my vehicle on the highway?",
@@ -463,11 +463,11 @@ export const cityFAQs: Record<string, FAQCategory[]> = {
         },
         {
           q: "How much does towing cost in Bengaluru?",
-          a: "Car towing within Bengaluru city limits starts from ₹499. Bike towing starts from ₹299. Highway towing is charged per kilometre — transparent pricing before any movement.",
+          a: "Indicative local pricing starts from ₹1,299 for car towing up to 10 km and ₹799 for bike towing up to 5 km. The final charge depends on the vehicle, route, access, recovery method, and destination and is confirmed before dispatch.",
         },
         {
           q: "Do you provide accident towing in Bengaluru?",
-          a: "Yes. We provide emergency accident recovery and towing 24/7 across Bengaluru. Our team handles the vehicle carefully and can coordinate with your insurance for cashless towing.",
+          a: "Yes. Fiixup coordinates emergency accident recovery and towing 24/7 across Bengaluru. Share the vehicle condition, wheel and steering movement, access, destination, and any insurer instructions before dispatch.",
         },
         {
           q: "Can you tow from Bengaluru's ORR or highway at night?",
@@ -586,7 +586,7 @@ export const cityFAQs: Record<string, FAQCategory[]> = {
         },
         {
           q: "How much does towing cost in Chennai?",
-          a: "Car towing within Chennai city starts from ₹499. Bike towing starts from ₹299. ECR and OMR highway towing is priced per kilometre — transparent quote before any movement.",
+          a: "Indicative local pricing starts from ₹1,299 for car towing up to 10 km and ₹799 for bike towing up to 5 km. ECR, OMR, highway, toll, access, and recovery requirements can change the final quote, which is confirmed before dispatch.",
         },
         {
           q: "Do you provide emergency towing on ECR and OMR in Chennai?",
@@ -594,7 +594,7 @@ export const cityFAQs: Record<string, FAQCategory[]> = {
         },
         {
           q: "Can you tow a bike from anywhere in Chennai?",
-          a: "Yes. We provide two-wheeler towing across all Chennai zones and surrounding highways using dedicated bike carriers to prevent any transport damage.",
+          a: "Yes. Fiixup coordinates two-wheeler towing across Chennai and surrounding highways. The carrier and securing method are selected around the bike, condition, pickup access, and destination.",
         },
       ],
     },
@@ -713,7 +713,7 @@ export const cityFAQs: Record<string, FAQCategory[]> = {
         },
         {
           q: "How much does towing cost in Hyderabad?",
-          a: "Car towing within Hyderabad city starts from ₹499. Bike towing starts from ₹299. ORR and highway towing is quoted per kilometre — fully transparent before the truck moves.",
+          a: "Indicative local pricing starts from ₹1,299 for car towing up to 10 km and ₹799 for bike towing up to 5 km. ORR, highway, toll, access, and recovery requirements can change the final quote, which is confirmed before dispatch.",
         },
         {
           q: "Do you provide emergency towing on ORR and NH44 in Hyderabad?",
@@ -844,7 +844,7 @@ export const cityFAQs: Record<string, FAQCategory[]> = {
         },
         {
           q: "How much does towing cost in Mumbai?",
-          a: "Car towing within Mumbai city starts from ₹599 (slightly higher due to toll costs and expressway access). Bike towing starts from ₹399. All pricing is quoted before the truck moves.",
+          a: "Indicative local pricing starts from ₹1,299 for car towing up to 10 km and ₹799 for bike towing up to 5 km. Tolls, expressway access, distance, vehicle condition, and the recovery method can change the final quote, which is confirmed before dispatch.",
         },
         {
           q: "Can you tow from the Mumbai–Pune Expressway?",

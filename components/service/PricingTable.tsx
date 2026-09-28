@@ -13,12 +13,14 @@ interface Props {
   pricing: PricingData;
   serviceTitle: string;
   accentColor?: ThemeColor;
+  variant?: "service" | "towing";
 }
 
 
 
-export default function PricingTable({ pricing, serviceTitle, accentColor = "red" }: Props) {
+export default function PricingTable({ pricing, serviceTitle, accentColor = "red", variant = "service" }: Props) {
   const a = serviceThemes[accentColor];
+  const isTowing = variant === "towing";
 
   // `pricing` comes from admin-authored JSONB — any field may be missing.
   const rows = Array.isArray(pricing?.rows) ? pricing.rows : [];
@@ -39,7 +41,9 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
             {serviceTitle} — Price List
           </h2>
           <p className="text-gray-500 max-w-xl mx-auto">
-            No guesswork. No surprise bills. Every price is confirmed before our technician starts work.
+            {isTowing
+              ? "Indicative starting prices are shown below. The exact towing charge is confirmed before dispatch after the route, vehicle, recovery method, and access are checked."
+              : "No guesswork. No surprise bills. Every price is confirmed before our technician starts work."}
           </p>
         </div>
 
@@ -126,7 +130,10 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
 
         {/* Trust badges — shown whether or not a comparison table rendered */}
         <div className="mt-8 flex flex-wrap justify-center gap-2">
-          {["Upfront pricing", "30-day warranty", "Certified mechanics", "No hidden fees"].map((b) => (
+          {(isTowing
+            ? ["Indicative starting price", "Charge confirmed before dispatch", "Vehicle and access assessed", "Destination confirmed"]
+            : ["Upfront pricing", "30-day warranty", "Certified mechanics", "No hidden fees"]
+          ).map((b) => (
             <span key={b} className="flex items-center gap-1.5 text-xs bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full font-medium">
               <Check className="w-3 h-3 text-green-600" /> {b}
             </span>
@@ -138,9 +145,11 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
             href="tel:+918197459732"
             className="inline-flex items-center gap-2 bg-red-600 text-white font-bold px-8 py-4 rounded-xl hover:bg-red-700 transition-colors shadow-lg shadow-red-100 text-base"
           >
-            <Phone className="w-5 h-5" /> Get Exact Quote — Call +91 8197459732
+            <Phone className="w-5 h-5" /> {isTowing ? "Get Towing Quote" : "Get Exact Quote"} — Call +91 8197459732
           </a>
-          <p className="text-xs text-gray-400 mt-2">Quote confirmed before any work begins. No obligation.</p>
+          <p className="text-xs text-gray-400 mt-2">
+            {isTowing ? "Quote confirmed before dispatch. No obligation." : "Quote confirmed before any work begins. No obligation."}
+          </p>
         </div>
       </div>
     </section>

@@ -42,7 +42,8 @@ import { CspSeoContent } from "@/components/city-service/CspSeoContent";
 import { CityServiceCard } from "@/components/ui/CityServiceCard";
 import { getSmartAreasForCityCategory } from "@/lib/smart-internal-links";
 
-import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
+import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY, TOWING_ARRIVAL_PROMISE_NOTE_SHORT, TOWING_WORKFLOW_STEPS } from "@/lib/constants";
+import type { ThemeColor } from "@/lib/theme";
 import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 
 export const revalidate  = 3600;
@@ -169,7 +170,8 @@ export default async function CityServicePage({
   if (cat) {
     const theme       = heroTheme[cat.color] ?? heroTheme.blue;
     const CategoryIcon = cat.icon;
-    const accentColor  = (cat.color === "blue" ? "blue" : cat.color) as "blue" | "red";
+    const isTowingCategory = cat.slug === "towing";
+    const accentColor  = (cat.color === "blue" ? "blue" : cat.color) as ThemeColor;
 
     // ── THE KEY CHANGE ────────────────────────────────────────────────────
     // Fetch city-specific services from location_services table
@@ -264,12 +266,20 @@ export default async function CityServicePage({
 
             {/* Trust micro-row */}
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-500 mb-8">
-              {[
-                { icon: Clock,       text: "20-Min Quick Arrival*" },
-                { icon: Shield,      text: "30-day warranty"   },
-                { icon: Zap,         text: "Upfront pricing"   },
-                { icon: CheckCircle, text: "All brands covered" },
-              ].map(({ icon: Icon, text }) => (
+              {(isTowingCategory
+                ? [
+                    { icon: Clock,       text: "20-Min Quick Arrival*" },
+                    { icon: Shield,      text: "Suitable recovery method" },
+                    { icon: Zap,         text: "Price before dispatch" },
+                    { icon: CheckCircle, text: "Destination choice" },
+                  ]
+                : [
+                    { icon: Clock,       text: "20-Min Quick Arrival*" },
+                    { icon: Shield,      text: "30-day warranty" },
+                    { icon: Zap,         text: "Upfront pricing" },
+                    { icon: CheckCircle, text: "All brands covered" },
+                  ]
+              ).map(({ icon: Icon, text }) => (
                 <span key={text} className="flex items-center gap-1.5">
                   <Icon className="w-4 h-4 text-green-500" aria-hidden="true" />
                   {text}
@@ -277,7 +287,9 @@ export default async function CityServicePage({
               ))}
             </div>
             <p className="-mt-5 mb-8 text-xs leading-5 text-gray-500">
-              *Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability.
+              {isTowingCategory
+                ? TOWING_ARRIVAL_PROMISE_NOTE_SHORT
+                : "*Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability."}
             </p>
 
             <div className="flex flex-wrap gap-4 justify-center">
@@ -285,7 +297,7 @@ export default async function CityServicePage({
                 href="/contact#contact-form"
                 className={`${theme.btn} text-white px-8 py-3 rounded-lg transition-colors font-semibold`}
               >
-                Book a Service
+                {isTowingCategory ? "Request Towing" : "Book a Service"}
               </Link>
               <a
                 href={`tel:${city.phone ?? MAIN_PHONE}`}
@@ -299,7 +311,7 @@ export default async function CityServicePage({
         </section>
 
         {/* ── TRUST STRIP ────────────────────────────────────────────── */}
-        <IconTrustStrip />
+        <IconTrustStrip context={isTowingCategory ? "towing" : "service"} />
 
         {/* ── SERVICE CARDS — FROM location_services ─────────────────── */}
         {cityServices.length > 0 ? (
@@ -365,13 +377,14 @@ export default async function CityServicePage({
             pricing={cat.pricingSummary}
             serviceTitle={`${cat.title} in ${city.name}`}
             accentColor={accentColor}
+            variant={isTowingCategory ? "towing" : "service"}
           />
         )}
         {cat.brands?.length > 0 && (
           <BrandsGrid
             brands={cat.brands}
             heading={`${cat.title} Brands We Service in ${city.name}`}
-            accentColor={accentColor}
+            accentColor={accentColor === "blue" ? "blue" : "red"}
           />
         )}
         {cat.guide && <CompleteGuideSection guide={cat.guide} />}
@@ -382,11 +395,11 @@ export default async function CityServicePage({
             <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
               How {cat.title} Works in {city.name}
             </h2>
-            <HowItWorks />
+            <HowItWorks steps={isTowingCategory ? [...TOWING_WORKFLOW_STEPS] : undefined} />
           </div>
         </section>
 
-        <WhyChooseDoorstep />
+        <WhyChooseDoorstep variant={isTowingCategory ? "towing" : "doorstep"} />
 
         {/* ── AREA LINKS — internal SEO linking ──────────────────────── */}
         {categoryAreas.length ? (
@@ -396,7 +409,9 @@ export default async function CityServicePage({
                 {cat.title} Near You in {city.name}
               </h2>
               <p className="text-gray-500 text-sm mb-5">
-                We provide doorstep {cat.title.toLowerCase()} across all major areas:
+                {isTowingCategory
+                  ? `Explore ${cat.title.toLowerCase()} coverage across major areas:`
+                  : `We provide doorstep ${cat.title.toLowerCase()} across all major areas:`}
               </p>
               <div className="flex flex-wrap gap-2">
                 {categoryAreas.map((area) => (
@@ -424,15 +439,16 @@ export default async function CityServicePage({
               Ready to Book {cat.title} in {city.name}?
             </h2>
             <p className="text-blue-100 text-lg mb-8">
-              Certified technicians come to you — at your home, office, or anywhere
-              in {city.name}.
+              {isTowingCategory
+                ? `Share the vehicle, pickup, access, and destination details for 24/7 towing coordination in ${city.name}.`
+                : `Certified technicians come to you — at your home, office, or anywhere in ${city.name}.`}
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link
                 href="/contact#contact-form"
                 className="bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-blue-50 transition-colors"
               >
-                Book Service Now
+                {isTowingCategory ? "Request Towing" : "Book Service Now"}
               </Link>
               <a
                 href={`tel:${city.phone ?? MAIN_PHONE}`}

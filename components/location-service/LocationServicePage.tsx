@@ -18,6 +18,7 @@ import { getSmartNearbyAreasForService, getSmartRelatedServicesForLocation } fro
 import { getPageLinkOverrides } from "@/lib/page-link-overrides";
 import { resolveSectionOrder, type LocationServiceSectionId } from "@/lib/locationServicePageSections";
 import { formatPriceRange } from "@/lib/utils";
+import { TOWING_ARRIVAL_PROMISE_NOTE_SHORT, TOWING_WORKFLOW_STEPS } from "@/lib/constants";
 
 // ─── Theme config ────────────────────────────────────────────────────────────
 const CATEGORY_THEME: Record<string, {
@@ -42,7 +43,7 @@ const CATEGORY_THEME: Record<string, {
   towing: {
     bgAccent: "bg-amber-600", btnHover: "hover:bg-amber-700", bgLight: "bg-amber-50",
     accentText: "text-amber-600", borderClr: "border-amber-200",
-    heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🚛 Towing Service",
+    heroImage: "/assets/car-emergency.webp", badge: "🚛 Towing Service",
   },
   electrical: {
     bgAccent: "bg-purple-600", btnHover: "hover:bg-purple-700", bgLight: "bg-purple-50",
@@ -98,6 +99,8 @@ interface Props {
 // ─── Component (Server) ──────────────────────────────────────────────────────
 export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
   const theme = CATEGORY_THEME[data.serviceCategory] ?? DEFAULT_THEME;
+  const isTowing = data.serviceCategory === "towing" || data.serviceSlug.includes("towing");
+  const isBikeTowing = isTowing && data.serviceSlug.startsWith("bike-");
   const { bgAccent, btnHover, bgLight, accentText, borderClr, heroImage } = theme;
   // Only trust an absolute https:// URL (a real Media Library upload) — many
   // rows still carry stale local `/images/...` paths from before the Media
@@ -234,15 +237,23 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
-            {sectionHeading("how_it_works", `How Doorstep ${withLocation(data.serviceName, data.locationHeading)} Works`)}
+            {sectionHeading(
+              "how_it_works",
+              isTowing
+                ? `How ${withLocation(data.serviceName, data.locationHeading)} Works`
+                : `How Doorstep ${withLocation(data.serviceName, data.locationHeading)} Works`
+            )}
           </h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            {[
-              { step: "1", title: "Book Online or Call", desc: `Call ${city.phone} or fill the form.` },
-              { step: "2", title: "We Confirm & Dispatch", desc: "Nearest available technician dispatched." },
-              { step: "3", title: "Tech Arrives at Door", desc: "Certified technician with tools and parts." },
-              { step: "4", title: "Drive Away Happy", desc: "30-day warranty and digital receipt." },
-            ].map(({ step, title, desc }) => (
+            {(isTowing
+              ? TOWING_WORKFLOW_STEPS.map(({ n, title, desc }) => ({ step: n, title, desc }))
+              : [
+                  { step: "1", title: "Book Online or Call", desc: `Call ${city.phone} or fill the form.` },
+                  { step: "2", title: "We Confirm & Dispatch", desc: "Nearest available technician dispatched." },
+                  { step: "3", title: "Tech Arrives at Door", desc: "Certified technician with tools and parts." },
+                  { step: "4", title: "Drive Away Happy", desc: "30-day warranty and digital receipt." },
+                ]
+            ).map(({ step, title, desc }) => (
               <div key={step} className="text-center">
                 <div className={`w-14 h-14 ${bgAccent} text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg`}>
                   {step}
@@ -265,7 +276,9 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
             {sectionHeading("pricing", `${withLocation(data.serviceName, data.locationHeading)} Cost`)}
           </h2>
           <p className="text-gray-600 text-center mb-10">
-            Transparent pricing — quoted before work begins.
+            {isTowing
+              ? "Indicative starting price — exact towing charge confirmed before dispatch."
+              : "Transparent pricing — quoted before work begins."}
           </p>
           <div className="max-w-3xl mx-auto">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -293,7 +306,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                 href={`/${city.slug}#contact`}
                 className={`${bgAccent} ${btnHover} text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-block`}
               >
-                Get Your Free Quote
+                {isTowing ? "Get Towing Quote" : "Get Your Free Quote"}
               </Link>
             </div>
           </div>
@@ -459,23 +472,30 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                     {data.arrival_time || "20-Min Quick Arrival*"}
                   </p>
                   <p className="text-xs text-gray-500 mt-0.5">
-                    Target after mechanic dispatch
+                    {isTowing ? "Target after recovery-vehicle dispatch" : "Target after mechanic dispatch"}
                   </p>
                 </div>
 
                 <div className="w-px bg-gray-200" />
 
-                <div>
-                  <p className="text-2xl font-bold text-green-600">
-                    {data.warranty || "30-Day"}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-0.5">
-                    Warranty
-                  </p>
-                </div>
+                {isTowing ? (
+                  <div>
+                    <p className="text-2xl font-bold text-green-600">Before Dispatch</p>
+                    <p className="text-xs text-gray-500 mt-0.5">Price Confirmed</p>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-2xl font-bold text-green-600">
+                      {data.warranty || "30-Day"}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-0.5">Warranty</p>
+                  </div>
+                )}
               </div>
               <p className="-mt-5 mb-8 max-w-xl text-xs leading-5 text-gray-500">
-                *Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability.
+                {isTowing
+                  ? TOWING_ARRIVAL_PROMISE_NOTE_SHORT
+                  : "*Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability."}
               </p>
 
               {/* CTAs */}
@@ -484,7 +504,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                   href={`/${city.slug}#contact`}
                   className={`${bgAccent} ${btnHover} text-white px-8 py-3 rounded-lg font-bold transition-colors`}
                 >
-                  Book in {data.locationHeading}
+                  {isTowing ? `Request Towing in ${data.locationHeading}` : `Book in ${data.locationHeading}`}
                 </Link>
                 <a
                   href={`tel:${city.phone}`}
@@ -524,13 +544,22 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
       <section className="bg-white border-b border-gray-100 py-5">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center gap-8">
-            {[
-              { icon: Shield, label: "Certified Technicians" },
-              { icon: CheckCircle, label: "30-Day Warranty" },
-              { icon: Clock, label: "24/7 Available" },
-              { icon: IndianRupee, label: "Transparent Pricing" },
-              { icon: MapPin, label: "Doorstep Service" },
-            ].map(({ icon: I, label }) => (
+            {(isTowing
+              ? [
+                  { icon: Clock, label: "20-Min Quick Arrival*" },
+                  { icon: CheckCircle, label: "Suitable Recovery Method" },
+                  { icon: MapPin, label: "Destination Choice" },
+                  { icon: IndianRupee, label: "Price Before Dispatch" },
+                  { icon: Phone, label: "24/7 Coordination" },
+                ]
+              : [
+                  { icon: Shield, label: "Certified Technicians" },
+                  { icon: CheckCircle, label: "30-Day Warranty" },
+                  { icon: Clock, label: "24/7 Available" },
+                  { icon: IndianRupee, label: "Transparent Pricing" },
+                  { icon: MapPin, label: "Doorstep Service" },
+                ]
+            ).map(({ icon: I, label }) => (
               <div key={label} className="flex items-center gap-2">
                 <I className="w-5 h-5 text-green-600" />
                 <span className="text-sm font-semibold text-gray-700">{label}</span>
@@ -539,6 +568,46 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
           </div>
         </div>
       </section>
+
+      {isTowing && (
+        <section className="border-b border-gray-100 bg-gray-50 py-10">
+          <div className="container mx-auto grid gap-8 px-4 lg:grid-cols-[1.4fr_1fr]">
+            <div>
+              <h2 className="mb-4 text-2xl font-bold text-gray-900">Quick Towing Decision Guide</h2>
+              <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
+                {[
+                  [isBikeTowing ? "Bike cannot be ridden safely" : "Car cannot be driven safely", "Towing and recovery assessment"],
+                  ["Accident-damaged vehicle", "Condition and access checked before dispatch"],
+                  [isBikeTowing ? "EV, scooter, or heavy bike" : "Automatic, AWD, EV, or low-clearance car", "Suitable carrier or flatbed considered where required"],
+                  ["Basement or restricted access", "Clearance and loading approach assessed first"],
+                  ["Destination", "Garage, dealership, home, or another selected location"],
+                  ["Availability", "24/7 recovery coordination"],
+                  ["Arrival", "20-Min Quick Arrival target after dispatch*"],
+                  ["Price", `Indicative from ${isBikeTowing ? "₹799" : "₹1,299"}; exact charge confirmed before dispatch`],
+                ].map(([need, response], index) => (
+                  <div key={need} className={`grid gap-1 px-5 py-3 sm:grid-cols-[0.8fr_1.2fr] ${index > 0 ? "border-t border-gray-100" : ""}`}>
+                    <p className="font-semibold text-gray-900">{need}</p>
+                    <p className="text-sm text-gray-600">{response}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6">
+              <h2 className="mb-3 text-xl font-bold text-gray-900">What to Share Before Dispatch</h2>
+              <p className="mb-4 text-sm leading-6 text-gray-700">
+                These details help Fiixup identify a suitable recovery method and give you a useful ETA and quote.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {["Vehicle model", "Exact pickup", "Wheel condition", "Steering condition", "Roadside or basement", "Accident or breakdown", "Destination"].map((item) => (
+                  <span key={item} className="rounded-full border border-amber-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ABOUT */}
       <section className="py-16 bg-white">
@@ -584,14 +653,16 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
             Book {withLocation(data.serviceName, data.locationHeading)} Now
           </h2>
           <p className="text-white/80 mb-8 text-lg">
-            Certified technicians available 24/7 across {data.displayLocation}.
+            {isTowing
+              ? `Share the vehicle, pickup, access, and destination details for 24/7 towing coordination across ${data.displayLocation}.`
+              : `Certified technicians available 24/7 across ${data.displayLocation}.`}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href={`/${city.slug}#contact`}
               className="bg-white text-gray-900 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors"
             >
-              Book Service Now
+              {isTowing ? "Request Towing" : "Book Service Now"}
             </Link>
             <a
               href={`tel:${city.phone}`}

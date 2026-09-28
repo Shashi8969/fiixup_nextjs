@@ -33,7 +33,7 @@ const TOP_SERVICES = [
   { icon: Bike,    label: "Bike Service at Home",     href: "/services/bike-service-at-home",        tag: "From ₹349",  color: "red"    },
   { icon: Car,     label: "Car Service at Home",      href: "/services/car-service-at-home",         tag: "From ₹999",  color: "blue"   },
   { icon: Zap,     label: "Battery Jump Start",       href: "/services/car-battery-jumpstart-near-me",tag: "From ₹399", color: "green"  },
-  { icon: Truck,   label: "Towing Service",           href: "/services/car-towing-service-near-me",  tag: "From ₹499",  color: "amber"  },
+  { icon: Truck,   label: "Towing Service",           href: "/services/car-towing-service-near-me",  tag: "From ₹1,299", color: "amber"  },
   { icon: Wrench,  label: "Puncture Repair",          href: "/services/car-puncture-repair-near-me", tag: "From ₹199",  color: "orange" },
   { icon: Battery, label: "Roadside Assistance",      href: "/services/roadside-assistance-near-me", tag: "From ₹299",  color: "purple" },
 ];

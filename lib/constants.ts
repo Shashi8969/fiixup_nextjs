@@ -30,6 +30,13 @@ export const ARRIVAL_PROMISE_NOTE =
 export const ARRIVAL_PROMISE_NOTE_SHORT =
   "*Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability.";
 
+export const TOWING_ARRIVAL_SUPPORTING_TEXT =
+  "Fiixup targets arrival in around 20 minutes after recovery-vehicle dispatch for eligible towing bookings.";
+export const TOWING_ARRIVAL_PROMISE_NOTE =
+  "*20 minutes is our target arrival time after dispatch, not the towing duration. Actual ETA may vary depending on traffic, distance, weather, service demand, vehicle access and recovery-vehicle availability.";
+export const TOWING_ARRIVAL_PROMISE_NOTE_SHORT =
+  "*Target arrival after recovery-vehicle dispatch for eligible bookings. Actual ETA may vary by traffic, distance, vehicle access and availability.";
+
 export const PRICE_DISCLAIMER_SHORT =
   "Prices shown are starting/indicative prices. Final charges may vary by location, night or after-hours timing, extra labour, parts, fluids, additional repairs, multiple punctures, towing/pickup distance, or other work approved after inspection.";
 
@@ -46,9 +53,23 @@ export const TRUST_BADGES = [
   "✅ Doorstep, roadside & partner-garage support",
 ] as const;
 
+export const TOWING_TRUST_BADGES = [
+  "✅ 20-Min Quick Arrival*",
+  "✅ Recovery method matched to the vehicle",
+  "✅ ETA and towing charge confirmed before dispatch",
+  "✅ 24/7 recovery coordination",
+] as const;
+
 export const HOW_IT_WORKS_STEPS = [
   { n: "1", title: "Book & Confirm", desc: "Call, WhatsApp, or use the booking form. Share your vehicle, issue, location, and preferred time." },
   { n: "2", title: "20-Min Quick Arrival*", desc: "Target arrival is around 20 minutes after mechanic dispatch for eligible doorstep and roadside bookings." },
   { n: "3", title: "Repair or Pickup", desc: "Suitable jobs are handled at your location. Workshop-only car jobs can be moved to a partner garage, with free pickup and drop on eligible services." },
   { n: "4", title: "Approve & Complete", desc: "Starting prices cover the standard scope. Any extra labour, parts, or additional repair should be explained before paid work proceeds. Warranty applies to eligible repairs." },
+] as const;
+
+export const TOWING_WORKFLOW_STEPS = [
+  { n: "1", title: "Share Location & Vehicle Details", desc: "Tell Fiixup your pickup location, vehicle model and condition, access constraints, and preferred destination." },
+  { n: "2", title: "Method, ETA & Price Confirmed", desc: "We identify a suitable recovery method and confirm the expected arrival time and towing charge before dispatch." },
+  { n: "3", title: "Vehicle Secured for Transport", desc: "The operator checks access, loads the vehicle using the appropriate recovery method, and secures it for transport." },
+  { n: "4", title: "Delivered to Your Destination", desc: "Your vehicle is transported to the garage, dealership, home, or other destination you selected." },
 ] as const;

@@ -9,10 +9,12 @@ export default function Hero({
   // ADDED: Accept category data
   categoryTitle,
   CategoryIcon,
+  variant = "service",
   bgAccent,
   accentBlue,
   bgLight
 }: any) {
+  const isTowing = variant === "towing";
   return (
     <section className={`${bgLight} py-6 border-b border-gray-300`}>
       <div className="container mx-auto px-4">
@@ -55,7 +57,9 @@ export default function Hero({
                 <p className="text-2xl font-bold text-gray-900">
                   {service.duration}
                 </p>
-                <p className="max-w-32 text-xs text-gray-500">Estimated service time after work starts</p>
+                <p className="max-w-32 text-xs text-gray-500">
+                  {isTowing ? "Estimated recovery or transport time" : "Estimated service time after work starts"}
+                </p>
               </div>
               <div className="w-px bg-gray-200" />
               <div>
@@ -66,7 +70,7 @@ export default function Hero({
 
             <div className="flex flex-wrap gap-3">
               <Link href="/contact#contact-form" className={`${bgAccent} text-white px-8 py-3 rounded-lg font-bold`}>
-                Book This Service
+                {isTowing ? "Request Towing" : "Book This Service"}
               </Link>
 
               <a href="tel:+918197459732" className="bg-white border-2 border-gray-200 text-gray-800 px-6 py-3 rounded-lg font-bold flex items-center gap-2">

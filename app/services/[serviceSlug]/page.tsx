@@ -25,7 +25,8 @@ import ServiceBenefits      from "@/components/service/ServiceBenefits";
 
 import { iconMap } from "@/lib/icons";
 import { getAllServices, getServiceBySlug, getServicesByCategory } from "@/lib/services";
-import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
+import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY, TOWING_WORKFLOW_STEPS } from "@/lib/constants";
+import type { ThemeColor } from "@/lib/theme";
 import { serviceDetailSchema, serviceCategorySchema, jsonLdString } from "@/lib/schema";
 import { getAllServiceCategories, getServiceCategoryBySlug } from "@/lib/data/serviceCategory";
 import { metadataFromBasicSeo } from "@/lib/seo/metadata";
@@ -104,7 +105,8 @@ export default async function Page({
   if (cat) {
     const theme = heroTheme[cat.color] ?? heroTheme.blue;
     const CategoryIcon = cat.icon;
-    const accentColor = (cat.slug === "car" ? "blue" : cat.color) as "blue" | "red";
+    const isTowingCategory = cat.slug === "towing";
+    const accentColor = (cat.slug === "car" ? "blue" : cat.color) as ThemeColor;
 
     // Fetch services for this category from Supabase
     const catServices = await getServicesByCategory(cat.categorySlug as any);
@@ -138,7 +140,7 @@ export default async function Page({
                 href="/contact#contact-form"
                 className={`${theme.btn} text-white px-8 py-3 rounded-lg transition-colors font-semibold`}
               >
-                Book a Service
+                {isTowingCategory ? "Request Towing" : "Book a Service"}
               </Link>
               <a
                 href={`tel:${MAIN_PHONE}`}
@@ -150,7 +152,7 @@ export default async function Page({
           </div>
         </section>
 
-        <IconTrustStrip />
+        <IconTrustStrip context={isTowingCategory ? "towing" : "service"} />
 
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
@@ -178,11 +180,20 @@ export default async function Page({
         )}
 
         {cat.pricingSummary && (
-          <PricingTable pricing={cat.pricingSummary} serviceTitle={cat.title} accentColor={accentColor} />
+          <PricingTable
+            pricing={cat.pricingSummary}
+            serviceTitle={cat.title}
+            accentColor={accentColor}
+            variant={isTowingCategory ? "towing" : "service"}
+          />
         )}
 
         {cat.brands && (
-          <BrandsGrid brands={cat.brands} heading={`${cat.title} Brands We Service`} accentColor={accentColor} />
+          <BrandsGrid
+            brands={cat.brands}
+            heading={`${cat.title} Brands We Service`}
+            accentColor={accentColor === "blue" ? "blue" : "red"}
+          />
         )}
 
         {cat.guide && <CompleteGuideSection guide={cat.guide} />}
@@ -190,21 +201,23 @@ export default async function Page({
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">How It Works</h2>
-            <HowItWorks />
+            <HowItWorks steps={isTowingCategory ? [...TOWING_WORKFLOW_STEPS] : undefined} />
           </div>
         </section>
 
-        <WhyChooseDoorstep />
+        <WhyChooseDoorstep variant={isTowingCategory ? "towing" : "doorstep"} />
 
         <section className="py-16 bg-blue-600 text-white text-center">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold mb-4">Ready to Book?</h2>
             <p className="text-white mb-8 text-lg">
-              Certified technicians come to you — at home, office, or anywhere your vehicle is parked.
+              {isTowingCategory
+                ? "Share the vehicle, pickup, access, and destination details. We confirm the recovery method, ETA, and charge before dispatch."
+                : "Certified technicians come to you — at home, office, or anywhere your vehicle is parked."}
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link href="/contact#contact-form" className="bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-blue-50 transition-colors">
-                Book Service Now
+                {isTowingCategory ? "Request Towing" : "Book Service Now"}
               </Link>
               <a href={`tel:${MAIN_PHONE}`} className="bg-red-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-red-700 transition-colors flex items-center gap-2">
                 <Phone className="w-4 h-4" /> {MAIN_PHONE_DISPLAY}
@@ -221,7 +234,8 @@ export default async function Page({
   if (!service) return notFound();
 
   const Icon = iconMap[service.icon];
-  const isCar = service.category === "car";
+  const isTowing = service.category === "towing" || service.slug.includes("towing");
+  const isCar = service.category === "car" || (isTowing && service.slug.startsWith("car-"));
 
   const accentBlue   = isCar ? "text-blue-600"   : "text-red-600";
   const bgAccent     = isCar ? "bg-blue-600"     : "bg-red-600";
@@ -267,9 +281,18 @@ export default async function Page({
         dangerouslySetInnerHTML={{ __html: jsonLdString(service.schemaJson ?? serviceSchemaData) }}
       />
 
-      <Hero service={service} Icon={Icon} isCar={isCar} bgAccent={bgAccent} accentBlue={accentBlue} bgLight={bgLight} />
+      <Hero
+        service={service}
+        Icon={Icon}
+        isCar={isCar}
+        categoryTitle={isTowing ? "Towing Service" : undefined}
+        variant={isTowing ? "towing" : "service"}
+        bgAccent={bgAccent}
+        accentBlue={accentBlue}
+        bgLight={bgLight}
+      />
 
-      <TrustStrip />
+      <TrustStrip context={isTowing ? "towing" : "service"} />
 
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12">
@@ -298,21 +321,28 @@ export default async function Page({
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
-            How Doorstep {service.shortTitle} Works
+            {isTowing ? `How ${service.shortTitle} Works` : `How Doorstep ${service.shortTitle} Works`}
           </h2>
-          <HowItWorks />
+          <HowItWorks steps={isTowing ? [...TOWING_WORKFLOW_STEPS] : undefined} />
         </div>
       </section>
 
       {service.pricing && (
-        <PricingTable pricing={service.pricing} serviceTitle={service.shortTitle} accentColor={accentColor} />
+        <PricingTable
+          pricing={service.pricing}
+          serviceTitle={service.shortTitle}
+          accentColor={accentColor}
+          variant={isTowing ? "towing" : "service"}
+        />
       )}
 
       {brands.length > 0 && (
         <BrandsGrid
           brands={brands}
           heading={`${isCar ? "Car" : "Bike"} Brands We Service`}
-          subtext={`Our certified mechanics are trained to service all popular ${isCar ? "car" : "bike"} brands available in India.`}
+          subtext={isTowing
+            ? `We coordinate recovery for popular ${isCar ? "car" : "bike"} brands available in India; the method depends on the vehicle and recovery condition.`
+            : `Our certified mechanics are trained to service all popular ${isCar ? "car" : "bike"} brands available in India.`}
           accentColor={accentColor}
         />
       )}
@@ -331,12 +361,14 @@ export default async function Page({
             {service.shortTitle} — Frequently Asked Questions
           </h2>
           <p className="text-gray-500 text-center mb-10">
-            Common questions about our doorstep {service.shortTitle.toLowerCase()} service.
+            {isTowing
+              ? `Common questions about ${service.shortTitle.toLowerCase()}, dispatch, access, and pricing.`
+              : `Common questions about our doorstep ${service.shortTitle.toLowerCase()} service.`}
           </p>
           <ServiceFAQ faqs={service.faqs} />
         </div>
       </section>
-      <WhyChooseDoorstep />
+      <WhyChooseDoorstep variant={isTowing ? "towing" : "doorstep"} />
 
       {service.guide && <CompleteGuideSection guide={service.guide} />}
 
@@ -344,7 +376,9 @@ export default async function Page({
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold mb-8">
-              Other {isCar ? "Car" : "Bike"} Services You May Need
+              {isTowing
+                ? `Other ${isCar ? "Car" : "Bike"} Recovery Services You May Need`
+                : `Other ${isCar ? "Car" : "Bike"} Services You May Need`}
             </h2>
             <div className="grid sm:grid-cols-3 gap-6">
               {related.map((s) => {
@@ -370,7 +404,11 @@ export default async function Page({
 
       
 
-      <BookingCTA serviceTitle={service.shortTitle} bgAccent={bgAccent} />
+      <BookingCTA
+        serviceTitle={service.shortTitle}
+        bgAccent={bgAccent}
+        variant={isTowing ? "towing" : "service"}
+      />
     </>
   );
 }

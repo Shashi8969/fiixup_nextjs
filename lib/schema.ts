@@ -621,6 +621,7 @@ export function serviceDetailSchema(opts: {
   } = opts;
 
   const isCity  = Boolean(cityName && citySlug);
+  const isTowing = /tow|recovery/i.test(`${name} ${slug}`);
   const baseUrl = isCity
     ? `${SITE_URL}/${citySlug}/services/${slug}`
     : `${SITE_URL}/services/${slug}`;
@@ -688,27 +689,47 @@ export function serviceDetailSchema(opts: {
     graph.push({
       "@type":       "HowTo",
       "@id":         `${baseUrl}/#howto`,
-      name:          `How to Book ${name} at Your Doorstep — Fiixup`,
-      description:   `Book ${name} at your home in 3 easy steps. Fiixup targets arrival around 20 minutes after mechanic dispatch for eligible bookings.`,
-      totalTime:     "PT60M",
+      name:          isTowing ? `How to Arrange ${name} — Fiixup` : `How to Book ${name} at Your Doorstep — Fiixup`,
+      description:   isTowing
+        ? `Share the vehicle, pickup, access, and destination details. Fiixup confirms a suitable recovery method, expected ETA, and towing charge before dispatch.`
+        : `Book ${name} at your home in 3 easy steps. Fiixup targets arrival around 20 minutes after mechanic dispatch for eligible bookings.`,
+      ...(!isTowing && { totalTime: "PT60M" }),
       estimatedCost: { "@type": "MonetaryAmount", currency: "INR", minValue: minPrice, maxValue: maxPrice },
-      step: [
-        {
-          "@type": "HowToStep", position: 1,
-          name: "Call or Book Online",
-          text: `Call ${MAIN_PHONE} or fill the online booking form with your vehicle details and location.`,
-        },
-        {
-          "@type": "HowToStep", position: 2,
-          name: "Certified Mechanic Dispatched",
-          text: "After a mechanic is dispatched, Fiixup targets arrival at your location in around 20 minutes for eligible bookings. Actual ETA may vary.",
-        },
-        {
-          "@type": "HowToStep", position: 3,
-          name: "Service Completed at Doorstep",
-          text: `${name} completed at your home or office. 30-day service warranty included.`,
-        },
-      ],
+      step: isTowing
+        ? [
+            {
+              "@type": "HowToStep", position: 1,
+              name: "Share Location and Vehicle Details",
+              text: `Call ${MAIN_PHONE} or use the booking form with the pickup, vehicle condition, access, and destination details.`,
+            },
+            {
+              "@type": "HowToStep", position: 2,
+              name: "Confirm Method, ETA, and Price",
+              text: "Fiixup identifies a suitable recovery method and confirms the expected arrival time and towing charge before dispatch.",
+            },
+            {
+              "@type": "HowToStep", position: 3,
+              name: "Secure and Transport the Vehicle",
+              text: "The operator checks access, secures the vehicle, and transports it to the selected garage, dealership, home, or other destination.",
+            },
+          ]
+        : [
+            {
+              "@type": "HowToStep", position: 1,
+              name: "Call or Book Online",
+              text: `Call ${MAIN_PHONE} or fill the online booking form with your vehicle details and location.`,
+            },
+            {
+              "@type": "HowToStep", position: 2,
+              name: "Certified Mechanic Dispatched",
+              text: "After a mechanic is dispatched, Fiixup targets arrival at your location in around 20 minutes for eligible bookings. Actual ETA may vary.",
+            },
+            {
+              "@type": "HowToStep", position: 3,
+              name: "Service Completed at Doorstep",
+              text: `${name} completed at your home or office. 30-day service warranty included.`,
+            },
+          ],
     });
   }
 
