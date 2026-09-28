@@ -207,7 +207,7 @@ export default async function CityServicePage({
         {
           "@type":         "ItemList",
           name:            `${cat.title} in ${city.name}`,
-          description:     cat.description,
+          description:     dbPage?.data.heroSubheading ?? cat.description,
           numberOfItems:   cityServices.length,
           itemListElement: cityServices.map((s, i) => ({
             "@type":    "ListItem",
@@ -261,7 +261,7 @@ export default async function CityServicePage({
             </h1>
 
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6 leading-relaxed">
-              {cat.description}
+              {dbPage?.data.heroSubheading ?? cat.description}
             </p>
 
             {/* Trust micro-row */}
@@ -321,7 +321,9 @@ export default async function CityServicePage({
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
                   All {cat.title} in {city.name}
                 </h2>
-                <p className="text-gray-500 max-w-xl mx-auto">{cat.description}</p>
+                <p className="text-gray-500 max-w-xl mx-auto">
+                  {dbPage?.data.aboutPara1 ?? cat.description}
+                </p>
               </div>
 
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">

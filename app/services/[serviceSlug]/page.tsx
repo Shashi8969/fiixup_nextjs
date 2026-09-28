@@ -175,7 +175,7 @@ export default async function Page({
           </div>
         </section>
 
-        {cat.benefits && (
+        {cat.benefits?.length > 0 && (
           <ServiceBenefits benefits={cat.benefits} serviceTitle={cat.title} accentColor={accentColor} />
         )}
 
@@ -188,7 +188,7 @@ export default async function Page({
           />
         )}
 
-        {cat.brands && (
+        {cat.brands?.length > 0 && (
           <BrandsGrid
             brands={cat.brands}
             heading={`${cat.title} Brands We Service`}
