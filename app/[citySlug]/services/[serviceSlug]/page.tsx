@@ -224,9 +224,59 @@ export default async function CityServicePage({
       ],
     };
 
+    // Mumbai is a service-area market without a physical Fiixup storefront in
+    // the city. Render service-area schema from the actual live Mumbai child
+    // pages so a later CMS rebuild cannot re-introduce a synthetic LocalBusiness
+    // address or global service URLs that do not exist under /mumbai.
+    const mumbaiSchema = city.slug === "mumbai" ? {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Service",
+          "@id": `${SITE_URL}/${city.slug}/services/${cat.slug}#service`,
+          url: `${SITE_URL}/${city.slug}/services/${cat.slug}`,
+          name: `Fiixup ${cat.title} in ${city.name}`,
+          description: dbPage?.seo.meta_description ?? cat.description,
+          serviceType: cat.title,
+          provider: { "@id": `${SITE_URL}/#organization` },
+          areaServed: { "@type": "City", name: city.name },
+        },
+        {
+          "@type": "ItemList",
+          "@id": `${SITE_URL}/${city.slug}/services/${cat.slug}#services`,
+          name: `${cat.title} in ${city.name}`,
+          numberOfItems: cityServices.length,
+          itemListElement: cityServices.map((s, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            name: s.serviceName,
+            url: s.canonicalUrl,
+          })),
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": `${SITE_URL}/${city.slug}/services/${cat.slug}#breadcrumb`,
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+            { "@type": "ListItem", position: 2, name: city.name, item: `${SITE_URL}/${city.slug}` },
+            { "@type": "ListItem", position: 3, name: cat.title, item: `${SITE_URL}/${city.slug}/services/${cat.slug}` },
+          ],
+        },
+        ...(dbPage?.data.faqs?.length ? [{
+          "@type": "FAQPage",
+          "@id": `${SITE_URL}/${city.slug}/services/${cat.slug}#faq`,
+          mainEntity: dbPage.data.faqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.q,
+            acceptedAnswer: { "@type": "Answer", text: faq.a },
+          })),
+        }] : []),
+      ],
+    } : null;
+
     return (
       <>
-        <JsonLd data={dbPage?.seo.schema_json ?? schema} />
+        <JsonLd data={mumbaiSchema ?? dbPage?.seo.schema_json ?? schema} />
 
         {/* ── BREADCRUMB ─────────────────────────────────────────────── */}
         <nav aria-label="Breadcrumb" className="bg-gray-50 border-b border-gray-100">
