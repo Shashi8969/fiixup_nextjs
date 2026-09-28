@@ -189,6 +189,9 @@ export default async function CityAreaPage({ params }: { params: Params }) {
             schemaReviewCount:     data.schemaReviewCount,
             displayLocation:       data.displayLocation,
             locationHeading:       data.locationHeading,
+            availability:          data.availability,
+            arrival_time:          data.arrivalTime,
+            warranty:              data.warranty,
           }}
           city={{
             slug:     data.city.slug,

@@ -106,6 +106,9 @@ function rowToLocationService(row: any): LocationServiceData {
     schemaReviewCount:     verifiedReviewCount(row.schema_review_count),
     displayLocation:       isCity ? row.city_name : `${row.area_name}, ${row.city_name}`,
     locationHeading:       isCity ? row.city_name : (row.area_name ?? row.city_name),
+    availability:          row.availability ?? undefined,
+    arrival_time:          row.arrival_time ?? undefined,
+    warranty:              row.warranty ?? undefined,
   };
 }
 
