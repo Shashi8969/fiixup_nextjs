@@ -73,6 +73,12 @@ const DEFAULT_THEME = {
   heroImage: "/assets/Car_mechanic_700x1049.webp", badge: "🔧 Vehicle Service",
 };
 
+const SERVICE_BADGES: Record<string, string> = {
+  "bike-mechanic-near-me": "🏍️ Bike Mechanic",
+  "bike-service-near-me": "🏍️ Bike Service",
+  "bike-garage-near-me": "🔧 Bike Garage",
+};
+
 const iconMap: Record<string, React.ElementType> = {
   Clock, Shield, IndianRupee, Star, Phone, MapPin, CheckCircle,
 };
@@ -99,6 +105,7 @@ interface Props {
 // ─── Component (Server) ──────────────────────────────────────────────────────
 export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
   const theme = CATEGORY_THEME[data.serviceCategory] ?? DEFAULT_THEME;
+  const serviceBadge = SERVICE_BADGES[data.serviceSlug] ?? theme.badge;
   const isTowing = data.serviceCategory === "towing" || data.serviceSlug.includes("towing");
   const isBikeTowing = isTowing && data.serviceSlug.startsWith("bike-");
   const { bgAccent, btnHover, bgLight, accentText, borderClr, heroImage } = theme;
@@ -444,7 +451,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <span className={`inline-block ${bgAccent} text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-4`}>
-                {theme.badge} — {data.locationHeading}
+                {serviceBadge} — {data.locationHeading}
               </span>
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 leading-tight">
                 {data.heroHeading}
