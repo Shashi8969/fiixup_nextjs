@@ -1,6 +1,6 @@
 // components/service/ServiceTestimonials.tsx
 import type { ServiceTestimonial } from "@/lib/models/service.model";
-import { Star, BadgeCheck } from "lucide-react";
+import { Star } from "lucide-react";
 import Link from "next/link";
 
 interface Props {
@@ -14,20 +14,11 @@ export default function ServiceTestimonials({ testimonials, serviceTitle }: Prop
       <div className="container mx-auto px-4">
         <div className="text-center mb-10">
           <span className="inline-block text-xs font-bold tracking-widest uppercase text-gray-500 mb-2">
-            Real Customer Reviews
+            Customer Feedback
           </span>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
             What Customers Say About Our {serviceTitle}
           </h2>
-          <div className="flex items-center justify-center gap-2 mt-3">
-            <div className="flex">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} className="w-5 h-5 fill-amber-400 text-amber-400" />
-              ))}
-            </div>
-            <span className="font-bold text-gray-900">4.9</span>
-            <span className="text-gray-500 text-sm">/ 5 — 10,000+ services</span>
-          </div>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -48,7 +39,6 @@ export default function ServiceTestimonials({ testimonials, serviceTitle }: Prop
                 <div>
                   <div className="flex items-center gap-1.5">
                     <p className="font-bold text-gray-900 text-sm">{t.name}</p>
-                    {t.verified && <BadgeCheck className="w-3.5 h-3.5 text-blue-500" />}
                   </div>
                   <p className="text-xs text-gray-500 mt-0.5">{t.location}</p>
                   <p className="text-xs text-gray-400">{t.vehicle}</p>
@@ -60,9 +50,6 @@ export default function ServiceTestimonials({ testimonials, serviceTitle }: Prop
         </div>
 
         <div className="text-center mt-10">
-          <p className="text-sm text-gray-500 mb-4">
-            Join 10,000+ satisfied customers across Bengaluru, Chennai, Hyderabad & Mumbai
-          </p>
           <Link
             href="/contact#contact-form"
             className="inline-flex items-center gap-2 bg-red-600 text-white font-bold px-7 py-3.5 rounded-xl hover:bg-red-700 transition-colors shadow-lg shadow-red-100"
