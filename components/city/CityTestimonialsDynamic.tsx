@@ -3,7 +3,6 @@
 // =====================================================================
 
 import type { CityHubPageData } from '@/lib/cityPages';
-import { Marquee } from '@/components/ui/Marquee';
 import { TestimonialCard } from '@/components/ui/TestimonialCard';
 
 export function CityTestimonialsDynamic({ data }: { data: CityHubPageData }) {
@@ -26,13 +25,9 @@ export function CityTestimonialsDynamic({ data }: { data: CityHubPageData }) {
         </div>
       </div>
 
-      {/* Same auto-scrolling marquee pattern as the homepage — a row this
-          long (6-10 reviews per city) reads better as a continuous strip
-          you can watch or hover-pause than as a static grid stacking many
-          rows deep down the page. */}
-      <Marquee durationSeconds={Math.max(30, testimonials.length * 7)}>
+      <div className="flex gap-5 overflow-x-auto px-4 pb-4 snap-x snap-mandatory" aria-label="Customer feedback">
         {testimonials.map((t, i) => (
-          <div key={`${t.name}-${i}`} className="w-[320px] shrink-0 sm:w-[360px]">
+          <div key={`${t.name}-${i}`} className="w-[320px] shrink-0 snap-start sm:w-[360px]">
             <TestimonialCard
               name={t.name}
               rating={t.rating}
@@ -40,11 +35,10 @@ export function CityTestimonialsDynamic({ data }: { data: CityHubPageData }) {
               date={t.date_label}
               vehicle={t.vehicle}
               area={t.area || data.cityName}
-              sourceLabel={t.verified ? 'Verified Customer Review' : undefined}
             />
           </div>
         ))}
-      </Marquee>
+      </div>
     </section>
   );
 }
