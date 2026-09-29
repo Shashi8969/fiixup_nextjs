@@ -95,6 +95,11 @@ function withLocation(serviceName: string, location: string): string {
   return `${serviceName} in ${location}`;
 }
 
+function withDoorstep(serviceName: string, location: string): string {
+  const locatedName = withLocation(serviceName, location);
+  return /^doorstep\b/i.test(locatedName) ? locatedName : `Doorstep ${locatedName}`;
+}
+
 // ─── Props ───────────────────────────────────────────────────────────────────
 interface Props {
   data: LocationServiceData;
@@ -108,6 +113,15 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
   const serviceBadge = SERVICE_BADGES[data.serviceSlug] ?? theme.badge;
   const isTowing = data.serviceCategory === "towing" || data.serviceSlug.includes("towing");
   const isBikeTowing = isTowing && data.serviceSlug.startsWith("bike-");
+  const fallbackProcessSteps = isTowing
+    ? TOWING_WORKFLOW_STEPS.map(({ n, title, desc }) => ({ step: n, title, desc }))
+    : [
+        { step: "1", title: "Book Online or Call", desc: `Call ${city.phone} or fill the form.` },
+        { step: "2", title: "We Confirm & Dispatch", desc: "Nearest available technician dispatched." },
+        { step: "3", title: "Technician Inspects the Problem", desc: "The technician checks the vehicle and confirms the suitable next step." },
+        { step: "4", title: "Approved Work Is Completed", desc: "The approved repair, roadside help, or recovery step is completed." },
+      ];
+  const processSteps = data.processSteps.length > 0 ? data.processSteps : fallbackProcessSteps;
   const { bgAccent, btnHover, bgLight, accentText, borderClr, heroImage } = theme;
   // Only trust an absolute https:// URL (a real Media Library upload) — many
   // rows still carry stale local `/images/...` paths from before the Media
@@ -248,19 +262,11 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
               "how_it_works",
               isTowing
                 ? `How ${withLocation(data.serviceName, data.locationHeading)} Works`
-                : `How Doorstep ${withLocation(data.serviceName, data.locationHeading)} Works`
+                : `How ${withDoorstep(data.serviceName, data.locationHeading)} Works`
             )}
           </h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            {(isTowing
-              ? TOWING_WORKFLOW_STEPS.map(({ n, title, desc }) => ({ step: n, title, desc }))
-              : [
-                  { step: "1", title: "Book Online or Call", desc: `Call ${city.phone} or fill the form.` },
-                  { step: "2", title: "We Confirm & Dispatch", desc: "Nearest available technician dispatched." },
-                  { step: "3", title: "Tech Arrives at Door", desc: "Certified technician with tools and parts." },
-                  { step: "4", title: "Drive Away Happy", desc: "30-day warranty and digital receipt." },
-                ]
-            ).map(({ step, title, desc }) => (
+            {processSteps.map(({ step, title, desc }) => (
               <div key={step} className="text-center">
                 <div className={`w-14 h-14 ${bgAccent} text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg`}>
                   {step}

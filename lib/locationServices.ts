@@ -1,6 +1,12 @@
 import { supabase } from "./supabase";
 import { normalizeImageMeta, type ImageMeta } from "./seo-pages";
 
+export interface ProcessStep {
+  step: string;
+  title: string;
+  desc: string;
+}
+
 export interface LocationServiceData {
   id: number;
   citySlug: string;
@@ -26,6 +32,7 @@ export interface LocationServiceData {
   whyChoosePoints: { icon: string; title: string; desc: string }[];
   pricingRows: { label: string; priceFrom: number; priceTo?: number; note?: string }[];
   pricingDisclaimer: string;
+  processSteps: ProcessStep[];
   testimonials: { name: string; rating: number; text: string; date: string; vehicle: string; area: string }[];
   faqs: { q: string; a: string }[];
   nearbyAreas: { name: string; slug: string }[];
@@ -60,6 +67,26 @@ function verifiedReviewCount(value: unknown): number {
   return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : 0;
 }
 
+function normalizeProcessSteps(value: unknown): ProcessStep[] {
+  if (!Array.isArray(value)) return [];
+
+  return value.flatMap((item, index) => {
+    if (!item || typeof item !== "object") return [];
+
+    const raw = item as Record<string, unknown>;
+    const title = typeof raw.title === "string" ? raw.title.trim() : "";
+    const rawDesc = raw.desc ?? raw.text ?? raw.description;
+    const desc = typeof rawDesc === "string" ? rawDesc.trim() : "";
+    const rawStep = raw.step;
+    const step =
+      typeof rawStep === "string" || typeof rawStep === "number"
+        ? String(rawStep)
+        : String(index + 1);
+
+    return title && desc ? [{ step, title, desc }] : [];
+  });
+}
+
 function rowToLocationService(row: any): LocationServiceData {
   const isCity = !row.area_slug;
   return {
@@ -87,6 +114,7 @@ function rowToLocationService(row: any): LocationServiceData {
     whyChoosePoints:       row.why_choose_points ?? [],
     pricingRows:           row.pricing_rows ?? [],
     pricingDisclaimer:     row.pricing_disclaimer ?? "",
+    processSteps:           normalizeProcessSteps(row.process_steps),
     testimonials:          row.testimonials ?? [],
     faqs:                  (row.faqs ?? []).filter((f: any) => f?.q && f?.a),
     nearbyAreas:           row.nearby_areas ?? [],
