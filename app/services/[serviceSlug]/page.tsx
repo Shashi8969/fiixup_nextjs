@@ -235,7 +235,14 @@ export default async function Page({
 
   const Icon = iconMap[service.icon];
   const isTowing = service.category === "towing" || service.slug.includes("towing");
-  const isCar = service.category === "car" || (isTowing && service.slug.startsWith("car-"));
+  // Roadside and towing records can still be vehicle-specific. Do not label a
+  // car breakdown page as a bike service just because its category is roadside.
+  const isCar = service.category === "car" || service.slug.startsWith("car-");
+  const serviceFamily = isCar
+    ? "Car"
+    : service.category === "bike" || service.slug.startsWith("bike-")
+      ? "Bike"
+      : "Roadside";
 
   const accentBlue   = isCar ? "text-blue-600"   : "text-red-600";
   const bgAccent     = isCar ? "bg-blue-600"     : "bg-red-600";
@@ -285,7 +292,7 @@ export default async function Page({
         service={service}
         Icon={Icon}
         isCar={isCar}
-        categoryTitle={isTowing ? "Towing Service" : undefined}
+        categoryTitle={isTowing ? "Towing Service" : serviceFamily === "Roadside" ? "Roadside Assistance" : `${serviceFamily} Service`}
         variant={isTowing ? "towing" : "service"}
         bgAccent={bgAccent}
         accentBlue={accentBlue}
@@ -339,10 +346,10 @@ export default async function Page({
       {brands.length > 0 && (
         <BrandsGrid
           brands={brands}
-          heading={`${isCar ? "Car" : "Bike"} Brands We Service`}
+          heading={`${serviceFamily === "Roadside" ? "Vehicle" : serviceFamily} Brands We Service`}
           subtext={isTowing
             ? `We coordinate recovery for popular ${isCar ? "car" : "bike"} brands available in India; the method depends on the vehicle and recovery condition.`
-            : `Our certified mechanics are trained to service all popular ${isCar ? "car" : "bike"} brands available in India.`}
+            : `Our certified mechanics are trained to service all popular ${serviceFamily === "Roadside" ? "vehicle" : serviceFamily.toLowerCase()} brands available in India.`}
           accentColor={accentColor}
         />
       )}
@@ -377,8 +384,8 @@ export default async function Page({
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold mb-8">
               {isTowing
-                ? `Other ${isCar ? "Car" : "Bike"} Recovery Services You May Need`
-                : `Other ${isCar ? "Car" : "Bike"} Services You May Need`}
+                ? `Other ${serviceFamily} Recovery Services You May Need`
+                : `Other ${serviceFamily} Services You May Need`}
             </h2>
             <div className="grid sm:grid-cols-3 gap-6">
               {related.map((s) => {
