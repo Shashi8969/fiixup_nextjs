@@ -98,13 +98,13 @@ export async function generateMetadata({
 
   if (cat) {
     const geo = { region: city.state, placename: city.name };
-    // No location_services rows yet for this city+category → the page body
-    // renders nothing but a "being set up, call us" placeholder (see the
-    // empty-state branch below). Don't ask Google to index a page with no
-    // real content — see SEO_AUDIT.md F2. Self-healing: flips back to
-    // indexable the moment an admin adds a location_services row here.
-    const hasContent = await hasAnyCityServiceInCategory(citySlug, cat.categorySlug);
     const dbPage = await getCityServiceCategoryPage(citySlug, serviceSlug);
+    // For CMS-backed city/category pages, seo_pages.is_indexed is the
+    // Supabase-controlled source of truth. The content-presence check remains
+    // only as a fallback for a missing seo_pages row.
+    const indexable = dbPage
+      ? dbPage.seo.is_indexed
+      : await hasAnyCityServiceInCategory(citySlug, cat.categorySlug);
     if (dbPage) {
       return metadataFromBasicSeo({
         title: dbPage.seo.meta_title,
@@ -115,7 +115,7 @@ export async function generateMetadata({
         ogImage: dbPage.seo.og_image_url,
         ogImageAlt: dbPage.seo.meta_title,
         geo,
-        index: hasContent,
+        index: indexable,
       });
     }
 
@@ -130,7 +130,7 @@ export async function generateMetadata({
       path: `/${city.slug}/services/${cat.slug}`,
       ogImageAlt: title,
       geo,
-      index: hasContent,
+      index: indexable,
     });
   }
 

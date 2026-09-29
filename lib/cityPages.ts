@@ -213,14 +213,14 @@ export const getCityServiceCategoryPage = cache(async (
   citySlug: string,
   categorySlug: string
 ): Promise<{
-  seo: Pick<SeoPage, 'meta_title'|'meta_description'|'meta_keywords'|'canonical_url'|'og_image_url'|'schema_json'|'breadcrumbs_json'|'is_active'>;
+  seo: Pick<SeoPage, 'meta_title'|'meta_description'|'meta_keywords'|'canonical_url'|'og_image_url'|'schema_json'|'breadcrumbs_json'|'is_active'|'is_indexed'>;
   data: CityServiceCategoryPageData;
 } | null> => {
   const urlPath = `/${citySlug.toLowerCase()}/services/${categorySlug.toLowerCase()}`;
 
   const { data, error } = await supabase
     .from('seo_pages')
-    .select('meta_title, meta_description, meta_keywords, canonical_url, og_image_url, schema_json, breadcrumbs_json, is_active, page_data')
+    .select('meta_title, meta_description, meta_keywords, canonical_url, og_image_url, schema_json, breadcrumbs_json, is_active, is_indexed, page_data')
     .eq('url_path', urlPath)
     .eq('page_type', 'city_service_category')
     .eq('is_active', true)
@@ -240,6 +240,7 @@ export const getCityServiceCategoryPage = cache(async (
       schema_json:      data.schema_json,
       breadcrumbs_json: data.breadcrumbs_json,
       is_active:        data.is_active,
+      is_indexed:       data.is_indexed,
     },
     data: pd as unknown as CityServiceCategoryPageData,
   };
