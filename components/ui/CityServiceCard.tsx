@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Clock, Star, Wrench } from "lucide-react";
+import { ArrowRight, Clock, Wrench } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { iconMap } from "@/lib/icons";
 import { getCityServiceHref } from "@/lib/routes";
@@ -63,8 +63,6 @@ export function CityServiceCard({
   pricingRows,
   priceLabel,
   duration,
-  rating = 4.9,
-  reviewCount = 150,
   icon,
   categoryIcon,
   theme,
@@ -85,8 +83,6 @@ export function CityServiceCard({
   const linkText = theme?.linkText ?? "text-blue-600";
   const displayPrice = formatPrice(pricingRows, priceLabel);
   const displayDuration = duration || "Varies by job";
-  const displayRating = typeof rating === "number" && Number.isFinite(rating) ? rating : 4.9;
-  const displayReviews = typeof reviewCount === "number" && Number.isFinite(reviewCount) ? reviewCount : 150;
 
   if (variant === "index") {
     return (
@@ -108,23 +104,6 @@ export function CityServiceCard({
 
         <div className="pt-3 border-t border-gray-100 space-y-2">
           <div className="flex items-center gap-1 flex-wrap">
-            <div className="flex">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star
-                  key={s}
-                  className={`w-3 h-3 ${
-                    s <= Math.round(displayRating)
-                      ? "fill-yellow-400 text-yellow-400"
-                      : "fill-gray-200 text-gray-200"
-                  }`}
-                  aria-hidden="true"
-                />
-              ))}
-            </div>
-            <span className="text-xs text-gray-400">
-              {displayRating.toFixed(1)} ({displayReviews}+)
-            </span>
-            <span className="text-gray-300" aria-hidden="true">·</span>
             <span className="text-xs text-gray-400 inline-flex items-center gap-0.5">
               <Clock className="w-3 h-3" aria-hidden="true" />
               Service time: {displayDuration}
@@ -198,25 +177,6 @@ export function CityServiceCard({
       <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-5 line-clamp-2">
         {tagline}
       </p>
-
-      <div className="flex items-center gap-1.5 mb-4">
-        <div className="flex">
-          {[1, 2, 3, 4, 5].map((s) => (
-            <Star
-              key={s}
-              className={`w-3 h-3 ${
-                s <= Math.round(displayRating)
-                  ? "fill-yellow-400 text-yellow-400"
-                  : "fill-gray-200 text-gray-200"
-              }`}
-              aria-hidden="true"
-            />
-          ))}
-        </div>
-        <span className="text-xs text-gray-400">
-          {displayRating.toFixed(1)} ({displayReviews}+ reviews)
-        </span>
-      </div>
 
       <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
         <div>

@@ -1,6 +1,4 @@
-import { Star } from "lucide-react";
 import type { CityData } from "@/lib/models/city.model";
-import { globalStats } from "@/lib/data/testimonials";
 import { getBrandReviews, getReviewsByIds } from "@/lib/reviews";
 import { TestimonialCard } from "@/components/ui/TestimonialCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -22,13 +20,13 @@ export async function Testimonials({ reviewIds }: { reviewIds?: string[] } = {})
       </div>
 
       {testimonials.length > 0 && (
-        <Marquee durationSeconds={Math.max(30, testimonials.length * 7)}>
+        <div className="flex gap-5 overflow-x-auto px-4 pb-4 snap-x snap-mandatory" aria-label="Customer feedback">
           {testimonials.map((t) => (
-            <div key={`${t.name}-${t.text.slice(0, 24)}`} className="w-[320px] shrink-0 sm:w-[360px]">
+            <div key={`${t.name}-${t.text.slice(0, 24)}`} className="w-[320px] shrink-0 snap-start sm:w-[360px]">
               <TestimonialCard {...t} />
             </div>
           ))}
-        </Marquee>
+        </div>
       )}
 
       {/* <div className="container mx-auto px-4">
@@ -69,24 +67,10 @@ export function CityTestimonials({ city }: { readonly city: CityData }) {
 
   const cityStats = [
     {
-      value: "4.9/5",
-      label: `Average Customer Rating in ${city.name}`
+      value: "24/7",
+      label: `Booking Support in ${city.name}`
     },
 
-    {
-      value: "1,200+",
-      label: `Verified Service Reviews from ${city.name}`
-    },
-
-    {
-      value: "98%",
-      label: "Customers Recommend Fiixup to Others"
-    },
-
-    {
-      value: "10,000+",
-      label: `Cars & Bikes Serviced in ${city.name}`
-    },
   ];
 
   return (
