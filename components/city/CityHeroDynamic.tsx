@@ -9,6 +9,7 @@ import { useRef, useState } from 'react';
 import { CheckCircle, MapPin, Star, Shield, Clock, Zap } from 'lucide-react';
 import type { CityHubPageData } from '@/lib/cityPages';
 import { submitLead } from '@/lib/send-lead';
+import { ARRIVAL_PROMISE_NOTE_SHORT, PRICE_DISCLAIMER_SHORT } from '@/lib/constants';
 
 const DEFAULT_BULLETS = (cityName: string, areaNames: string[]) => [
   `24/7 Emergency Service in ${cityName}`,
@@ -144,11 +145,11 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
               </span>
               <span className="flex items-center gap-1.5">
                 <Zap className="w-4 h-4 text-blue-500" aria-hidden="true" />
-                No hidden charges
+                Starting price; extras approved first
               </span>
             </div>
             <p className="mt-2 max-w-xl text-[11px] leading-4 text-gray-500">
-              *Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability.
+              {ARRIVAL_PROMISE_NOTE_SHORT} {PRICE_DISCLAIMER_SHORT}
             </p>
           </div>
 

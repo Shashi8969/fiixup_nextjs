@@ -25,20 +25,18 @@ function normalizeReview(row: ReviewRow): PublicReview | null {
 
   if (!text) return null;
 
-  const sourceName = firstText(row, ["source_name", "source", "platform", "review_platform"], "Google Business Profile");
+  const sourceName = firstText(row, ["source_name", "source", "platform", "review_platform"]);
   const usageType = firstText(row, ["usage_type", "review_usage", "level"], "brand").toLowerCase();
 
   return {
     name,
     rating: Math.round(Math.max(1, Math.min(5, asNumber(row.rating, 5)))),
     text,
-    date: firstText(row, ["date_label", "review_date_label", "published_at", "created_at", "date"], "Verified review"),
+    date: firstText(row, ["date_label", "review_date_label", "date"]),
     vehicle: firstText(row, ["vehicle", "vehicle_type", "customer_type"], "Customer"),
     area: firstText(row, ["area", "area_name", "city", "city_name", "location"]),
     sourceName,
-    sourceLabel: sourceName.toLowerCase().includes("google")
-      ? "Verified Google Review"
-      : `Verified ${sourceName} Review`,
+    sourceLabel: undefined,
     usageType: usageType === "category" || usageType === "exact_service" ? usageType : "brand",
   };
 }

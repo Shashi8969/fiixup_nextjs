@@ -42,7 +42,7 @@ export const globalFAQs: FAQCategory[] = [
       },
       {
         q: "Is there a call-out or visit fee?",
-        a: "We charge a minimal call-out fee which is waived when you proceed with the service. All pricing is shared upfront — no hidden charges, ever.",
+        a: "A call-out or visit fee may apply and should be disclosed before confirmation. Website prices are starting or indicative; location, night or after-hours timing, extra labour, parts, multiple punctures, towing distance, and additional approved work can change the final charge.",
       },
       {
         q: "What payment methods do you accept?",
@@ -81,7 +81,7 @@ export const globalFAQs: FAQCategory[] = [
       },
       {
         q: "How much does a bike service cost at home?",
-        a: "A basic doorstep bike service starts from ₹299. Full servicing including oil change, air filter, spark plug, and chain lubrication typically ranges from ₹599–₹1,499 depending on your bike model. You receive a quote before work begins — no surprises.",
+        a: "A basic doorstep bike service starts from ₹299. Full servicing including oil change, air filter, spark plug, and chain lubrication typically ranges from ₹599–₹1,499 depending on your bike model. These are starting or indicative prices; any location or night charge, parts, fluids, extra labour, or additional repair is explained before approval.",
       },
       {
         q: "How often should I service my bike?",
@@ -172,7 +172,7 @@ export const globalFAQs: FAQCategory[] = [
       },
       {
         q: "Can you do a car oil change at my home?",
-        a: "Yes. Engine oil change with oil filter is a standard doorstep job completed in 30–45 minutes. We use manufacturer-recommended oil grades for every car model.",
+        a: "Yes. Engine oil change with oil filter is a standard doorstep job. The approved oil-change work itself commonly takes around 30–45 minutes after the mechanic arrives, inspects the vehicle, and you approve the job. This is service time, not arrival time. We use manufacturer-recommended oil grades for every car model.",
       },
       {
         q: "Do you service luxury cars like BMW, Mercedes, and Audi?",
@@ -199,7 +199,7 @@ export const globalFAQs: FAQCategory[] = [
       },
       {
         q: "How much does bike towing cost?",
-        a: "Local bike towing starts from an indicative ₹799 for up to 5 km. Extra distance, access, loading difficulty, and the destination can change the final charge, which is confirmed before dispatch.",
+        a: "Bike towing charges depend on the pickup and destination, vehicle condition, access, loading difficulty, distance, and recovery method. The applicable charge is confirmed before dispatch.",
       },
       {
         q: "What types of tow trucks does Fiixup use?",
@@ -397,7 +397,7 @@ export const cityFAQs: Record<string, FAQCategory[]> = {
         },
         {
           q: "How much does a doorstep bike service cost in Bengaluru?",
-          a: "Basic bike servicing starts from ₹299. Full service with oil change, filter, chain, and spark plug starts from ₹599. You get a detailed quote before work begins — no hidden charges.",
+          a: "Basic bike servicing starts from ₹299. Full service with oil change, filter, chain, and spark plug starts from ₹599. These are starting or indicative prices; location, night or after-hours timing, parts, fluids, extra labour, and additional repairs can change the final charge after inspection and approval.",
         },
         {
           q: "Do you service Royal Enfield bikes in Bengaluru?",
@@ -831,7 +831,7 @@ export const cityFAQs: Record<string, FAQCategory[]> = {
         },
         {
           q: "How do you deal with Mumbai's traffic when arriving for a service?",
-          a: "We factor Mumbai's traffic patterns into our dispatch — assigning the closest available technician to you, not the nearest in straight-line distance. Our aim is 45–75 minutes for city zones and 60–90 minutes during peak traffic.",
+          a: "We assign the closest suitable available technician after dispatch. Fiixup targets arrival in around 20 minutes for eligible doorstep and roadside bookings, but actual ETA can vary with Mumbai traffic, distance, weather, service demand, vehicle accessibility, and mechanic availability.",
         },
       ],
     },
@@ -873,7 +873,7 @@ export const cityFAQs: Record<string, FAQCategory[]> = {
         },
         {
           q: "Mumbai roads cause a lot of tyre damage — how fast can you reach me?",
-          a: "We aim for 45–75 minutes anywhere in Mumbai city, factoring in traffic. For Thane and Navi Mumbai, 60–90 minutes. We repair tube and tubeless tyres for both bikes and cars on-site.",
+          a: "Fiixup targets arrival in around 20 minutes after mechanic dispatch for eligible Mumbai roadside bookings. Actual ETA can vary with traffic, distance, weather, service demand, vehicle accessibility, and mechanic availability. Tube or tubeless repair time begins after inspection and depends on puncture count, position, tyre condition, and access.",
         },
         {
           q: "Can you jump start my car in Mumbai during monsoon season?",

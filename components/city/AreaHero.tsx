@@ -3,7 +3,7 @@ import type { CityData } from "@/lib/models/city.model";
 import { AreaDispatchPanel } from "./AreaDispatchPanel";
 import { computeRatingSummary } from "@/lib/areaPages";
 import { Reveal } from "@/components/ui/Reveal";
-import { ARRIVAL_PROMISE_NOTE, ARRIVAL_SUPPORTING_TEXT } from "@/lib/constants";
+import { ARRIVAL_PROMISE_NOTE, ARRIVAL_SUPPORTING_TEXT, PRICE_DISCLAIMER_SHORT } from "@/lib/constants";
 
 type AreaHeroProps = {
   city: CityData;
@@ -64,7 +64,7 @@ export function AreaHero({ city, areaName, heroHeading, heroSubheading, testimon
             </p>
           </div>
           <p className="mt-2 text-xs leading-5 text-slate-500">
-            {ARRIVAL_PROMISE_NOTE} Displayed prices are starting/indicative prices; extra labour, parts, multiple punctures, towing/pickup distance, or additional repairs can change the final charge after approval.
+            {ARRIVAL_PROMISE_NOTE} {PRICE_DISCLAIMER_SHORT}
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">

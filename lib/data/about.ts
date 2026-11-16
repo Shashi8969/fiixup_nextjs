@@ -114,7 +114,7 @@ export const aboutFaqs = [
   },
   {
     question: "Is pricing shared before the mechanic starts work?",
-    answer: "Always. Fiixup uses upfront, transparent pricing — you see the cost before any work begins, with no hidden charges or on-the-spot upselling.",
+    answer: "Yes. Website prices are starting or indicative prices for the standard scope. After inspection, the mechanic explains any location or night charge, extra labour, parts, fluids, multiple punctures, or additional repair before paid work proceeds.",
   },
   {
     question: "How do I book a doorstep mechanic?",

@@ -41,10 +41,9 @@ export function buildContentSecurityPolicy(): string {
     "base-uri 'self'",
     "object-src 'none'",
     `frame-ancestors 'self' ${adminPreviewOrigins}`,
-    // Only the city hub "Find Us" map embed needs this — without an
-    // explicit frame-src, default-src 'self' silently blocks the Google
-    // Maps <iframe> and it just renders blank.
-    "frame-src 'self' https://www.google.com",
+    // City maps and privacy-enhanced YouTube content blocks are the only
+    // supported iframe sources. Arbitrary embed HTML remains blocked.
+    "frame-src 'self' https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com",
     "form-action 'self'",
     `img-src 'self' data: blob: https://${supabaseHost} https://www.google-analytics.com https://www.googletagmanager.com`,
     "font-src 'self' data:",

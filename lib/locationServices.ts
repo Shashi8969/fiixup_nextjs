@@ -1,5 +1,9 @@
 import { supabase } from "./supabase";
 import { normalizeImageMeta, type ImageMeta } from "./seo-pages";
+import {
+  normalizeLocationServicePageSettings,
+  type LocationServicePageSettings,
+} from "./locationServicePageSettings";
 
 export interface LocationServiceData {
   id: number;
@@ -24,6 +28,7 @@ export interface LocationServiceData {
   aboutBullets: { heading: string; text: string }[];
   serviceHighlights: { title: string; description: string }[];
   whyChoosePoints: { icon: string; title: string; desc: string }[];
+  processSteps: { step: string; title: string; desc: string }[];
   pricingRows: { label: string; priceFrom: number; priceTo?: number; note?: string }[];
   pricingDisclaimer: string;
   testimonials: { name: string; rating: number; text: string; date: string; vehicle: string; area: string }[];
@@ -39,6 +44,7 @@ export interface LocationServiceData {
   heroImageAlt: string | null;
   heroImageMeta: ImageMeta | null;
   pageLayout: { id: string; visible: boolean; heading: string | null }[];
+  pageSettings: LocationServicePageSettings;
   schemaAggregateRating: number;
   schemaReviewCount: number;
   displayLocation: string;
@@ -85,6 +91,11 @@ function rowToLocationService(row: any): LocationServiceData {
     aboutBullets:          row.about_bullets ?? [],
     serviceHighlights:     row.service_highlights ?? [],
     whyChoosePoints:       row.why_choose_points ?? [],
+    processSteps:          (Array.isArray(row.process_steps) ? row.process_steps : []).flatMap((item: any, index: number) => {
+      const title = String(item?.title ?? "").trim();
+      const desc = String(item?.desc ?? item?.description ?? item?.text ?? "").trim();
+      return title && desc ? [{ step: String(item?.step ?? index + 1), title, desc }] : [];
+    }),
     pricingRows:           row.pricing_rows ?? [],
     pricingDisclaimer:     row.pricing_disclaimer ?? "",
     testimonials:          row.testimonials ?? [],
@@ -100,6 +111,7 @@ function rowToLocationService(row: any): LocationServiceData {
     heroImageAlt:          row.hero_image_alt ?? null,
     heroImageMeta:         normalizeImageMeta(row.hero_image_meta),
     pageLayout:            row.page_layout ?? [],
+    pageSettings:          normalizeLocationServicePageSettings(row.page_settings),
     // Never manufacture trust metrics. Missing/unusable values stay at zero;
     // UI/schema callers can then omit rating output until a verified source is wired in.
     schemaAggregateRating: verifiedRating(row.schema_aggregate_rating),

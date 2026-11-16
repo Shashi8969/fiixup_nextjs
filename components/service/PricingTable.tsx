@@ -14,11 +14,12 @@ interface Props {
   serviceTitle: string;
   accentColor?: ThemeColor;
   variant?: "service" | "towing";
+  heading?: string;
 }
 
 
 
-export default function PricingTable({ pricing, serviceTitle, accentColor = "red", variant = "service" }: Props) {
+export default function PricingTable({ pricing, serviceTitle, accentColor = "red", variant = "service", heading }: Props) {
   const a = serviceThemes[accentColor];
   const isTowing = variant === "towing";
 
@@ -38,12 +39,12 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
             Transparent Pricing
           </span>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-            {serviceTitle} — Price List
+            {heading ?? `${serviceTitle} — Price List`}
           </h2>
           <p className="text-gray-500 max-w-xl mx-auto">
             {isTowing
               ? "Indicative starting prices are shown below. The exact towing charge is confirmed before dispatch after the route, vehicle, recovery method, and access are checked."
-              : "No guesswork. No surprise bills. Every price is confirmed before our technician starts work."}
+              : "Website prices are starting estimates. The final scope and charge are confirmed after inspection and before paid work starts."}
           </p>
         </div>
 
@@ -132,7 +133,7 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
         <div className="mt-8 flex flex-wrap justify-center gap-2">
           {(isTowing
             ? ["Indicative starting price", "Charge confirmed before dispatch", "Vehicle and access assessed", "Destination confirmed"]
-            : ["Upfront pricing", "30-day warranty", "Certified mechanics", "No hidden fees"]
+            : ["Starting price shown", "Extras approved first", "30-day warranty", "Certified mechanics"]
           ).map((b) => (
             <span key={b} className="flex items-center gap-1.5 text-xs bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full font-medium">
               <Check className="w-3 h-3 text-green-600" /> {b}

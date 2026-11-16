@@ -1,6 +1,6 @@
 // app/about/page.tsx
 import type { Metadata } from "next";
-import { CheckCircle, Phone, ChevronRight, Star, ShieldCheck, Clock3 } from "lucide-react";
+import { CheckCircle, Phone, ChevronRight, ShieldCheck, Clock3 } from "lucide-react";
 import Link from "next/link";
 import { Testimonials } from "@/components/Testimonials";
 import { TeamSection } from "@/components/about/TeamSection";
@@ -74,10 +74,6 @@ export default async function AboutPage() {
 
           <Reveal delay={0.1}>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-semibold text-gray-700">
-              <span className="flex items-center gap-1.5">
-                <Star className="h-4 w-4 fill-amber-400 text-amber-400" aria-hidden="true" />
-                4.9/5 average rating
-              </span>
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="h-4 w-4 text-blue-600" aria-hidden="true" />
                 Certified &amp; verified technicians

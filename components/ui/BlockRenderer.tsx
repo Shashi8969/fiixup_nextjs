@@ -21,6 +21,7 @@ export type Block =
   | { type: "tip";          content: string; label?: string }
   | { type: "warning";      content: string; label?: string }
   | { type: "image";        url: string; alt: string; caption?: string }
+  | { type: "video";        url: string; title: string; caption?: string }
   | { type: "quote";        content: string; author?: string }
   | { type: "code";         language: string; content: string }
   | { type: "divider" }
@@ -240,6 +241,55 @@ function ImageBlock({ url, alt, caption }: { url: string; alt: string; caption?:
       {caption && (
         <figcaption className="text-center text-xs text-gray-500 mt-2 italic">{caption}</figcaption>
       )}
+    </figure>
+  );
+}
+
+// ─── YouTube Video ───────────────────────────────────────────────────────────
+
+function youtubeEmbedUrl(value: string): string | null {
+  const raw = value.trim();
+  if (!raw) return null;
+  let videoId = /^[A-Za-z0-9_-]{6,20}$/.test(raw) ? raw : "";
+
+  if (!videoId) {
+    try {
+      const url = new URL(raw);
+      const host = url.hostname.toLowerCase().replace(/^www\./, "");
+      if (host === "youtu.be") {
+        videoId = url.pathname.split("/").filter(Boolean)[0] ?? "";
+      } else if (host === "youtube.com" || host === "m.youtube.com") {
+        if (url.pathname === "/watch") videoId = url.searchParams.get("v") ?? "";
+        else videoId = url.pathname.match(/^\/(?:embed|shorts)\/([A-Za-z0-9_-]+)/)?.[1] ?? "";
+      }
+    } catch {
+      return null;
+    }
+  }
+
+  return /^[A-Za-z0-9_-]{6,20}$/.test(videoId)
+    ? `https://www.youtube-nocookie.com/embed/${videoId}`
+    : null;
+}
+
+function VideoBlock({ url, title, caption }: { url: string; title: string; caption?: string }) {
+  const embedUrl = youtubeEmbedUrl(url);
+  if (!embedUrl) return null;
+
+  return (
+    <figure className="mb-6">
+      <div className="aspect-video overflow-hidden rounded-lg border border-gray-200 bg-black shadow-sm">
+        <iframe
+          src={embedUrl}
+          title={title || "Fiixup service video"}
+          className="h-full w-full"
+          loading="lazy"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        />
+      </div>
+      {caption && <figcaption className="mt-2 text-center text-xs italic text-gray-500">{caption}</figcaption>}
     </figure>
   );
 }
@@ -536,6 +586,9 @@ function renderBlock(b: Record<string, unknown>, minHeadingLevel: number): React
 
           case "image":
             return <ImageBlock url={String(b.url ?? b.src ?? "")} alt={String(b.alt ?? "")} caption={b.caption ? String(b.caption) : undefined} />;
+
+          case "video":
+            return <VideoBlock url={String(b.url ?? "")} title={String(b.title ?? "Fiixup service video")} caption={b.caption ? String(b.caption) : undefined} />;
 
           case "quote":
             return <QuoteBlock content={String(b.content ?? "")} author={b.author ? String(b.author) : undefined} />;

@@ -208,7 +208,7 @@ export default async function BrandPage({
                         {s.price.includes("₹") ? s.price : `From ₹${s.price}`}
                       </span>
                       <span className="flex items-center gap-1 text-xs text-gray-500">
-                        <Clock className="w-3.5 h-3.5" /> {s.duration}
+                        <Clock className="w-3.5 h-3.5" /> Service time: {s.duration}
                       </span>
                     </div>
                   </Link>

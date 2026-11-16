@@ -6,9 +6,10 @@ import { paragraphs, asArray } from "@/lib/cms-guards";
 
 interface Props {
   guide: CompleteGuide;
+  heading?: string;
 }
 
-export default function CompleteGuideSection({ guide }: Props) {
+export default function CompleteGuideSection({ guide, heading }: Props) {
   // `guide` is admin-authored JSONB — the call sites only check that the object
   // exists, so `sections` can still be missing or a non-array.
   const sections = asArray<GuideSection>(guide?.sections);
@@ -26,7 +27,7 @@ export default function CompleteGuideSection({ guide }: Props) {
               Complete Guide
             </span>
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">
-              {guide.title}
+              {heading ?? guide.title}
             </h2>
             <p className="text-gray-600 text-lg leading-relaxed border-l-4 border-red-500 pl-4">
               {guide.intro}

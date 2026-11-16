@@ -142,6 +142,12 @@ export interface Service {
   image_url: string;
   image_alt: string;
   og_image_url: string;
+  seo_intro_heading?: string;
+  seo_intro_body?: string;
+  seo_sections?: unknown;
+  seo_conclusion?: string;
+  content_blocks?: unknown[];
+  page_layout?: unknown[];
   created_at: string;
   updated_at: string;
 
@@ -225,6 +231,8 @@ export interface LocationService {
   why_choose_points: { icon: string; title: string; desc: string }[];
   pricing_disclaimer: string;
   process_steps: unknown[];
+  page_settings?: Record<string, unknown>;
+  is_indexed?: boolean;
   schema_aggregate_rating: number;
   schema_review_count: number;
   is_active: boolean;

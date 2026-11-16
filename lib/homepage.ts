@@ -148,8 +148,8 @@ const FALLBACK_HOME_DATA: Omit<HomePageData, "services" | "cityCoverage"> & {
     cityOptions: [...CITIES_LIST],
     successTitle: "Request Sent!",
     successText: "Our team will call you within 1 minutes 🚀",
-    experienceValue: "20+",
-    experienceLabel: "Years Experience",
+    experienceValue: "2020",
+    experienceLabel: "Founded in Bengaluru",
   },
   services: {
     heading: "Professional Vehicle Services",
@@ -192,7 +192,7 @@ const FALLBACK_HOME_DATA: Omit<HomePageData, "services" | "cityCoverage"> & {
     cities: [...CITIES_LIST],
     trustBadges: [
       "✅ 20-Min Quick Arrival*",
-      "✅ Upfront pricing — no hidden charges",
+      "✅ Starting price shown — extra work approved first",
       "✅ 30-day warranty on all repairs",
       "✅ Certified & background-verified technicians",
     ],

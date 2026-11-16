@@ -6,6 +6,7 @@
 import Link from 'next/link';
 import { Phone } from 'lucide-react';
 import type { CityServiceCategoryPageData } from '@/lib/cityPages';
+import { ARRIVAL_PROMISE_NOTE_SHORT, ARRIVAL_SUPPORTING_TEXT, PRICE_DISCLAIMER_SHORT } from '@/lib/constants';
 
 export function CspCTA({ data }: { data: CityServiceCategoryPageData }) {
   return (
@@ -14,8 +15,11 @@ export function CspCTA({ data }: { data: CityServiceCategoryPageData }) {
         <h2 className="text-3xl md:text-4xl font-extrabold mb-4">
           Ready to Book {data.categoryTitle} in {data.cityName}?
         </h2>
-        <p className="text-blue-200 text-lg mb-8">
-          Fiixup aims to get a mechanic to your location in around 20 minutes after dispatch for eligible doorstep and roadside bookings.* Prices shown are starting/indicative; extra paid work is explained before approval.
+        <p className="text-blue-200 text-lg mb-2">
+          {ARRIVAL_SUPPORTING_TEXT}
+        </p>
+        <p className="mb-8 text-xs leading-5 text-blue-200">
+          {ARRIVAL_PROMISE_NOTE_SHORT} {PRICE_DISCLAIMER_SHORT}
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
           <Link

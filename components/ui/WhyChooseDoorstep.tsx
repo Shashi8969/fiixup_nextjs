@@ -17,16 +17,21 @@ const whyTowing = [
   { title: "24/7 Coordination", desc: "Fiixup coordinates towing support at any hour across supported service areas." },
 ];
 
-export default function WhyChooseDoorstep({ variant = "doorstep" }: { variant?: "doorstep" | "towing" }) {
+export default function WhyChooseDoorstep({
+  variant = "doorstep",
+  heading,
+}: {
+  variant?: "doorstep" | "towing";
+  heading?: string;
+} = {}) {
   const isTowing = variant === "towing";
   const reasons = isTowing ? whyTowing : whyDoorstep;
+  const resolvedHeading = heading ?? (isTowing ? "Why Choose Fiixup Towing?" : "Why Choose Doorstep Service?");
 
   return (
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4 max-w-4xl">
-        <h2 className="text-3xl font-bold text-center mb-12">
-          {isTowing ? "Why Choose Fiixup Towing?" : "Why Choose Doorstep Service?"}
-        </h2>
+        <h2 className="text-3xl font-bold text-center mb-12">{resolvedHeading}</h2>
         <div className="grid md:grid-cols-2 gap-8">
           {reasons.map(({ title, desc }) => (
             <div key={title} className="flex gap-4">

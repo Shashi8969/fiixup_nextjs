@@ -26,7 +26,13 @@ import { TrustStrip }                      from "@/components/ui/TrustStrip";
 import HowItWorks                          from "@/components/ui/HowItWorks";
 import WhyChooseDoorstep                   from "@/components/ui/WhyChooseDoorstep";
 import { CityServiceCard, getStartingPrice } from "@/components/ui/CityServiceCard";
-import { SITE_URL, MAIN_PHONE, MAIN_PHONE_DISPLAY } from "@/lib/constants";
+import {
+  ARRIVAL_PROMISE_NOTE_SHORT,
+  ARRIVAL_SUPPORTING_TEXT,
+  SITE_URL,
+  MAIN_PHONE,
+  MAIN_PHONE_DISPLAY,
+} from "@/lib/constants";
 import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 import { jsonLdString } from "@/lib/schema";
 
@@ -203,9 +209,8 @@ export default async function CityServicesPage({
             </h1>
 
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-7 leading-relaxed">
-              {totalServices} doorstep services available across {city.name} — certified
-              Fiixup aims to get a mechanic to your home, office, or roadside location in around
-              20 minutes after dispatch for eligible bookings, 24/7.*
+              {totalServices} doorstep services available across {city.name} with certified mechanics.{' '}
+              {ARRIVAL_SUPPORTING_TEXT} Booking support is available 24/7.
             </p>
 
             {/* Trust row */}
@@ -223,7 +228,7 @@ export default async function CityServicesPage({
               ))}
             </div>
             <p className="-mt-5 mb-8 text-xs leading-5 text-gray-500">
-              *Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability.
+              {ARRIVAL_PROMISE_NOTE_SHORT}
             </p>
 
             {/* CTAs */}

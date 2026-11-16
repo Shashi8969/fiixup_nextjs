@@ -117,6 +117,14 @@ export interface ServiceData {
   bikeBrands?: BrandEntry[];
   relatedSlugs?: string[];
 
+  // Long-form editorial content and page composition, authored in the admin.
+  seoIntroHeading?: string;
+  seoIntroBody?: string;
+  seoSections?: unknown;
+  seoConclusion?: string;
+  contentBlocks?: unknown[];
+  pageLayout?: unknown[];
+
   /** Admin-authored JSON-LD override from the CMS Schema tab, if set. */
   schemaJson?: unknown;
 }

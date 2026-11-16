@@ -28,6 +28,7 @@
 
 import { SITE_URL, MAIN_PHONE, MAIN_EMAIL } from "./constants";
 import type { PublicSiteSettings } from "./site-settings";
+import { sanitizeBusinessSchema } from "./seo/sanitize-business-schema";
 
 // ── Safe JSON-LD serialization ──────────────────────────────────────────────
 // CMS-editable strings (testimonial quotes, FAQ answers, business copy) can
@@ -35,7 +36,7 @@ import type { PublicSiteSettings } from "./site-settings";
 // <script type="application/ld+json"> tag early and inject arbitrary markup.
 // Escaping "<" as < neutralizes that without changing the parsed JSON.
 export function jsonLdString(data: unknown): string {
-  return JSON.stringify(data).replace(/</g, "\\u003c");
+  return JSON.stringify(sanitizeBusinessSchema(data)).replace(/</g, "\\u003c");
 }
 
 // ── Constants ────────────────────────────────────────────────────────────────
@@ -616,7 +617,7 @@ export function serviceDetailSchema(opts: {
 }) {
   const {
     name, slug, description, minPrice, maxPrice,
-    duration, features = [], faqs = [],
+    features = [], faqs = [],
     cityName, citySlug,
   } = opts;
 
@@ -658,7 +659,6 @@ export function serviceDetailSchema(opts: {
         "@type":       "Offer",
         priceCurrency: "INR",
         availability:  "https://schema.org/InStock",
-        ...(duration && { deliveryTime: duration }),
         priceSpecification: {
           "@type": "PriceSpecification",
           minPrice, maxPrice, priceCurrency: "INR",

@@ -58,6 +58,12 @@ function rowToService(row: any, faqs?: any[], testimonials?: any[], brands?: any
     bikeBrands:      resolvedBikeBrands,
     relatedSlugs:    row.related_slugs ?? undefined,
     faqs:            resolvedFaqs,
+    seoIntroHeading: row.seo_intro_heading ?? undefined,
+    seoIntroBody:    row.seo_intro_body ?? undefined,
+    seoSections:     row.seo_sections ?? undefined,
+    seoConclusion:   row.seo_conclusion ?? undefined,
+    contentBlocks:   row.content_blocks ?? [],
+    pageLayout:      row.page_layout ?? [],
     metaTitle:       row.meta_title,
     metaDescription: row.meta_description,
     metaKeywords:    row.meta_keywords,
@@ -96,7 +102,9 @@ export const getServiceBySlug = cache(async (slug: string): Promise<ServiceData 
       meta_title, meta_description, meta_keywords,
       image_url, image_alt, og_image_url,
       car_brands, bike_brands, faqs, testimonials,
-      schema_json
+      schema_json,
+      seo_intro_heading, seo_intro_body, seo_sections, seo_conclusion,
+      content_blocks, page_layout
     `)
     .eq("slug", slug)
     .single();

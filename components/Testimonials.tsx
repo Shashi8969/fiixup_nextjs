@@ -6,7 +6,7 @@ import { TestimonialCard } from "@/components/ui/TestimonialCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Marquee } from "@/components/ui/Marquee";
 
-export async function Testimonials({ reviewIds }: { reviewIds?: string[] } = {}) {
+export async function Testimonials({ reviewIds, heading }: { reviewIds?: string[]; heading?: string } = {}) {
   const testimonials = reviewIds?.length
     ? await getReviewsByIds(reviewIds)
     : await getBrandReviews(8);
@@ -16,7 +16,7 @@ export async function Testimonials({ reviewIds }: { reviewIds?: string[] } = {})
       <div className="container mx-auto px-4">
 
         <SectionHeader
-          heading="Vehicle Owners Across India Use Fiixup for Doorstep Car & Bike Repair"
+          heading={heading ?? "Vehicle Owners Across India Use Fiixup for Doorstep Car & Bike Repair"}
           subtext="Customers book Fiixup for emergency breakdown support, doorstep car servicing, bike repair, battery replacement, puncture repair, and roadside mechanic assistance across Bengaluru, Chennai, Hyderabad, and Mumbai."
         />
       </div>
@@ -66,29 +66,6 @@ export async function Testimonials({ reviewIds }: { reviewIds?: string[] } = {})
 }
 
 export function CityTestimonials({ city }: { readonly city: CityData }) {
-
-  const cityStats = [
-    {
-      value: "4.9/5",
-      label: `Average Customer Rating in ${city.name}`
-    },
-
-    {
-      value: "1,200+",
-      label: `Verified Service Reviews from ${city.name}`
-    },
-
-    {
-      value: "98%",
-      label: "Customers Recommend Fiixup to Others"
-    },
-
-    {
-      value: "10,000+",
-      label: `Cars & Bikes Serviced in ${city.name}`
-    },
-  ];
-
   return (
     <section id="testimonials" className="py-20 bg-blue-50">
 
@@ -106,26 +83,6 @@ export function CityTestimonials({ city }: { readonly city: CityData }) {
               key={`${t.name}-${t.date}`}
               {...t}
             />
-          ))}
-
-        </div>
-
-        <div className="mt-12 bg-white rounded-xl p-6 flex flex-wrap items-center justify-center gap-10 shadow-sm max-w-3xl mx-auto">
-
-          {cityStats.map(({ value, label }) => (
-
-            <div key={label} className="text-center">
-
-              <p className="text-4xl font-bold text-gray-900">
-                {value}
-              </p>
-
-              <p className="text-sm text-gray-500 mt-1">
-                {label}
-              </p>
-
-            </div>
-
           ))}
 
         </div>

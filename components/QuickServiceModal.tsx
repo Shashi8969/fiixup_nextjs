@@ -67,7 +67,7 @@ export function QuickServiceModal({
         <Dialog.Overlay className="fixed inset-0 backdrop-blur-md bg-black/30 z-[100] data-[state=open]:animate-in data-[state=open]:fade-in" />
         <Dialog.Content
           aria-modal="true"
-          className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl max-w-md w-[calc(100%-2rem)] p-8 z-[100] focus:outline-none"
+          className="fixed left-1/2 top-1/2 max-h-[calc(100dvh-2rem)] w-[calc(100%_-_2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl bg-white p-6 focus:outline-none sm:p-8 z-[100]"
           onOpenAutoFocus={(e) => {
             e.preventDefault();
             formRef.current?.querySelector("input")?.focus();

@@ -49,7 +49,7 @@ export function ServiceCardPrice({
         
         <div className="flex items-center gap-1.5 text-gray-600 font-medium text-sm">
           <Clock className="w-4 h-4" />
-          <span>{duration}</span>
+          <span>Service time: {duration}</span>
         </div>
       </div>
 

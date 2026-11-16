@@ -2,6 +2,7 @@
 // Individual + category service page — fully data-driven from Supabase.
 
 import type { Metadata } from "next";
+import { Fragment, type ReactNode } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Phone } from "lucide-react";
@@ -30,6 +31,12 @@ import type { ThemeColor } from "@/lib/theme";
 import { serviceDetailSchema, serviceCategorySchema, jsonLdString } from "@/lib/schema";
 import { getAllServiceCategories, getServiceCategoryBySlug } from "@/lib/data/serviceCategory";
 import { metadataFromBasicSeo } from "@/lib/seo/metadata";
+import { SeoEditorialContent } from "@/components/ui/SeoEditorialContent";
+import {
+  resolveServiceSectionOrder,
+  type ServicePageLayoutRow,
+  type ServicePageSectionId,
+} from "@/lib/servicePageSections";
 
 export const revalidate = 3600;
 
@@ -235,7 +242,15 @@ export default async function Page({
 
   const Icon = iconMap[service.icon];
   const isTowing = service.category === "towing" || service.slug.includes("towing");
-  const isCar = service.category === "car" || (isTowing && service.slug.startsWith("car-"));
+  const isCar = service.category === "car" || service.slug.startsWith("car-");
+  const serviceFamily = isCar
+    ? "Car"
+    : service.category === "bike" || service.slug.startsWith("bike-")
+      ? "Bike"
+      : "Roadside";
+  const doorstepServiceTitle = /^doorstep\b/i.test(service.shortTitle)
+    ? service.shortTitle
+    : `Doorstep ${service.shortTitle}`;
 
   const accentBlue   = isCar ? "text-blue-600"   : "text-red-600";
   const bgAccent     = isCar ? "bg-blue-600"     : "bg-red-600";
@@ -274,6 +289,140 @@ export default async function Page({
     duration:     service.duration,
   });
 
+  const layoutRows = resolveServiceSectionOrder(
+    (Array.isArray(service.pageLayout) ? service.pageLayout : []) as ServicePageLayoutRow[]
+  );
+  const layoutById = new Map(layoutRows.map((row) => [row.id, row]));
+  const sectionHeading = (id: ServicePageSectionId, fallback?: string) => {
+    const override = layoutById.get(id)?.heading;
+    return override && override.trim() ? override : fallback;
+  };
+
+  const sectionRenderers: Record<ServicePageSectionId, () => ReactNode> = {
+    benefits: () => service.benefits && service.benefits.length > 0 ? (
+      <ServiceBenefits
+        benefits={service.benefits}
+        serviceTitle={service.shortTitle}
+        accentColor={accentColor}
+        heading={sectionHeading("benefits", `Why Choose Fiixup for ${service.shortTitle}?`)}
+      />
+    ) : null,
+    how_it_works: () => (
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
+            {sectionHeading("how_it_works", isTowing ? `How ${service.shortTitle} Works` : `How ${doorstepServiceTitle} Works`)}
+          </h2>
+          <HowItWorks steps={isTowing ? [...TOWING_WORKFLOW_STEPS] : undefined} />
+        </div>
+      </section>
+    ),
+    pricing: () => service.pricing ? (
+      <PricingTable
+        pricing={service.pricing}
+        serviceTitle={service.shortTitle}
+        accentColor={accentColor}
+        variant={isTowing ? "towing" : "service"}
+        heading={sectionHeading("pricing", `${service.shortTitle} — Price List`)}
+      />
+    ) : null,
+    brands: () => brands.length > 0 ? (
+      <BrandsGrid
+        brands={brands}
+        heading={sectionHeading("brands", `${serviceFamily === "Roadside" ? "Vehicle" : serviceFamily} Brands We Service`)}
+        subtext={isTowing
+          ? `We coordinate recovery for popular ${isCar ? "car" : "bike"} brands available in India; the method depends on the vehicle and recovery condition.`
+          : `Our certified mechanics are trained to service all popular ${serviceFamily === "Roadside" ? "vehicle" : serviceFamily.toLowerCase()} brands available in India.`}
+        accentColor={accentColor}
+      />
+    ) : null,
+    city_coverage: () => (
+      <CityCoverage
+        service={service}
+        borderAccent={borderAccent}
+        accentBlue={accentBlue}
+        heading={sectionHeading("city_coverage")}
+      />
+    ),
+    testimonials: () => service.testimonials && service.testimonials.length > 0 ? (
+      <ServiceTestimonials
+        testimonials={service.testimonials}
+        serviceTitle={service.shortTitle}
+        heading={sectionHeading("testimonials", `What Customers Say About Our ${service.shortTitle}`)}
+      />
+    ) : (
+      <Testimonials heading={sectionHeading("testimonials")} />
+    ),
+    faqs: () => (
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-2">
+            {sectionHeading("faqs", `${service.shortTitle} — Frequently Asked Questions`)}
+          </h2>
+          <p className="text-gray-500 text-center mb-10">
+            {isTowing
+              ? `Common questions about ${service.shortTitle.toLowerCase()}, dispatch, access, and pricing.`
+              : `Common questions about our doorstep ${service.shortTitle.toLowerCase()} service.`}
+          </p>
+          <ServiceFAQ faqs={service.faqs} />
+        </div>
+      </section>
+    ),
+    why_choose: () => (
+      <WhyChooseDoorstep
+        variant={isTowing ? "towing" : "doorstep"}
+        heading={sectionHeading("why_choose", isTowing ? "Why Choose Fiixup Towing?" : "Why Choose Doorstep Service?")}
+      />
+    ),
+    seo_content: () => (
+      <SeoEditorialContent
+        introHeading={service.seoIntroHeading}
+        introBody={service.seoIntroBody}
+        sections={service.seoSections}
+        conclusion={service.seoConclusion}
+        contentBlocks={service.contentBlocks}
+      />
+    ),
+    guide: () => service.guide ? (
+      <CompleteGuideSection
+        guide={service.guide}
+        heading={sectionHeading("guide", service.guide.title)}
+      />
+    ) : null,
+    related_services: () => related.length > 0 ? (
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl font-bold mb-8">
+            {sectionHeading(
+              "related_services",
+              isTowing
+                ? `Other ${serviceFamily} Recovery Services You May Need`
+                : `Other ${serviceFamily} Services You May Need`
+            )}
+          </h2>
+          <div className="grid sm:grid-cols-3 gap-6">
+            {related.map((relatedService) => {
+              const RelIcon = iconMap[relatedService.icon] || iconMap["default"];
+              if (!RelIcon) return null;
+              return (
+                <a
+                  key={relatedService.slug}
+                  href={`/services/${relatedService.slug}`}
+                  className="bg-white p-6 border border-gray-200 rounded-2xl hover:shadow-lg hover:border-gray-300 transition-all"
+                >
+                  <RelIcon className={`w-10 h-10 ${accentBlue} mb-3`} />
+                  <h3 className="font-bold mb-1 text-gray-900">{relatedService.shortTitle}</h3>
+                  <p className="text-sm text-gray-500 mb-3">{relatedService.tagline}</p>
+                  <p className={`text-sm font-bold ${accentBlue}`}>From {relatedService.price}</p>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    ) : null,
+  };
+
   return (
     <>
       <script
@@ -285,7 +434,7 @@ export default async function Page({
         service={service}
         Icon={Icon}
         isCar={isCar}
-        categoryTitle={isTowing ? "Towing Service" : undefined}
+        categoryTitle={isTowing ? "Towing Service" : serviceFamily === "Roadside" ? "Roadside Assistance" : `${serviceFamily} Service`}
         variant={isTowing ? "towing" : "service"}
         bgAccent={bgAccent}
         accentBlue={accentBlue}
@@ -314,95 +463,11 @@ export default async function Page({
         </div>
       </section>
 
-      {service.benefits && service.benefits.length > 0 && (
-        <ServiceBenefits benefits={service.benefits} serviceTitle={service.shortTitle} accentColor={accentColor} />
-      )}
-
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
-            {isTowing ? `How ${service.shortTitle} Works` : `How Doorstep ${service.shortTitle} Works`}
-          </h2>
-          <HowItWorks steps={isTowing ? [...TOWING_WORKFLOW_STEPS] : undefined} />
-        </div>
-      </section>
-
-      {service.pricing && (
-        <PricingTable
-          pricing={service.pricing}
-          serviceTitle={service.shortTitle}
-          accentColor={accentColor}
-          variant={isTowing ? "towing" : "service"}
-        />
-      )}
-
-      {brands.length > 0 && (
-        <BrandsGrid
-          brands={brands}
-          heading={`${isCar ? "Car" : "Bike"} Brands We Service`}
-          subtext={isTowing
-            ? `We coordinate recovery for popular ${isCar ? "car" : "bike"} brands available in India; the method depends on the vehicle and recovery condition.`
-            : `Our certified mechanics are trained to service all popular ${isCar ? "car" : "bike"} brands available in India.`}
-          accentColor={accentColor}
-        />
-      )}
-
-      <CityCoverage service={service} borderAccent={borderAccent} accentBlue={accentBlue} />
-
-      {service.testimonials && service.testimonials.length > 0 ? (
-        <ServiceTestimonials testimonials={service.testimonials} serviceTitle={service.shortTitle} />
-      ) : (
-        <Testimonials />
-      )}
-
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-2">
-            {service.shortTitle} — Frequently Asked Questions
-          </h2>
-          <p className="text-gray-500 text-center mb-10">
-            {isTowing
-              ? `Common questions about ${service.shortTitle.toLowerCase()}, dispatch, access, and pricing.`
-              : `Common questions about our doorstep ${service.shortTitle.toLowerCase()} service.`}
-          </p>
-          <ServiceFAQ faqs={service.faqs} />
-        </div>
-      </section>
-      <WhyChooseDoorstep variant={isTowing ? "towing" : "doorstep"} />
-
-      {service.guide && <CompleteGuideSection guide={service.guide} />}
-
-      {related.length > 0 && (
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <h2 className="text-2xl font-bold mb-8">
-              {isTowing
-                ? `Other ${isCar ? "Car" : "Bike"} Recovery Services You May Need`
-                : `Other ${isCar ? "Car" : "Bike"} Services You May Need`}
-            </h2>
-            <div className="grid sm:grid-cols-3 gap-6">
-              {related.map((s) => {
-                const RelIcon = iconMap[s.icon] || iconMap["default"];
-                if (!RelIcon) return null;
-                return (
-                  <a
-                    key={s.slug}
-                    href={`/services/${s.slug}`}
-                    className="bg-white p-6 border border-gray-200 rounded-2xl hover:shadow-lg hover:border-gray-300 transition-all"
-                  >
-                    <RelIcon className={`w-10 h-10 ${accentBlue} mb-3`} />
-                    <h3 className="font-bold mb-1 text-gray-900">{s.shortTitle}</h3>
-                    <p className="text-sm text-gray-500 mb-3">{s.tagline}</p>
-                    <p className={`text-sm font-bold ${accentBlue}`}>From {s.price}</p>
-                  </a>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      )}
-
-      
+      {layoutRows.map((row) => (
+        <Fragment key={row.id}>
+          {row.visible !== false ? sectionRenderers[row.id]() : null}
+        </Fragment>
+      ))}
 
       <BookingCTA
         serviceTitle={service.shortTitle}

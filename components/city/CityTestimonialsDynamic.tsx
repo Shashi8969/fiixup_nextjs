@@ -40,7 +40,6 @@ export function CityTestimonialsDynamic({ data }: { data: CityHubPageData }) {
               date={t.date_label}
               vehicle={t.vehicle}
               area={t.area || data.cityName}
-              sourceLabel={t.verified ? 'Verified Customer Review' : undefined}
             />
           </div>
         ))}

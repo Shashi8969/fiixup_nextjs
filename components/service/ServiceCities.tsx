@@ -4,10 +4,13 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { CITIES_LIST } from "@/lib/constants";
 
-export default function CityCoverage({ service, borderAccent, accentBlue }: any) {
+export default function CityCoverage({ service, borderAccent, accentBlue, heading }: any) {
   return (
     <section className="py-14 bg-white">
       <div className="container mx-auto px-4">
+        {heading && (
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-8">{heading}</h2>
+        )}
         <div className="flex flex-wrap gap-4 justify-center">
           {CITIES_LIST.map((city) => (
             <Link

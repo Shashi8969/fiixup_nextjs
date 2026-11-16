@@ -329,7 +329,7 @@ export default async function CityServicePage({
                 : [
                     { icon: Clock,       text: "20-Min Quick Arrival*" },
                     { icon: Shield,      text: "30-day warranty" },
-                    { icon: Zap,         text: "Upfront pricing" },
+                    { icon: Zap,         text: "Starting price; extras approved" },
                     { icon: CheckCircle, text: "All brands covered" },
                   ]
               ).map(({ icon: Icon, text }) => (

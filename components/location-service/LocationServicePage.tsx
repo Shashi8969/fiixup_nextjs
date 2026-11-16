@@ -2,7 +2,7 @@
 // SERVER COMPONENT — no "use client"
 // FAQAccordion is the only client island (handles useState for open/close)
 
-import { Fragment } from "react";
+import { Fragment, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -19,6 +19,10 @@ import { getPageLinkOverrides } from "@/lib/page-link-overrides";
 import { resolveSectionOrder, type LocationServiceSectionId } from "@/lib/locationServicePageSections";
 import { formatPriceRange } from "@/lib/utils";
 import { TOWING_ARRIVAL_PROMISE_NOTE_SHORT, TOWING_WORKFLOW_STEPS } from "@/lib/constants";
+import {
+  normalizeLocationServicePageSettings,
+  safeLocationServiceActionHref,
+} from "@/lib/locationServicePageSettings";
 
 // ─── Theme config ────────────────────────────────────────────────────────────
 const CATEGORY_THEME: Record<string, {
@@ -95,6 +99,24 @@ function withLocation(serviceName: string, location: string): string {
   return `${serviceName} in ${location}`;
 }
 
+function withDoorstep(serviceName: string, location: string): string {
+  const locatedName = withLocation(serviceName, location);
+  return /^doorstep\b/i.test(locatedName) ? locatedName : `Doorstep ${locatedName}`;
+}
+
+function ActionLink({ href, className, children }: { href: string; className: string; children: ReactNode }) {
+  if (href.startsWith("/") || href.startsWith("#")) {
+    return <Link href={href} className={className}>{children}</Link>;
+  }
+
+  const external = href.startsWith("https://");
+  return (
+    <a href={href} className={className} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}>
+      {children}
+    </a>
+  );
+}
+
 // ─── Props ───────────────────────────────────────────────────────────────────
 interface Props {
   data: LocationServiceData;
@@ -120,6 +142,41 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
   const sourcePath = data.isCityLevel
     ? `/${data.citySlug}/${data.serviceSlug}`
     : `/${data.citySlug}/${data.areaSlug}/${data.serviceSlug}`;
+  const pageSettings = normalizeLocationServicePageSettings(data.pageSettings);
+  const renderedBreadcrumbs = pageSettings.breadcrumbs.length ? pageSettings.breadcrumbs : breadcrumbs;
+  const contactHref = `/${city.slug}#contact`;
+  const heroPrimaryHref = safeLocationServiceActionHref(pageSettings.hero.primaryHref, contactHref);
+  const heroSecondaryHref = safeLocationServiceActionHref(pageSettings.hero.secondaryHref, `tel:${city.phone}`);
+  const pricingCtaHref = safeLocationServiceActionHref(pageSettings.pricing.ctaHref, contactHref);
+  const closingPrimaryHref = safeLocationServiceActionHref(pageSettings.closingCta.primaryHref, contactHref);
+  const closingSecondaryHref = safeLocationServiceActionHref(pageSettings.closingCta.secondaryHref, `tel:${city.phone}`);
+  const workflowSteps = data.processSteps.length
+    ? data.processSteps.map((step, index) => ({ ...step, step: step.step || String(index + 1) }))
+    : isTowing
+      ? TOWING_WORKFLOW_STEPS.map(({ n, title, desc }) => ({ step: String(n), title, desc }))
+      : [
+          { step: "1", title: "Book Online or Call", desc: `Call ${city.phone} or fill the form.` },
+          { step: "2", title: "We Confirm & Dispatch", desc: "Nearest available technician dispatched." },
+          { step: "3", title: "Technician Inspects the Problem", desc: "The technician checks the vehicle and confirms the suitable next step." },
+          { step: "4", title: "Approved Work Is Completed", desc: "The approved repair, roadside help, or recovery step is completed." },
+        ];
+  const trustItems = pageSettings.trustItems.length
+    ? pageSettings.trustItems
+    : isTowing
+      ? [
+          { icon: "Clock", label: "20-Min Quick Arrival*" },
+          { icon: "CheckCircle", label: "Suitable Recovery Method" },
+          { icon: "MapPin", label: "Destination Choice" },
+          { icon: "IndianRupee", label: "Price Before Dispatch" },
+          { icon: "Phone", label: "24/7 Coordination" },
+        ]
+      : [
+          { icon: "Shield", label: "Certified Technicians" },
+          { icon: "CheckCircle", label: "30-Day Warranty" },
+          { icon: "Clock", label: "24/7 Available" },
+          { icon: "IndianRupee", label: "Transparent Pricing" },
+          { icon: "MapPin", label: "Doorstep Service" },
+        ];
 
   const [
     activePaths,
@@ -248,19 +305,11 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
               "how_it_works",
               isTowing
                 ? `How ${withLocation(data.serviceName, data.locationHeading)} Works`
-                : `How Doorstep ${withLocation(data.serviceName, data.locationHeading)} Works`
+                : `How ${withDoorstep(data.serviceName, data.locationHeading)} Works`
             )}
           </h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            {(isTowing
-              ? TOWING_WORKFLOW_STEPS.map(({ n, title, desc }) => ({ step: n, title, desc }))
-              : [
-                  { step: "1", title: "Book Online or Call", desc: `Call ${city.phone} or fill the form.` },
-                  { step: "2", title: "We Confirm & Dispatch", desc: "Nearest available technician dispatched." },
-                  { step: "3", title: "Tech Arrives at Door", desc: "Certified technician with tools and parts." },
-                  { step: "4", title: "Drive Away Happy", desc: "30-day warranty and digital receipt." },
-                ]
-            ).map(({ step, title, desc }) => (
+            {workflowSteps.map(({ step, title, desc }) => (
               <div key={step} className="text-center">
                 <div className={`w-14 h-14 ${bgAccent} text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg`}>
                   {step}
@@ -283,9 +332,9 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
             {sectionHeading("pricing", `${withLocation(data.serviceName, data.locationHeading)} Cost`)}
           </h2>
           <p className="text-gray-600 text-center mb-10">
-            {isTowing
+            {pageSettings.pricing.intro || (isTowing
               ? "Indicative starting price — exact towing charge confirmed before dispatch."
-              : "Transparent pricing — quoted before work begins."}
+              : "Transparent pricing — quoted before work begins.")}
           </p>
           <div className="max-w-3xl mx-auto">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -309,12 +358,12 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
             </div>
             <p className="text-xs text-gray-500 mt-3 text-center">{data.pricingDisclaimer}</p>
             <div className="mt-6 text-center">
-              <Link
-                href={`/${city.slug}#contact`}
+              <ActionLink
+                href={pricingCtaHref}
                 className={`${bgAccent} ${btnHover} text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-block`}
               >
-                {isTowing ? "Get Towing Quote" : "Get Your Free Quote"}
-              </Link>
+                {pageSettings.pricing.ctaLabel || (isTowing ? "Get Towing Quote" : "Get Your Free Quote")}
+              </ActionLink>
             </div>
           </div>
         </div>
@@ -357,7 +406,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
             {sectionHeading("faqs", `${withLocation(data.serviceName, data.locationHeading)} — FAQs`)}
           </h2>
           <p className="text-gray-500 text-center mb-10">
-            Common questions from our customers here.
+            {pageSettings.faqIntro || "Common questions from our customers here."}
           </p>
           {/* Only this component is "use client" */}
           <FAQAccordion faqs={data.faqs} accentText={accentText} />
@@ -432,9 +481,9 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
 
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6 flex-wrap">
-            {breadcrumbs.map((crumb, i) => (
-              <span key={crumb.url} className="flex items-center gap-2">
-                {i < breadcrumbs.length - 1 ? (
+            {renderedBreadcrumbs.map((crumb, i) => (
+              <span key={`${crumb.url}-${i}`} className="flex items-center gap-2">
+                {i < renderedBreadcrumbs.length - 1 ? (
                   <>
                     <Link href={crumb.url} className="hover:text-blue-600 transition-colors">
                       {crumb.name}
@@ -451,7 +500,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <span className={`inline-block ${bgAccent} text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-4`}>
-                {serviceBadge} — {data.locationHeading}
+                {pageSettings.hero.eyebrow || `${serviceBadge} — ${data.locationHeading}`}
               </span>
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 leading-tight">
                 {data.heroHeading}
@@ -468,7 +517,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                     {data.availability || "24/7"}
                   </p>
                   <p className="text-xs text-gray-500 mt-0.5">
-                    Always Available
+                    {pageSettings.hero.availabilityLabel || "Always Available"}
                   </p>
                 </div>
 
@@ -479,7 +528,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                     {data.arrival_time || "20-Min Quick Arrival*"}
                   </p>
                   <p className="text-xs text-gray-500 mt-0.5">
-                    {isTowing ? "Target after recovery-vehicle dispatch" : "Target after mechanic dispatch"}
+                    {pageSettings.hero.arrivalLabel || (isTowing ? "Target after recovery-vehicle dispatch" : "Target after mechanic dispatch")}
                   </p>
                 </div>
 
@@ -488,37 +537,37 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                 {isTowing ? (
                   <div>
                     <p className="text-2xl font-bold text-green-600">Before Dispatch</p>
-                    <p className="text-xs text-gray-500 mt-0.5">Price Confirmed</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{pageSettings.hero.warrantyLabel || "Price Confirmed"}</p>
                   </div>
                 ) : (
                   <div>
                     <p className="text-2xl font-bold text-green-600">
                       {data.warranty || "30-Day"}
                     </p>
-                    <p className="text-xs text-gray-500 mt-0.5">Warranty</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{pageSettings.hero.warrantyLabel || "Warranty"}</p>
                   </div>
                 )}
               </div>
               <p className="-mt-5 mb-8 max-w-xl text-xs leading-5 text-gray-500">
-                {isTowing
+                {pageSettings.hero.arrivalNote || (isTowing
                   ? TOWING_ARRIVAL_PROMISE_NOTE_SHORT
-                  : "*Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability."}
+                  : "*Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability.")}
               </p>
 
               {/* CTAs */}
               <div className="flex flex-wrap gap-3">
-                <Link
-                  href={`/${city.slug}#contact`}
+                <ActionLink
+                  href={heroPrimaryHref}
                   className={`${bgAccent} ${btnHover} text-white px-8 py-3 rounded-lg font-bold transition-colors`}
                 >
-                  {isTowing ? `Request Towing in ${data.locationHeading}` : `Book in ${data.locationHeading}`}
-                </Link>
-                <a
-                  href={`tel:${city.phone}`}
+                  {pageSettings.hero.primaryLabel || (isTowing ? `Request Towing in ${data.locationHeading}` : `Book in ${data.locationHeading}`)}
+                </ActionLink>
+                <ActionLink
+                  href={heroSecondaryHref}
                   className="bg-white border-2 border-gray-200 text-gray-800 px-6 py-3 rounded-lg font-bold hover:border-blue-400 transition-colors flex items-center gap-2"
                 >
-                  <Phone className="w-4 h-4" /> {city.phone}
-                </a>
+                  <Phone className="w-4 h-4" /> {pageSettings.hero.secondaryLabel || city.phone}
+                </ActionLink>
               </div>
             </div>
 
@@ -551,27 +600,15 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
       <section className="bg-white border-b border-gray-100 py-5">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center gap-8">
-            {(isTowing
-              ? [
-                  { icon: Clock, label: "20-Min Quick Arrival*" },
-                  { icon: CheckCircle, label: "Suitable Recovery Method" },
-                  { icon: MapPin, label: "Destination Choice" },
-                  { icon: IndianRupee, label: "Price Before Dispatch" },
-                  { icon: Phone, label: "24/7 Coordination" },
-                ]
-              : [
-                  { icon: Shield, label: "Certified Technicians" },
-                  { icon: CheckCircle, label: "30-Day Warranty" },
-                  { icon: Clock, label: "24/7 Available" },
-                  { icon: IndianRupee, label: "Transparent Pricing" },
-                  { icon: MapPin, label: "Doorstep Service" },
-                ]
-            ).map(({ icon: I, label }) => (
-              <div key={label} className="flex items-center gap-2">
-                <I className="w-5 h-5 text-green-600" />
-                <span className="text-sm font-semibold text-gray-700">{label}</span>
-              </div>
-            ))}
+            {trustItems.map(({ icon, label }) => {
+              const I = iconMap[icon] ?? CheckCircle;
+              return (
+                <div key={`${icon}-${label}`} className="flex items-center gap-2">
+                  <I className="w-5 h-5 text-green-600" />
+                  <span className="text-sm font-semibold text-gray-700">{label}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -657,26 +694,26 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
       <section className={`py-16 ${bgAccent} text-white text-center`}>
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-3">
-            Book {withLocation(data.serviceName, data.locationHeading)} Now
+            {pageSettings.closingCta.heading || `Book ${withLocation(data.serviceName, data.locationHeading)} Now`}
           </h2>
           <p className="text-white/80 mb-8 text-lg">
-            {isTowing
+            {pageSettings.closingCta.body || (isTowing
               ? `Share the vehicle, pickup, access, and destination details for 24/7 towing coordination across ${data.displayLocation}.`
-              : `Certified technicians available 24/7 across ${data.displayLocation}.`}
+              : `Certified technicians available 24/7 across ${data.displayLocation}.`)}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link
-              href={`/${city.slug}#contact`}
+            <ActionLink
+              href={closingPrimaryHref}
               className="bg-white text-gray-900 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors"
             >
-              {isTowing ? "Request Towing" : "Book Service Now"}
-            </Link>
-            <a
-              href={`tel:${city.phone}`}
+              {pageSettings.closingCta.primaryLabel || (isTowing ? "Request Towing" : "Book Service Now")}
+            </ActionLink>
+            <ActionLink
+              href={closingSecondaryHref}
               className="bg-black/20 text-white border border-white/30 px-8 py-3 rounded-lg font-bold hover:bg-black/30 transition-colors flex items-center gap-2"
             >
-              <Phone className="w-4 h-4" /> {city.phone}
-            </a>
+              <Phone className="w-4 h-4" /> {pageSettings.closingCta.secondaryLabel || city.phone}
+            </ActionLink>
           </div>
         </div>
       </section>

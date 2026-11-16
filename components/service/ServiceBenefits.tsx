@@ -13,10 +13,11 @@ interface Props {
   benefits: Benefit[];
   serviceTitle: string;
   accentColor?: ThemeColor;
+  heading?: string;
 }
 
 
-export default function ServiceBenefits({ benefits, serviceTitle, accentColor = "red" }: Props) {
+export default function ServiceBenefits({ benefits, serviceTitle, accentColor = "red", heading }: Props) {
   const c = serviceThemes[accentColor];
 
   return (
@@ -27,7 +28,7 @@ export default function ServiceBenefits({ benefits, serviceTitle, accentColor = 
             Why Fiixup
           </span>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-            Why Choose Fiixup for {serviceTitle}?
+            {heading ?? `Why Choose Fiixup for ${serviceTitle}?`}
           </h2>
         </div>
 

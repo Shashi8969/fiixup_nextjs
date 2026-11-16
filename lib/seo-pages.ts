@@ -4,6 +4,7 @@
 import { unstable_cache } from 'next/cache'
 import { supabase } from '@/lib/supabase'
 import { asArray, asBoolean, asNumber, asObject, asString, cleanPath, normalizeJsonLd, normalizeSeoSections } from '@/lib/cms-guards'
+import { normalizeLocationServicePageSettings, type LocationServicePageSettings } from '@/lib/locationServicePageSettings'
 
 export interface SeoPage {
   url_path:              string
@@ -50,6 +51,7 @@ export interface PageData {
   aboutBullets:          { heading: string; text: string }[]
   serviceHighlights:     { title: string; description: string }[]
   whyChoosePoints:       { icon: string; title: string; desc: string }[]
+  processSteps:          { step: string; title: string; desc: string }[]
   pricingDisclaimer:     string
   schemaAggregateRating: number
   schemaReviewCount:     number
@@ -70,6 +72,7 @@ export interface PageData {
   aboutImageAlt:         string | null
   aboutImageMeta:        ImageMeta | null
   pageLayout:            { id: string; visible: boolean; heading: string | null }[]
+  pageSettings:          LocationServicePageSettings
   availability?:          string
   arrivalTime?:           string
   warranty?:              string
@@ -169,6 +172,11 @@ function normalizePageData(value: unknown): PageData {
     aboutBullets: normalizeArrayObject(pd.aboutBullets, (item) => ({ heading: asString(item.heading), text: asString(item.text ?? item.desc) })),
     serviceHighlights: normalizeArrayObject(pd.serviceHighlights, (item) => ({ title: asString(item.title), description: asString(item.description ?? item.text) })),
     whyChoosePoints: normalizeArrayObject(pd.whyChoosePoints, (item) => ({ icon: asString(item.icon), title: asString(item.title), desc: asString(item.desc ?? item.text ?? item.description) })),
+    processSteps: normalizeArrayObject(pd.processSteps ?? pd.process_steps, (item) => ({
+      step: asString(item.step),
+      title: asString(item.title),
+      desc: asString(item.desc ?? item.description ?? item.text),
+    })).filter((step) => step.title && step.desc),
     pricingDisclaimer: asString(pd.pricingDisclaimer),
     // Missing ratings/review counts must stay missing. A synthetic 4.9/150
     // makes low-content pages look more authoritative than the source data can
@@ -207,6 +215,7 @@ function normalizePageData(value: unknown): PageData {
       visible: asBoolean(item.visible, true),
       heading: asString(item.heading) || null,
     })).filter((row) => row.id),
+    pageSettings: normalizeLocationServicePageSettings(pd.pageSettings ?? pd.page_settings),
   }
 }
 
