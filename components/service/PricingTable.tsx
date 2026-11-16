@@ -133,7 +133,7 @@ export default function PricingTable({ pricing, serviceTitle, accentColor = "red
         <div className="mt-8 flex flex-wrap justify-center gap-2">
           {(isTowing
             ? ["Indicative starting price", "Charge confirmed before dispatch", "Vehicle and access assessed", "Destination confirmed"]
-            : ["Starting price shown", "Extras approved first", "30-day warranty", "Certified mechanics"]
+            : ["Starting price shown", "Extras approved first", "Applicable terms confirmed", "Certified mechanics"]
           ).map((b) => (
             <span key={b} className="flex items-center gap-1.5 text-xs bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full font-medium">
               <Check className="w-3 h-3 text-green-600" /> {b}

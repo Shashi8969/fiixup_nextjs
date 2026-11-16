@@ -54,12 +54,12 @@ export function AreaHero({ city, areaName, heroHeading, heroSubheading, testimon
           <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-blue-200 bg-blue-50/70 px-4 py-3.5">
             <ShieldCheck className="h-5 w-5 shrink-0 text-green-600" aria-hidden="true" />
             <p className="text-[15px] text-slate-800">
-              <span className="font-extrabold text-blue-700">20-Min Quick Arrival*</span>{" "}
+              <span className="font-extrabold text-blue-700">Arrival estimate confirmed</span>{" "}
               <span className="ml-1 inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 font-mono text-xs font-extrabold text-amber-800">
                 Starting prices
               </span>{" "}
               <span className="ml-1 inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 font-mono text-xs font-extrabold text-green-700">
-                30-day warranty on eligible repairs
+                Applicable warranty confirmed before work
               </span>
             </p>
           </div>
@@ -88,8 +88,8 @@ export function AreaHero({ city, areaName, heroHeading, heroSubheading, testimon
 
           <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-4 border-t border-gray-200 pt-6 sm:grid-cols-4">
             {[
-              { icon: Clock3, title: "20-Min", text: "Target arrival after dispatch*" },
-              { icon: ShieldCheck, title: "30-day", text: "Eligible repair warranty" },
+              { icon: Clock3, title: "ETA", text: "Based on location and availability" },
+              { icon: ShieldCheck, title: "Terms", text: "Warranty confirmed per job" },
               { icon: Wrench, title: "Flexible", text: "Doorstep, roadside or garage" },
               { icon: IndianRupee, title: "Starting", text: "Price; extras approved first" },
             ].map(({ icon: Icon, title, text }) => (

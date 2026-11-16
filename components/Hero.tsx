@@ -1,11 +1,9 @@
-"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { CheckCircle, MapPin, Star } from "lucide-react";
-import { ARRIVAL_PROMISE_NOTE_SHORT, MAIN_PHONE } from "@/lib/constants";
-import { useLeadForm } from "@/lib/hooks/useLeadForm";
+import { MAIN_PHONE } from "@/lib/constants";
 import type { HomeHeroData } from "@/lib/homepage";
-import { SERVICE_OPTIONS } from "@/lib/data/serviceOptions";
+import { HeroBookingForm } from "@/components/HeroBookingForm";
 
 type HeroProps = {
   data: HomeHeroData;
@@ -13,35 +11,13 @@ type HeroProps = {
 };
 
 export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
-
-  const { isSuccess, successMessage, submit } = useLeadForm({
-    fallbackSuccessMessage: data.successText,
-  });
-
-  // ✅ Submit handler
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-
-    formData.set("name", "Not provided");
-    formData.set("vehicle", "Not specified");
-    if (!formData.get("service")) formData.set("service", "Quick Booking");
-    formData.set("message", "User submitted from Hero section");
-
-    const result = await submit(formData, "Hero Quick Booking");
-    if (result.ok) form.reset();
-    else alert("Failed. Call us instead.");
-  };
-
   return (
     <section className="relative bg-gradient-to-br from-blue-50 to-blue-100 py-12 overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center">
 
-          {/* LEFT — ordered second on mobile so the booking form (RIGHT) is visible without scrolling; desktop order is unchanged. DOM order stays as written (H1 first) for SEO regardless of visual order. */}
-          <div className="order-2 md:order-1 space-y-6">
+          {/* Lead with the page promise on mobile; the booking form follows it. */}
+          <div className="order-1 space-y-6">
             <div className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
               <MapPin className="w-4 h-4" />
               {data.badgeText}
@@ -94,9 +70,9 @@ export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
             </div>
           </div>
 
-          {/* RIGHT — image + booking form, ordered first on mobile so the form is above the fold */}
-          <div className="order-1 md:order-2 relative">
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[560px] sm:h-[520px] md:h-[500px] w-full">
+          {/* RIGHT — image + booking form */}
+          <div className="order-2 relative">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[500px] w-full">
               <Image
                 src={data.imageUrl}
                 alt={data.imageAlt}
@@ -108,118 +84,7 @@ export function Hero({ data, mainPhone = MAIN_PHONE }: HeroProps) {
               />
             </div>
 
-            {/* FORM OVERLAY */}
-            <div className="absolute inset-0 flex items-center justify-center px-4">
-              <div className="w-full max-w-sm">
-                {!isSuccess ? (
-                  <div className="bg-white/90 p-5 sm:p-6 rounded-xl shadow-xl backdrop-blur-sm">
-                    <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 leading-snug">
-                      {data.formTitle}
-                    </h2>
-
-                    <p className="text-xs sm:text-sm text-gray-600 mb-4 leading-relaxed">
-                      {data.formSubtitle}
-                    </p>
-
-                    <p className="-mt-2 mb-4 text-[11px] leading-4 text-gray-500">
-                      {ARRIVAL_PROMISE_NOTE_SHORT}
-                    </p>
-
-                    <form onSubmit={handleSubmit} className="space-y-3">
-                      {/* Honeypot — hidden from real visitors, bots auto-fill it */}
-                      <input
-                        type="text"
-                        name="website"
-                        tabIndex={-1}
-                        autoComplete="off"
-                        aria-hidden="true"
-                        style={{ position: "absolute", left: "-9999px", top: 0, width: 1, height: 1, overflow: "hidden" }}
-                      />
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Mobile Number
-                        </label>
-                        <input
-                          type="tel"
-                          name="phone"
-                          required
-                          placeholder="+91 98765 43210"
-                          className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 bg-white text-gray-900"
-                        />
-                      </div>
-
-                      <div>
-                        <label
-                          htmlFor="city"
-                          className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                          Your City
-                        </label>
-
-                        <select
-                          id="city"
-                          name="city"
-                          required
-                          defaultValue=""
-                          className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 bg-white text-gray-900"
-                        >
-                          <option value="" disabled>Select your city</option>
-                          {data.cityOptions.map((city) => (
-                            <option key={city} value={city}>{city}</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div>
-                        <label
-                          htmlFor="hero-service"
-                          className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                          Service Required
-                        </label>
-
-                        <select
-                          id="hero-service"
-                          name="service"
-                          defaultValue=""
-                          className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 bg-white text-gray-900"
-                        >
-                          <option value="">Quick Booking</option>
-                          {SERVICE_OPTIONS.slice(0, 12).map((service) => (
-                            <option key={service} value={service}>
-                              {service}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <input type="hidden" name="request_time" />
-                      <input type="hidden" name="form_type" value="Hero Quick Booking" />
-
-                      <button
-                        type="submit"
-                        className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-                      >
-                        Request Service Now
-                      </button>
-                    </form>
-                  </div>
-                ) : (
-                  <div className="bg-white/90 p-6 rounded-xl shadow-xl backdrop-blur-sm min-h-[260px] flex flex-col items-center justify-center text-center">
-                    <div className="text-4xl mb-2">✅</div>
-
-                    <h3 className="text-lg font-bold text-green-700">
-                      {data.successTitle}
-                    </h3>
-
-                    <p className="text-sm text-gray-600 mt-1">
-                      {successMessage || data.successText}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
+            <HeroBookingForm data={data} />
 
             {/* ✅ YOUR BADGE (UNCHANGED POSITION) */}
             <div className="absolute -bottom-6 left-4 md:-left-6 bg-yellow-400 text-gray-900 p-4 sm:p-5 rounded-xl shadow-lg">

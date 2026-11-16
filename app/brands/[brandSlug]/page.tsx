@@ -26,6 +26,7 @@ import ServiceFAQ from "@/components/service/ServiceFAQ";
 import BookingCTA from "@/components/ui/BookingCTA";
 
 export const revalidate = 3600;
+export const dynamic = "force-static";
 
 export async function generateStaticParams() {
   const brands = await getAllBrandPages();

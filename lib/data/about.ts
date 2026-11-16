@@ -90,8 +90,8 @@ export const timeline = [
   {
     year: "Today",
     Icon: Sparkles,
-    heading: "50+ technicians, 10,000+ vehicles serviced",
-    text: "Certified mechanics, transparent pricing, and 24/7 availability across four cities — with more on the way.",
+    heading: "Doorstep support across four cities",
+    text: "Certified mechanics, transparent pricing and 24/7 booking support across four cities — with more on the way.",
   },
 ];
 
@@ -102,11 +102,11 @@ export const aboutFaqs = [
   },
   {
     question: "Are Fiixup's mechanics certified and verified?",
-    answer: "Yes. Every technician is certified and background-verified before joining the network, and each repair carries a 30-day warranty on parts and labour.",
+    answer: "Every technician is certified and background-verified before joining the network. Any warranty depends on the selected work and parts and is confirmed for the booking.",
   },
   {
     question: "How quickly can a mechanic reach me?",
-    answer: "Fiixup aims to get a mechanic to your location in around 20 minutes after dispatch for eligible doorstep and roadside bookings. Actual ETA varies with traffic, location and mechanic availability, and is separate from repair time.",
+    answer: "Arrival time depends on your location, traffic, service demand and technician availability. Fiixup confirms the estimated arrival time for each booking.",
   },
   {
     question: "Do you service both cars and bikes?",
@@ -141,26 +141,13 @@ export const aboutContent = {
 
 export const stats = [
   {
-    icon: Users,
-    value: "10,000+",
-    label: "Vehicle Owners Assisted"
-  },
-
-  {
     icon: Clock,
     value: "24/7",
     label: "Emergency Breakdown Support"
   },
-
-  {
-    icon: ThumbsUp,
-    value: "98%",
-    label: "Customer Satisfaction"
-  },
-
   {
     icon: Award,
-    value: "4+",
+    value: "4",
     label: "Cities Covered"
   },
 ];

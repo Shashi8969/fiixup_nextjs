@@ -8,9 +8,21 @@ import { Users, Clock, ThumbsUp, Award } from 'lucide-react';
 import type { CityHubPageData } from '@/lib/cityPages';
 
 export function CityAboutDynamic({ data }: { data: CityHubPageData }) {
-  const iconMap = { Users, Clock, ThumbsUp, Award };
-
   const highlights = data.serviceHighlights ?? [];
+  const stats = [
+    data.statsCustomers?.trim()
+      ? { icon: Users, value: data.statsCustomers.trim(), label: 'Happy Customers' }
+      : null,
+    { icon: Clock, value: '24/7', label: 'Service Available' },
+    data.statsSatisfaction?.trim()
+      ? { icon: ThumbsUp, value: data.statsSatisfaction.trim(), label: 'Customer Satisfaction' }
+      : null,
+    data.statsCoverage?.trim()
+      ? { icon: Award, value: data.statsCoverage.trim(), label: data.statsLabel ?? `${data.cityName} Coverage` }
+      : data.areas?.length
+        ? { icon: Award, value: String(data.areas.length), label: 'Service Areas' }
+        : null,
+  ].filter((stat): stat is { icon: typeof Users; value: string; label: string } => stat !== null);
 
   return (
     <section id="about" className="py-20 bg-white">
@@ -67,12 +79,7 @@ export function CityAboutDynamic({ data }: { data: CityHubPageData }) {
 
         {/* Stats grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-12">
-          {[
-            { icon: Users,    value: data.statsCustomers ?? '10,000+',    label: 'Happy Customers' },
-            { icon: Clock,    value: '24/7',                              label: 'Service Available' },
-            { icon: ThumbsUp, value: data.statsSatisfaction ?? '98%',     label: 'Customer Satisfaction' },
-            { icon: Award,    value: data.statsCoverage ?? `${(data.areas ?? []).length}+ Areas`, label: data.statsLabel ?? `${data.cityName} Coverage` },
-          ].map((stat, i) => (
+          {stats.map((stat, i) => (
             <div key={i} className="bg-gray-50 border border-gray-100 rounded-2xl p-6 text-center hover:shadow-md transition-shadow">
               <stat.icon className="w-9 h-9 text-blue-600 mx-auto mb-3" aria-hidden="true" />
               <p className="text-3xl font-extrabold text-gray-900 mb-1">{stat.value}</p>

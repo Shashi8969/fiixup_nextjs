@@ -6,9 +6,9 @@ import type { CityServiceCategoryPageData } from '@/lib/cityPages';
 
 const DEFAULT_STEPS = [
   { step: 1, title: 'Book & Confirm', desc: 'Call, WhatsApp, or fill the form and share your vehicle, issue, and location.' },
-  { step: 2, title: '20-Min Quick Arrival*', desc: 'Target arrival is around 20 minutes after mechanic dispatch for eligible doorstep and roadside bookings.' },
+  { step: 2, title: 'Dispatch & ETA', desc: 'Fiixup confirms the available technician and estimated arrival time for the booking location.' },
   { step: 3, title: 'Diagnose & Choose the Right Fix', desc: 'Suitable work is handled at the vehicle; workshop-only car jobs can be coordinated through a partner garage.' },
-  { step: 4, title: 'Approve & Complete', desc: 'Starting prices cover the standard scope. Extra paid work is explained before approval, and eligible repairs carry a 30-day warranty.' },
+  { step: 4, title: 'Approve & Complete', desc: 'Starting prices cover the standard scope. Extra paid work and any applicable warranty are explained before approval.' },
 ];
 
 export function CspProcess({ data }: { data: CityServiceCategoryPageData }) {

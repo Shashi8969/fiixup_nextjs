@@ -27,7 +27,10 @@ import {
 import { getAllServiceCategories, getServiceCategoryBySlug } from "@/lib/data/serviceCategory";
 import { getCityServicesByCategory, hasAnyCityServiceInCategory } from "@/lib/locationServices";
 import { getCityBySlug, getAllCities }                       from "@/lib/cities";
-import { getCityServiceCategoryPage } from "@/lib/cityPages";
+import {
+  getCityServiceCategoryPage,
+  hasCityCategoryEditorialContent,
+} from "@/lib/cityPages";
 import { getServiceBySlug } from "@/lib/services";
 
 import { TrustStrip as IconTrustStrip } from "@/components/ui/TrustStrip";
@@ -47,6 +50,7 @@ import type { ThemeColor } from "@/lib/theme";
 import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 
 export const revalidate  = 3600;
+export const dynamic = "force-static";
 export const dynamicParams = true;
 
 // ── Theme map ────────────────────────────────────────────────────────────────
@@ -99,12 +103,12 @@ export async function generateMetadata({
   if (cat) {
     const geo = { region: city.state, placename: city.name };
     const dbPage = await getCityServiceCategoryPage(citySlug, serviceSlug);
-    // For CMS-backed city/category pages, seo_pages.is_indexed is the
-    // Supabase-controlled source of truth. The content-presence check remains
-    // only as a fallback for a missing seo_pages row.
-    const indexable = dbPage
-      ? dbPage.seo.is_indexed
-      : await hasAnyCityServiceInCategory(citySlug, cat.categorySlug);
+    const hasActiveChildServices = await hasAnyCityServiceInCategory(
+      citySlug,
+      cat.categorySlug,
+    );
+    const hasEditorialContent = hasCityCategoryEditorialContent(dbPage?.data);
+    const indexable = hasActiveChildServices || hasEditorialContent;
     if (dbPage) {
       return metadataFromBasicSeo({
         title: dbPage.seo.meta_title,
@@ -120,7 +124,7 @@ export async function generateMetadata({
     }
 
     const title    = `${cat.title} in ${city.name} — Doorstep Service | Fiixup`;
-    const desc     = `Get doorstep ${cat.title.toLowerCase()} in ${city.name}. Certified mechanics reach you in 20 minutes. Transparent pricing, 30-day warranty. Call ${city.phone}.`;
+    const desc     = `Explore doorstep ${cat.title.toLowerCase()} options in ${city.name}. Availability, arrival time and any applicable warranty depend on the selected service. Call ${city.phone}.`;
     const canonical = `${SITE_URL}/${city.slug}/services/${cat.slug}`;
     return metadataFromBasicSeo({
       title,
@@ -183,6 +187,7 @@ export default async function CityServicePage({
       getCityServiceCategoryPage(citySlug, serviceSlug),
       getSmartAreasForCityCategory(citySlug, cat.categorySlug),
     ]);
+    const hasEditorialContent = hasCityCategoryEditorialContent(dbPage?.data);
     const categoryAreas = smartCategoryAreas.length
       ? smartCategoryAreas
       : ((city.areas as { name: string; slug: string }[] | undefined) ?? []).map((area) => ({
@@ -321,14 +326,14 @@ export default async function CityServicePage({
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-500 mb-8">
               {(isTowingCategory
                 ? [
-                    { icon: Clock,       text: "20-Min Quick Arrival*" },
+                    { icon: Clock,       text: "Recovery ETA confirmed after booking details" },
                     { icon: Shield,      text: "Suitable recovery method" },
                     { icon: Zap,         text: "Price before dispatch" },
                     { icon: CheckCircle, text: "Destination choice" },
                   ]
                 : [
-                    { icon: Clock,       text: "20-Min Quick Arrival*" },
-                    { icon: Shield,      text: "30-day warranty" },
+                    { icon: Clock,       text: "Arrival depends on location and availability" },
+                    { icon: Shield,      text: "Applicable warranty confirmed before work" },
                     { icon: Zap,         text: "Starting price; extras approved" },
                     { icon: CheckCircle, text: "All brands covered" },
                   ]
@@ -402,11 +407,15 @@ export default async function CityServicePage({
             </div>
           </section>
         ) : (
-          // Empty state — no location_services rows yet for this city+category
           <section className="py-16 bg-white">
             <div className="container mx-auto px-4 text-center">
-              <p className="text-gray-400 text-lg mb-6">
-                Services for {cat.title} in {city.name} are being set up — please call us directly.
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+                {cat.title} help in {city.name}
+              </h2>
+              <p className="text-gray-600 text-lg mb-6 max-w-2xl mx-auto">
+                {hasEditorialContent
+                  ? `Read the local service guidance below, then contact Fiixup to confirm the right option and current availability in ${city.name}.`
+                  : `Contact Fiixup to confirm current ${cat.title.toLowerCase()} availability and the right next step for your vehicle in ${city.name}.`}
               </p>
               <a
                 href={`tel:${city.phone ?? MAIN_PHONE}`}

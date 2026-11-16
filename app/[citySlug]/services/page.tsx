@@ -37,6 +37,7 @@ import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 import { jsonLdString } from "@/lib/schema";
 
 export const revalidate = 3600;
+export const dynamic = "force-static";
 
 // ── Color theme map ───────────────────────────────────────────────────────────
 const THEME: Record<string, {
@@ -71,7 +72,7 @@ export async function generateMetadata({
   if (!city) return {};
 
   const title     = `All Car & Bike Services in ${city.name} — Doorstep Repair | Fiixup`;
-  const desc      = `Browse every doorstep car and bike repair service available in ${city.name}. Battery replacement, tyre puncture, oil change, bike service, towing, roadside assistance & more. Certified mechanics reach you in 20 minutes. Call ${city.phone}.`;
+  const desc      = `Browse every doorstep car and bike repair service available in ${city.name}. Battery replacement, tyre puncture, oil change, bike service, towing, roadside assistance & more. Arrival estimates are confirmed after booking details. Call ${city.phone}.`;
   const canonical = `${SITE_URL}/${city.slug}/services`;
 
   return metadataFromBasicSeo({
@@ -216,8 +217,8 @@ export default async function CityServicesPage({
             {/* Trust row */}
             <div className="flex flex-wrap justify-center gap-x-7 gap-y-2.5 text-sm text-gray-600 mb-8">
               {[
-                { icon: Clock,       text: "20-Min Quick Arrival*"        },
-                { icon: Shield,      text: "30-day warranty on all repairs"  },
+                { icon: Clock,       text: "Arrival estimate confirmed"      },
+                { icon: Shield,      text: "Applicable terms confirmed"      },
                 { icon: Zap,         text: "Transparent pricing — always"    },
                 { icon: CheckCircle, text: "All car & bike brands covered"   },
               ].map(({ icon: Icon, text }) => (
@@ -228,7 +229,7 @@ export default async function CityServicesPage({
               ))}
             </div>
             <p className="-mt-5 mb-8 text-xs leading-5 text-gray-500">
-              {ARRIVAL_PROMISE_NOTE_SHORT}
+              Arrival depends on location, traffic, service type, and technician availability.
             </p>
 
             {/* CTAs */}

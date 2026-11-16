@@ -1,5 +1,6 @@
 // app/blog/page.tsx
 export const revalidate = 3600;
+export const dynamic = "force-static";
 
 import type { Metadata } from "next";
 import { getAllPosts } from "@/lib/posts";

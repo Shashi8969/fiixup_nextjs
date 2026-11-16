@@ -10,8 +10,8 @@ type Params = Promise<{ token: string }>;
 export async function generateMetadata({ params }: { params: Params }) {
   const { token } = await params;
   const draft = await getPreviewDraft(token);
-  if (!draft) return { title: "Preview expired" };
-  return { title: "Draft Preview — " + (draft.payload?.title ?? draft.public_path ?? "Fiixup"), robots: { index: false, follow: false } };
+  if (!draft) return { title: "Preview expired", robots: { index: false, follow: false }, referrer: "no-referrer" as const };
+  return { title: "Draft Preview — " + (draft.payload?.title ?? draft.public_path ?? "Fiixup"), robots: { index: false, follow: false }, referrer: "no-referrer" as const };
 }
 
 export default async function AdminPreviewPage({ params }: { params: Params }) {

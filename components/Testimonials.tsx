@@ -1,6 +1,4 @@
-import { Star } from "lucide-react";
 import type { CityData } from "@/lib/models/city.model";
-import { globalStats } from "@/lib/data/testimonials";
 import { getBrandReviews, getReviewsByIds } from "@/lib/reviews";
 import { TestimonialCard } from "@/components/ui/TestimonialCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -31,36 +29,6 @@ export async function Testimonials({ reviewIds, heading }: { reviewIds?: string[
         </Marquee>
       )}
 
-      {/* <div className="container mx-auto px-4">
-        <div className="mt-12 bg-white rounded-xl p-6 flex flex-wrap items-center justify-center gap-10 shadow-sm max-w-3xl mx-auto">
-
-          {globalStats.map(({ value, label, isRating }) => (
-
-            <div key={label} className="text-center">
-
-              <p className="text-4xl font-bold text-gray-900">
-                {value}
-              </p>
-
-              {isRating && (
-                <div className="flex gap-0.5 justify-center my-1">
-                  {Array.from({ length: 5 }, (_, i) => (
-                    <Star
-                      key={i}
-                      className="w-4 h-4 fill-yellow-400 text-yellow-400"
-                    />
-                  ))}
-                </div>
-              )}
-
-              <p className="text-sm text-gray-500">
-                {label}
-              </p>
-
-            </div>
-          ))}
-        </div>
-      </div> */}
     </section>
   );
 }

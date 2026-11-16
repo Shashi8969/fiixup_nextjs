@@ -25,7 +25,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
+import redirectSnapshot from "./lib/generated-redirects.json";
 
 interface RedirectRow {
   source: string;
@@ -110,6 +111,34 @@ function getWildcardPrefix(source: string) {
   return "";
 }
 
+function replaceRedirectCache(data: RedirectRow[]) {
+  const nextExactMap = new Map<string, RedirectRow>();
+  const nextWildcardRows: WildcardRedirectRow[] = [];
+
+  for (const row of data) {
+    if (!row?.source || !row?.destination) continue;
+
+    if (isWildcardSource(row.source)) {
+      const prefix = getWildcardPrefix(row.source);
+      if (!prefix) continue;
+      nextWildcardRows.push({ ...row, prefix });
+      continue;
+    }
+
+    const normalizedSource = normalizeSourcePath(row.source);
+    if (normalizedSource) nextExactMap.set(normalizedSource, row);
+  }
+
+  nextWildcardRows.sort((a, b) => b.prefix.length - a.prefix.length);
+  exactRedirectMap = nextExactMap;
+  wildcardRedirects = nextWildcardRows;
+}
+
+// A build-time snapshot makes redirects available immediately on cold starts.
+// Runtime refreshes below keep admin-managed changes current without delaying
+// normal page responses.
+replaceRedirectCache(redirectSnapshot as RedirectRow[]);
+
 function isSafeAbsoluteUrl(value: string) {
   try {
     const parsed = new URL(value);
@@ -124,6 +153,7 @@ function shouldSkipProxy(pathname: string) {
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
     pathname.startsWith("/assets") ||
+    pathname.startsWith("/admin-preview/") ||
     pathname === "/favicon.ico" ||
     pathname === "/robots.txt" ||
     pathname === "/sitemap.xml" ||
@@ -147,10 +177,13 @@ function buildDestinationUrl(
   capturedPath = ""
 ) {
 const rawDestination = String(row.destination || "").trim();
+if (!rawDestination || /[\u0000-\u0020\u007f\\]/.test(rawDestination)) return null;
 
 if (isSafeAbsoluteUrl(rawDestination)) {
-  return new URL(rawDestination);
+  const url = new URL(rawDestination);
+  return url.username || url.password ? null : url;
 }
+if (/^[a-z][a-z0-9+.-]*:/i.test(rawDestination)) return null;
 
   const safeCapturedPath = capturedPath.replace(/^\/+/, "");
 
@@ -171,7 +204,8 @@ if (isSafeAbsoluteUrl(rawDestination)) {
 
   destination = destination.replace(/\/{2,}/g, "/");
 
-  return new URL(destination, requestUrl);
+  const url = new URL(destination, requestUrl);
+  return url.origin === new URL(requestUrl).origin ? url : null;
 }
 
 async function refreshRedirects() {
@@ -193,6 +227,7 @@ async function refreshRedirects() {
           "Content-Type": "application/json",
         },
         cache: "no-store",
+        signal: AbortSignal.timeout(5000),
       }
     );
 
@@ -203,40 +238,14 @@ async function refreshRedirects() {
 
     const data: RedirectRow[] = await res.json();
 
-    const nextExactMap = new Map<string, RedirectRow>();
-    const nextWildcardRows: WildcardRedirectRow[] = [];
-
-    for (const row of data) {
-      if (!row?.source || !row?.destination) continue;
-
-      if (isWildcardSource(row.source)) {
-        const prefix = getWildcardPrefix(row.source);
-        if (!prefix) continue;
-
-        nextWildcardRows.push({
-          ...row,
-          prefix,
-        });
-
-        continue;
-      }
-
-      const normalizedSource = normalizeSourcePath(row.source);
-      if (!normalizedSource) continue;
-
-      nextExactMap.set(normalizedSource, row);
-    }
-
-    // Longest wildcard first.
-    // Example:
-    // /tag/car/:path* wins before /tag/:path*
-    nextWildcardRows.sort((a, b) => b.prefix.length - a.prefix.length);
-
-    exactRedirectMap = nextExactMap;
-    wildcardRedirects = nextWildcardRows;
+    replaceRedirectCache(data);
     cacheExpiry = Date.now() + getCacheTtlMs();
   } catch (error) {
     console.warn("[proxy] Redirect fetch error:", error);
+  } finally {
+    // Back off on outages as well as successful/empty results, instead of
+    // scheduling a new database request on every visitor's page load.
+    if (cacheExpiry <= Date.now()) cacheExpiry = Date.now() + 30_000;
   }
 }
 
@@ -252,9 +261,7 @@ export function resetRedirectCache() {
 }
 
 async function ensureRedirectCache() {
-  const hasCache = exactRedirectMap.size > 0 || wildcardRedirects.length > 0;
-
-  if (Date.now() < cacheExpiry && hasCache) {
+  if (Date.now() < cacheExpiry) {
     return;
   }
 
@@ -289,14 +296,19 @@ function findWildcardMatch(pathname: string) {
 }
 
 // IMPORTANT: Next.js 16 uses proxy(), not middleware()
-export async function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest, event: NextFetchEvent) {
   const rawPathname = request.nextUrl.pathname;
 
   if (shouldSkipProxy(rawPathname)) {
     return passThroughWithPathname(request);
   }
 
-  await ensureRedirectCache();
+  const refresh = ensureRedirectCache();
+  if (exactRedirectMap.size > 0 || wildcardRedirects.length > 0) {
+    event.waitUntil(refresh);
+  } else {
+    await refresh;
+  }
 
   const pathname = normalizeSourcePath(rawPathname);
 
@@ -305,6 +317,7 @@ export async function proxy(request: NextRequest) {
 
   if (exactMatch) {
     const destinationUrl = buildDestinationUrl(exactMatch, request.url);
+    if (!destinationUrl) return passThroughWithPathname(request);
 
     return NextResponse.redirect(destinationUrl, {
       status: exactMatch.is_permanent ? 301 : 302,
@@ -320,6 +333,7 @@ export async function proxy(request: NextRequest) {
       request.url,
       wildcardMatch.capturedPath
     );
+    if (!destinationUrl) return passThroughWithPathname(request);
 
     return NextResponse.redirect(destinationUrl, {
       status: wildcardMatch.row.is_permanent ? 301 : 302,

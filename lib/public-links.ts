@@ -5,7 +5,7 @@ import type { NavigationLink } from "@/lib/navigation-types";
 type SeoPathRow = {
   url_path: string | null;
   page_type: string | null;
-  page_data?: Record<string, unknown> | null;
+  city_slug?: string | null;
 };
 
 type ServiceCategoryRow = {
@@ -102,7 +102,7 @@ export const getPublicLinkRegistry = unstable_cache(
     const [seoResult, categoryResult, registryResult] = await Promise.all([
       supabase
         .from("seo_pages")
-        .select("url_path,page_type,page_data")
+        .select("url_path,page_type,city_slug:page_data->>citySlug")
         .eq("is_active", true),
       supabase
         .from("service_categories")
@@ -125,7 +125,7 @@ export const getPublicLinkRegistry = unstable_cache(
       activePaths.add(path);
 
       if (row.page_type === "city_hub") {
-        const citySlug = getCitySlugFromPath(path, row.page_data);
+        const citySlug = getCitySlugFromPath(path, { citySlug: row.city_slug });
         if (citySlug) {
           citySlugs.add(citySlug);
           activePaths.add(`/${citySlug}/services`);

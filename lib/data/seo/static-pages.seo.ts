@@ -27,7 +27,7 @@ export const staticPagesSEO: PageSEO[] = [
       "about fiixup, doorstep auto repair company, mobile mechanic India, certified vehicle technicians, transparent car service pricing",
     ogTitle: "About Fiixup — Doorstep Auto Repair Across India",
     ogDescription:
-      "50+ certified technicians. 24/7 service. 4 cities. Transparent pricing with a 30-day warranty on every repair.",
+      "Certified technicians, 24/7 booking support, service across four cities, and transparent pricing with service-specific terms.",
     canonical: `${SITE_URL}/about`,
   },
   {
@@ -106,7 +106,7 @@ export const staticPagesSEO: PageSEO[] = [
     route: "/brands",
     title: "Car & Bike Brands We Service | Doorstep Repair | Fiixup",
     description:
-      "Doorstep repair and service for every major car and bike brand sold in India — Maruti Suzuki, Hyundai, Tata, Honda, Royal Enfield, Bajaj & more. Certified mechanics, upfront pricing, 30-day warranty.",
+      "Doorstep repair and service for major car and bike brands sold in India — Maruti Suzuki, Hyundai, Tata, Honda, Royal Enfield, Bajaj & more. Certified mechanics, upfront pricing, and service-specific terms.",
     keywords:
       "car brand service center at home, bike brand doorstep repair, maruti suzuki service at home, honda car service, royal enfield doorstep mechanic, all brand car repair India",
     ogTitle: "Fiixup — Every Major Car & Bike Brand Serviced at Your Doorstep",

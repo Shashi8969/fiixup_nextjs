@@ -19,7 +19,7 @@ export function CityContactDynamic({ data }: { data: CityHubPageData }) {
               Book Your Doorstep Repair in {data.cityName}
             </h2>
             <p className="text-blue-200 text-lg mb-8">
-              20-Min Quick Arrival* for eligible bookings after mechanic dispatch. No workshop visit needed for suitable jobs.
+              Arrival time depends on location and technician availability. No workshop visit is needed for suitable jobs.
             </p>
 
             <div className="space-y-4">
@@ -85,7 +85,7 @@ export function CityContactDynamic({ data }: { data: CityHubPageData }) {
             </Link>
 
             <div className="mt-6 pt-6 border-t border-white/20 grid grid-cols-2 gap-3 text-sm text-blue-200">
-              {['20-Min Quick Arrival*', 'Starting price; extras approved', '30-day warranty', 'Verified mechanics'].map((t) => (
+              {['Arrival estimate confirmed', 'Starting price; extras approved', 'Applicable warranty confirmed', 'Verified mechanics'].map((t) => (
                 <div key={t} className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-400 flex-shrink-0" aria-hidden="true" />
                   <span>{t}</span>

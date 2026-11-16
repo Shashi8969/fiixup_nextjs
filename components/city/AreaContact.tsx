@@ -20,7 +20,7 @@ export function AreaContact({ data }: { data: AreaHubPageData }) {
                 Book your doorstep repair in {data.areaName}
               </h2>
               <p className="mb-8 text-lg text-blue-200">
-                20-Min Quick Arrival* for eligible bookings after mechanic dispatch. No workshop visit needed for suitable jobs.
+                Arrival time depends on location and technician availability. No workshop visit is needed for suitable jobs.
               </p>
 
               <div className="space-y-4">
@@ -76,7 +76,7 @@ export function AreaContact({ data }: { data: AreaHubPageData }) {
               </Link>
 
               <div className="mt-6 grid grid-cols-2 gap-3 border-t border-white/20 pt-6 text-sm text-blue-200">
-                {['20-Min Quick Arrival*', 'Starting price; extras approved', '30-day warranty', 'Verified mechanics'].map((t) => (
+                {['Arrival estimate confirmed', 'Starting price; extras approved', 'Applicable warranty confirmed', 'Verified mechanics'].map((t) => (
                   <div key={t} className="flex items-center gap-2">
                     <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-green-400" aria-hidden="true" />
                     <span>{t}</span>

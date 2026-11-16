@@ -5,6 +5,7 @@
 // Future: wire these up to /admin/redirects page.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import 'server-only';
 import { createClient } from "@supabase/supabase-js";
 
 function getAdminClient() {

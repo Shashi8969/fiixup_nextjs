@@ -19,7 +19,8 @@ import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
 const seo = getStaticPageSEO("about")!;
-export const revalidate = 3600; // refreshes every 1 hour
+export const revalidate = 3600;
+export const dynamic = "force-static"; // refreshes every 1 hour
 
 export const metadata: Metadata = metadataFromBasicSeo({
   title: seo.title,
@@ -80,7 +81,7 @@ export default async function AboutPage() {
               </span>
               <span className="flex items-center gap-1.5">
                 <Clock3 className="h-4 w-4 text-blue-600" aria-hidden="true" />
-                20-Min Quick Arrival*
+                Arrival estimate confirmed after booking
               </span>
             </div>
           </Reveal>
@@ -120,7 +121,7 @@ export default async function AboutPage() {
                   service provider.
                 </p>
                 <p>
-                  Today, we serve over 10,000 happy customers across{" "}
+                  Today, we support vehicle owners across{" "}
                   <Link href="/bangalore" className="font-medium text-blue-600 hover:underline">Bengaluru</Link>,{" "}
                   <Link href="/chennai" className="font-medium text-blue-600 hover:underline">Chennai</Link>,{" "}
                   <Link href="/hyderabad" className="font-medium text-blue-600 hover:underline">Hyderabad</Link> and{" "}
@@ -243,7 +244,7 @@ export default async function AboutPage() {
             Ready for hassle-free vehicle care?
           </h2>
           <p className="mx-auto mb-8 max-w-xl text-gray-600">
-            Book a certified mechanic to your doorstep in minutes — transparent pricing, genuine parts, 30-day warranty.
+            Request a certified mechanic at your doorstep with transparent pricing, genuine parts, and service-specific terms confirmed before work.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link

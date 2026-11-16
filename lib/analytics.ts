@@ -1,4 +1,5 @@
 export const GA_MEASUREMENT_ID = "G-XSNGMPP0KH";export const CONSENT_STORAGE_KEY = "fiixup_cookie_consent_v1";
+import { isLocalReviewHost } from '@/lib/local-review';
 export const CONSENT_UPDATED_EVENT = "fiixup-consent-updated";
 export const OPEN_CONSENT_EVENT = "fiixup-open-cookie-settings";
 // Fired by QuickServiceModal whenever it opens/closes so other fixed-position
@@ -46,6 +47,11 @@ export function hasAnalyticsConsent(): boolean {
   return readConsentPreferences()?.analytics === true;
 }
 
+// Preview URLs contain bearer capability tokens and unpublished content.
+export function isPrivateAnalyticsPath(pathname: string): boolean {
+  return /^\/(?:admin-preview|api)(?:\/|$)/i.test(pathname);
+}
+
 export function trackEvent(
   eventName: string,
   parameters: Record<string, string | number | boolean | undefined> = {},
@@ -57,6 +63,7 @@ export function trackEvent(
   if (typeof window === "undefined" || typeof window.gtag !== "function") {
     return;
   }
+  if (isPrivateAnalyticsPath(window.location.pathname) || isLocalReviewHost(window.location.host)) return;
 
   const safeParameters = Object.fromEntries(
     Object.entries(parameters).filter(([, value]) => value !== undefined),

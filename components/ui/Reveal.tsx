@@ -28,7 +28,10 @@ export function Reveal({
   const inView = useInView(ref, { once: true, rootMargin: "0px 0px -10% 0px" });
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   if (reduceMotion) {
     return <div className={className}>{children}</div>;

@@ -39,6 +39,7 @@ import {
 } from "@/lib/servicePageSections";
 
 export const revalidate = 3600;
+export const dynamic = "force-static";
 
 const heroTheme: Record<string, { gradient: string; iconBg: string; iconText: string; btn: string }> = {
   blue:   { gradient: "from-blue-50 to-blue-100",     iconBg: "bg-blue-100",   iconText: "text-blue-700",   btn: "bg-blue-600 hover:bg-blue-700" },

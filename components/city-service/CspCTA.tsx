@@ -38,7 +38,7 @@ export function CspCTA({ data }: { data: CityServiceCategoryPageData }) {
         </div>
         <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-blue-300">
           {[
-            '30-day warranty on eligible repairs',
+            'Applicable warranty confirmed before work',
             'Doorstep & roadside support',
             'Partner-garage support',
             'Starting price shown',

@@ -3,6 +3,7 @@ import { cache } from 'react'
 import { supabase } from '@/lib/supabase'
 import { normalizeImageMeta, type ImageMeta } from '@/lib/seo-pages'
 import { asArray } from '@/lib/cms-guards'
+import { verifiedRating, verifiedReviewCount } from '@/lib/verified-stats'
 
 // lib/global-service.ts
 export interface GlobalServicePage {
@@ -33,8 +34,8 @@ export interface GlobalServicePage {
   testimonials: Array<{ name: string; rating: number; text: string; vehicle: string; location: string; date: string }>;
   faqs: Array<{ q: string; a: string }>;
   related_services: Array<{ name: string; slug: string; category: string }>;
-  schema_aggregate_rating: number;
-  schema_review_count: number;
+  schema_aggregate_rating: number | null;
+  schema_review_count: number | null;
   schema_json: object | null;
   hero_stats: Array<{ value: string; label: string }>;
   service_duration: string;
@@ -95,8 +96,8 @@ export const getGlobalServicePage = cache(async (serviceSlug: string): Promise<G
   return {
     ...(page as GlobalServicePage),
     hero_image_meta: normalizeImageMeta(page.hero_image_meta),
-    schema_aggregate_rating: Number(page.schema_aggregate_rating) || 4.9,
-    schema_review_count: page.schema_review_count ?? 0,
+    schema_aggregate_rating: verifiedRating(page.schema_aggregate_rating),
+    schema_review_count: verifiedReviewCount(page.schema_review_count),
     // These four are nullable JSONB columns spread in raw above, but the page
     // template maps them unguarded — normalize so a cleared field can't crash
     // the route (same contract the child tables below already get).

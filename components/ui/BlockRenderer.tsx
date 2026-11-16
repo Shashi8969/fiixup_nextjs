@@ -11,6 +11,7 @@ import {
 import { CmsImage } from "@/components/ui/CmsImage";
 import { Reveal } from "@/components/ui/Reveal";
 import { stripEditorialScaffold } from "@/lib/seo/editorial-scaffold";
+import { cleanHtml, safeHref } from "@/lib/security/html";
 // ─── Type Definitions ─────────────────────────────────────────────────────────
 export type Block =
 | { type: "rich_content"; html: string }
@@ -35,75 +36,6 @@ export type Block =
   | { type: "meta";         title: string; description: string } // skip render
   | { type: string; [key: string]: unknown }; // unknown future blocks
 
-
-// HTML allows "/" as an attribute separator, not just whitespace, so
-// `<img/onerror=alert(1) src=x>` slips past attribute rules anchored on \s.
-// Rewrite those separators to spaces first — quote-aware, so a "/" inside an
-// attribute value (`href="/online=1"`) is left alone — then the \s-anchored
-// rules below see a normalized tag. The tag matcher consumes quoted strings
-// whole so a ">" inside a value can't truncate a tag and hide its tail.
-function normalizeAttrSeparators(html: string) {
-  return html.replace(/<[a-z][a-z0-9:-]*(?:"[^"]*"|'[^']*'|[^>"'])*>/gi, (tag) => {
-    let out = "";
-    let quote: string | null = null;
-    for (let i = 0; i < tag.length; i++) {
-      const ch = tag[i];
-      if (quote) {
-        out += ch;
-        if (ch === quote) quote = null;
-        continue;
-      }
-      if (ch === '"' || ch === "'") {
-        quote = ch;
-        out += ch;
-        continue;
-      }
-      // Keep the self-closing slash in `<br />`; rewrite separator slashes.
-      if (ch === "/" && !/^\s*>/.test(tag.slice(i + 1))) {
-        out += " ";
-        continue;
-      }
-      out += ch;
-    }
-    return out;
-  });
-}
-
-function cleanHtml(html: string) {
-  return normalizeAttrSeparators(String(html ?? ""))
-    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
-    .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, "")
-    .replace(/<\/?(?:iframe|object|embed|form|input|button|textarea|select|option|meta|link|base)[\s\S]*?>/gi, "")
-    .replace(/\son\w+=("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
-    .replace(/\s(?:srcdoc|formaction)=("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
-    .replace(/\sstyle=("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
-    .replace(/\s(href|src|xlink:href)=("|')\s*(?:javascript|vbscript|data:text\/html):[\s\S]*?\2/gi, ' $1="#"')
-    .replace(/\s(href|src|xlink:href)=\s*(?:javascript|vbscript|data:text\/html):[^\s>]*/gi, ' $1="#"')
-    .replace(/<a\b(?![^>]*\brel=)([^>]*)>/gi, '<a$1 rel="noopener noreferrer">');
-}
-
-function safeHref(value: string, fallback = "#") {
-  const href = String(value || "").trim();
-  if (!href) return fallback;
-
-  const lower = href.toLowerCase();
-  if (lower.startsWith("javascript:") || lower.startsWith("vbscript:") || lower.startsWith("data:")) {
-    return fallback;
-  }
-
-  if (
-    href.startsWith("/") ||
-    href.startsWith("#") ||
-    lower.startsWith("tel:") ||
-    lower.startsWith("mailto:") ||
-    lower.startsWith("https://") ||
-    lower.startsWith("http://")
-  ) {
-    return href;
-  }
-
-  return fallback;
-}
 
 function HtmlSpan({ html }: { html: string }) {
   return <span dangerouslySetInnerHTML={{ __html: cleanHtml(html) }} />;

@@ -27,10 +27,9 @@ import { GlobalServicePage } from '@/components/global-service/GlobalServicePage
 import { JsonLd } from '@/components/seo/JsonLd';
 
 export const revalidate = 3600;
+export const dynamic = "force-static";
 export const dynamicParams = true;
 
-// ── Known city slugs — O(1) check, avoids a DB round-trip for 99% of traffic ─
-const CITY_SLUGS = new Set(['bangalore', 'chennai', 'hyderabad', 'mumbai']);
 
 // ── Static params — city slugs UNION global service slugs ────────────────────
 export async function generateStaticParams() {
@@ -49,10 +48,9 @@ export async function generateMetadata({
   const { citySlug } = await params;
 
   // ── Path A: city hub ──
-  if (CITY_SLUGS.has(citySlug)) {
-    const page = await getCityHubPage(citySlug);
-    if (!page) return {};
-    const { seo, data } = page;
+  const cityPage = await getCityHubPage(citySlug);
+if (cityPage) {
+  const { seo, data } = cityPage;
     const ogImage = seo.og_image_url ?? `${SITE_URL}/assets/og-image.webp`;
     return {
       title:       seo.meta_title,
@@ -127,11 +125,9 @@ export default async function CityPage({
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // PATH A — City hub page
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  if (CITY_SLUGS.has(citySlug)) {
-    const page = await getCityHubPage(citySlug);
-    if (!page) return notFound();
-
-    const { seo, data } = page;
+  const cityPage = await getCityHubPage(citySlug);
+if (cityPage) {
+  const { seo, data } = cityPage;
 
     const schema = cityHubSchema({
       name:        data.cityName,
@@ -142,8 +138,6 @@ export default async function CityPage({
       lng:         data.longitude   ?? undefined,
       phone:       data.cityPhone,
       email:       data.cityEmail,
-      reviewCount: data.schemaReviewCount     ?? 500,
-      rating:      data.schemaAggregateRating ?? 4.9,
       areas:       data.areas       ?? [],
       faqs:        data.faqs        ?? [],
       heroHeading: data.heroHeading,

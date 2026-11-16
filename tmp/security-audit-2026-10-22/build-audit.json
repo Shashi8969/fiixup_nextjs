@@ -1,0 +1,10 @@
+{
+  "publicFilesScanned": 69,
+  "privateKeyNamesChecked": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "REVALIDATE_SECRET",
+    "GMAIL_APP_PASSWORD"
+  ],
+  "exposed": [],
+  "trackedSensitiveFiles": []
+}

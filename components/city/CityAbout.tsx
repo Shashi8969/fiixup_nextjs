@@ -1,13 +1,11 @@
 import Image from "next/image";
-import { Award, Users, ThumbsUp, Clock } from "lucide-react";
+import { MapPin, Clock } from "lucide-react";
 import type { CityData } from "@/lib/models/city.model";
 
 export function CityAbout({ city }: { city: CityData }) {
   const stats = [
-    { icon: Users,    value: "10,000+", label: "Happy Customers"      },
-    { icon: Clock,    value: "24/7",    label: "Service Available"     },
-    { icon: ThumbsUp, value: "98%",     label: "Customer Satisfaction" },
-    { icon: Award,    value: "100%",    label: city.statsLabel         },
+    { icon: Clock,  value: "24/7", label: "Service Available" },
+    { icon: MapPin, value: String(city.areas.length), label: "Service Areas" },
   ];
 
   return (

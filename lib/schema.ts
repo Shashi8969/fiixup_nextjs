@@ -692,7 +692,7 @@ export function serviceDetailSchema(opts: {
       name:          isTowing ? `How to Arrange ${name} — Fiixup` : `How to Book ${name} at Your Doorstep — Fiixup`,
       description:   isTowing
         ? `Share the vehicle, pickup, access, and destination details. Fiixup confirms a suitable recovery method, expected ETA, and towing charge before dispatch.`
-        : `Book ${name} at your home in 3 easy steps. Fiixup targets arrival around 20 minutes after mechanic dispatch for eligible bookings.`,
+        : `Book ${name} at your home in 3 easy steps. Fiixup confirms availability and an arrival estimate after reviewing the booking details.`,
       ...(!isTowing && { totalTime: "PT60M" }),
       estimatedCost: { "@type": "MonetaryAmount", currency: "INR", minValue: minPrice, maxValue: maxPrice },
       step: isTowing
@@ -722,12 +722,12 @@ export function serviceDetailSchema(opts: {
             {
               "@type": "HowToStep", position: 2,
               name: "Certified Mechanic Dispatched",
-              text: "After a mechanic is dispatched, Fiixup targets arrival at your location in around 20 minutes for eligible bookings. Actual ETA may vary.",
+              text: "Fiixup confirms technician availability and an arrival estimate after reviewing the vehicle, issue, and location details.",
             },
             {
               "@type": "HowToStep", position: 3,
               name: "Service Completed at Doorstep",
-              text: `${name} completed at your home or office. 30-day service warranty included.`,
+              text: `${name} is completed at your home or office after the scope, price, and any applicable warranty are confirmed.`,
             },
           ],
     });
@@ -762,7 +762,7 @@ export function brandsListingSchema(
         "@id":       `${SITE_URL}/brands/#webpage`,
         url:         `${SITE_URL}/brands`,
         name:        "Car & Bike Brands We Service — Fiixup",
-        description: "Doorstep repair and service for every major car and bike brand sold in India. Certified mechanics, upfront pricing, 30-day warranty.",
+        description: "Doorstep repair and service for every major car and bike brand sold in India, with certified mechanics, upfront pricing, and service-specific terms.",
         isPartOf:    { "@id": SITE_ID },
         about:       { "@id": ORG_ID },
         breadcrumb:  { "@id": `${SITE_URL}/brands/#breadcrumb` },
@@ -1083,7 +1083,7 @@ export function aboutPageSchema(opts?: { faqs?: { question: string; answer: stri
         "@id":        `${SITE_URL}/about/#webpage`,
         url:          `${SITE_URL}/about`,
         name:         "About Fiixup — India's 24/7 Doorstep Car & Bike Repair",
-        description:  "Fiixup was founded in 2020 to bring professional auto repair directly to vehicle owners across India. 50+ certified mechanics, 10,000+ happy customers.",
+        description:  "Fiixup was founded in 2020 to bring professional auto repair directly to vehicle owners across supported cities in India.",
         isPartOf:     { "@id": SITE_ID },
         about:        { "@id": ORG_ID },
         mainEntity:   { "@id": ORG_ID },
@@ -1237,8 +1237,8 @@ export function cityHubSchema(opts: {
   lng?:        number;
   phone?:      string;
   email?:      string;
-  reviewCount: number;
-  rating:      number;
+  reviewCount?: number | null;
+  rating?:      number | null;
   areas:       { name: string; slug: string }[];
   faqs:        { q: string; a: string }[];
   heroHeading: string;

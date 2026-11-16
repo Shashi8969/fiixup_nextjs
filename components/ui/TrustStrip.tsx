@@ -7,14 +7,14 @@ import {
 } from "@/lib/constants";
 
 const iconItems = [
-  { icon: Clock,       label: "20-Min Quick Arrival*", sub: "Target arrival after mechanic dispatch" },
+  { icon: Clock,       label: "Arrival Confirmed",     sub: "ETA depends on location and availability" },
   { icon: Award,       label: "Flexible Service",     sub: "Doorstep, roadside or partner garage" },
-  { icon: Shield,      label: "30-Day Warranty",      sub: "On eligible repairs" },
+  { icon: Shield,      label: "Service-Specific Terms", sub: "Applicable warranty confirmed before work" },
   { icon: CheckCircle, label: "Clear Pricing",         sub: "Starting price; extra work approved first" },
 ];
 
 const towingIconItems = [
-  { icon: Clock,       label: "20-Min Quick Arrival*", sub: "Target after recovery-vehicle dispatch" },
+  { icon: Clock,       label: "Recovery ETA",          sub: "Confirmed after pickup and access details" },
   { icon: Truck,       label: "Suitable Recovery",     sub: "Method matched to vehicle and access" },
   { icon: MapPin,      label: "Destination Choice",    sub: "Garage, dealership, home, or another location" },
   { icon: CheckCircle, label: "Price Confirmed",       sub: "Towing charge confirmed before dispatch" },

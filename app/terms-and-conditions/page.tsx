@@ -1,3 +1,6 @@
+export const dynamic = "force-static";
+export const revalidate = 3600;
+
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 // This project already defines SITE_URL and MAIN_PHONE in lib/constants.ts (per your SEO setup) —

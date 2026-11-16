@@ -108,7 +108,7 @@ export function CityServiceDetail({
           <div className="flex flex-wrap justify-center gap-8">
             {[
               { icon: Award, label: 'Certified Technicians' },
-              { icon: Shield, label: '30-Day Warranty' },
+              { icon: Shield, label: 'Applicable Terms Confirmed' },
               { icon: Clock, label: '24/7 Available' },
               { icon: CheckCircle, label: 'Transparent Pricing' },
               { icon: MapPin, label: `Doorstep in ${city.name}` },
@@ -130,10 +130,10 @@ export function CityServiceDetail({
               <h2 className="text-2xl font-bold mb-4">{service.shortTitle} in {city.name}</h2>
               <p className="text-gray-700 leading-relaxed text-lg mb-4">{service.description}</p>
               <p className="text-gray-600 leading-relaxed mb-8">
-                Our certified technicians cover all areas of {city.name} including {city.areas.map((a: any) => typeof a === 'string' ? a : a.name).join(', ')}. Fiixup aims to get a mechanic to your location in around 20 minutes after dispatch for eligible doorstep and roadside bookings.*
+                Our certified technicians cover all areas of {city.name} including {city.areas.map((a: any) => typeof a === 'string' ? a : a.name).join(', ')}. Share your vehicle, issue, and exact location so Fiixup can confirm availability and an arrival estimate before dispatch.
               </p>
               <p className="mb-8 text-xs leading-5 text-gray-500">
-                *20 minutes is our target arrival time. Actual arrival may vary depending on traffic, distance, weather, service demand, vehicle accessibility and mechanic availability.
+                Actual arrival depends on traffic, distance, weather, service demand, vehicle accessibility, and mechanic availability.
               </p>
               <h3 className="font-bold text-gray-900 mb-3">{isCar ? 'Car Brands We Service' : 'Bike Brands We Service'}</h3>
               <div className="flex flex-wrap gap-2">
@@ -168,8 +168,8 @@ export function CityServiceDetail({
             {[
               { step: '1', title: 'Book Online or Call', desc: `Call ${city.phone} or fill the form. Takes under 30 seconds.` },
               { step: '2', title: 'We Confirm & Dispatch', desc: `We dispatch the nearest ${city.name} technician to your location.` },
-              { step: '3', title: 'Tech Arrives at Your Door', desc: 'Certified technician arrives with tools & parts within the hour.' },
-              { step: '4', title: 'Drive Away Happy', desc: 'Service complete. 30-day warranty and digital receipt provided.' },
+              { step: '3', title: 'Tech Arrives at Your Door', desc: 'A certified technician arrives with the required tools and confirmed parts.' },
+              { step: '4', title: 'Approve & Complete', desc: 'Service terms and any applicable warranty are confirmed before work; a digital receipt follows.' },
             ].map(({ step, title, desc }) => (
               <div key={step} className="text-center">
                 <div className={`w-14 h-14 ${bgAccent} text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg`}>{step}</div>

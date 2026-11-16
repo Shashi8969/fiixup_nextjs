@@ -10,6 +10,7 @@ import {
   Clock, Shield, IndianRupee, Navigation, ArrowRight,
 } from "lucide-react";
 import type { LocationServiceData } from "@/lib/locationServices";
+import { hasVerifiedRatingSummary } from "@/lib/verified-stats";
 import type { CityData } from "@/lib/models/city.model";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
 import { LocationServiceSeoContent } from "./LocationServiceSeoContent";
@@ -164,7 +165,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
     ? pageSettings.trustItems
     : isTowing
       ? [
-          { icon: "Clock", label: "20-Min Quick Arrival*" },
+          { icon: "Clock", label: "Recovery ETA Confirmed After Booking" },
           { icon: "CheckCircle", label: "Suitable Recovery Method" },
           { icon: "MapPin", label: "Destination Choice" },
           { icon: "IndianRupee", label: "Price Before Dispatch" },
@@ -172,7 +173,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
         ]
       : [
           { icon: "Shield", label: "Certified Technicians" },
-          { icon: "CheckCircle", label: "30-Day Warranty" },
+          { icon: "CheckCircle", label: "Applicable Terms Confirmed Before Work" },
           { icon: "Clock", label: "24/7 Available" },
           { icon: "IndianRupee", label: "Transparent Pricing" },
           { icon: "MapPin", label: "Doorstep Service" },
@@ -525,10 +526,10 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
 
                 <div>
                   <p className="text-2xl font-bold text-gray-900">
-                    {data.arrival_time || "20-Min Quick Arrival*"}
+                    {data.arrival_time || "ETA Confirmed"}
                   </p>
                   <p className="text-xs text-gray-500 mt-0.5">
-                    {pageSettings.hero.arrivalLabel || (isTowing ? "Target after recovery-vehicle dispatch" : "Target after mechanic dispatch")}
+                    {pageSettings.hero.arrivalLabel || "Based on location and availability"}
                   </p>
                 </div>
 
@@ -542,9 +543,9 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                 ) : (
                   <div>
                     <p className="text-2xl font-bold text-green-600">
-                      {data.warranty || "30-Day"}
+                      {data.warranty || "Before Work"}
                     </p>
-                    <p className="text-xs text-gray-500 mt-0.5">{pageSettings.hero.warrantyLabel || "Warranty"}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{pageSettings.hero.warrantyLabel || (data.warranty ? "Warranty" : "Terms Confirmed")}</p>
                   </div>
                 )}
               </div>
@@ -585,7 +586,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                   sizes="50vw"
                 />
               </div>
-              {Number(data.schemaReviewCount) > 0 ? (
+              {hasVerifiedRatingSummary(data.schemaAggregateRating, data.schemaReviewCount) ? (
                 <div className="absolute -bottom-4 -left-4 bg-yellow-400 text-gray-900 p-4 rounded-xl shadow-lg">
                   <p className="text-2xl font-bold">{data.schemaAggregateRating}/5</p>
                   <p className="text-xs font-semibold">{data.schemaReviewCount}+ Reviews</p>
@@ -626,7 +627,7 @@ export async function LocationServicePage({ data, city, breadcrumbs }: Props) {
                   ["Basement or restricted access", "Clearance and loading approach assessed first"],
                   ["Destination", "Garage, dealership, home, or another selected location"],
                   ["Availability", "24/7 recovery coordination"],
-                  ["Arrival", "20-Min Quick Arrival target after dispatch*"],
+                  ["Arrival", "ETA confirmed after pickup and access details are reviewed"],
                   ["Price", `Indicative from ${isBikeTowing ? "₹799" : "₹1,299"}; exact charge confirmed before dispatch`],
                 ].map(([need, response], index) => (
                   <div key={need} className={`grid gap-1 px-5 py-3 sm:grid-cols-[0.8fr_1.2fr] ${index > 0 ? "border-t border-gray-100" : ""}`}>

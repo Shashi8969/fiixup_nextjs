@@ -125,7 +125,7 @@ const FALLBACK_HOME_DATA: Omit<HomePageData, "services" | "cityCoverage"> & {
 } = {
   seo: {
     title: "24/7 Doorstep Car & Bike Repair | Fiixup",
-    description: "Certified mechanics at your home or office across India. Serving Bangalore, Chennai, Hyderabad & Mumbai. Starting ₹249. 20-min response. Book now.",
+    description: "Certified mechanics at your home or office across India. Serving Bangalore, Chennai, Hyderabad and Mumbai with availability confirmed for each booking.",
     keywords: DEFAULT_KEYWORDS,
     canonical: SITE_URL,
     ogImage: DEFAULT_OG_IMAGE,
@@ -134,7 +134,7 @@ const FALLBACK_HOME_DATA: Omit<HomePageData, "services" | "cityCoverage"> & {
   hero: {
     badgeText: "Bengaluru · Chennai · Hyderabad · Mumbai",
     heading: "24/7 Car & Bike Service at Your Doorstep",
-    subheading: "Book in Seconds, Get Car & Bike Repair in Minutes. Certified Mechanics, Transparent Pricing, 30-Day Warranty.",
+    subheading: "Book car and bike repair at your location with certified mechanics, transparent pricing and service-specific terms.",
     features: fallbackFeatures,
     avatars: fallbackAvatars,
     reviewText: "Drivers across Bangalore, Chennai, Hyderabad & Mumbai trust us for quick and reliable doorstep repairs",
@@ -143,11 +143,11 @@ const FALLBACK_HOME_DATA: Omit<HomePageData, "services" | "cityCoverage"> & {
     secondaryCtaLabel: "Call Now",
     imageUrl: "/assets/Car_mechanic_700x1049.webp",
     imageAlt: "Certified mechanic performing doorstep car repair in India",
-    formTitle: "Book in 30 seconds. 20-Min Quick Arrival*.",
+    formTitle: "Request doorstep vehicle service",
     formSubtitle: "Tell us your issue — our nearby mechanic team will contact you shortly",
     cityOptions: [...CITIES_LIST],
     successTitle: "Request Sent!",
-    successText: "Our team will call you within 1 minutes 🚀",
+    successText: "Our team will contact you shortly.",
     experienceValue: "2020",
     experienceLabel: "Founded in Bengaluru",
   },
@@ -185,15 +185,15 @@ const FALLBACK_HOME_DATA: Omit<HomePageData, "services" | "cityCoverage"> & {
   contact: {
     heading: "Book a Nearby Car or Bike Mechanic at Your Location",
     subtext: `Need help with a dead battery, puncture, engine issue, oil change, brake problem, or vehicle not starting? Fiixup provides doorstep car and bike repair services across ${CITIES_LIST.join(", ")}. Mechanics arrive at your home, office, apartment parking, or roadside location for quick repair and servicing support.`,
-    formTitle: "Book in 30 seconds. 20-Min Quick Arrival*.",
+    formTitle: "Request doorstep vehicle service",
     formSubtitle: "Share your vehicle issue and our nearby mechanic team will contact you shortly for booking confirmation and assistance.",
     successText: "✅ Booking request received successfully. Our team will contact you shortly.",
     errorText: `❌ Unable to send your request right now. Please call us directly at ${MAIN_PHONE_DISPLAY}.`,
     cities: [...CITIES_LIST],
     trustBadges: [
-      "✅ 20-Min Quick Arrival*",
+      "✅ Arrival estimate confirmed for each booking",
       "✅ Starting price shown — extra work approved first",
-      "✅ 30-day warranty on all repairs",
+      "✅ Applicable warranty confirmed for the selected work",
       "✅ Certified & background-verified technicians",
     ],
   },
@@ -264,7 +264,7 @@ function overrideVehiclesServiced(
   vehiclesTotal: number
 ): { value: string; label: string }[] {
   if (!Number.isFinite(vehiclesTotal) || vehiclesTotal <= 0) return stats;
-  const formatted = `${vehiclesTotal.toLocaleString("en-IN")}+`;
+  const formatted = vehiclesTotal.toLocaleString("en-IN");
   return stats.map((stat) =>
     stat.label.trim().toLowerCase() === "vehicles serviced" ? { ...stat, value: formatted } : stat
   );

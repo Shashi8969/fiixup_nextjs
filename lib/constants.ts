@@ -22,20 +22,20 @@ export type CityName = (typeof CITIES_LIST)[number];
  * Verified Fiixup service-language rules.
  * Keep these centralized so pages do not drift into conflicting promises.
  */
-export const ARRIVAL_PROMISE = "20-Min Quick Arrival*";
+export const ARRIVAL_PROMISE = "Arrival confirmed after booking";
 export const ARRIVAL_SUPPORTING_TEXT =
-  "Fiixup aims to get a mechanic to your location in around 20 minutes after dispatch for eligible doorstep and roadside bookings.";
+  "Arrival time depends on your location, traffic, service demand and technician availability.";
 export const ARRIVAL_PROMISE_NOTE =
-  "*20 minutes is our target arrival time. Actual arrival may vary depending on traffic, distance, weather, service demand, vehicle accessibility and mechanic availability.";
+  "Fiixup confirms the available technician and estimated arrival time for each booking.";
 export const ARRIVAL_PROMISE_NOTE_SHORT =
-  "*Target arrival after mechanic dispatch for eligible bookings. Actual ETA may vary by traffic, location and mechanic availability.";
+  "Arrival time depends on location, traffic and technician availability.";
 
 export const TOWING_ARRIVAL_SUPPORTING_TEXT =
-  "Fiixup targets arrival in around 20 minutes after recovery-vehicle dispatch for eligible towing bookings.";
+  "Recovery-vehicle arrival depends on location, traffic, access and current availability.";
 export const TOWING_ARRIVAL_PROMISE_NOTE =
-  "*20 minutes is our target arrival time after dispatch, not the towing duration. Actual ETA may vary depending on traffic, distance, weather, service demand, vehicle access and recovery-vehicle availability.";
+  "Fiixup confirms the estimated arrival time after the vehicle, pickup point and access details are reviewed.";
 export const TOWING_ARRIVAL_PROMISE_NOTE_SHORT =
-  "*Target arrival after recovery-vehicle dispatch for eligible bookings. Actual ETA may vary by traffic, distance, vehicle access and availability.";
+  "Recovery ETA varies by traffic, distance, vehicle access and availability.";
 
 export const PRICE_DISCLAIMER_SHORT =
   "Prices shown are starting/indicative prices. Final charges may vary by location, night or after-hours timing, extra labour, parts, fluids, additional repairs, multiple punctures, towing/pickup distance, or other work approved after inspection.";
@@ -47,14 +47,14 @@ export const PICKUP_DROP_PROMISE =
   "For car-service jobs that need workshop equipment, Fiixup can coordinate inspection/collection and service through partner garages. Free pickup and drop is available on eligible services and should be confirmed at booking.";
 
 export const TRUST_BADGES = [
-  "✅ 20-Min Quick Arrival*",
+  "✅ Arrival estimate confirmed for each booking",
   "✅ Starting price shown — extra work approved first",
-  "✅ 30-day warranty on eligible repairs",
+  "✅ Applicable warranty confirmed for the selected work",
   "✅ Doorstep, roadside & partner-garage support",
 ] as const;
 
 export const TOWING_TRUST_BADGES = [
-  "✅ 20-Min Quick Arrival*",
+  "✅ Recovery ETA confirmed after booking details",
   "✅ Recovery method matched to the vehicle",
   "✅ ETA and towing charge confirmed before dispatch",
   "✅ 24/7 recovery coordination",
@@ -62,9 +62,9 @@ export const TOWING_TRUST_BADGES = [
 
 export const HOW_IT_WORKS_STEPS = [
   { n: "1", title: "Book & Confirm", desc: "Call, WhatsApp, or use the booking form. Share your vehicle, issue, location, and preferred time." },
-  { n: "2", title: "20-Min Quick Arrival*", desc: "Target arrival is around 20 minutes after mechanic dispatch for eligible doorstep and roadside bookings." },
+  { n: "2", title: "Dispatch & ETA", desc: "Fiixup confirms the available technician and estimated arrival time for your location." },
   { n: "3", title: "Repair or Pickup", desc: "Suitable jobs are handled at your location. Workshop-only car jobs can be moved to a partner garage, with free pickup and drop on eligible services." },
-  { n: "4", title: "Approve & Complete", desc: "Starting prices cover the standard scope. Any extra labour, parts, or additional repair should be explained before paid work proceeds. Warranty applies to eligible repairs." },
+  { n: "4", title: "Approve & Complete", desc: "Starting prices cover the standard scope. Any extra labour, parts, additional repair or applicable warranty is explained before paid work proceeds." },
 ] as const;
 
 export const TOWING_WORKFLOW_STEPS = [

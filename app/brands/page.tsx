@@ -1,5 +1,6 @@
 // app/brands/page.tsx
 export const revalidate = 3600;
+export const dynamic = "force-static";
 
 import type { Metadata } from "next";
 import Link from "next/link";

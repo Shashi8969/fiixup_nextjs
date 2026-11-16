@@ -75,7 +75,8 @@ function getSecret(request: NextRequest) {
   return (
     request.headers.get("x-revalidate-secret") ||
     bearer ||
-    request.nextUrl.searchParams.get("secret") ||
+    ((process.env.NODE_ENV !== "production" || process.env.ALLOW_QUERY_REVALIDATE === "true")
+      ? request.nextUrl.searchParams.get("secret") : "") ||
     ""
   );
 }
@@ -153,6 +154,10 @@ async function handleRevalidate(request: NextRequest, payload?: RevalidatePayloa
 
   const tag = payload?.tag || request.nextUrl.searchParams.get("tag") || "";
   const path = payload?.path || request.nextUrl.searchParams.get("path") || "";
+
+  if (typeof tag !== "string" || typeof path !== "string") {
+    return NextResponse.json({ error: "Path and tag must be strings." }, { status: 400, headers: { "Cache-Control": "no-store" } });
+  }
 
   if (tag) {
     if (!isValidTag(tag)) {

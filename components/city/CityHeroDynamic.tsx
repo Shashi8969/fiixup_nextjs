@@ -6,10 +6,10 @@
 import Link       from 'next/link';
 import Image      from 'next/image';
 import { useRef, useState } from 'react';
-import { CheckCircle, MapPin, Star, Shield, Clock, Zap } from 'lucide-react';
+import { CheckCircle, MapPin, Shield, Clock, Zap } from 'lucide-react';
 import type { CityHubPageData } from '@/lib/cityPages';
 import { submitLead } from '@/lib/send-lead';
-import { ARRIVAL_PROMISE_NOTE_SHORT, PRICE_DISCLAIMER_SHORT } from '@/lib/constants';
+import { PRICE_DISCLAIMER_SHORT } from '@/lib/constants';
 
 const DEFAULT_BULLETS = (cityName: string, areaNames: string[]) => [
   `24/7 Emergency Service in ${cityName}`,
@@ -26,12 +26,20 @@ const HERO_SUBHEADING = (cityName: string, areaNames: string[]) => {
     : `Real ITI-certified mechanics come to you anywhere in ${cityName}, with upfront pricing and zero garage visits.`;
 };
 
-const DEFAULT_STATS = (data: CityHubPageData) => [
-  { value: data.statsCustomers    ?? '10,000+', label: 'Happy Customers' },
-  { value: '24/7',                              label: 'Service Available' },
-  { value: data.statsSatisfaction ?? '98%',     label: 'Satisfaction Rate' },
-  { value: data.statsCoverage     ?? `${data.areas?.length ?? 50}+ Areas`, label: data.statsLabel ?? 'City Coverage' },
-];
+const DEFAULT_STATS = (data: CityHubPageData): { value: string; label: string }[] => [
+  data.statsCustomers?.trim()
+    ? { value: data.statsCustomers.trim(), label: 'Happy Customers' }
+    : null,
+  { value: '24/7', label: 'Service Available' },
+  data.statsSatisfaction?.trim()
+    ? { value: data.statsSatisfaction.trim(), label: 'Satisfaction Rate' }
+    : null,
+  data.statsCoverage?.trim()
+    ? { value: data.statsCoverage.trim(), label: data.statsLabel ?? 'City Coverage' }
+    : data.areas?.length
+      ? { value: String(data.areas.length), label: 'Service Areas' }
+      : null,
+].filter((stat): stat is { value: string; label: string } => stat !== null);
 
 export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
   const [phone,   setPhone]   = useState('');
@@ -137,11 +145,11 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
             <div className="flex flex-wrap gap-4 pt-2 text-sm text-gray-500">
               <span className="flex items-center gap-1.5">
                 <Shield className="w-4 h-4 text-blue-500" aria-hidden="true" />
-                30-day warranty
+                Certified technicians
               </span>
               <span className="flex items-center gap-1.5">
                 <Clock className="w-4 h-4 text-blue-500" aria-hidden="true" />
-                20-Min Quick Arrival*
+                Arrival depends on location and availability
               </span>
               <span className="flex items-center gap-1.5">
                 <Zap className="w-4 h-4 text-blue-500" aria-hidden="true" />
@@ -149,7 +157,7 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
               </span>
             </div>
             <p className="mt-2 max-w-xl text-[11px] leading-4 text-gray-500">
-              {ARRIVAL_PROMISE_NOTE_SHORT} {PRICE_DISCLAIMER_SHORT}
+              {PRICE_DISCLAIMER_SHORT}
             </p>
           </div>
 
@@ -212,16 +220,15 @@ export function CityHeroDynamic({ data }: { data: CityHubPageData }) {
                         maxLength={10}
                         className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm mb-3"
                       />
-                      <p className="text-xs text-gray-400 mb-3 flex items-center gap-1">
-                        <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" aria-hidden="true" />
-                        92% users get callback within 120 seconds
+                      <p className="text-xs text-gray-500 mb-3">
+                        Our team will contact you after reviewing the request.
                       </p>
                       <button
                         type="submit"
                         disabled={loading}
                         className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-bold hover:bg-blue-700 disabled:opacity-60 transition-colors text-sm"
                       >
-                        {loading ? 'Sending…' : 'Get Call in 2 Minutes'}
+                        {loading ? 'Sending…' : 'Request a Callback'}
                       </button>
                     </form>
                   </>

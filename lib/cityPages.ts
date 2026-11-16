@@ -54,8 +54,8 @@ export interface CityHubPageData {
 
   // Stats bar
   statsLabel:        string;
-  statsCustomers:    string;
-  statsSatisfaction: string;
+  statsCustomers:    string | null;
+  statsSatisfaction: string | null;
   statsCoverage:     string | null;
 
   // Services section headings
@@ -88,8 +88,8 @@ export interface CityHubPageData {
   addressLine2:        string | null;
 
   // Schema
-  schemaAggregateRating: number;
-  schemaReviewCount:     number;
+  schemaAggregateRating: number | null;
+  schemaReviewCount:     number | null;
   latitude:              number | null;
   longitude:             number | null;
   postalCode:            string | null;
@@ -145,8 +145,8 @@ export interface CityServiceCategoryPageData {
   contentBlocks:   unknown[] | null;
 
   // Schema
-  schemaAggregateRating: number;
-  schemaReviewCount:     number;
+  schemaAggregateRating: number | null;
+  schemaReviewCount:     number | null;
 
   // Collections
   services: {
@@ -161,6 +161,26 @@ export interface CityServiceCategoryPageData {
   faqs:           { q: string; a: string }[];
   relatedServices:{ slug: string; name: string; category: string | null }[];
   areas:          { name: string; slug: string }[];
+}
+
+/**
+ * Editorial copy is sufficient page content even when a city/category has no
+ * active child service cards yet. Keep this rule close to the CMS data type so
+ * metadata and rendering cannot drift apart.
+ */
+export function hasCityCategoryEditorialContent(
+  data: Pick<
+    CityServiceCategoryPageData,
+    'seoIntroBody' | 'seoSections' | 'aboutPara1'
+  > | null | undefined,
+): boolean {
+  if (!data) return false;
+
+  return Boolean(
+    data.seoIntroBody?.trim()
+    || (data.seoSections?.length ?? 0) >= 3
+    || data.aboutPara1?.trim()
+  );
 }
 
 // ─── Fetch helpers (React.cache) ─────────────────────────────────────────────

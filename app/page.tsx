@@ -1,5 +1,6 @@
 // app/page.tsx
 export const revalidate = 3600;
+export const dynamic = "force-static";
 
 import { Suspense } from "react";
 import type { Metadata } from "next";

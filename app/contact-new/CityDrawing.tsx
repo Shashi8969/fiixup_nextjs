@@ -1,0 +1,7 @@
+// Small, original line illustrations. These represent cities, not branch locations.
+export default function CityDrawing({ city }: { city: string }) {
+  return <svg viewBox="0 0 180 110" fill="none" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M9 97h162" opacity=".45" />
+    {city === "bangalore" ? <><path d="M30 96V56h120v40M24 56h132l-10-9H34zM51 47V35h78v12M58 35h64M68 35V24h44v11M73 24c0-15 34-15 34 0M90 10V5M41 66v22m14-22v22m14-22v22m42-22v22m14-22v22m14-22v22M82 96V71h16v25M27 96h126" /><path d="M15 97V76h9M156 97V76h9v21" opacity=".45" /></> : city === "mumbai" ? <><path d="M41 97V39h98v58M34 39h112M43 33h94M51 33V20h13v13m52 0V20h13v13M53 20c0-10 9-10 9 0m56 0c0-10 9-10 9 0M57 97V56h66v41M75 97V73c0-22 30-22 30 0v24M48 48h84M47 58v29m86-29v29M79 33V21h22v12M76 21h28" /><path d="M17 98c11-6 17 6 28 0m89 0c11-6 17 6 28 0" opacity=".45" /></> : city === "hyderabad" ? <><path d="M49 97V40h82v57M43 40h94M53 40V22h8v18m58 0V22h8v18M53 22c-5-10 13-10 8 0m58 0c-5-10 13-10 8 0M65 97V73c0-29 50-29 50 0v24M68 49h44M41 97V17m98 80V17M36 18h10m88 0h10M38 12c-5-12 11-12 6 0m92 0c-5-12 11-12 6 0M36 28h10m88 0h10M38 97V31m4 66V31m96 66V31m4 66V31M79 54v-8m11 8v-8m11 8v-8" /></> : <><path d="M72 97 81 29h24l9 68M79 41h28M77 55h32M75 69h36M73 83h40M78 29V17h30v12M75 17h36M84 17V8h18v9M92 8V4M30 96c8-8 16 8 24 0m64 0c8-8 16 8 24 0M19 86c7-6 14 6 21 0m79 0c7-6 14 6 21 0M91 97V84h10v13" /><path d="M83 22h20M40 54l30-10m44 0 30 10" opacity=".45" /></>}
+  </svg>;
+}

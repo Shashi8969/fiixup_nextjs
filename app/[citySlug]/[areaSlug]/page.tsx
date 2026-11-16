@@ -35,7 +35,8 @@ import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { metadataFromSeoPage, metadataFromBasicSeo } from '@/lib/seo/metadata'
 
 export const revalidate = 3600
-export const dynamicParams = true
+
+export const dynamic = "force-static";export const dynamicParams = true
 
 type Params = Promise<{ citySlug: string; areaSlug: string }>
 

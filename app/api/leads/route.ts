@@ -8,7 +8,10 @@ import {
   rateLimitKey,
   rateLimitRequest,
   readJsonBody,
+  clearRateLimitKey,
 } from "@/lib/api-security";
+import { cleanLeadPayload, validLeadContact } from "@/lib/lead-validation";
+import { isLocalReviewHost } from "@/lib/local-review";
 
 export const runtime = "nodejs";
 
@@ -84,14 +87,7 @@ function toLabel(key: string): string {
 }
 
 function normalizePayload(payload: LeadPayload): Record<string, string> {
-  const normalized: Record<string, string> = {};
-
-  for (const [key, value] of Object.entries(payload || {})) {
-    const cleaned = cleanValue(value);
-    if (cleaned) normalized[key] = cleaned;
-  }
-
-  return normalized;
+  return cleanLeadPayload(payload);
 }
 
 function buildLeadTable(data: Record<string, string>) {
@@ -148,9 +144,6 @@ function buildLeadResponseMeta(lead: SavedLeadRow | null) {
   return {
     success_message: buildSuccessMessage(lead),
     is_duplicate: Boolean(lead?.is_duplicate),
-    duplicate_lead_count_before: lead?.duplicate_lead_count_before ?? 0,
-    duplicate_note: lead?.duplicate_note ?? null,
-    page_path: lead?.page_path ?? null,
   };
 }
 
@@ -225,6 +218,13 @@ async function updateLeadNotification(
 }
 
 export async function POST(request: NextRequest) {
+  if (isLocalReviewHost(request.headers.get('host') || request.nextUrl.host)) {
+    return NextResponse.json({ ok: false, error: 'Local review mode: this request has not been sent or saved to the live project.' }, {
+      status: 503, headers: { 'Cache-Control': 'no-store' },
+    });
+  }
+  let reservedPhone: string | null = null;
+  let delivered = false;
   try {
     const limited = rateLimitRequest(request, "lead-submit", LEAD_RATE_LIMIT);
     if (limited) return limited;
@@ -253,14 +253,14 @@ export async function POST(request: NextRequest) {
     // the page loaded is almost never a human filling out this form.
     const renderMs = Number(rawPayload.form_render_ms);
     if (Number.isFinite(renderMs) && renderMs >= 0 && renderMs < MIN_FORM_FILL_MS) {
-      return NextResponse.json(buildLeadResponseMeta(null));
+      return NextResponse.json({ error: "Please wait a moment and try again." }, { status: 400 });
     }
 
     const data = normalizePayload(rawPayload);
 
-    if (!data.phone && !data.email) {
+    if (!validLeadContact(data)) {
       return NextResponse.json(
-        { error: "Phone number or email is required" },
+        { error: "Provide a valid phone number or email address." },
         { status: 400 }
       );
     }
@@ -274,6 +274,7 @@ export async function POST(request: NextRequest) {
         buildLeadResponseMeta({ is_duplicate: true } as SavedLeadRow)
       );
     }
+    reservedPhone = phoneKey;
 
     const requestTime =
       data.request_time ||
@@ -285,6 +286,8 @@ export async function POST(request: NextRequest) {
     data.request_time = requestTime;
 
     const { lead, leadId, error: dbError } = await saveLeadToDatabase(data, request);
+    delivered = Boolean(leadId);
+    if (dbError) console.error("[leads] Lead storage unavailable; checking email fallback.");
 
     const smtpUser = process.env.GMAIL_USER || process.env.SMTP_USER;
     const smtpPass = process.env.GMAIL_APP_PASSWORD || process.env.SMTP_PASS;
@@ -295,7 +298,7 @@ export async function POST(request: NextRequest) {
 
       if (dbError) {
         return NextResponse.json(
-          { error: "Lead storage and mail server are not configured", db_error: dbError },
+          { error: "Unable to send lead request. Please call us directly." },
           { status: 500 }
         );
       }
@@ -304,7 +307,6 @@ export async function POST(request: NextRequest) {
         ok: true,
         lead_saved: Boolean(leadId),
         email_sent: false,
-        db_error: dbError,
         ...buildLeadResponseMeta(lead),
       });
     }
@@ -314,7 +316,7 @@ export async function POST(request: NextRequest) {
     const city = data.city || data.city_name || "City not selected";
     const phone = data.phone || "Phone not provided";
 
-    const subject = `New Fiixup Lead: ${service} - ${city} - ${phone}`;
+    const subject = `New Fiixup Lead: ${service} - ${city} - ${phone}`.replace(/[\r\n]/g, " ");
 
     const html = `
       <div style="font-family:Arial,sans-serif;line-height:1.5;color:#111827;">
@@ -336,6 +338,11 @@ export async function POST(request: NextRequest) {
       host: process.env.SMTP_HOST || "smtp.gmail.com",
       port: Number(process.env.SMTP_PORT || 465),
       secure: (process.env.SMTP_SECURE || "true") !== "false",
+      requireTLS: true,
+      tls: { minVersion: "TLSv1.2", rejectUnauthorized: true },
+      connectionTimeout: 10_000,
+      greetingTimeout: 10_000,
+      socketTimeout: 20_000,
       auth: {
         user: smtpUser,
         pass: smtpPass,
@@ -351,6 +358,7 @@ export async function POST(request: NextRequest) {
         text,
         html,
       });
+      delivered = true;
       await updateLeadNotification(leadId, "sent");
     } catch (mailError) {
       const message = mailError instanceof Error ? mailError.message : "Unable to send lead email";
@@ -367,7 +375,6 @@ export async function POST(request: NextRequest) {
         ok: true,
         lead_saved: true,
         email_sent: false,
-        email_error: message,
         ...buildLeadResponseMeta(lead),
       });
     }
@@ -376,7 +383,6 @@ export async function POST(request: NextRequest) {
       ok: true,
       lead_saved: Boolean(leadId),
       email_sent: true,
-      db_error: dbError,
       ...buildLeadResponseMeta(lead),
     });
   } catch (error) {
@@ -385,5 +391,9 @@ export async function POST(request: NextRequest) {
       { error: "Unable to send lead request" },
       { status: 500 }
     );
+  } finally {
+    // A failed storage/email attempt must not make the customer's retry look
+    // like an accepted duplicate. Keep the cooldown only after delivery.
+    if (reservedPhone && !delivered) clearRateLimitKey(request, "lead-phone", reservedPhone);
   }
 }

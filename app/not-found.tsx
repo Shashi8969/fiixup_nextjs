@@ -67,7 +67,8 @@ export default async function NotFound() {
   const forwardedFor = hdrs.get("x-forwarded-for");
   const realIp = hdrs.get("x-real-ip");
 
-  after(() => logBrokenLinkHit({ pathname, referrer, userAgent, forwardedFor, realIp }));
+  const host = hdrs.get('host');
+  after(() => logBrokenLinkHit({ pathname, referrer, userAgent, forwardedFor, realIp, host }));
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -152,7 +153,7 @@ export default async function NotFound() {
               </span>
               <span className="flex items-center gap-1.5">
                 <Shield className="w-4 h-4 text-green-500" />
-                30-day warranty on all repairs
+                Applicable service terms confirmed before work
               </span>
             </div>
 
@@ -322,10 +323,10 @@ export default async function NotFound() {
                 Still need help? We&apos;re one call away.
               </p>
               <p className="text-blue-200 text-sm mt-1">
-                20-Min Quick Arrival* after mechanic dispatch for eligible bookings. Available 24/7, 365 days.
+                Share your vehicle and location to confirm availability and an arrival estimate. Booking support is available 24/7.
               </p>
               <p className="mt-1 text-[11px] leading-4 text-blue-300">
-                *Actual ETA may vary by traffic, location and mechanic availability.
+                Actual ETA depends on traffic, location, service type, and mechanic availability.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 justify-center">

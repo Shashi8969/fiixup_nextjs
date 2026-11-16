@@ -1,0 +1,28 @@
+{
+  "sourceFiles": 248,
+  "clientRoots": 40,
+  "findings": [],
+  "changedFiles": [
+    "app/admin-preview/[token]/page.tsx",
+    "app/api/chat/route.ts",
+    "app/api/leads/route.ts",
+    "app/api/revalidate/route.ts",
+    "app/contact-new/RequestForm.tsx",
+    "app/not-found.tsx",
+    "components/analytics/AnalyticsManager.tsx",
+    "components/ui/BlockRenderer.tsx",
+    "lib/analytics.ts",
+    "lib/api-security.ts",
+    "lib/notFoundTracking.ts",
+    "lib/preview-drafts.ts",
+    "lib/public-links.ts",
+    "lib/redirects.ts",
+    "lib/security-headers.ts",
+    "scripts/generate-redirect-snapshot.mjs",
+    "package.json",
+    "package-lock.json",
+    "next.config.mjs",
+    "proxy.ts"
+  ],
+  "styleFilesChanged": []
+}

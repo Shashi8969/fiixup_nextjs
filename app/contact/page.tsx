@@ -8,7 +8,8 @@ import { getPublicSiteSettings } from "@/lib/site-settings";
 import { getAllCities } from "@/lib/cities";
 import { PageHero } from "@/components/ui/PageHero";
 import { metadataFromBasicSeo } from "@/lib/seo/metadata";
-export const revalidate = 3600; // refreshes every 1 hour
+export const revalidate = 3600;
+export const dynamic = "force-static"; // refreshes every 1 hour
 
 
 const seo = getStaticPageSEO("contact")!;

@@ -1,0 +1,1597 @@
+[
+  {
+    "source": "/Car-Repair-Service",
+    "destination": "/services/car-general-repair",
+    "is_permanent": true
+  },
+  {
+    "source": "/Break-Down-Service",
+    "destination": "/services/car-breakdown-service",
+    "is_permanent": true
+  },
+  {
+    "source": "/break-down-service",
+    "destination": "/services/car-breakdown-service",
+    "is_permanent": true
+  },
+  {
+    "source": "/bengaluru",
+    "destination": "/bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-jumpstart-service-chennai",
+    "destination": "/services/car-battery-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-jumpstart-service-tips",
+    "destination": "/blog/how-to-jump-start-car-safely",
+    "is_permanent": true
+  },
+  {
+    "source": "/how-to-jump-start-a-car-in-bengaluru",
+    "destination": "/blog/how-to-jump-start-car-safely",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-tyre-puncture-repair",
+    "destination": "/services/car-puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tyre-puncture-repair-near-me-bengaluru",
+    "destination": "/services/car-puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tyre-puncture-repair-near-me-chennai",
+    "destination": "/services/car-puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-puncture-repair-near-me-chennai",
+    "destination": "/services/bike-puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-towing-service-chennai",
+    "destination": "/services/car-towing-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-towing-service-near-me-in-bengaluru",
+    "destination": "/services/bike-towing-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-towing-service-chennai",
+    "destination": "/services/bike-towing-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/roadside-assistance-chennai",
+    "destination": "/services/roadside-assistance-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/on-road-mechanic-for-car-bike-bengaluru-fixup",
+    "destination": "/services/mobile-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-oil-change-near-me-bengaluru-fiixup-24-7-doorstep",
+    "destination": "/services/car-oil-change-at-home",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-mechanic-near-me-chennai",
+    "destination": "/chennai/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-mechanic-in-hsr-layout",
+    "destination": "/bangalore/hsr-layout/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/24-hours-bike-repair-koramangala",
+    "destination": "/bangalore/koramangala/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/24-7-bike-mechanic-rr-nagar-bangalore",
+    "destination": "/bangalore/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/mechanic-in-electronic-city",
+    "destination": "/bangalore/electronic-city/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/garage-near-me-bengaluru",
+    "destination": "/bangalore/car-garage-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-garage-near-me-bengaluru",
+    "destination": "/bangalore/bike-garage-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-garage-near-me-in-chennai-fiixups-24-7-doorstep-solutions",
+    "destination": "/chennai/bike-garage-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-mechanics-bangalore",
+    "destination": "/bangalore/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-mechanic-in-chennai-24-7-emergency-car-repair",
+    "destination": "/chennai/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-breakdown-service-chennai",
+    "destination": "/chennai/car-breakdown-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/motor-mechanic-near-me-chennai",
+    "destination": "/chennai/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-mechanic-in-bangaluru",
+    "destination": "/bangalore/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-car-doorstep-service-chennai",
+    "destination": "/chennai",
+    "is_permanent": true
+  },
+  {
+    "source": "/book-bike-service",
+    "destination": "/contact#contact-form",
+    "is_permanent": true
+  },
+  {
+    "source": "/tips-for-car-breakdown",
+    "destination": "/blog/doorstep-car-service-vs-garage",
+    "is_permanent": true
+  },
+  {
+    "source": "/2024/10/10/bike-mechanic-bangalore",
+    "destination": "/bangalore/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/2025/01/21/mechanics-in-hsr-layout-call-91-8722777367",
+    "destination": "/bangalore/hsr-layout/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/mechanic-near-me",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": false
+  },
+  {
+    "source": "/car-repair-near-me",
+    "destination": "/bangalore/car-repair-near-me",
+    "is_permanent": false
+  },
+  {
+    "source": "/2024/10/21/car-jumpstart-service-in-bengaluru/",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-mechanic-bangalore",
+    "destination": "/bangalore/bike-mechanic-near-me",
+    "is_permanent": false
+  },
+  {
+    "source": "/car-mechanics-bangalore-2",
+    "destination": "/bangalore/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/mobile-mechanic-near-me",
+    "destination": "/services/mobile-mechanic-near-me",
+    "is_permanent": false
+  },
+  {
+    "source": "/2024/10/11/car-mechanics-bangalore",
+    "destination": "/bangalore/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/2024/11/05/car-tyre-puncture-repair",
+    "destination": "/services/car-puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-mechanic-near-me-bangalore",
+    "destination": "/bangalore/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/24-7-bike-mechanic-in-hsr-layout",
+    "destination": "/bangalore/hsr-layout/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore-towing-service",
+    "destination": "/bangalore/car-towing-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-jump-start-near-me-bengaluru",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/fastest-royal-enfield-servicing-near-me-hsr-fiixup-24-7",
+    "destination": "/bangalore/hsr-layout/royal-enfield-service-bangalore/",
+    "is_permanent": true
+  },
+  {
+    "source": "/royal-enfield-service-bengaluru",
+    "destination": "/bangalore/royal-enfield-service-bangalore/",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/hsr-layout/doorstep-mechanic-near-me",
+    "destination": "/bangalore/hsr-layout/mechanic-near-me",
+    "is_permanent": false
+  },
+  {
+    "source": "/tag/trusted-bike-mechanic-hsr-layout/",
+    "destination": "/bangalore/hsr-layout/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/roadside-assistance-chennai/",
+    "destination": "/chennai/services/roadside",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mechanic-near-me-indiranagar/",
+    "destination": "/bangalore/indiranagar/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/nearest-bike-garage-chennai/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-garage-mylapore/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/emergency-bike-towing-bangalore/",
+    "destination": "/bangalore/bike-towing-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/doorstep-car-service/",
+    "destination": "/bangalore/car-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/24-hour-car-mechanic-bangalore/",
+    "destination": "/bangalore/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-garage-t-nagar/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-garage-adyar/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-breakdown-chennai/",
+    "destination": "/chennai/services/roadside",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-oil-change-chennai/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/category/automotive/",
+    "destination": "/blog",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mobile-bike-repair-chennai/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-repair-near-me/",
+    "destination": "/bangalore/car-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/emergency-bike-repair-chennai/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-breakdown-help-bangalore/",
+    "destination": "/bangalore/car-breakdown-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/motor-mechanic-near-me-chennai/",
+    "destination": "/chennai/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-service-near-me/",
+    "destination": "/bangalore/car-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mechanic-near-me-electronic-city/",
+    "destination": "/bangalore/electronic-city/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/royal-enfield-mechanic-chennai/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mechanic-near-me-bannerghatta-road/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/trusted-car-mechanic-bangalore/",
+    "destination": "/bangalore/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-mechanic-malleshwaram/",
+    "destination": "/bangalore/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mechanic-near-me-koramangala/",
+    "destination": "/bangalore/koramangala/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-repair-service-near-me-bangalore/",
+    "destination": "/bangalore/car-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/category/automotive/services/bike/roadside-assistance-bike/",
+    "destination": "/bangalore/services/roadside",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bajaj-mechanic-chennai/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-breakdown-help/",
+    "destination": "/bangalore/car-breakdown-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/breakdown-service-near-me/",
+    "destination": "/bangalore/24-7-roadside-assistance",
+    "is_permanent": true
+  },
+  {
+    "source": "/category/automotive/services/",
+    "destination": "/blog",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-mechanic-near-me-chennai/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-mechanic-near-me/",
+    "destination": "/bangalore/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/emergency-roadside-assistance/",
+    "destination": "/bangalore/roadside-assistance-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-puncture-chennai/",
+    "destination": "/chennai/services/puncture",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-garage-omr/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mechanic-near-me-hsr-layout/",
+    "destination": "/bangalore/hsr-layout/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/battery-jump-start-bike-chennai/",
+    "destination": "/chennai/services/battery",
+    "is_permanent": true
+  },
+  {
+    "source": "/blog/bangalore-towing-service/",
+    "destination": "/bangalore/services/towing",
+    "is_permanent": true
+  },
+  {
+    "source": "/about-fiixup-bangalore",
+    "destination": "/about",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/emergency-mechanic-electronic-city/",
+    "destination": "/bangalore/electronic-city/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-mechanic-devanahalli/",
+    "destination": "/bangalore/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/motorcycle-breakdown-help/",
+    "destination": "/bangalore/24-7-roadside-assistance",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mechanic-near-me-open-now-bangalore/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mechanic-near-me-rajajinagar/",
+    "destination": "/bangalore/rajajinagar/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mechanic-near-me-chennai/",
+    "destination": "/chennai/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/doorstep-bike-service-hsr-layout/",
+    "destination": "/bangalore/hsr-layout/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-battery-car-jump-start/",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/trusted-bike-mechanic/",
+    "destination": "/bangalore/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/battery-service/",
+    "destination": "/bangalore/car-battery-replacement-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/jump-starter-service/",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-mechanic-near-my-locality-bangalore/",
+    "destination": "/bangalore/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mechanic-near-me-btm-layout/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-puncture-repair-near-me-chennai/",
+    "destination": "/chennai/services/puncture",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/trusted-bike-mechanic-chennai/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/tvs-mechanic-hsr-layout/",
+    "destination": "/bangalore/hsr-layout/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/best-car-service-in-bangalore-tips/",
+    "destination": "/bangalore/car-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/hsr-layout/garage-near-me/",
+    "destination": "/bangalore/hsr-layout/car-garage-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mobile-puncture-repair-service/",
+    "destination": "/bangalore/puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mobile-mechanic-chennai/",
+    "destination": "/chennai/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-mechanic-sector-1-hsr-layout/",
+    "destination": "/bangalore/hsr-layout/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-breakdown-near-me/",
+    "destination": "/bangalore/car-breakdown-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-mechanic-whitefield/",
+    "destination": "/bangalore/whitefield/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-repair-service-bangalore/",
+    "destination": "/bangalore/bike-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/motorcycle-mechanic-near-me/",
+    "destination": "/bangalore/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-roadside-help-bangalore/",
+    "destination": "/bangalore/24-7-roadside-assistance",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-repair/",
+    "destination": "/bangalore/car-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-repair-at-home-bangalore/",
+    "destination": "/bangalore/car-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/roadside-assistance/",
+    "destination": "/bangalore/roadside-assistance-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/breakdown-help-near-me/",
+    "destination": "/bangalore/24-7-roadside-assistance",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/breakdown-service-bengaluru/",
+    "destination": "/bangalore/24-7-roadside-assistance",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-mechanic-in-rr-nagar/",
+    "destination": "/bangalore/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/doorstep-bike-service-chennai/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/emergency-car-repair-bangalore/",
+    "destination": "/bangalore/car-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/hsr-layout/car-repair-near-me/",
+    "destination": "/bangalore/hsr-layout/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/breakdown-service-near-me-bangalore/",
+    "destination": "/bangalore/24-7-roadside-assistance",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-mechanic-in-electronic-city/",
+    "destination": "/bangalore/electronic-city/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/roadside-assistance-electronic-city/",
+    "destination": "/bangalore/electronic-city/24-7-roadside-assistance",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/battery-jump-start-near-me/",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-jumpstart-service/",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/doorstep-mechanic-bangalore/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mechanic-near-me-whitefield/",
+    "destination": "/bangalore/whitefield/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mechanic-near-me-jp-nagar/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-towing-bengaluru/",
+    "destination": "/bangalore/bike-towing-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-service-near-me-bangalore/",
+    "destination": "/bangalore/car-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/car-jumpstart-near-me",
+    "destination": "/chennai/services/battery",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-and-bike-roadside-assistance-bangalore/",
+    "destination": "/bangalore/roadside-assistance-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/24-7-mechanic-service/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/https-fiixup-in-mechanic-near-me-bangalore/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-oil-change-near-me-bengaluru/",
+    "destination": "/bangalore/car-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-mechanic-in-domlur/",
+    "destination": "/bangalore/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/puncture-repairs-at-home/",
+    "destination": "/bangalore/puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-breakdown-service-chennai/",
+    "destination": "/chennai/car-towing-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/24-7-roadside-assistance/",
+    "destination": "/bangalore/roadside-assistance-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/emergency-bike-repair/",
+    "destination": "/bangalore/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/local-bike-repair-service/",
+    "destination": "/bangalore/bike-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/vehicle-mechanic-near-me-bangalore/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/24-hours-bike-repair-koramangala/",
+    "destination": "/bangalore/koramangala/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/doorstep-puncture-repair-near-me/",
+    "destination": "/bangalore/puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-mechanic-in-hsr/",
+    "destination": "/bangalore/hsr-layout/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-garage-near-me-in-chennai-fiixups-24-7-doorstep-solutions/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-service-center-near-me-chennai/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/garage-near-me-bengaluru/",
+    "destination": "/bangalore/car-garage-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/category/automotive/services/car/roadside-assistance/",
+    "destination": "/bangalore/services/roadside",
+    "is_permanent": true
+  },
+  {
+    "source": "/category/automotive/services/bike/bike-towing/",
+    "destination": "/bangalore/services/towing",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-mechanic-in-bangalore/",
+    "destination": "/bangalore/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/category/automotive/services/car-towing/",
+    "destination": "/bangalore/services/towing",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mechanic-near-me-hebbal/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-mechanic-koramangala/",
+    "destination": "/bangalore/koramangala/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mechanics-near-me/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-garage-chromepet/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-mechanic-near-me-chennai/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/mechanic-near-me-bangalore/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/blog/car-repair-service/",
+    "destination": "/bangalore/car-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-battery-jump-start-near-me/",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/mechanics-in-hsr-layout-call-91-8722777367",
+    "destination": "/bangalore/hsr-layout/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/royal-enfield-service-bangalore/",
+    "destination": "/bangalore/royal-enfield-service-bangalore/",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/roadside-assistance-bangalore/",
+    "destination": "/bangalore/roadside-assistance-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-service-near-me-bangalore/feed/",
+    "destination": "/bangalore/car-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/category/automotive/services/bike/royal-enfield-bike/",
+    "destination": "/bangalore/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/mechanic-near-me/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-workshop-near-me-chennai/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mobile-mechanic-near-me/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-puncture-repair-electronic-city/",
+    "destination": "/bangalore/electronic-city/puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/roadside-bike-repair-electronic-city/",
+    "destination": "/bangalore/electronic-city/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mechanic-shop-near-me/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/roadside-mechanic-bangalore/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/vehicle-repair-chennai/",
+    "destination": "/chennai/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-mechanic-near-me/",
+    "destination": "/bangalore/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-mechanic-in-hebbal/",
+    "destination": "/bangalore/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/vehicle-repair-service-bangalore/",
+    "destination": "/bangalore/car-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-towing-service-bangalore/",
+    "destination": "/bangalore/car-towing-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/emergency-mechanic-electronic-city/feed/",
+    "destination": "/bangalore/electronic-city/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-maintenance/",
+    "destination": "/bangalore/car-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/omr/car-towing-near-me",
+    "destination": "/chennai/car-towing-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/bannerghatta-road/car-mechanic-near-me",
+    "destination": "/bangalore/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/puncture-shop-near-me",
+    "destination": "/bangalore/puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/search/{search_term_string}/feed/rss2/",
+    "destination": "/blog",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/velachery/mechanic-near-me",
+    "destination": "/chennai/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/adyar/car-towing-near-me",
+    "destination": "/chennai/car-towing-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/car-breakdown-service-near-me",
+    "destination": "/chennai/car-towing-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/best-car-service-bangalore/",
+    "destination": "/bangalore/car-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/jp-nagar/car-mechanic-near-me",
+    "destination": "/bangalore/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tyre-puncture-repair-near-me/",
+    "destination": "/bangalore/puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-puncture-near-me/",
+    "destination": "/bangalore/puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/quick-car-service-bangalore/",
+    "destination": "/bangalore/car-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mobile-mechanic-near-me-bangalore/",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/mobile-mechanic-electronic-city/",
+    "destination": "/bangalore/electronic-city/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-service-center-bangalore/",
+    "destination": "/bangalore/car-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/bike-mechanic-near-me",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/breakdown-near-me/",
+    "destination": "/bangalore/24-7-roadside-assistance",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-jumpstart-service-in-bengaluru/",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/royal-enfield-mechanic-hsr-layout/",
+    "destination": "/bangalore/hsr-layout/royal-enfield-service-bangalore/",
+    "is_permanent": true
+  },
+  {
+    "source": "/Royal-Enfield-Service-Bangalore/",
+    "destination": "/bangalore/royal-enfield-service-bangalore/",
+    "is_permanent": true
+  },
+  {
+    "source": "/2024/10/11/car-mechanics-bangalore/",
+    "destination": "/bangalore/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-garage-near-me-bengaluru/feed/",
+    "destination": "/bangalore/bike-garage-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/roadside-assistance-bengaluru/",
+    "destination": "/bangalore/roadside-assistance-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-tyre-puncture-repair-bangalore/",
+    "destination": "/bangalore/puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/24-hours-bike-repair-koramangala/feed/",
+    "destination": "/bangalore/koramangala/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/category/uncategorized/break-down-service/page/2/",
+    "destination": "/blog",
+    "is_permanent": true
+  },
+  {
+    "source": "/services/mechanic&city=chennai",
+    "destination": "/chennai/services/mechanic",
+    "is_permanent": true
+  },
+  {
+    "source": "/services/towing&city=chennai",
+    "destination": "/chennai/services/towing",
+    "is_permanent": true
+  },
+  {
+    "source": "/services/roadside&city=chennai",
+    "destination": "/chennai/services/roadside",
+    "is_permanent": true
+  },
+  {
+    "source": "/services/bike&city=chennai",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/services/car&city=chennai",
+    "destination": "/chennai/services/car",
+    "is_permanent": true
+  },
+  {
+    "source": "/services/puncture&city=chennai",
+    "destination": "/chennai/services/puncture",
+    "is_permanent": true
+  },
+  {
+    "source": "/undefined&city=chennai",
+    "destination": "/chennai",
+    "is_permanent": true
+  },
+  {
+    "source": "/hyderabad/undefined",
+    "destination": "/hyderabad",
+    "is_permanent": true
+  },
+  {
+    "source": "/mumbai/undefined",
+    "destination": "/mumbai",
+    "is_permanent": true
+  },
+  {
+    "source": "/thank-you/",
+    "destination": "/contact",
+    "is_permanent": true
+  },
+  {
+    "source": "/services/car-ac-service",
+    "destination": "/bangalore/car-ac-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/undefined",
+    "destination": "/chennai",
+    "is_permanent": true
+  },
+  {
+    "source": "/services/bike-brake-clutch",
+    "destination": "/bangalore/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/services/bike-parts-replacement",
+    "destination": "/bangalore/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/services/bike-general-service",
+    "destination": "/bangalore/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/services/car-oil-change",
+    "destination": "/bangalore/services/car",
+    "is_permanent": true
+  },
+  {
+    "source": "/services/car-battery-electrical",
+    "destination": "/bangalore/services/battery",
+    "is_permanent": true
+  },
+  {
+    "source": "/services/services/battery",
+    "destination": "/bangalore/services/battery",
+    "is_permanent": true
+  },
+  {
+    "source": "/services/bike-regular-maintenance",
+    "destination": "/bangalore/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/category/automotive/services/car/",
+    "destination": "/bangalore/services/car",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/jump-start-service-near-me/feed/",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/category/automotive/services/bike/",
+    "destination": "/bangalore/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/category/automotive/services/car/doorstep-service/",
+    "destination": "/bangalore/services/car",
+    "is_permanent": true
+  },
+  {
+    "source": "/best-car-service-in-bangalore/",
+    "destination": "/bangalore/car-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/car-mechanic-chennai/",
+    "destination": "/chennai/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/yamaha-mechanic-chennai/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-service-near-me-chennai/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/auto-jump-start-near-me/",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tubeless-tyre-puncture-repair-chennai/",
+    "destination": "/chennai/services/puncture",
+    "is_permanent": true
+  },
+  {
+    "source": "/tubeless-tyre-puncture-repair-near-me/",
+    "destination": "/bangalore/puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/trusted-bike-mechanic-hsr-layout/feed/",
+    "destination": "/bangalore/hsr-layout/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/emergency-service/",
+    "destination": "/bangalore/24-7-roadside-assistance",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/tvs-mechanic-chennai/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/fiixup-chennai/",
+    "destination": "/chennai",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/bike-garage-tambaram/",
+    "destination": "/chennai/services/bike",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/hsr-layout/doorstep-mechanic-near-me/",
+    "destination": "/bangalore/hsr-layout/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/hsr-layout/jump-start-service-near-me/",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/:path*",
+    "destination": "/blog",
+    "is_permanent": true
+  },
+  {
+    "source": "/category/:path*",
+    "destination": "/blog",
+    "is_permanent": true
+  },
+  {
+    "source": "/search/:path*",
+    "destination": "/blog",
+    "is_permanent": true
+  },
+  {
+    "source": "/2024/10/01/on-road-mechanic-for-car-bike-bengaluru-fixup",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/whitefield",
+    "destination": "/bangalore/whitefield",
+    "is_permanent": true
+  },
+  {
+    "source": "/doorstep-car-puncture-repair",
+    "destination": "/bangalore/puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-brake-service",
+    "destination": "/services/car-brake-service",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-general-repair",
+    "destination": "/services/car-general-repair",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-engine-diagnostics",
+    "destination": "/services/car-engine-diagnostics",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-ac-service-repair",
+    "destination": "/services/car-ac-service-repair",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-battery-jumpstart-near-me",
+    "destination": "/services/car-battery-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-electrical-repair",
+    "destination": "/services/bike-electrical-repair",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-brake-clutch-repair",
+    "destination": "/services/bike-brake-clutch-repair",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-battery-jumpstart-near-me",
+    "destination": "/services/bike-battery-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-regular-maintenance-plan",
+    "destination": "/services/bike-regular-maintenance-plan",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-oil-change-at-home",
+    "destination": "/services/car-oil-change-at-home",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-jumpstart-near-me-bengaluru",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/roadside-assistance-in-bangalore",
+    "destination": "/bangalore/roadside-assistance-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/mechanic-near-me-bangalore",
+    "destination": "/bangalore/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/car-jumpstart-service-in-bengaluru",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/hsr-layout/flat-tyre-service-near-me/",
+    "destination": "/bangalore/hsr-layout/puncture-repair-near-me/",
+    "is_permanent": true
+  },
+  {
+    "source": "/bengaluru/jp-nagar",
+    "destination": "/bangalore/jp-nagar/",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/hsr-layout/bike-service-near-me/",
+    "destination": "/bangalore/hsr-layout/bike-mechanic-near-me/",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/hsr-layout/towing-service-near-me/",
+    "destination": "https://fiixup.in/bangalore/hsr-layout/car-towing-near-me/",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/banashankari/royal-enfield-service-bangalore",
+    "destination": "/bangalore/royal-enfield-service-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/bellandur/royal-enfield-service-bangalore",
+    "destination": "/bangalore/royal-enfield-service-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/btm-layout/royal-enfield-service-bangalore",
+    "destination": "/bangalore/royal-enfield-service-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/electronic-city/royal-enfield-service-bangalore",
+    "destination": "/bangalore/royal-enfield-service-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/hebbal/royal-enfield-service-bangalore",
+    "destination": "/bangalore/royal-enfield-service-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/hsr-layout/royal-enfield-service-bangalore",
+    "destination": "/bangalore/royal-enfield-service-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/indiranagar/royal-enfield-service-bangalore",
+    "destination": "/bangalore/royal-enfield-service-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/jayanagar/royal-enfield-service-bangalore",
+    "destination": "/bangalore/royal-enfield-service-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/jp-nagar/royal-enfield-service-bangalore",
+    "destination": "/bangalore/royal-enfield-service-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/koramangala/royal-enfield-service-bangalore",
+    "destination": "/bangalore/royal-enfield-service-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/marathahalli/royal-enfield-service-bangalore",
+    "destination": "/bangalore/royal-enfield-service-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/rajajinagar/royal-enfield-service-bangalore",
+    "destination": "/bangalore/royal-enfield-service-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/sarjapur-road/royal-enfield-service-bangalore",
+    "destination": "/bangalore/royal-enfield-service-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/whitefield/royal-enfield-service-bangalore",
+    "destination": "/bangalore/royal-enfield-service-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/tag/on-road-mechanic-for-bike",
+    "destination": "/bangalore/bike-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/car-battery-replacement-bangalore",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/battery-health-report-bangalore",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/emergency-roadside-battery-bangalore",
+    "destination": "/bangalore/car-jumpstart-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/24-7-roadside-assistance",
+    "destination": "/bangalore/car-breakdown-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/roadside-assistance-bangalore",
+    "destination": "/bangalore/car-breakdown-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/bike-jumpstart-near-me",
+    "destination": "/bangalore/bike-jump-start-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/t.-nagar",
+    "destination": "/chennai/t-nagar",
+    "is_permanent": true
+  },
+  {
+    "source": "/mumbai/services/car-engine-diagnostics",
+    "destination": "/mumbai/services/car",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/services/car-engine-diagnostics",
+    "destination": "/chennai/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/bike-battery-replacement-at-home",
+    "destination": "/chennai/services/battery",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/bike-battery-replacement-bangalore",
+    "destination": "/bangalore/bike-jump-start-bangalore",
+    "is_permanent": true
+  },
+  {
+    "source": "/home2",
+    "destination": "/",
+    "is_permanent": true
+  },
+  {
+    "source": "/hsr-layout/breakdown-service-near-me",
+    "destination": "/hsr-layout/car-breakdown-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/two-wheeler-service-near-me",
+    "destination": "/bangalore/bike-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-puncture-repair-near-me",
+    "destination": "/services/bike-puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/car-brake-service",
+    "destination": "/bangalore/car-service-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/flat-tyre-repair-near-me",
+    "destination": "/bangalore/puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bengaluru/jayanagar",
+    "destination": "/bangalore/jayanagar",
+    "is_permanent": true
+  },
+  {
+    "source": "/mumbai/services/bike-battery-jumpstart-near-me",
+    "destination": "/mumbai/services/battery",
+    "is_permanent": true
+  },
+  {
+    "source": "/mumbai/services/car-general-repair",
+    "destination": "/mumbai/services/car",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/bike-puncture-repair-near-me",
+    "destination": "/chennai/services/puncture",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/car-battery-jumpstart-near-me",
+    "destination": "/chennai/car-jump-start-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bike-puncture-repair-in-bangalore",
+    "destination": "/bangalore/puncture-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/car-engine-diagnostics",
+    "destination": "/bangalore/car-repair-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bangalore/car-oil-change-at-home",
+    "destination": "/bangalore/car-oil-change-services",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/anna-nagar/car-towing-near-me",
+    "destination": "/chennai/car-towing-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/services/car-towing-service-near-me",
+    "destination": "/chennai/car-towing-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/bengaluru/whitefield",
+    "destination": "/bangalore/whitefield",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/services/bike-regular-maintenance-plan",
+    "destination": "/chennai/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/car-mechanic-near-me-2",
+    "destination": "/chennai/car-mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/chennai/car-ac-service-near-me",
+    "destination": "/chennai/mechanic-near-me",
+    "is_permanent": true
+  },
+  {
+    "source": "/hyderabad/puncture-repair-near-me",
+    "destination": "/hyderabad/services/puncture",
+    "is_permanent": true
+  },
+  {
+    "source": "/mumbai/bike-puncture-repair-near-me",
+    "destination": "/mumbai/services/puncture",
+    "is_permanent": true
+  }
+]

@@ -1,4 +1,6 @@
+import 'server-only';
 import { createClient } from "@supabase/supabase-js";
+import { isLocalReviewHost } from '@/lib/local-review';
 
 // Noisy SEO-tool/scraper crawlers only. Deliberately excludes Googlebot,
 // Bingbot, etc. — their 404 hits are the most actionable signal here, not
@@ -35,8 +37,10 @@ export async function logBrokenLinkHit(input: {
   userAgent: string | null;
   forwardedFor: string | null;
   realIp: string | null;
+  host?: string | null;
 }) {
   try {
+    if (isLocalReviewHost(input.host)) return;
     if (isNoisyUserAgent(input.userAgent)) return;
 
     const path = normalizeBrokenPath(input.pathname);

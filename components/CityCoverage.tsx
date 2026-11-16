@@ -159,7 +159,7 @@ export function CityCoverage({
                 {city.highlight}
               </span>
 
-              <div className="flex items-center gap-1.5 text-sm font-bold text-gray-400 transition-all group-hover:gap-2.5 group-hover:text-blue-600">
+              <div className="flex items-center gap-1.5 text-sm font-bold text-gray-600 transition-all group-hover:gap-2.5 group-hover:text-blue-700">
                 Explore {city.name}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </div>

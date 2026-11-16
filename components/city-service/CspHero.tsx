@@ -12,7 +12,7 @@
 import Link from 'next/link';
 import { MapPin, Shield, Clock, Zap } from 'lucide-react';
 import type { CityServiceCategoryPageData } from '@/lib/cityPages';
-import { ARRIVAL_PROMISE_NOTE_SHORT, PRICE_DISCLAIMER_SHORT, WHATSAPP_NUMBER } from '@/lib/constants';
+import { PRICE_DISCLAIMER_SHORT, WHATSAPP_NUMBER } from '@/lib/constants';
 
 const COLOR_MAP: Record<string, { gradient: string; btn: string; badge: string }> = {
   blue:   { gradient: 'from-blue-50 to-blue-100',     btn: 'bg-blue-600 hover:bg-blue-700',     badge: 'bg-blue-100 text-blue-800'   },
@@ -82,8 +82,8 @@ export function CspHero({ data, cityPhone }: { data: CityServiceCategoryPageData
           {/* Trust micro-badges */}
           <div className="flex flex-wrap justify-center gap-5 text-sm text-gray-500">
             {[
-              { icon: Shield, text: '30-day warranty' },
-              { icon: Clock,  text: '20-Min Quick Arrival*' },
+              { icon: Shield, text: 'Applicable warranty confirmed before work' },
+              { icon: Clock,  text: 'Arrival depends on location and availability' },
               { icon: Zap,    text: 'Starting price; extras approved first' },
             ].map(({ icon: Icon, text }) => (
               <span key={text} className="flex items-center gap-1.5">
@@ -93,7 +93,7 @@ export function CspHero({ data, cityPhone }: { data: CityServiceCategoryPageData
             ))}
           </div>
           <p className="mx-auto mt-3 max-w-2xl text-center text-[11px] leading-4 text-gray-500">
-            {ARRIVAL_PROMISE_NOTE_SHORT} {PRICE_DISCLAIMER_SHORT}
+            {PRICE_DISCLAIMER_SHORT}
           </p>
         </div>
       </div>

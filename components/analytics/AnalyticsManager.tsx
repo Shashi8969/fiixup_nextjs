@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import { isLocalReviewHost } from '@/lib/local-review';
 import {
   CONSENT_STORAGE_KEY,
   CONSENT_UPDATED_EVENT,
@@ -9,6 +10,7 @@ import {
   hasAnalyticsConsent,
   readConsentPreferences,
   trackEvent,
+  isPrivateAnalyticsPath,
 } from "@/lib/analytics";
 
 const ENGAGEMENT_THRESHOLDS = [30, 60, 120, 300];
@@ -23,6 +25,7 @@ const SCROLL_THRESHOLDS = [25, 50, 75, 90];
 // "consent update" upgrades those pings to full, cookie-backed tracking.
 function initGoogleAnalytics(): boolean {
   if (typeof window === "undefined") return false;
+  if (isPrivateAnalyticsPath(window.location.pathname) || isLocalReviewHost(window.location.host)) return false;
 
   if (!GA_MEASUREMENT_ID) {
     console.warn(
@@ -142,24 +145,28 @@ export function AnalyticsManager() {
     window.addEventListener(CONSENT_UPDATED_EVENT, handleConsentUpdate);
     window.addEventListener("storage", handleStorage);
 
-    // Defer the first load off the critical rendering path — gtag.js itself
-    // is ~190KB and was showing up as a top contributor to blocking time on
-    // initial page load. Consent Mode v2 pings still fire automatically,
-    // just after the browser is idle (or after a short delay) rather than
-    // competing with hydration.
-    let idleId: number | undefined;
-    let timeoutId: ReturnType<typeof setTimeout> | undefined;
-    if (typeof window.requestIdleCallback === "function") {
-      idleId = window.requestIdleCallback(() => sendCurrentPageView(), { timeout: 2000 });
-    } else {
-      timeoutId = setTimeout(sendCurrentPageView, 1000);
-    }
+    // Keep the ~190KB Google script out of the critical render/hydration
+    // window. Load it as soon as a visitor actually engages, or after a
+    // conservative fallback delay so passive page views are still counted.
+    const loadAnalytics = () => {
+      sendCurrentPageView();
+      window.removeEventListener("pointerdown", loadAnalytics);
+      window.removeEventListener("keydown", loadAnalytics);
+      window.removeEventListener("touchstart", loadAnalytics);
+    };
+
+    window.addEventListener("pointerdown", loadAnalytics, { once: true, passive: true });
+    window.addEventListener("keydown", loadAnalytics, { once: true });
+    window.addEventListener("touchstart", loadAnalytics, { once: true, passive: true });
+    const timeoutId = setTimeout(loadAnalytics, 6000);
 
     return () => {
       window.removeEventListener(CONSENT_UPDATED_EVENT, handleConsentUpdate);
       window.removeEventListener("storage", handleStorage);
-      if (idleId !== undefined) window.cancelIdleCallback?.(idleId);
-      if (timeoutId !== undefined) clearTimeout(timeoutId);
+      window.removeEventListener("pointerdown", loadAnalytics);
+      window.removeEventListener("keydown", loadAnalytics);
+      window.removeEventListener("touchstart", loadAnalytics);
+      clearTimeout(timeoutId);
     };
   }, []);
 

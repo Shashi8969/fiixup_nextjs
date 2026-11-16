@@ -11,6 +11,7 @@ import { metadataFromBasicSeo } from "@/lib/seo/metadata";
 
 const seo = getStaticPageSEO("faq")!;
 export const revalidate = 3600;
+export const dynamic = "force-static";
 
 export const metadata: Metadata = metadataFromBasicSeo({
   title: seo.title,

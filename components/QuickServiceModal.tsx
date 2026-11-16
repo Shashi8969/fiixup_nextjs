@@ -88,10 +88,10 @@ export function QuickServiceModal({
             </div>
             <Dialog.Title className="text-2xl font-bold mb-2">Need Quick Service?</Dialog.Title>
             <Dialog.Description className="text-gray-600">
-              Book in 30 seconds. 20-Min Quick Arrival* after mechanic dispatch for eligible bookings.
+              Share your vehicle, issue, and location. We confirm availability and an arrival estimate before dispatch.
             </Dialog.Description>
             <p className="mt-2 text-xs leading-5 text-gray-500">
-              *Actual ETA may vary by traffic, location and mechanic availability.
+              Actual ETA depends on traffic, location, service type, and mechanic availability.
             </p>
           </div>
 

@@ -5,6 +5,7 @@ import { unstable_cache } from 'next/cache'
 import { supabase } from '@/lib/supabase'
 import { asArray, asBoolean, asNumber, asObject, asString, cleanPath, normalizeJsonLd, normalizeSeoSections } from '@/lib/cms-guards'
 import { normalizeLocationServicePageSettings, type LocationServicePageSettings } from '@/lib/locationServicePageSettings'
+import { verifiedRating, verifiedReviewCount } from '@/lib/verified-stats'
 
 export interface SeoPage {
   url_path:              string
@@ -53,8 +54,8 @@ export interface PageData {
   whyChoosePoints:       { icon: string; title: string; desc: string }[]
   processSteps:          { step: string; title: string; desc: string }[]
   pricingDisclaimer:     string
-  schemaAggregateRating: number
-  schemaReviewCount:     number
+  schemaAggregateRating: number | null
+  schemaReviewCount:     number | null
   pricingRows:           { label: string; priceFrom: number; priceTo?: number; note?: string; highlight?: boolean }[]
   testimonials:          { name: string; rating: number; text: string; vehicle: string; area: string; date: string }[]
   faqs:                  { q: string; a: string }[]
@@ -178,11 +179,8 @@ function normalizePageData(value: unknown): PageData {
       desc: asString(item.desc ?? item.description ?? item.text),
     })).filter((step) => step.title && step.desc),
     pricingDisclaimer: asString(pd.pricingDisclaimer),
-    // Missing ratings/review counts must stay missing. A synthetic 4.9/150
-    // makes low-content pages look more authoritative than the source data can
-    // prove and can leak into visible trust badges.
-    schemaAggregateRating: pd.schemaAggregateRating == null ? 0 : asNumber(pd.schemaAggregateRating, 0),
-    schemaReviewCount: pd.schemaReviewCount == null ? 0 : asNumber(pd.schemaReviewCount, 0),
+    schemaAggregateRating: verifiedRating(pd.schemaAggregateRating),
+    schemaReviewCount: verifiedReviewCount(pd.schemaReviewCount),
     pricingRows: normalizeArrayObject(pd.pricingRows, (item) => ({
       label: asString(item.label),
       priceFrom: asNumber(item.priceFrom ?? item.price_from, 0),

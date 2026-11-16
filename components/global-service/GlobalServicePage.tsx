@@ -25,6 +25,7 @@ import {
 } from "@/lib/constants";
 import { formatPriceRange } from "@/lib/utils";
 import type { GlobalServicePage as GlobalServicePageType } from "@/lib/global-service";
+import { hasVerifiedRatingSummary } from "@/lib/verified-stats";
 
 type ExtendedGlobalServicePage = GlobalServicePageType & {
   process_steps?: Array<{ step?: number; title: string; text?: string; description?: string }>;
@@ -231,6 +232,7 @@ export function GlobalServicePage({ data }: Props) {
 
         <div className="relative rounded-[32px] overflow-hidden shadow-2xl border border-white/40 bg-white">
 
+          {hasVerifiedRatingSummary(data.schema_aggregate_rating, data.schema_review_count) && (
           <div className="absolute top-5 left-5 z-20 bg-white/90 backdrop-blur-md rounded-2xl px-4 py-3 shadow-lg">
             <div className="flex items-center gap-2">
               <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
@@ -244,6 +246,7 @@ export function GlobalServicePage({ data }: Props) {
               </div>
             </div>
           </div>
+          )}
 
           <Image
             src={data.hero_image_url || heroImage}
@@ -270,7 +273,7 @@ export function GlobalServicePage({ data }: Props) {
           <div className="flex flex-wrap justify-center gap-8">
             {[
               { icon: Shield, label: "Certified Technicians" },
-              { icon: CheckCircle, label: "30-Day Warranty" },
+              { icon: CheckCircle, label: "Applicable Terms Confirmed Before Work" },
               { icon: Clock, label: "24/7 Available" },
               { icon: IndianRupee, label: "Transparent Pricing" },
               { icon: Phone, label: "Free Quote" },

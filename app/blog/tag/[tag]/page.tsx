@@ -2,6 +2,7 @@
 // Blog posts filtered by tag — makes the tag pills on a post page and the
 // blog listing actually navigable, instead of being unclickable text.
 export const revalidate = 3600;
+export const dynamic = "force-static";
 export const dynamicParams = true;
 
 import type { Metadata } from "next";

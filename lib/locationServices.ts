@@ -4,6 +4,7 @@ import {
   normalizeLocationServicePageSettings,
   type LocationServicePageSettings,
 } from "./locationServicePageSettings";
+import { verifiedRating, verifiedReviewCount } from "./verified-stats";
 
 export interface LocationServiceData {
   id: number;
@@ -45,25 +46,13 @@ export interface LocationServiceData {
   heroImageMeta: ImageMeta | null;
   pageLayout: { id: string; visible: boolean; heading: string | null }[];
   pageSettings: LocationServicePageSettings;
-  schemaAggregateRating: number;
-  schemaReviewCount: number;
+  schemaAggregateRating: number | null;
+  schemaReviewCount: number | null;
   displayLocation: string;
   locationHeading: string;
   availability?: string;
   arrival_time?: string;
   warranty?: string;
-}
-
-function verifiedRating(value: unknown): number {
-  if (value == null || value === "") return 0;
-  const parsed = Number(value);
-  return Number.isFinite(parsed) && parsed > 0 && parsed <= 5 ? parsed : 0;
-}
-
-function verifiedReviewCount(value: unknown): number {
-  if (value == null || value === "") return 0;
-  const parsed = Number(value);
-  return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : 0;
 }
 
 function rowToLocationService(row: any): LocationServiceData {
@@ -112,8 +101,8 @@ function rowToLocationService(row: any): LocationServiceData {
     heroImageMeta:         normalizeImageMeta(row.hero_image_meta),
     pageLayout:            row.page_layout ?? [],
     pageSettings:          normalizeLocationServicePageSettings(row.page_settings),
-    // Never manufacture trust metrics. Missing/unusable values stay at zero;
-    // UI/schema callers can then omit rating output until a verified source is wired in.
+    // Never manufacture trust metrics. Missing/unusable values stay null so
+    // UI/schema callers can omit them completely.
     schemaAggregateRating: verifiedRating(row.schema_aggregate_rating),
     schemaReviewCount:     verifiedReviewCount(row.schema_review_count),
     displayLocation:       isCity ? row.city_name : `${row.area_name}, ${row.city_name}`,
@@ -264,8 +253,8 @@ export interface CityServiceListItem {
   serviceCategory: string;
   heroSubheading:  string;
   pricingRows:     { label: string; priceFrom: number; priceTo?: number; highlight?: boolean }[];
-  schemaAggregateRating: number;
-  schemaReviewCount:     number;
+  schemaAggregateRating: number | null;
+  schemaReviewCount:     number | null;
   canonicalUrl:    string;
 }
 
@@ -312,14 +301,14 @@ export interface CityServiceCard {
   heroSubheading:  string;
   pricingRows:     { label: string; priceFrom: number; priceTo?: number; note?: string }[];
   duration:        string | null;
-  schemaAggregateRating: number;
-  schemaReviewCount:     number;
+  schemaAggregateRating: number | null;
+  schemaReviewCount:     number | null;
   canonicalUrl:    string;
 }
 
-// A city-category page is indexable when it has active city-level child services OR
-// an explicitly approved editorial page in city_service_pages. Read the authoritative
-// source directly so stale generated seo_pages JSON can never silently noindex it.
+// Reports whether the category currently has at least one active city-level
+// service. Editorial indexability is evaluated from the CMS page data by the
+// route itself so an empty/stale boolean cannot override substantive content.
 export async function hasAnyCityServiceInCategory(
   citySlug: string,
   categorySlug: string
@@ -341,23 +330,7 @@ export async function hasAnyCityServiceInCategory(
     return true;
   }
 
-  if ((count ?? 0) > 0) return true;
-
-  const { data: editorialPage, error: editorialError } = await supabase
-    .from("city_service_pages")
-    .select("editorial_indexable")
-    .eq("city_slug", normalizedCity)
-    .eq("category_slug", normalizedCategory)
-    .eq("is_active", true)
-    .maybeSingle();
-
-  if (editorialError) {
-    console.error("hasAnyCityServiceInCategory editorial-page error:", editorialError.message);
-    // A temporary source-table lookup failure must not inject noindex.
-    return true;
-  }
-
-  return editorialPage?.editorial_indexable === true;
+  return (count ?? 0) > 0;
 }
 
 export async function getCityServicesByCategory(

@@ -1,0 +1,119 @@
+[
+  {
+    "path": "/",
+    "status": 200,
+    "poweredBy": null,
+    "cache": "s-maxage=3600, stale-while-revalidate=31532400",
+    "csp": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self' https://fiixup-admin.vercel.app; frame-src 'self' https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com; form-action 'self'; img-src 'self' data: blob: https://vpnztzzsyzgesnpihxsu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://vpnztzzsyzgesnpihxsu.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; upgrade-insecure-requests",
+    "referrer": "strict-origin-when-cross-origin",
+    "robots": null
+  },
+  {
+    "path": "/contact",
+    "status": 200,
+    "poweredBy": null,
+    "cache": "s-maxage=3600, stale-while-revalidate=31532400",
+    "csp": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self' https://fiixup-admin.vercel.app; frame-src 'self' https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com; form-action 'self'; img-src 'self' data: blob: https://vpnztzzsyzgesnpihxsu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://vpnztzzsyzgesnpihxsu.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; upgrade-insecure-requests",
+    "referrer": "strict-origin-when-cross-origin",
+    "robots": null
+  },
+  {
+    "path": "/contact-new",
+    "status": 200,
+    "poweredBy": null,
+    "cache": "private, no-cache, no-store, max-age=0, must-revalidate",
+    "csp": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self' https://fiixup-admin.vercel.app; frame-src 'self' https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com; form-action 'self'; img-src 'self' data: blob: https://vpnztzzsyzgesnpihxsu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://vpnztzzsyzgesnpihxsu.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; upgrade-insecure-requests",
+    "referrer": "strict-origin-when-cross-origin",
+    "robots": null
+  },
+  {
+    "path": "/services",
+    "status": 200,
+    "poweredBy": null,
+    "cache": "s-maxage=3600, stale-while-revalidate=31532400",
+    "csp": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self' https://fiixup-admin.vercel.app; frame-src 'self' https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com; form-action 'self'; img-src 'self' data: blob: https://vpnztzzsyzgesnpihxsu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://vpnztzzsyzgesnpihxsu.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; upgrade-insecure-requests",
+    "referrer": "strict-origin-when-cross-origin",
+    "robots": null
+  },
+  {
+    "path": "/bangalore",
+    "status": 200,
+    "poweredBy": null,
+    "cache": "s-maxage=3600, stale-while-revalidate=31532400",
+    "csp": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self' https://fiixup-admin.vercel.app; frame-src 'self' https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com; form-action 'self'; img-src 'self' data: blob: https://vpnztzzsyzgesnpihxsu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://vpnztzzsyzgesnpihxsu.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; upgrade-insecure-requests",
+    "referrer": "strict-origin-when-cross-origin",
+    "robots": null
+  },
+  {
+    "path": "/blog",
+    "status": 200,
+    "poweredBy": null,
+    "cache": "s-maxage=3600, stale-while-revalidate=31532400",
+    "csp": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self' https://fiixup-admin.vercel.app; frame-src 'self' https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com; form-action 'self'; img-src 'self' data: blob: https://vpnztzzsyzgesnpihxsu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://vpnztzzsyzgesnpihxsu.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; upgrade-insecure-requests",
+    "referrer": "strict-origin-when-cross-origin",
+    "robots": null
+  },
+  {
+    "path": "/api/posts?limit=1",
+    "status": 200,
+    "poweredBy": null,
+    "cache": null,
+    "csp": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self' https://fiixup-admin.vercel.app; frame-src 'self' https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com; form-action 'self'; img-src 'self' data: blob: https://vpnztzzsyzgesnpihxsu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://vpnztzzsyzgesnpihxsu.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; upgrade-insecure-requests",
+    "referrer": "strict-origin-when-cross-origin",
+    "robots": null
+  },
+  {
+    "path": "/admin-preview/not-a-token",
+    "status": 404,
+    "poweredBy": null,
+    "cache": "private, no-store, max-age=0",
+    "csp": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self' https://fiixup-admin.vercel.app; frame-src 'self' https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com; form-action 'self'; img-src 'self' data: blob: https://vpnztzzsyzgesnpihxsu.supabase.co; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://vpnztzzsyzgesnpihxsu.supabase.co; upgrade-insecure-requests",
+    "referrer": "no-referrer",
+    "robots": "noindex, nofollow, noarchive"
+  },
+  {
+    "path": "/api/leads",
+    "status": 400,
+    "cache": "no-store",
+    "result": {
+      "error": "Provide a valid phone number or email address."
+    }
+  },
+  {
+    "path": "/api/leads",
+    "status": 403,
+    "cache": "no-store",
+    "result": {
+      "error": "Request origin not allowed"
+    }
+  },
+  {
+    "path": "/api/leads",
+    "status": 413,
+    "cache": "no-store",
+    "result": {
+      "error": "Request body is too large."
+    }
+  },
+  {
+    "path": "/api/chat",
+    "status": 400,
+    "cache": "no-store",
+    "result": {
+      "error": "Empty question."
+    }
+  },
+  {
+    "path": "/api/revalidate",
+    "status": 401,
+    "cache": "no-store",
+    "result": {
+      "error": "Unauthorized"
+    }
+  },
+  {
+    "path": "local-image-optimizer",
+    "status": 200,
+    "type": "image/jpeg"
+  }
+]

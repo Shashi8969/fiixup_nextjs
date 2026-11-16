@@ -17,8 +17,8 @@ export function useInView(
     if (!el) return;
 
     if (typeof IntersectionObserver === "undefined") {
-      setInView(true);
-      return;
+      const frame = requestAnimationFrame(() => setInView(true));
+      return () => cancelAnimationFrame(frame);
     }
 
     const io = new IntersectionObserver(

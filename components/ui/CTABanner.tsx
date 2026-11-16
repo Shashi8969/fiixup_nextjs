@@ -15,7 +15,7 @@ interface CTABannerProps {
 
 const defaultProps = {
   heading: "Need a Mechanic Right Now?",
-  subtext: "20-Min Quick Arrival* after mechanic dispatch for eligible bookings.",
+  subtext: "Share your vehicle and location to confirm availability and an arrival estimate.",
   callLabel: "Call Now",
   waLabel: "WhatsApp Us",
   variant: "blue",
@@ -82,10 +82,10 @@ export function InlineCTA({
     <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6 text-center">
       <h3 className="text-xl font-bold text-gray-900 mb-2">{heading}</h3>
       <p className="text-gray-600 text-sm mb-4">
-        20-Min Quick Arrival* after mechanic dispatch for eligible bookings.
+        Share your vehicle and location to confirm availability and an arrival estimate.
       </p>
       <p className="mt-2 text-center text-[11px] leading-4 text-gray-500">
-        *Actual ETA may vary by traffic, location and mechanic availability.
+        Actual ETA depends on traffic, location, service type, and mechanic availability.
       </p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <a

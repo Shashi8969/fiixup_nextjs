@@ -13,7 +13,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import {
-  getClientIp,
   isSameOriginRequest,
   rateLimitRequest,
   readJsonBody,
@@ -37,15 +36,20 @@ const ALLOWED_ORIGIN_HOSTS =
 // it is itself cached for hours, so this is just amortizing the TF-IDF build.
 let cachedIndex: { index: KnowledgeIndex; builtAt: number } | null = null;
 const INDEX_TTL_MS = 5 * 60 * 1000;
+let indexBuild: Promise<KnowledgeIndex> | null = null;
 
 async function getIndex(): Promise<KnowledgeIndex> {
   if (cachedIndex && Date.now() - cachedIndex.builtAt < INDEX_TTL_MS) {
     return cachedIndex.index;
   }
-  const corpus = await getChatCorpus();
-  const index = new KnowledgeIndex(corpus);
-  cachedIndex = { index, builtAt: Date.now() };
-  return index;
+  if (!indexBuild) {
+    indexBuild = getChatCorpus().then(corpus => {
+      const index = new KnowledgeIndex(corpus);
+      cachedIndex = { index, builtAt: Date.now() };
+      return index;
+    }).finally(() => { indexBuild = null; });
+  }
+  return indexBuild;
 }
 
 export async function POST(request: NextRequest) {

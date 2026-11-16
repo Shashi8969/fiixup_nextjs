@@ -16,10 +16,17 @@ export function sanitizeBusinessSchema(value: unknown): unknown {
   const types = Array.isArray(node["@type"]) ? node["@type"] : [node["@type"]];
   const isServiceAreaBusiness = types.some((type) => type === "LocalBusiness" || type === "AutoRepair")
     && !HEADQUARTERS_IDS.has(String(node["@id"] ?? ""));
+  const isTrustClaimEntity = types.some((type) =>
+    ["Organization", "LocalBusiness", "AutoRepair", "Service"].includes(String(type))
+  );
 
   return Object.fromEntries(
     Object.entries(node)
-      .filter(([key]) => !isServiceAreaBusiness || !["address", "geo", "hasMap"].includes(key))
+      .filter(([key]) => {
+        if (isServiceAreaBusiness && ["address", "geo", "hasMap"].includes(key)) return false;
+        if (isTrustClaimEntity && ["aggregateRating", "review"].includes(key)) return false;
+        return true;
+      })
       .map(([key, child]) => [key, sanitizeBusinessSchema(child)])
   );
 }

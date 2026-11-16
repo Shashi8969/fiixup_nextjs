@@ -71,20 +71,20 @@ export function AreaAbout({ data }: { data: AreaHubPageData }) {
             )}
             <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
               <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-xl bg-blue-50 p-5 text-left">
+                {data.statsCustomers && <div className="rounded-xl bg-blue-50 p-5 text-left">
                   <Users className="mb-2 h-6 w-6 text-blue-600" aria-hidden="true" />
                   <p className="font-mono text-[28px] font-extrabold leading-none text-blue-700">
-                    {customers ? <CountUp value={customers.value} suffix={customers.suffix} /> : (data.statsCustomers ?? `${data.cityName} customers`)}
+                    {customers ? <CountUp value={customers.value} suffix={customers.suffix} /> : data.statsCustomers}
                   </p>
                   <p className="mt-1.5 text-xs font-semibold text-gray-500">Customers served</p>
-                </div>
-                <div className="rounded-xl bg-gray-50 p-5 text-left">
+                </div>}
+                {data.statsSatisfaction && <div className="rounded-xl bg-gray-50 p-5 text-left">
                   <ThumbsUp className="mb-2 h-6 w-6 text-gray-700" aria-hidden="true" />
                   <p className="font-mono text-[28px] font-extrabold leading-none text-gray-900">
-                    {satisfaction ? <CountUp value={satisfaction.value} suffix={satisfaction.suffix} /> : (data.statsSatisfaction ?? '—')}
+                    {satisfaction ? <CountUp value={satisfaction.value} suffix={satisfaction.suffix} /> : data.statsSatisfaction}
                   </p>
                   <p className="mt-1.5 text-xs font-semibold text-gray-500">Satisfaction rate</p>
-                </div>
+                </div>}
                 <div className="rounded-xl bg-gray-50 p-5 text-left">
                   <Clock className="mb-2 h-6 w-6 text-gray-700" aria-hidden="true" />
                   <p className="font-mono text-[28px] font-extrabold leading-none text-gray-900">
